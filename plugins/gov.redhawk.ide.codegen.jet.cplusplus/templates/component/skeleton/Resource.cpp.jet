@@ -1,0 +1,176 @@
+<%@ jet package="gov.redhawk.ide.codegen.jet.cplusplus.template.component.skeleton"
+imports="gov.redhawk.ide.codegen.ImplementationSettings
+mil.jpeojtrs.sca.spd.SoftPkg
+mil.jpeojtrs.sca.spd.Implementation
+gov.redhawk.ide.codegen.jet.TemplateParameter"
+class="ResourceCppTemplate"
+skeleton="../../generator.skeleton" 
+%>
+<%
+    TemplateParameter templ = (TemplateParameter) argument;
+    ImplementationSettings implSettings = templ.getImplSettings();
+    Implementation impl = templ.getImpl();
+    SoftPkg softPkg = (SoftPkg) impl.eContainer();
+    String PREFIX = gov.redhawk.ide.codegen.util.CodegenFileHelper.getPreferredFilePrefix(softPkg, implSettings);
+%>
+/**************************************************************************
+    This is the component code. This file contains all the access points
+     you need to use to be able to access all input and output ports,
+     respond to incoming data, and perform general component housekeeping
+**************************************************************************/
+#include <iostream>
+#include <fstream>
+
+#include "<%=PREFIX%>.h"
+#include <uuid/uuid.h>
+
+/**************************************************************************
+    Component-level housekeeping (memory and thread management)
+**************************************************************************/
+
+<%=PREFIX%>_i::<%=PREFIX%>_i(const char *uuid, omni_condition *con,
+    const char *label, ossie::ORB *in_orb) : Resource_impl(uuid)
+{
+    cout << "Starting everything" << endl;
+    component_running = con;
+    comp_uuid = uuid;
+    
+    // component_alive flag is turned to false to terminate the main processing thread
+    component_alive = true;
+    naming_service_name = label;
+    orb = in_orb;
+
+    // this is the signal used to tell the main procesing thread that information is ready
+    //  it is thrown by the input (provides) port when data is ready
+    data_in_signal = new omni_condition(&data_in_signal_lock);
+
+    //Initialize variables
+
+    thread_started = false;
+}
+
+
+<%=PREFIX%>_i::~<%=PREFIX%>_i(void)
+{
+    // The function releaseObject in the Framework-level functions section of this file does the memory housekeeping
+    //    The reason why it was placed there instead of here is that CORBA doesn't like it when you clean up CORBA
+    //    stuff in the destructor. Also, the component's ports are separate threads that need to be cleaned up, and
+    //    that also belongs in the framework-level termination.
+    usleep(1);
+}
+
+/*******************************************************************************************
+    Framework-level functions
+    These functions are generally called by the framework to perform housekeeping.
+*******************************************************************************************/
+void <%=PREFIX%>_i::initialize() throw (CF::LifeCycle::InitializeError, CORBA::SystemException)
+{
+    // This function is called by the framework during construction of the waveform
+    //    it is called before configure() is called, so whatever values you set in the xml properties file
+    //    won't be available when this is called. I wouldn't have done it in this order, but this
+    //    is what the specs call for
+	//
+	//	TODO
+}
+
+void <%=PREFIX%>_i::start() throw (CORBA::SystemException, CF::Resource::StartError)
+{
+    // This is a framework-level start call. This function is called only if this component
+    //    happens to be the assembly controller (or the assembly controller is written such that
+    //    it calls this component's start function
+    // The vast majority of components won't have their start function called
+	//
+	//	TODO
+}
+
+void <%=PREFIX%>_i::stop() throw (CORBA::SystemException, CF::Resource::StopError)
+{
+    // This is a framework-level stop call. This function is called only if this component
+    //    happens to be the assembly controller (or the assembly controller is written such that
+    //    it calls this component's start function
+    // The vast majority of components won't have their stop function called
+	//
+	//	TODO
+}
+
+void <%=PREFIX%>_i::releaseObject() throw (CF::LifeCycle::ReleaseError, CORBA::SystemException)
+{
+	// This is the part of the code where you will put in the logic that will appropriately cleanup
+	// your component.  It is appropriate to do Memory Cleanup here since
+	// CORBA doesn't like any cleaning up done in the Destructor.
+	// TODO
+}
+
+void <%=PREFIX%>_i::configure(const CF::Properties&) throw (CORBA::SystemException, CF::PropertySet::InvalidConfiguration, CF::PropertySet::PartialConfiguration)
+{
+	// Configure is called when a Component is asked to change/set a property that has already been previously defined.
+	// Here you will put in the logic that will take care of dealing with the newly requested property, which in turn
+	// will allow your Components to be overridden at runtime.
+	// TODO
+}
+
+CORBA::Object* <%=PREFIX%>_i::getPort (const char *) throw (CF::PortSupplier::UnknownPort, CORBA::SystemException)
+{
+	// This function will return an object reference for the named port which in turn will be used to establish a connection
+	// between two separate ports possible.
+	// TODO
+	return 0;
+}
+
+void <%=PREFIX%>_i::query (CF::Properties & configProperties) throw (CF::UnknownProperties, CORBA::SystemException)
+{
+	// Framework level call that allows a Component to reveal the details of it's properties to interested parties.  You will
+	// need to take in the request, find the appropriate property and return that value to the one who queried.
+	// TODO
+}
+
+void <%=PREFIX%>_i::runTest (CORBA::ULong TestID, CF::Properties & testValues) throw (CF::UnknownProperties, CF::TestableObject::UnknownTest, CORBA::SystemException)
+{
+	// Allows for the ability to perform stand alone testing of an SCA Component - useful for built in test (BIT) operations.
+	// This function will need to run the test specified by the TestID, along with the values provided by testValues.
+	// TODO
+}
+
+char * <%=PREFIX%>_i::identifier () throw (CORBA::SystemException)
+{
+	// Provide the ID of your Component to those who may be interested.
+	// TODO
+	return NULL;
+}
+
+/**************************************************************************************
+    Main processing thread
+    
+    General functionality:
+    This function is running as a separate thread from the component's main thread. The function
+    is generally in a blocked state, where it is waiting for the data_in_signal to be set.
+    
+    data_in_signal will only be set automatically when the component is exiting, otherwise
+    you should set it from either the input port or some other condition.
+**************************************************************************************/
+
+void <%=PREFIX%>_i::run(void *args)
+{
+
+    while(component_alive)
+    {
+        // Wait for signal that data is ready (or signal to exit service loop)
+        data_in_signal->wait();
+        
+        // Lock the mutex to prevent control information from changing the operating parameters while a block of
+        //    data is being processed
+        process_data_lock.lock();
+        
+        // If the component was released (framework-level end) while this was locked, then exit loop
+        if (!component_alive) {
+            process_data_lock.unlock();
+            continue;
+        }
+        
+        // While the process_data_lock is locked, you can perform work on your data.
+        // TODO
+        
+        process_data_lock.unlock();
+    }
+    thread_exit_lock.lock();    // this is necessary to make sure releaseObject is called before the component is destroyed
+}

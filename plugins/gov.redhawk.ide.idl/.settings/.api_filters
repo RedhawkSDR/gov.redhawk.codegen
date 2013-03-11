@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<component id="gov.redhawk.ide.idl" version="2">
+    <resource path="src/gov/redhawk/ide/idl/Attribute.java" type="gov.redhawk.ide.idl.Attribute">
+        <filter id="338722907">
+            <message_arguments>
+                <message_argument value="gov.redhawk.ide.idl.Attribute"/>
+                <message_argument value="Attribute(String, boolean, String, String, String, String)"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/gov/redhawk/ide/idl/Operation.java" type="gov.redhawk.ide.idl.Operation">
+        <filter id="338722907">
+            <message_arguments>
+                <message_argument value="gov.redhawk.ide.idl.Operation"/>
+                <message_argument value="Operation(String, String, String)"/>
+            </message_arguments>
+        </filter>
+    </resource>
+</component>

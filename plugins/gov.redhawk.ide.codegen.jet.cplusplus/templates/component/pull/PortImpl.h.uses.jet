@@ -1,0 +1,929 @@
+<%@ jet package="gov.redhawk.ide.codegen.jet.cplusplus.template.component.pull"
+imports="gov.redhawk.ide.RedhawkIdeActivator
+gov.redhawk.ide.codegen.cplusplus.CppHelper
+gov.redhawk.ide.codegen.jet.TemplateParameter
+gov.redhawk.ide.codegen.jet.cplusplus.CplusplusJetGeneratorPlugin
+gov.redhawk.ide.codegen.jet.cplusplus.CppProperties
+gov.redhawk.ide.codegen.ImplementationSettings
+gov.redhawk.ide.idl.Attribute
+gov.redhawk.ide.idl.IdlUtil
+gov.redhawk.ide.idl.Interface
+gov.redhawk.ide.idl.Operation
+java.util.Arrays
+java.util.List
+mil.jpeojtrs.sca.scd.Uses
+mil.jpeojtrs.sca.spd.Implementation
+mil.jpeojtrs.sca.spd.SoftPkg
+org.eclipse.core.runtime.CoreException
+org.eclipse.core.runtime.IPath
+org.eclipse.core.runtime.IStatus
+org.eclipse.core.runtime.Status
+org.eclipse.emf.common.util.EList"
+class="PullPortImplHUsesTemplate"
+skeleton="../../generator.skeleton2"
+%>
+<% 
+    TemplateParameter templ = (TemplateParameter) argument;
+    Implementation impl = templ.getImpl();
+    ImplementationSettings implSettings = templ.getImplSettings();
+    SoftPkg softPkg = (SoftPkg) impl.eContainer();
+    String PREFIX = gov.redhawk.ide.codegen.util.CodegenFileHelper.getPreferredFilePrefix(softPkg, implSettings);
+    EList<Uses> uses = softPkg.getDescriptor().getComponent().getComponentFeatures().getPorts().getUses();
+    List<CppProperties.Property> properties = CppProperties.getProperties(softPkg);
+    Uses use = null;
+    List<IPath> search_paths = Arrays.asList(RedhawkIdeActivator.getDefault().getDefaultIdlIncludePath());
+    CppHelper _cppHelper = new CppHelper();
+    for (Uses entry : uses) {
+        String intName = entry.getRepID();
+        if (intName.equals(templ.getPortRepId())) {
+            use = entry;
+            if (templ.isGenSupport()) {
+                Interface intf = IdlUtil.getInstance().getInterface(search_paths, intName.split(":")[1], true);
+                if (intf == null) {
+                    throw new CoreException(new Status(IStatus.ERROR, CplusplusJetGeneratorPlugin.PLUGIN_ID, "Unable to find interface for " + intName));
+                }
+                if (intf.getNameSpace().equals("ExtendedEvent")) {
+%>
+#include "ossie/MessageInterface.h"
+<%
+                	continue;
+                }
+                if (intf.getFullPath().contains("/COS/")) {
+%>
+#include "COS/<%=intf.getFilename()%>.hh"
+<%
+                } else {
+%>
+#include "<%=intf.getNameSpace() + "/" + intf.getFilename()%>.h"
+<%
+            	}
+            }
+            break;
+        }
+    }
+
+	for (CppProperties.Property prop : properties) { 
+		if (prop.getKinds().indexOf("message") != -1) { 
+%> 
+#include "struct_props.h" 
+<% 
+			break; 
+		} 
+	} 
+
+    if (templ.isGenClassDef()) {
+        Interface intf = IdlUtil.getInstance().getInterface(search_paths, use.getRepID().split(":")[1], true);
+        if (intf == null) {
+            throw new CoreException(new Status(IStatus.ERROR, CplusplusJetGeneratorPlugin.PLUGIN_ID, "Unable to find interface for " + use.getRepID()));
+        }
+
+        String nameSpace = intf.getNameSpace();
+        String interfaceName = intf.getName();
+        boolean pushPacketCall = false;
+        boolean isBULKIO = "BULKIO".equals(nameSpace);
+        String dataTransfer = "";
+        String tmpDataTransfer = "";
+        String rawTransferType = "char";
+%>
+// ----------------------------------------------------------------------------------------
+// <%=nameSpace%>_<%=interfaceName%>_Out_i declaration
+// ----------------------------------------------------------------------------------------
+<%
+        if (isBULKIO && "dataSDDS".equals(interfaceName)) {
+%>
+class BULKIO_dataSDDS_Out_i : public Port_Uses_base_impl, public virtual POA_BULKIO::UsesPortStatisticsProvider
+{
+public:
+    BULKIO_dataSDDS_Out_i(std::string port_name, <%=PREFIX%>_base *_parent);
+
+    ~BULKIO_dataSDDS_Out_i();
+
+    class linkStatistics
+    {
+        public:
+            struct statPoint {
+                unsigned int elements;
+                float queueSize;
+                double secs;
+                double usecs;
+            };
+
+            linkStatistics() {
+                bitSize = 8.0;
+                historyWindow = 10;
+                activeStreamIDs.resize(0);
+                receivedStatistics_idx = 0;
+                receivedStatistics.resize(historyWindow);
+                runningStats.elementsPerSecond = -1.0;
+                runningStats.bitsPerSecond = -1.0;
+                runningStats.callsPerSecond = -1.0;
+                runningStats.averageQueueDepth = -1.0;
+                runningStats.streamIDs.length(0);
+                runningStats.timeSinceLastCall = -1;
+                enabled = true;
+            };
+
+            void setBitSize(double _bitSize) {
+                bitSize = _bitSize;
+            }
+
+            void setEnabled(bool enableStats) {
+                enabled = enableStats;
+            }
+
+            void update(unsigned int elementsReceived, float queueSize, bool EOS, std::string streamID) {
+                if (!enabled) {
+                    return;
+                }
+                struct timeval tv;
+                struct timezone tz;
+                gettimeofday(&tv, &tz);
+                receivedStatistics[receivedStatistics_idx].elements = elementsReceived;
+                receivedStatistics[receivedStatistics_idx].queueSize = queueSize;
+                receivedStatistics[receivedStatistics_idx].secs = tv.tv_sec;
+                receivedStatistics[receivedStatistics_idx++].usecs = tv.tv_usec;
+                receivedStatistics_idx = receivedStatistics_idx % historyWindow;
+                if (!EOS) {
+                    std::list<std::string>::iterator p = activeStreamIDs.begin();
+                    bool foundStreamID = false;
+                    while (p != activeStreamIDs.end()) {
+                        if (*p == streamID) {
+                            foundStreamID = true;
+                            break;
+                        }
+                        p++;
+                    }
+                    if (!foundStreamID) {
+                        activeStreamIDs.push_back(streamID);
+                    }
+                } else {
+                    std::list<std::string>::iterator p = activeStreamIDs.begin();
+                    while (p != activeStreamIDs.end()) {
+                        if (*p == streamID) {
+                            activeStreamIDs.erase(p);
+                            break;
+                        }
+                        p++;
+                    }
+                }
+            };
+
+            BULKIO::PortStatistics retrieve() {
+                if (!enabled) {
+                    return runningStats;
+                }
+                struct timeval tv;
+                struct timezone tz;
+                gettimeofday(&tv, &tz);
+
+                int idx = (receivedStatistics_idx == 0) ? (historyWindow - 1) : (receivedStatistics_idx - 1);
+                double front_sec = receivedStatistics[idx].secs;
+                double front_usec = receivedStatistics[idx].usecs;
+                double secDiff = tv.tv_sec - receivedStatistics[receivedStatistics_idx].secs;
+                double usecDiff = (tv.tv_usec - receivedStatistics[receivedStatistics_idx].usecs) / ((double)1e6);
+
+                double totalTime = secDiff + usecDiff;
+                double totalData = 0;
+                float queueSize = 0;
+                int startIdx = (receivedStatistics_idx + 1) % historyWindow;
+                for (int i = startIdx; i != receivedStatistics_idx; ) {
+                    totalData += receivedStatistics[i].elements;
+                    queueSize += receivedStatistics[i].queueSize;
+                    i = (i + 1) % historyWindow;
+                }
+                runningStats.bitsPerSecond = ((totalData * bitSize) / totalTime);
+                runningStats.elementsPerSecond = (totalData / totalTime);
+                runningStats.averageQueueDepth = (queueSize / historyWindow);
+                runningStats.callsPerSecond = (double(historyWindow - 1) / totalTime);
+                runningStats.timeSinceLastCall = (((double)tv.tv_sec) - front_sec) + (((double)tv.tv_usec - front_usec) / ((double)1e6));
+                unsigned int streamIDsize = activeStreamIDs.size();
+                std::list< std::string >::iterator p = activeStreamIDs.begin();
+                runningStats.streamIDs.length(streamIDsize);
+                for (unsigned int i = 0; i < streamIDsize; i++) {
+                    if (p == activeStreamIDs.end()) {
+                        break;
+                    }
+                    runningStats.streamIDs[i] = CORBA::string_dup((*p).c_str());
+                    p++;
+                }
+                return runningStats;
+            };
+
+        protected:
+            bool enabled;
+            double bitSize;
+            BULKIO::PortStatistics runningStats;
+            std::vector<statPoint> receivedStatistics;
+            std::list< std::string > activeStreamIDs;
+            unsigned long historyWindow;
+            int receivedStatistics_idx;
+    };
+
+    BULKIO::UsesPortStatisticsSequence * statistics()
+    {
+        boost::mutex::scoped_lock lock(updatingPortsLock);
+        BULKIO::UsesPortStatisticsSequence_var recStat = new BULKIO::UsesPortStatisticsSequence();
+        recStat->length(outConnections.size());
+        for (unsigned int i = 0; i < outConnections.size(); i++) {
+            recStat[i].connectionId = CORBA::string_dup(outConnections[i].second.c_str());
+            recStat[i].statistics = stats[outConnections[i].second].retrieve();
+        }
+        return recStat._retn();
+    };
+
+    BULKIO::PortUsageType state()
+    {
+        boost::mutex::scoped_lock lock(updatingPortsLock);
+        if (outConnections.size() > 0) {
+            return BULKIO::ACTIVE;
+        } else {
+            return BULKIO::IDLE;
+        }
+
+        return BULKIO::BUSY;
+    };
+
+    void enableStats(bool enable)
+    {
+        for (unsigned int i = 0; i < outConnections.size(); i++) {
+            stats[outConnections[i].second].setEnabled(enable);
+        }
+    };
+
+    void setBitSize(double bitSize)
+    {
+        for (unsigned int i = 0; i < outConnections.size(); i++) {
+            stats[outConnections[i].second].setBitSize(bitSize);
+        }
+    };
+
+    void updateStats(unsigned int elementsReceived, unsigned int queueSize, bool EOS, std::string streamID)
+    {
+        for (unsigned int i = 0; i < outConnections.size(); i++) {
+            stats[outConnections[i].second].update(elementsReceived, queueSize, EOS, streamID);
+        }
+    };
+
+    void connectPort(CORBA::Object_ptr connection, const char* connectionId)
+    {
+        boost::mutex::scoped_lock lock(updatingPortsLock);   // don't want to process while command information is coming in
+        BULKIO::dataSDDS_var port = BULKIO::dataSDDS::_narrow(connection);
+        if (lastStreamData != NULL) {
+            // TODO - use the username instead
+            std::string attachId = port->attach(*lastStreamData, user_id.c_str());
+            attachedGroup.insert(std::make_pair(attachId, std::make_pair(lastStreamData, user_id)));
+            attachedPorts.insert(std::make_pair(port, attachId));
+        }
+        outConnections.push_back(std::make_pair(port, connectionId));
+        active = true;
+        recConnectionsRefresh = true;
+        refreshSRI = true;
+    };
+
+    void disconnectPort(const char* connectionId)
+    {
+        boost::mutex::scoped_lock lock(updatingPortsLock);   // don't want to process while command information is coming in
+        for (unsigned int i = 0; i < outConnections.size(); i++) {
+            if (outConnections[i].second == connectionId) {
+            	if (attachedPorts.find(outConnections[i].first) != attachedPorts.end()) {
+                    outConnections[i].first->detach(attachedPorts[outConnections[i].first].c_str());
+                }
+                outConnections.erase(outConnections.begin() + i);
+                break;
+            }
+        }
+
+        if (outConnections.size() == 0) {
+            active = false;
+        }
+        recConnectionsRefresh = true;
+    };
+
+    ExtendedCF::UsesConnectionSequence * connections() 
+    {
+        boost::mutex::scoped_lock lock(updatingPortsLock);   // don't want to process while command information is coming in
+        if (recConnectionsRefresh) {
+            recConnections.length(outConnections.size());
+            for (unsigned int i = 0; i < outConnections.size(); i++) {
+                recConnections[i].connectionId = CORBA::string_dup(outConnections[i].second.c_str());
+                recConnections[i].port = CORBA::Object::_duplicate(outConnections[i].first);
+            }
+            recConnectionsRefresh = false;
+        }
+        ExtendedCF::UsesConnectionSequence_var retVal = new ExtendedCF::UsesConnectionSequence(recConnections);
+        return retVal._retn();
+    };
+
+    std::vector< std::pair<BULKIO::dataSDDS_var, std::string> > _getConnections()
+    {
+        return outConnections;
+    };
+    
+    void pushSRI(const BULKIO::StreamSRI& H, const BULKIO::PrecisionUTCTime& T);
+
+    BULKIO::SDDSStreamDefinition* getStreamDefinition(const char* attachId);
+
+    char* getUser(const char* attachId);
+
+    BULKIO::dataSDDS::InputUsageState usageState();
+
+    BULKIO::SDDSStreamSequence* attachedStreams();
+
+    BULKIO::StringSequence* attachmentIds();
+
+    char* attach(const BULKIO::SDDSStreamDefinition& stream, const char* userid) throw (BULKIO::dataSDDS::AttachError, BULKIO::dataSDDS::StreamInputError);
+
+    void detach(const char* attachId, const char* connectionId);
+
+    std::map<std::string, std::pair<BULKIO::StreamSRI, BULKIO::PrecisionUTCTime> > currentSRIs;
+
+protected:
+    <%=PREFIX%>_i *parent;
+    // maps a stream ID to a pair of Stream and userID
+    std::map<std::string, std::pair<BULKIO::SDDSStreamDefinition*, std::string> > attachedGroup;
+
+    BULKIO::SDDSStreamDefinition* lastStreamData;
+    std::vector < std::pair<BULKIO::dataSDDS_var, std::string> > outConnections;
+    std::map<BULKIO::dataSDDS::_var_type, std::string> attachedPorts;
+    std::string user_id;
+    ExtendedCF::UsesConnectionSequence recConnections;
+    bool recConnectionsRefresh;
+    std::map<std::string, linkStatistics> stats;
+};
+<%
+        } else if (nameSpace.equals("ExtendedEvent") && interfaceName.equals("MessageEvent")) {
+%>
+class <%=nameSpace%>_<%=interfaceName%>_Out_i : public MessageSupplierPort
+{
+    public:
+        <%=nameSpace%>_<%=interfaceName%>_Out_i(std::string port_name) : MessageSupplierPort(port_name) {
+        };
+<%
+		for (CppProperties.Property prop : properties) {
+			if (prop.getKinds().indexOf("message") != -1) {
+        		if (prop.getKinds().indexOf("event") != -1) {         
+%>
+        void sendMessage(propertyChange< <%=prop.getCppType()%> > message) {
+            CF::Properties outProps;
+            CORBA::Any data;
+            outProps.length(1);
+            outProps[0].id = CORBA::string_dup(message.getId().c_str());
+            outProps[0].value <<= message;
+            data <<= outProps;
+            push(data);
+        };
+
+        void sendMessages(std::vector<propertyChange< <%=prop.getCppType()%>> > messages) {
+            CF::Properties outProps;
+            CORBA::Any data;
+            outProps.length(messages.size());
+            for (unsigned int i=0; i<messages.size(); i++) {
+                outProps[i].id = CORBA::string_dup(messages[i].getId().c_str());
+                outProps[i].value <<= messages[i];
+            }
+            data <<= outProps;
+            push(data);
+        };
+<%
+				} else {
+%>
+        void sendMessage(<%=prop.getCppType()%> message) {
+            CF::Properties outProps;
+            CORBA::Any data;
+            outProps.length(1);
+            outProps[0].id = CORBA::string_dup(message.getId().c_str());
+            outProps[0].value <<= message;
+            data <<= outProps;
+            push(data);
+        };
+
+        void sendMessages(std::vector<<%=prop.getCppType()%>> messages) {
+            CF::Properties outProps;
+            CORBA::Any data;
+            outProps.length(messages.size());
+            for (unsigned int i=0; i<messages.size(); i++) {
+                outProps[i].id = CORBA::string_dup(messages[i].getId().c_str());
+                outProps[i].value <<= messages[i];
+            }
+            data <<= outProps;
+            push(data);
+        };
+<%
+				}
+			}
+		}
+%>
+};
+<%
+        } else {
+            String ppDataTransfer = "";
+%>
+class <%=nameSpace%>_<%=interfaceName%>_Out_i : public Port_Uses_base_impl, public <%if (isBULKIO) {%>virtual POA_BULKIO::UsesPortStatisticsProvider<%} else {%>POA_ExtendedCF::QueryablePort<%}%>
+{
+    public:
+        <%=nameSpace%>_<%=interfaceName%>_Out_i(std::string port_name, <%=PREFIX%>_base *_parent);
+        ~<%=nameSpace%>_<%=interfaceName%>_Out_i();
+<%
+            for (Operation op : intf.getOperations()) {
+                int numParams = op.getParams().size();
+                if ("pushPacket".equals(op.getName())) {
+                    if (numParams == 4) {
+                        ppDataTransfer = _cppHelper.getCppMapping(op.getParams().get(0).getCxxType());
+                        if (ppDataTransfer.startsWith("std::vector")) {
+                            if (ppDataTransfer.endsWith("& ")) {
+                                rawTransferType = ppDataTransfer.substring(12, ppDataTransfer.length() - 3);
+                            } else { 
+                                rawTransferType = ppDataTransfer.substring(12, ppDataTransfer.length() - 2);
+                            }
+                        } else if ("dataFile".equals(interfaceName)) {
+                            ppDataTransfer = "char";
+                        }
+                    }
+                    dataTransfer = op.getParams().get(0).getCxxType();
+                    if (dataTransfer.endsWith("&")) {
+                       tmpDataTransfer = dataTransfer.substring(6, dataTransfer.length()-1);
+                    } else {
+                       tmpDataTransfer = dataTransfer.substring(6, dataTransfer.length());
+                    }
+                    pushPacketCall = true;
+                    if ("dataFile".equals(interfaceName)) {
+%>
+        
+        /*
+         * pushPacket
+         *     description: push data out of the port
+         *
+         *  <%=op.getParams().get(0).getName()%>: structure containing the payload to send out
+         *  T: constant of type BULKIO::PrecisionUTCTime containing the timestamp for the outgoing data.
+         *    tcmode: timecode mode
+         *    tcstatus: timecode status 
+         *    toff: fractional sample offset
+         *    twsec: J1970 GMT 
+         *    tfsec: fractional seconds: 0.0 to 1.0
+         *  EOS: end-of-stream flag
+         *  streamID: stream identifier
+         */
+        void pushPacket(<%=op.getParams().get(0).getCxxType()%> <%=op.getParams().get(0).getName()%>, const BULKIO::PrecisionUTCTime& T, bool EOS, const std::string& streamID) {
+            if (refreshSRI) {
+                if (currentSRIs.find(streamID) == currentSRIs.end()) {
+                    BULKIO::StreamSRI sri;
+                    sri.hversion = 1;
+                    sri.xstart = 0.0;
+                    sri.xdelta = 1.0;
+                    sri.xunits = BULKIO::UNITS_TIME;
+                    sri.subsize = 0;
+                    sri.ystart = 0.0;
+                    sri.ydelta = 0.0;
+                    sri.yunits = BULKIO::UNITS_NONE;
+                    sri.mode = 0;
+                    sri.streamID = streamID.c_str();
+                    currentSRIs[streamID] = sri;
+                }
+                pushSRI(currentSRIs[streamID]);
+            }
+            boost::mutex::scoped_lock lock(updatingPortsLock);   // don't want to process while command information is coming in
+            if (active) {
+                std::vector < std::pair < <%=nameSpace%>::<%=interfaceName%>_var, std::string > >::iterator port;
+                for (port = outConnections.begin(); port != outConnections.end(); port++) {
+                    try {
+                        ((*port).first)->pushPacket(<%=op.getParams().get(0).getName()%>, T, EOS, streamID.c_str());
+                        stats[(*port).second].update(1, 0, 0, streamID);
+                    } catch(...) {
+                        std::cout << "Call to pushPacket by <%=nameSpace%>_<%=interfaceName%>_Out_i failed" << std::endl;
+                    }
+                }
+            }
+        };
+<%
+                        continue;
+                    } else if ("dataXML".equals(interfaceName)) {
+%>
+        
+        /*
+         * pushPacket
+         *     description: push data out of the port
+         *
+         *  <%=op.getParams().get(0).getName()%>: structure containing the payload to send out
+         *  EOS: end-of-stream flag
+         *  streamID: stream identifier
+         */
+        void pushPacket(<%=op.getParams().get(0).getCxxType()%> <%=op.getParams().get(0).getName()%>, bool EOS, const std::string& streamID) {
+            if (refreshSRI) {
+                if (currentSRIs.find(streamID) == currentSRIs.end()) {
+                    BULKIO::StreamSRI sri;
+                    sri.hversion = 1;
+                    sri.xstart = 0.0;
+                    sri.xdelta = 0.0;
+                    sri.xunits = BULKIO::UNITS_TIME;
+                    sri.subsize = 0;
+                    sri.ystart = 0.0;
+                    sri.ydelta = 0.0;
+                    sri.yunits = BULKIO::UNITS_NONE;
+                    sri.mode = 0;
+                    sri.streamID = streamID.c_str();
+                    struct timeval tmp_time;
+                    struct timezone tmp_tz;
+                    gettimeofday(&tmp_time, &tmp_tz);
+                    double wsec = tmp_time.tv_sec;
+                    double fsec = tmp_time.tv_usec / 1e6;;
+                    BULKIO::PrecisionUTCTime tstamp = BULKIO::PrecisionUTCTime();
+                    tstamp.tcmode = BULKIO::TCM_CPU;
+                    tstamp.tcstatus = (short)1;
+                    tstamp.toff = 0.0;
+                    tstamp.twsec = wsec;
+                    tstamp.tfsec = fsec;
+                    currentSRIs[streamID] = sri;
+                }
+                pushSRI(currentSRIs[streamID]);
+            }
+            boost::mutex::scoped_lock lock(updatingPortsLock);   // don't want to process while command information is coming in
+            if (active) {
+                std::vector < std::pair < <%=nameSpace%>::<%=interfaceName%>_var, std::string > >::iterator port;
+                for (port = outConnections.begin(); port != outConnections.end(); port++) {
+                    try {
+                        ((*port).first)->pushPacket(<%=op.getParams().get(0).getName()%>, EOS, streamID.c_str());
+                        stats[(*port).second].update(strlen(<%=op.getParams().get(0).getName()%>), 0, 0, streamID);
+                    } catch(...) {
+                        std::cout << "Call to pushPacket by <%=nameSpace%>_<%=interfaceName%>_Out_i failed" << std::endl;
+                    }
+                }
+            }
+        };
+<%
+                        continue;
+                    } else {
+%>
+        
+        /*
+         * pushPacket
+         *     description: push data out of the port
+         *
+         *  data: structure containing the payload to send out
+         *  T: constant of type BULKIO::PrecisionUTCTime containing the timestamp for the outgoing data.
+         *    tcmode: timecode mode
+         *    tcstatus: timecode status 
+         *    toff: fractional sample offset
+         *    twsec: J1970 GMT 
+         *    tfsec: fractional seconds: 0.0 to 1.0
+         *  EOS: end-of-stream flag
+         *  streamID: stream identifier
+         */
+        template <typename ALLOCATOR>
+<%
+                    if ("dataChar".equals(interfaceName)) {
+%>
+        void pushPacket(<%=_cppHelper.vectorize("std::vector<char>&")%> data, BULKIO::PrecisionUTCTime& T, bool EOS, const std::string& streamID) {
+<%
+                    } else {
+%>
+        void pushPacket(<%=_cppHelper.vectorize(ppDataTransfer.trim())%> data, BULKIO::PrecisionUTCTime& T, bool EOS, const std::string& streamID) {
+<%
+                    }
+%>
+            if (refreshSRI) {
+                if (currentSRIs.find(streamID) == currentSRIs.end()) {
+                    BULKIO::StreamSRI sri;
+                    sri.hversion = 1;
+                    sri.xstart = 0.0;
+                    sri.xdelta = 1.0;
+                    sri.xunits = BULKIO::UNITS_TIME;
+                    sri.subsize = 0;
+                    sri.ystart = 0.0;
+                    sri.ydelta = 0.0;
+                    sri.yunits = BULKIO::UNITS_NONE;
+                    sri.mode = 0;
+                    sri.streamID = streamID.c_str();
+                    currentSRIs[streamID] = sri;
+                }
+                pushSRI(currentSRIs[streamID]);
+            }
+            boost::mutex::scoped_lock lock(updatingPortsLock);   // don't want to process while command information is coming in
+            // Magic is below, make a new sequence using the data from the Iterator
+            // as the data for the sequence.  The 'false' at the end is whether or not
+            // CORBA is allowed to delete the buffer when the sequence is destroyed.
+            <%=tmpDataTransfer%> seq = <%=tmpDataTransfer%>(data.size(), data.size(), <%
+                        if (tmpDataTransfer.contains("UlongSequence")) {
+                                                                                      %>(CORBA::ULong*)<%
+                        } else if (tmpDataTransfer.contains("PortTypes::CharSequence")) {
+                                                                                      %>(CORBA::Char*)<%
+                        }
+                                                                                      %>&(data[0]), false);
+            if (active) {
+                std::vector < std::pair < <%=nameSpace%>::<%=interfaceName%>_var, std::string > >::iterator port;
+                for (port = outConnections.begin(); port != outConnections.end(); port++) {
+                    try {
+                        ((*port).first)->pushPacket(seq, T, EOS, streamID.c_str());
+                        stats[(*port).second].update(data.size(), 0, 0, streamID);
+                    } catch(...) {
+                        std::cout << "Call to pushPacket by <%=nameSpace%>_<%=interfaceName%>_Out_i failed" << std::endl;
+                    }
+                }
+            }
+        };
+<%
+                        continue;
+                    }
+                } // end if opName = pushPacket
+%>
+
+        <%=op.getCxxReturnType()%><%=_cppHelper.varReturnValue(op.getCxxReturnType(), op.getReturnType())%> <%=op.getName()%>(<%
+                if (numParams == 0) { %>);<%
+                }
+                for (int i = 0; i < numParams; i++) {
+                    if ("pushPacket".equals(op.getName()) && (numParams == 4) && (i == 0)) {
+                        String iteratorBase = _cppHelper.getBaseSequenceMapping(op.getParams().get(i).getCxxType());
+                        pushPacketCall = true;
+        %><%=iteratorBase%>::iterator begin, <%=iteratorBase%>::iterator end,<%
+                        continue;
+                    }
+        %><%=_cppHelper.getCppMapping(op.getParams().get(i).getCxxType())%><%
+        %> <%=op.getParams().get(i).getName()%><%
+                    if (i == (numParams - 1)) {
+                        %>);<%
+                    } else {
+                        %>, <%
+                    }
+                } // end for params
+            } // end for operations
+
+            if (!isBULKIO) {
+                for (Attribute op : intf.getAttributes()) {
+%>
+        <%=op.getCxxReturnType()%><%=_cppHelper.varReturnValue(op.getCxxReturnType(), op.getReturnType())%> <%=op.getName()%>();
+
+<%
+                    if (!op.isReadonly()) {
+%>
+        void <%=op.getName()%>(<%=op.getCxxType()%> data);
+
+<%
+                    } // end if readonly
+                } // end for attributes
+            } else {
+%>
+        class linkStatistics
+        {
+            public:
+                struct statPoint {
+                    unsigned int elements;
+                    float queueSize;
+                    double secs;
+                    double usecs;
+                };
+                
+                linkStatistics() {
+<%
+                    if ("dataChar".equals(interfaceName)) {
+%>
+                    bitSize = sizeof(char) * 8.0;
+<%
+                    } else {
+%>
+                    bitSize = sizeof(<%=rawTransferType%>) * 8.0;
+<%
+                    }
+%>
+                    historyWindow = 10;
+                    activeStreamIDs.resize(0);
+                    receivedStatistics_idx = 0;
+                    receivedStatistics.resize(historyWindow);
+                    runningStats.elementsPerSecond = -1.0;
+                    runningStats.bitsPerSecond = -1.0;
+                    runningStats.callsPerSecond = -1.0;
+                    runningStats.averageQueueDepth = -1.0;
+                    runningStats.streamIDs.length(0);
+                    runningStats.timeSinceLastCall = -1;
+                    enabled = true;
+                };
+
+                void setEnabled(bool enableStats) {
+                    enabled = enableStats;
+                }
+
+                void update(unsigned int elementsReceived, float queueSize, bool EOS, std::string streamID) {
+                    if (!enabled) {
+                        return;
+                    }
+                    struct timeval tv;
+                    struct timezone tz;
+                    gettimeofday(&tv, &tz);
+                    receivedStatistics[receivedStatistics_idx].elements = elementsReceived;
+                    receivedStatistics[receivedStatistics_idx].queueSize = queueSize;
+                    receivedStatistics[receivedStatistics_idx].secs = tv.tv_sec;
+                    receivedStatistics[receivedStatistics_idx++].usecs = tv.tv_usec;
+                    receivedStatistics_idx = receivedStatistics_idx % historyWindow;
+                    if (!EOS) {
+                        std::list<std::string>::iterator p = activeStreamIDs.begin();
+                        bool foundStreamID = false;
+                        while (p != activeStreamIDs.end()) {
+                            if (*p == streamID) {
+                                foundStreamID = true;
+                                break;
+                            }
+                            p++;
+                        }
+                        if (!foundStreamID) {
+                            activeStreamIDs.push_back(streamID);
+                        }
+                    } else {
+                        std::list<std::string>::iterator p = activeStreamIDs.begin();
+                        while (p != activeStreamIDs.end()) {
+                            if (*p == streamID) {
+                                activeStreamIDs.erase(p);
+                                break;
+                            }
+                            p++;
+                        }
+                    }
+                };
+
+                BULKIO::PortStatistics retrieve() {
+                    if (!enabled) {
+                        return runningStats;
+                    }
+                    struct timeval tv;
+                    struct timezone tz;
+                    gettimeofday(&tv, &tz);
+
+                    int idx = (receivedStatistics_idx == 0) ? (historyWindow - 1) : (receivedStatistics_idx - 1);
+                    double front_sec = receivedStatistics[idx].secs;
+                    double front_usec = receivedStatistics[idx].usecs;
+                    double secDiff = tv.tv_sec - receivedStatistics[receivedStatistics_idx].secs;
+                    double usecDiff = (tv.tv_usec - receivedStatistics[receivedStatistics_idx].usecs) / ((double)1e6);
+
+                    double totalTime = secDiff + usecDiff;
+                    double totalData = 0;
+                    float queueSize = 0;
+                    int startIdx = (receivedStatistics_idx + 1) % historyWindow;
+                    for (int i = startIdx; i != receivedStatistics_idx; ) {
+                        totalData += receivedStatistics[i].elements;
+                        queueSize += receivedStatistics[i].queueSize;
+                        i = (i + 1) % historyWindow;
+                    }
+                    runningStats.bitsPerSecond = ((totalData * bitSize) / totalTime);
+                    runningStats.elementsPerSecond = (totalData / totalTime);
+                    runningStats.averageQueueDepth = (queueSize / historyWindow);
+                    runningStats.callsPerSecond = (double(historyWindow - 1) / totalTime);
+                    runningStats.timeSinceLastCall = (((double)tv.tv_sec) - front_sec) + (((double)tv.tv_usec - front_usec) / ((double)1e6));
+                    unsigned int streamIDsize = activeStreamIDs.size();
+                    std::list< std::string >::iterator p = activeStreamIDs.begin();
+                    runningStats.streamIDs.length(streamIDsize);
+                    for (unsigned int i = 0; i < streamIDsize; i++) {
+                        if (p == activeStreamIDs.end()) {
+                            break;
+                        }
+                        runningStats.streamIDs[i] = CORBA::string_dup((*p).c_str());
+                        p++;
+                    }
+                    return runningStats;
+                };
+
+            protected:
+                bool enabled;
+                double bitSize;
+                BULKIO::PortStatistics runningStats;
+                std::vector<statPoint> receivedStatistics;
+                std::list< std::string > activeStreamIDs;
+                unsigned long historyWindow;
+                int receivedStatistics_idx;
+        };
+
+        BULKIO::UsesPortStatisticsSequence * statistics()
+        {
+            boost::mutex::scoped_lock lock(updatingPortsLock);
+            BULKIO::UsesPortStatisticsSequence_var recStat = new BULKIO::UsesPortStatisticsSequence();
+            recStat->length(outConnections.size());
+            for (unsigned int i = 0; i < outConnections.size(); i++) {
+                recStat[i].connectionId = CORBA::string_dup(outConnections[i].second.c_str());
+                recStat[i].statistics = stats[outConnections[i].second].retrieve();
+            }
+            return recStat._retn();
+        };
+
+        BULKIO::PortUsageType state()
+        {
+            boost::mutex::scoped_lock lock(updatingPortsLock);
+            if (outConnections.size() > 0) {
+                return BULKIO::ACTIVE;
+            } else {
+                return BULKIO::IDLE;
+            }
+
+            return BULKIO::BUSY;
+        };
+        
+        void enableStats(bool enable)
+        {
+            for (unsigned int i = 0; i < outConnections.size(); i++) {
+                stats[outConnections[i].second].setEnabled(enable);
+            }
+        };
+
+<%
+            } // end ifBULKIO
+%>
+
+        ExtendedCF::UsesConnectionSequence * connections() 
+        {
+            boost::mutex::scoped_lock lock(updatingPortsLock);   // don't want to process while command information is coming in
+            if (recConnectionsRefresh) {
+                recConnections.length(outConnections.size());
+                for (unsigned int i = 0; i < outConnections.size(); i++) {
+                    recConnections[i].connectionId = CORBA::string_dup(outConnections[i].second.c_str());
+                    recConnections[i].port = CORBA::Object::_duplicate(outConnections[i].first);
+                }
+                recConnectionsRefresh = false;
+            }
+            ExtendedCF::UsesConnectionSequence_var retVal = new ExtendedCF::UsesConnectionSequence(recConnections);
+            // NOTE: You must delete the object that this function returns!
+            return retVal._retn();
+        };
+
+        void connectPort(CORBA::Object_ptr connection, const char* connectionId)
+        {
+            boost::mutex::scoped_lock lock(updatingPortsLock);   // don't want to process while command information is coming in
+            <%=nameSpace%>::<%=interfaceName%>_var port = <%=nameSpace%>::<%=interfaceName%>::_narrow(connection);
+            outConnections.push_back(std::make_pair(port, connectionId));
+            active = true;
+            recConnectionsRefresh = true;
+<%
+            if (pushPacketCall) {
+%>
+            refreshSRI = true;
+<%
+            }
+%>
+        };
+
+        void disconnectPort(const char* connectionId)
+        {
+            boost::mutex::scoped_lock lock(updatingPortsLock);   // don't want to process while command information is coming in
+            for (unsigned int i = 0; i < outConnections.size(); i++) {
+                if (outConnections[i].second == connectionId) {
+                    outConnections.erase(outConnections.begin() + i);
+                    break;
+                }
+            }
+
+            if (outConnections.size() == 0) {
+                active = false;
+            }
+            recConnectionsRefresh = true;
+        };
+
+        std::vector< std::pair<<%=nameSpace%>::<%=interfaceName%>_var, std::string> > _getConnections()
+        {
+            return outConnections;
+        };
+<%
+            if (isBULKIO) {
+%>
+        std::map<std::string, BULKIO::StreamSRI> currentSRIs;
+<%
+            } // end if isBULKIO
+%>
+
+    protected:
+        <%=PREFIX%>_i *parent;
+        std::vector < std::pair<<%=nameSpace%>::<%=interfaceName%>_var, std::string> > outConnections;
+        ExtendedCF::UsesConnectionSequence recConnections;
+        bool recConnectionsRefresh;
+<%
+            if (isBULKIO) {
+%>
+        std::map<std::string, linkStatistics> stats;
+<%
+            } // end if isBULKIO
+
+            for (Operation op : intf.getOperations()) {
+                int numParams = op.getParams().size();
+                if (!"pushSRI".equals(op.getName()) && !("pushPacket".equals(op.getName()) && (numParams == 4))) {
+                    for (int i = 0; i < numParams; i++) {
+                        String iteratorBase = _cppHelper.getBaseSequenceMapping(op.getParams().get(i).getCxxType());
+                        if (iteratorBase.length() > 11) {
+                            if (iteratorBase.startsWith("std::vector")) {
+                                String corbaBase = op.getParams().get(i).getCxxType();
+                                int beginingIndex = 0;
+                                if (corbaBase.startsWith("const")) {
+                                    beginingIndex = 6;
+                                }
+                                if (corbaBase.endsWith("&")) {
+                            %>
+    <%=corbaBase.substring(beginingIndex, corbaBase.length()-1)%><%
+                                } else {
+                            %>
+    <%=corbaBase.substring(beginingIndex, corbaBase.length())%><%
+                                }
+                        %> Sequence_<%=op.getName()%>_<%=i%>; <%
+                            }
+                        }
+                    } // end for params
+                } // end if not pushSRI && not pushPacket
+            } // end for operations
+
+%>
+};
+<%
+        }
+    } // end if genClassDef
+%>

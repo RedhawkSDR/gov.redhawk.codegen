@@ -1,0 +1,125 @@
+<%@ jet package="gov.redhawk.ide.codegen.jet.cplusplus.template.component.pull"
+imports="gov.redhawk.ide.RedhawkIdeActivator
+gov.redhawk.ide.codegen.CodegenUtil
+gov.redhawk.ide.codegen.ImplementationSettings
+gov.redhawk.ide.codegen.IPortTemplateDesc
+gov.redhawk.ide.codegen.IScaPortCodegenTemplate
+gov.redhawk.ide.codegen.PortRepToGeneratorMap
+gov.redhawk.ide.codegen.jet.TemplateParameter
+gov.redhawk.ide.codegen.jet.cplusplus.ports.PropertyChangeEventPortTemplate
+gov.redhawk.ide.codegen.jet.cplusplus.ports.PullPortTemplate
+gov.redhawk.model.sca.util.ModelUtil
+java.util.Arrays
+java.util.HashMap
+java.util.HashSet
+java.util.List
+java.util.Date
+mil.jpeojtrs.sca.scd.Provides
+mil.jpeojtrs.sca.scd.Uses
+mil.jpeojtrs.sca.spd.Implementation
+mil.jpeojtrs.sca.spd.SoftPkg
+org.eclipse.core.runtime.CoreException
+org.eclipse.core.runtime.IPath
+org.eclipse.core.runtime.Platform
+org.eclipse.core.runtime.IProduct
+org.eclipse.emf.common.util.EList"
+class="PullPortImplCppTemplate"
+skeleton="../../generator.skeleton2" 
+%><%
+    TemplateParameter templ = (TemplateParameter) argument;
+    ImplementationSettings implSettings = templ.getImplSettings();
+    Implementation impl = templ.getImpl();
+    SoftPkg softPkg = (SoftPkg) impl.eContainer();
+    String PREFIX = gov.redhawk.ide.codegen.util.CodegenFileHelper.getPreferredFilePrefix(softPkg, implSettings);
+    EList<Uses> uses = softPkg.getDescriptor().getComponent().getComponentFeatures().getPorts().getUses();
+    EList<Provides> provides = softPkg.getDescriptor().getComponent().getComponentFeatures().getPorts().getProvides();
+    HashSet<String> usesReps = new HashSet<String>();
+    HashSet<String> providesReps = new HashSet<String>();
+    List<IPath> search_paths = Arrays.asList(RedhawkIdeActivator.getDefault().getDefaultIdlIncludePath());
+    TemplateParameter portTempl = new TemplateParameter(impl, implSettings, search_paths);
+    HashMap<String, IScaPortCodegenTemplate> portMap = new HashMap<String, IScaPortCodegenTemplate>();
+    boolean includePropertyChange = false;
+    Date date = new Date(System.currentTimeMillis());
+    for (PortRepToGeneratorMap p : implSettings.getPortGenerators()) {
+        try {
+            IPortTemplateDesc template = CodegenUtil.getPortTemplate(p.getGenerator(), null);
+            if (template != null) {
+                portMap.put(p.getRepId(), template.getTemplate());
+            }
+        } catch (CoreException e) {
+            // TODO What to do here! Throw the exception and not generate anything?
+        }
+    }
+    for (Uses entry : uses) {
+        if (PropertyChangeEventPortTemplate.EVENTCHANNEL_REPID.equals(entry.getRepID()) 
+                && PropertyChangeEventPortTemplate.EVENTCHANNEL_NAME.equals(entry.getUsesName())) {
+            includePropertyChange = true;
+            continue;
+        }
+        usesReps.add(entry.getRepID());
+    }
+    for (Provides entry : provides) {
+        providesReps.add(entry.getRepID());
+    }
+%>
+/*******************************************************************************************
+
+    AUTO-GENERATED CODE. DO NOT MODIFY
+
+ 	Source: <%=ModelUtil.getSpdFileName(softPkg)%>
+ 	Generated on: <%= date.toString() %>
+<%
+	String[] output;
+	IProduct product = Platform.getProduct();
+	if (product != null) {
+		output = product.getProperty("aboutText").split("\n");
+%>
+ 	<%=output[0]%>
+ 	<%=output[1]%>
+ 	<%=output[2]%>
+<%
+	}
+%>
+
+*******************************************************************************************/
+
+#include "<%=PREFIX%>.h"
+<%
+    if (includePropertyChange) {
+%>
+<%=new PropertyChangeEventPortTemplate().generateClassImplementation(null, false, softPkg, implSettings, portTempl, CodegenUtil.CPP)%>
+<%
+    }
+    for (String intName : usesReps) {
+        IScaPortCodegenTemplate gen = portMap.get(intName);
+        portTempl.setPortRepId(intName);
+        portTempl.setGenSupport(false);
+        portTempl.setGenClassDef(false);
+        portTempl.setGenClassImpl(true);
+        if (gen != null) {
+%>
+<%=gen.generateClassImplementation(intName, false, softPkg, implSettings, portTempl, CodegenUtil.CPP)%>
+<%
+        } else {
+%>
+<%=new PullPortTemplate().generateClassImplementation(intName, false, softPkg, implSettings, portTempl, CodegenUtil.CPP)%>
+<%
+        }
+    }
+    for (String intName : providesReps) {
+        IScaPortCodegenTemplate gen = portMap.get(intName);
+        portTempl.setPortRepId(intName);
+        portTempl.setGenSupport(false);
+        portTempl.setGenClassDef(false);
+        portTempl.setGenClassImpl(true);
+        if (gen != null) {
+%>
+<%=gen.generateClassImplementation(intName, true, softPkg, implSettings, portTempl, CodegenUtil.CPP)%>
+<%
+        } else {
+%>
+<%=new PullPortTemplate().generateClassImplementation(intName, true, softPkg, implSettings, portTempl, CodegenUtil.CPP)%>
+<%
+        }
+    }
+%>

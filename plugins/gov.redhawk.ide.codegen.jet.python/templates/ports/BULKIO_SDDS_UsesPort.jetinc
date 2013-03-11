@@ -1,0 +1,248 @@
+class Port<%=PortHelper.idlToCamelPortClass(tempUse.getRepID())%>Out_i(<%=PREFIX%>_base.Port<%=PortHelper.idlToCamelPortClass(tempUse.getRepID())%>Out):
+    class linkStatistics:
+        class statPoint:
+            def __init__(self):
+                self.elements = 0
+                self.queueSize = 0.0
+                self.secs = 0.0
+                self.streamID = ""
+
+        def __init__(self, port_ref):
+            self.enabled = True
+            self.bitSize = 8
+            self.historyWindow = 10
+            self.receivedStatistics = {}
+            self.port_ref = port_ref
+            self.receivedStatistics_idx = {}
+
+        def setBitSize(self, _bitSize):
+            self.bitSize = _bitSize
+
+        def setEnabled(self, enableStats):
+            self.enabled = enableStats
+
+        def update(self, elementsReceived, queueSize, streamID, connectionId):
+            if not self.enabled:
+                return
+
+            if self.receivedStatistics.has_key(connectionId):
+                self.receivedStatistics[connectionId][self.receivedStatistics_idx[connectionId]].elements = elementsReceived
+                self.receivedStatistics[connectionId][self.receivedStatistics_idx[connectionId]].queueSize = queueSize
+                self.receivedStatistics[connectionId][self.receivedStatistics_idx[connectionId]].secs = time.time()
+                self.receivedStatistics[connectionId][self.receivedStatistics_idx[connectionId]].streamID = streamID
+                self.receivedStatistics_idx[connectionId] += 1
+                self.receivedStatistics_idx[connectionId] = self.receivedStatistics_idx[connectionId]%self.historyWindow
+            else:
+                self.receivedStatistics[connectionId] = []
+                self.receivedStatistics_idx[connectionId] = 0
+                for i in range(self.historyWindow):
+                    self.receivedStatistics[connectionId].append(self.statPoint())
+                self.receivedStatistics[connectionId][self.receivedStatistics_idx[connectionId]].elements = elementsReceived
+                self.receivedStatistics[connectionId][self.receivedStatistics_idx[connectionId]].queueSize = queueSize
+                self.receivedStatistics[connectionId][self.receivedStatistics_idx[connectionId]].secs = time.time()
+                self.receivedStatistics[connectionId][self.receivedStatistics_idx[connectionId]].streamID = streamID
+                self.receivedStatistics_idx[connectionId] += 1
+                self.receivedStatistics_idx[connectionId] = self.receivedStatistics_idx[connectionId] % self.historyWindow
+
+        def retrieve(self):
+            if not self.enabled:
+                return
+
+            retVal = []
+            for entry in self.receivedStatistics:
+                runningStats = BULKIO.PortStatistics(portName=self.port_ref.name,averageQueueDepth=-1,elementsPerSecond=-1,bitsPerSecond=-1,callsPerSecond=-1,streamIDs=[],timeSinceLastCall=-1,keywords=[])
+
+                listPtr = (self.receivedStatistics_idx[entry] + 1) % self.historyWindow    # don't count the first set of data, since we're looking at change in time rather than absolute time
+                frontTime = self.receivedStatistics[entry][(self.receivedStatistics_idx[entry] - 1) % self.historyWindow].secs
+                backTime = self.receivedStatistics[entry][self.receivedStatistics_idx[entry]].secs
+                totalData = 0.0
+                queueSize = 0.0
+                streamIDs = []
+                while (listPtr != self.receivedStatistics_idx[entry]):
+                    totalData += self.receivedStatistics[entry][listPtr].elements
+                    queueSize += self.receivedStatistics[entry][listPtr].queueSize
+                    streamIDptr = 0
+                    foundstreamID = False
+                    while (streamIDptr != len(streamIDs)):
+                        if (streamIDs[streamIDptr] == self.receivedStatistics[entry][listPtr].streamID):
+                            foundstreamID = True
+                            break
+                        streamIDptr += 1
+                    if (not foundstreamID):
+                        streamIDs.append(self.receivedStatistics[entry][listPtr].streamID)
+                    listPtr += 1
+                    listPtr = listPtr % self.historyWindow
+
+                currentTime = time.time()
+                totalTime = currentTime - backTime
+                if totalTime == 0:
+                    totalTime = 1e6
+                receivedSize = len(self.receivedStatistics[entry])
+                runningStats.bitsPerSecond = (totalData * self.bitSize) / totalTime
+                runningStats.elementsPerSecond = totalData/totalTime
+                runningStats.averageQueueDepth = queueSize / receivedSize
+                runningStats.callsPerSecond = float((receivedSize - 1)) / totalTime
+                runningStats.streamIDs = streamIDs
+                runningStats.timeSinceLastCall = currentTime - frontTime
+                usesPortStat = BULKIO.UsesPortStatistics(connectionId=entry, statistics=runningStats)
+                retVal.append(usesPortStat)
+            return retVal
+
+    def __init__(self, parent, name, max_attachments=1):
+        self.parent = parent
+        self.name = name
+        self.max_attachments = max_attachments
+        self.outPorts = {} # key=connection_id,  value=port
+        self.attachedGroup = {} # key=connection_id,  value=attach_id
+        self.lastStreamData = None
+        self.lastName = None
+        self.defaultStreamSRI = BULKIO.StreamSRI(1, 0.0, 0.001, 1, 200, 0.0, 0.001, 1, 1, "sampleStream", False, [])
+        self.defaultTime = BULKIO.PrecisionUTCTime(0, 0, 0, 0, 0)
+        self.port_lock = threading.Lock()
+        self.stats = self.linkStatistics(self)
+        self.sriDict = {} # key=streamID  value=(StreamSRI, PrecisionUTCTime)
+    
+    def setBitSize(self, bitSize):
+        self.stats.setBitSize(bitSize)
+
+    def enableStats(self, enabled):
+        self.stats.setEnabled(enabled)
+        
+    def updateStats(self, elementsReceived, queueSize, streamID, connectionId):
+        self.port_lock.acquire()
+        try:
+            self.stats.update(elementsReceived, queueSize, streamID, connectionId)
+        finally:
+            self.port_lock.release()
+
+    def _get_connections(self):
+        currentConnections = []
+        self.port_lock.acquire()
+        try:
+            for id_, port in self.outPorts.items():
+                currentConnections.append(ExtendedCF.UsesConnection(id_, port))
+        finally:
+            self.port_lock.release()
+        return currentConnections
+
+    def _get_statistics(self):
+        self.port_lock.acquire()
+        try:
+            recStat = self.stats.retrieve()
+        finally:
+            self.port_lock.release()
+        return recStat
+
+    def _get_state(self):
+        if len(self._attachedStreams.values()) == 0:
+            return BULKIO.IDLE
+        # default behavior is to limit to one connection
+        elif len(self._attachedStreams.values()) == 1:
+            return BULKIO.BUSY
+        else:
+            return BULKIO.ACTIVE
+
+    def _get_attachedSRIs(self):
+        sris = []
+        self.port_lock.acquire()
+        try:
+            for entry in self.sriDict:
+                sri, t = self.sriDict[entry]
+                sris.append(copy.deepcopy(sri))
+        finally:
+            self.port_lock.release()
+        return sris
+
+    def connectPort(self, connection, connectionId):
+        self.port_lock.acquire()
+        try:
+            port = connection._narrow(<%=nameSpace%>.<%=interfaceName%>)
+            self.outPorts[str(connectionId)] = port
+            if self.lastStreamData:
+                self.attachedGroup[str(connectionId)] = port.attach(self.lastStreamData, self.lastName)
+        finally:
+            self.port_lock.release()
+    
+    def disconnectPort(self, connectionId):
+        self.port_lock.acquire()
+        try:
+            entry = self.outPorts.pop(str(connectionId), None)
+            if connectionId in self.attachedGroup:
+                try:
+                    entry.detach(self.attachedGroup.pop(connectionId))
+                except:
+                    self.parent._log.exception("Unable to detach %s, should not have happened", str(connectionId))
+        finally:
+            self.port_lock.release()
+
+    def detach(self, attachId=None, connectionId=None):
+        self.port_lock.acquire()
+        try:
+            if attachId == None:
+                for entry in self.outPorts:
+                    try:
+                        if entry in self.attachedGroup:
+                            if connectionId == None or entry == connectionId:
+                                self.outPorts[entry].detach(self.attachedGroup[entry])
+                                self.attachedGroup.pop(entry)
+                    except:
+                        self.parent._log.exception("Unable to detach %s", str(entry))
+                self.lastStreamData = None
+                self.lastName = None
+            else:
+                for entry in self.attachedGroup:
+                    try:
+                        if self.attachedGroup[entry] == attachId:
+                            if entry in self.outPorts:
+                                if connectionId == None or entry == connectionId:
+                                    self.outPorts[entry].detach(self.attachedGroup[entry])
+                            self.attachedGroup.pop(entry)
+                            if len(self.attachedGroup) == 0:
+                                self.lastStreamData = None
+                                self.lastName = None
+                            break
+                    except:
+                        self.parent._log.exception("Unable to detach %s", str(entry))
+        finally:
+            self.port_lock.release()
+    
+    def attach(self, streamData, name):
+        ids = []
+        self.port_lock.acquire()
+        try:
+            for entry in self.outPorts:
+                try:
+                    if entry in self.attachedGroup:
+                        self.outPorts[entry].detach(self.attachedGroup[entry])
+                    self.attachedGroup[entry] = self.outPorts[entry].attach(streamData, name)
+                    ids.append(self.attachedGroup[entry])
+                except:
+                    self.parent._log.exception("Unable to deliver update to %s", str(entry))
+            self.lastStreamData = streamData
+            self.lastName = name
+        finally:
+            self.port_lock.release()
+        return ids
+
+    def getStreamDefinition(self, attachId):
+        return self.lastStreamData
+
+    def getUser(self, attachId):
+        return self.lastName
+    
+    def pushSRI(self, H, T):
+        self.port_lock.acquire()
+        self.sriDict[H.streamID] = (copy.deepcopy(H), copy.deepcopy(T))
+        self.defaultStreamSRI = H
+        self.defaultTime = T
+        try:
+            try:
+                for connId, port in self.outPorts.items():
+                    if port != None:
+                        port.pushSRI(H, T)
+            except Exception:
+                self.parent._log.exception("The call to pushSRI failed on port %s connection %s instance %s", self.name, connId, port)
+        finally:
+            self.refreshSRI = False
+            self.port_lock.release()
+        

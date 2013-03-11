@@ -1,0 +1,23 @@
+<%@ jet package="gov.redhawk.ide.idl.generator.internal"
+imports="gov.redhawk.ide.idl.generator.newidl.GeneratorArgs"
+class="SampleIdlTemplate"
+skeleton="../generator.skeleton"
+%>
+<%
+	GeneratorArgs args = (GeneratorArgs) argument;
+	String interfaceName = args.getInterfaceName() + "Interfaces";
+	String idlModuleName = interfaceName.split("Interfaces")[0].toUpperCase();
+%>
+#ifndef _<%=idlModuleName%>_IDL_
+#define _<%=idlModuleName%>_IDL_
+
+module <%=idlModuleName%> {
+
+	// TODO define interfaces and data types here
+	interface SampleInterface {
+	    string echo(in string msg);
+	};
+	
+};
+
+#endif

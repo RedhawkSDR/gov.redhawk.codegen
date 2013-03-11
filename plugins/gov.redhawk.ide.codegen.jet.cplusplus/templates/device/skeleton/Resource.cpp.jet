@@ -1,0 +1,106 @@
+<%@ jet package="gov.redhawk.ide.codegen.jet.cplusplus.template.device.skeleton"
+imports="gov.redhawk.ide.codegen.ImplementationSettings
+gov.redhawk.ide.codegen.jet.TemplateParameter
+gov.redhawk.ide.preferences.RedhawkIdePreferenceConstants
+mil.jpeojtrs.sca.scd.SupportsInterface
+mil.jpeojtrs.sca.spd.SoftPkg"
+class="DResourceCppTemplate" 
+skeleton="../../generator.skeleton"
+%>
+<%
+    TemplateParameter templ = (TemplateParameter) argument;
+    ImplementationSettings implSettings = templ.getImplSettings();
+    SoftPkg softPkg = (SoftPkg) templ.getImpl().eContainer();
+    String PREFIX = gov.redhawk.ide.codegen.util.CodegenFileHelper.getPreferredFilePrefix(softPkg, implSettings);
+    String deviceType = softPkg.getDescriptor().getComponent().getComponentType();
+    boolean aggregateDevice = false;
+    if (deviceType.contains(RedhawkIdePreferenceConstants.EXECUTABLE_DEVICE.toLowerCase())) {
+        deviceType = "Executable";
+    } else if (deviceType.contains(RedhawkIdePreferenceConstants.LOADABLE_DEVICE.toLowerCase())) {
+        deviceType = "Loadable";
+    } else { 
+        deviceType = "";
+    } 
+    if (RedhawkIdePreferenceConstants.LOADABLE_DEVICE.toLowerCase().equals(deviceType)) {
+        deviceType = "Loadable";
+    }
+	for (SupportsInterface inter : softPkg.getDescriptor().getComponent().getComponentFeatures().getSupportsInterface()) {
+		if (inter.getSupportsName().contains(RedhawkIdePreferenceConstants.AGGREGATE_DEVICE)) {
+			aggregateDevice = true;
+		}
+	}
+%> 
+
+#include "<%=PREFIX%>.h"
+
+<%=PREFIX%>_i::<%=PREFIX%>_i(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl) :
+          <%=deviceType%>Device_impl (devMgr_ior, id, lbl, sftwrPrfl) <% if (aggregateDevice) {%>, AggregateDevice_impl ()<% }%>{
+    initResource(devMgr_ior, id, lbl, sftwrPrfl);
+};
+
+<%=PREFIX%>_i::<%=PREFIX%>_i(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, char *compDev) :
+          <%=deviceType%>Device_impl (devMgr_ior, id, lbl, sftwrPrfl, compDev) <% if (aggregateDevice) {%>, AggregateDevice_impl ()<% }%>{
+    initResource(devMgr_ior, id, lbl, sftwrPrfl);
+};
+
+<%=PREFIX%>_i::<%=PREFIX%>_i(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, CF::Properties capacities) :
+          <%=deviceType%>Device_impl (devMgr_ior, id, lbl, sftwrPrfl) <% if (aggregateDevice) {%>, AggregateDevice_impl ()<% }%>{
+    initResource(devMgr_ior, id, lbl, sftwrPrfl);
+};
+
+<%=PREFIX%>_i::<%=PREFIX%>_i(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, CF::Properties capacities, char *compDev) :
+          <%=deviceType%>Device_impl (devMgr_ior, id, lbl, sftwrPrfl, compDev) <% if (aggregateDevice) {%>, AggregateDevice_impl ()<% }%>{
+    initResource(devMgr_ior, id, lbl, sftwrPrfl);
+};
+
+void <%=PREFIX%>_i::initResource(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl) 
+{
+    // component_alive flag is turned to false to terminate the main processing thread
+    component_alive = true;
+    naming_service_name = lbl;
+
+    // this is the signal used to tell the main procesing thread that information is ready
+    //  it is thrown by the input (provides) port when data is ready
+    data_in_signal = new omni_condition(&data_in_signal_lock);
+
+    //Initialize variables
+
+    thread_started = false;
+};
+	  
+<%=PREFIX%>_i::~<%=PREFIX%>_i() {
+};
+
+CORBA::Boolean <%=PREFIX%>_i::allocateCapacity (const CF::Properties & capacities)
+    throw (CORBA::SystemException, CF::Device::InvalidCapacity, CF::Device::InvalidState) 
+{
+	// Allocate the space needed for the following capacities.
+    // TODO
+    return true;
+}
+
+void <%=PREFIX%>_i::deallocateCapacity (const CF::Properties & capacities)
+	throw (CORBA::SystemException, CF::Device::InvalidCapacity, CF::Device::InvalidState) 
+{
+	// Free up space as specified by capacities.
+	// TODO
+}
+
+CORBA::Object_ptr <%=PREFIX%>_i::getPort( const char* _id )
+	throw (CF::PortSupplier::UnknownPort, CORBA::SystemException)
+{
+	// This function will return an object reference for the named port which in turn will be used to establish a connection
+	// between two separate ports possible.
+	
+	// TODO
+	return NULL;
+}
+
+void <%=PREFIX%>_i::releaseObject()
+	throw (CF::LifeCycle::ReleaseError, CORBA::SystemException)
+{
+	// This is the part of the code where you will put in the logic that will appropriately cleanup
+	// your component.  It is appropriate to do Memory Cleanup here since
+	// CORBA doesn't like any cleaning up done in the Destructor.
+	// TODO
+}

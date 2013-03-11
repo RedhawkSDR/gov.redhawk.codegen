@@ -1,0 +1,86 @@
+<%@ jet package="gov.redhawk.ide.codegen.jet.java.template"
+imports="gov.redhawk.ide.codegen.ImplementationSettings
+gov.redhawk.ide.codegen.jet.TemplateParameter
+gov.redhawk.ide.codegen.util.AutoMakeUtil
+gov.redhawk.model.sca.util.ModelUtil
+java.util.HashSet
+mil.jpeojtrs.sca.scd.SoftwareComponent
+mil.jpeojtrs.sca.scd.ComponentType
+mil.jpeojtrs.sca.scd.Ports
+mil.jpeojtrs.sca.scd.Provides
+mil.jpeojtrs.sca.scd.Uses
+mil.jpeojtrs.sca.spd.Implementation
+mil.jpeojtrs.sca.spd.SoftPkg
+org.eclipse.core.resources.IResource
+org.eclipse.core.runtime.CoreException
+org.eclipse.emf.common.util.EList"
+class="MakefileAmTemplate"
+skeleton="../generator.skeleton2"
+%><%
+    TemplateParameter template = (TemplateParameter) argument;
+    ImplementationSettings implSettings = template.getImplSettings();
+    Implementation impl = template.getImpl();
+    SoftPkg softPkg = (SoftPkg) impl.eContainer();
+    Ports ports = softPkg.getDescriptor().getComponent().getComponentFeatures().getPorts();
+    EList<Provides> provides = ports.getProvides();
+    EList<Uses> uses = ports.getUses();
+    IResource resource = ModelUtil.getResource(implSettings);
+    
+    String sdrSubDir = "dom";
+    String subFolder = "components";
+
+    SoftwareComponent component = softPkg.getDescriptor().getComponent();
+    final ComponentType scdComponentType = SoftwareComponent.Util.getWellKnownComponentType(component); 
+    if (scdComponentType == ComponentType.DEVICE) {
+    	sdrSubDir = "dev";
+     	subFolder = "devices";
+    } else if (scdComponentType == ComponentType.SERVICE) {
+    	sdrSubDir = "dev";
+     	subFolder = "services";
+    }
+    
+    String xmlLocation = "";
+    for (String temp : implSettings.getOutputDir().split("/")) {
+    	if (temp.length() > 1) {
+    		xmlLocation += "../";
+    	}
+    }
+    
+    // Get a list of all the packages for the uses ports
+    HashSet<String> packages = new HashSet<String>();
+    for (Uses entry : uses) {
+        if (!(entry.getRepID().equals("IDL:omg.org/CosEventChannelAdmin/EventChannel:1.0") && entry.getUsesName().equals("propEvent"))) {
+		    final String[] ints = entry.getRepID().split(":")[1].split("/");
+            packages.add(ints[ints.length - 2]);
+        }
+    }
+    // Get a list of all the packages for the provides ports
+    for (Provides entry : provides) {
+		final String[] ints = entry.getRepID().split(":")[1].split("/");
+        packages.add(ints[ints.length - 2]);
+    }
+    
+    final String amDerivedVar = AutoMakeUtil.createDerivedVariableName(gov.redhawk.ide.codegen.util.CodegenFileHelper.getPreferredFilePrefix(softPkg, implSettings));
+%>
+<%=gov.redhawk.ide.codegen.util.CodegenFileHelper.getPreferredFilePrefix(softPkg, implSettings)%>.jar: $(<%=amDerivedVar%>_jar_SOURCES)
+	mkdir -p bin
+	$(JAVAC) -cp $(OSSIE_HOME)/lib/CFInterfaces.jar:$(OSSIE_HOME)/lib/log4j-1.2.15.jar:$(OSSIE_HOME)/lib/ossie.jar<%
+    for (String pack : packages) {
+        %>:$(OSSIE_HOME)/lib/<%=pack%>Interfaces.jar<%
+    }
+%> -d bin $(<%=amDerivedVar%>_jar_SOURCES)
+	$(JAR) cf ./<%=gov.redhawk.ide.codegen.util.CodegenFileHelper.getPreferredFilePrefix(softPkg, implSettings)%>.jar -C bin .
+
+clean-local:
+	rm -rf bin
+
+ossieName = <%=gov.redhawk.ide.codegen.util.CodegenFileHelper.getPreferredFilePrefix(softPkg, implSettings)%>
+bindir = $(prefix)/<%=sdrSubDir%>/<%=subFolder%>/<%=resource.getProject().getName()%>/<%=implSettings.getOutputDir()%>/
+bin_PROGRAMS = <%=gov.redhawk.ide.codegen.util.CodegenFileHelper.getPreferredFilePrefix(softPkg, implSettings)%>.jar
+<%=amDerivedVar%>_jar_SOURCES := $(shell find ./src -name "*.java")
+
+xmldir = $(prefix)/<%=sdrSubDir%>/<%=subFolder%>/<%=resource.getProject().getName()%>/
+dist_xml_DATA = <%=xmlLocation%><%=ModelUtil.getPrfFileName(softPkg.getPropertyFile())%> <%=xmlLocation%><%=ModelUtil.getScdFileName(softPkg)%> <%=xmlLocation%><%=ModelUtil.getSpdFileName(softPkg)%> 
+
+<%=sdrSubDir%>dir = $(prefix)/<%=sdrSubDir%>/<%=subFolder%>/<%=resource.getProject().getName()%>/<%=implSettings.getOutputDir()%>/
+dist_<%=sdrSubDir%>_SCRIPTS = startJava.sh

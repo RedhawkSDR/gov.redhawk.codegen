@@ -1,0 +1,581 @@
+<%@ jet package="gov.redhawk.ide.codegen.jet.cplusplus.template.component.pull"
+imports="gov.redhawk.ide.codegen.CodegenUtil
+gov.redhawk.ide.codegen.IPortTemplateDesc
+gov.redhawk.ide.codegen.IScaPortCodegenTemplate
+gov.redhawk.ide.codegen.ImplementationSettings
+gov.redhawk.ide.codegen.PortRepToGeneratorMap
+gov.redhawk.ide.codegen.Property
+gov.redhawk.ide.codegen.cplusplus.CppHelper
+gov.redhawk.ide.codegen.jet.TemplateParameter
+gov.redhawk.ide.codegen.jet.cplusplus.CplusplusJetGeneratorPlugin
+gov.redhawk.ide.codegen.jet.cplusplus.CppProperties
+gov.redhawk.ide.codegen.jet.cplusplus.ports.PropertyChangeEventPortTemplate
+gov.redhawk.ide.codegen.jet.cplusplus.ports.MessagingPortTemplate
+gov.redhawk.ide.codegen.jet.cplusplus.ports.PullPortTemplate
+gov.redhawk.model.sca.util.ModelUtil
+gov.redhawk.ide.idl.IdlUtil
+gov.redhawk.ide.idl.Interface
+gov.redhawk.ide.idl.Operation
+gov.redhawk.ide.RedhawkIdeActivator
+
+java.util.Arrays
+java.util.HashMap
+java.util.List
+java.util.Map
+java.util.Date
+
+mil.jpeojtrs.sca.scd.Ports
+mil.jpeojtrs.sca.scd.Provides
+mil.jpeojtrs.sca.scd.SupportsInterface
+mil.jpeojtrs.sca.scd.Uses
+mil.jpeojtrs.sca.spd.Implementation
+mil.jpeojtrs.sca.spd.SoftPkg
+
+org.eclipse.core.runtime.CoreException
+org.eclipse.core.runtime.IPath
+org.eclipse.core.runtime.IStatus
+org.eclipse.core.runtime.Status
+org.eclipse.core.runtime.Platform
+org.eclipse.core.runtime.IProduct
+org.eclipse.emf.common.util.EList"
+
+class="PullResourceBaseCppTemplate"
+skeleton="../../generator.skeleton2"
+%>
+<%
+    TemplateParameter templ = (TemplateParameter) argument;
+    ImplementationSettings implSettings = templ.getImplSettings();
+    Implementation impl = templ.getImpl();
+    SoftPkg softPkg = (SoftPkg) impl.eContainer();
+    String PREFIX = gov.redhawk.ide.codegen.util.CodegenFileHelper.getPreferredFilePrefix(softPkg, implSettings);
+    List<CppProperties.Property> properties = CppProperties.getProperties(softPkg);
+    Ports ports = softPkg.getDescriptor().getComponent().getComponentFeatures().getPorts();
+    EList<Provides> provides = ports.getProvides();
+    EList<Uses> uses = ports.getUses();
+    List<IPath> search_paths = Arrays.asList(RedhawkIdeActivator.getDefault().getDefaultIdlIncludePath());
+    TemplateParameter portTempl = new TemplateParameter(impl, implSettings, search_paths);
+    boolean autoStart = false;
+    Date date = new Date(System.currentTimeMillis());
+    for (Property tempProp : implSettings.getProperties()) {
+        if ("auto_start".equals(tempProp.getId())) {
+            if (Boolean.parseBoolean(tempProp.getValue())) {
+                autoStart = true;
+                break;
+            }
+        }
+    }
+    
+    HashMap<String, IScaPortCodegenTemplate> portMap = new HashMap<String, IScaPortCodegenTemplate>();
+    for (PortRepToGeneratorMap p : implSettings.getPortGenerators()) {
+        try {
+            IPortTemplateDesc template = CodegenUtil.getPortTemplate(p.getGenerator(), null);
+            if (template != null) {
+                portMap.put(p.getRepId(), template.getTemplate());
+            }
+        } catch (CoreException e) {
+            // TODO What to do here! Throw the exception and not generate anything?
+        }
+    }
+    String deviceType = "";
+    boolean aggregateDevice = false;
+
+    // TODO: Refactor this long block of code (and other similar blocks) into one handy place that can just give you an enum
+    final List<SupportsInterface> supportedInterfaces = softPkg.getDescriptor().getComponent().getComponentFeatures().getSupportsInterface();
+    for (SupportsInterface inter : supportedInterfaces) {
+        if (inter.getRepId().equals("IDL:CF/Device:1.0")) {
+            deviceType = "";
+            break;
+        }
+    }
+
+    for (SupportsInterface inter : supportedInterfaces) {
+        if (inter.getRepId().equals("IDL:CF/LoadableDevice:1.0")) {
+            deviceType = "Loadable"; 
+            break;
+        }
+    }
+
+    for (SupportsInterface inter : supportedInterfaces) {
+        if (inter.getRepId().equals("IDL:CF/ExecutableDevice:1.0")) {
+            deviceType = "Executable"; 
+            break;
+        }
+    }
+
+    for (SupportsInterface inter : supportedInterfaces) {
+        if (inter.getRepId().equals("IDL:CF/AggregateDevice:1.0")) {
+            aggregateDevice = true;
+            break;
+        }
+    }
+%>
+
+#include "<%=PREFIX%>_base.h"
+
+/*******************************************************************************************
+
+    AUTO-GENERATED CODE. DO NOT MODIFY
+    
+ 	Source: <%=ModelUtil.getSpdFileName(softPkg)%>
+ 	Generated on: <%= date.toString() %>
+<%
+	String[] output;
+	IProduct product = Platform.getProduct();
+	if (product != null) {
+		output = product.getProperty("aboutText").split("\n");
+%>
+ 	<%=output[0]%>
+ 	<%=output[1]%>
+ 	<%=output[2]%>
+<%
+	}
+%>
+
+*******************************************************************************************/
+
+/******************************************************************************************
+
+    The following class functions are for the base class for the component class. To
+    customize any of these functions, do not modify them here. Instead, overload them
+    on the child class
+
+******************************************************************************************/
+
+<%
+    if (!templ.isDevice()) {
+%> 
+<%=PREFIX%>_base::<%=PREFIX%>_base(const char *uuid, const char *label) :
+                                     Resource_impl(uuid, label), serviceThread(0) {
+    construct();
+}
+<%
+    } else {
+%>
+<%=PREFIX%>_base::<%=PREFIX%>_base(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl) :
+          <%=deviceType%>Device_impl (devMgr_ior, id, lbl, sftwrPrfl) <%
+        if (aggregateDevice) {
+%>, AggregateDevice_impl ()<%
+        }
+%>, serviceThread(0){
+    construct();
+}
+
+<%=PREFIX%>_base::<%=PREFIX%>_base(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, char *compDev) :
+          <%=deviceType%>Device_impl (devMgr_ior, id, lbl, sftwrPrfl, compDev) <%
+        if (aggregateDevice) {
+%>, AggregateDevice_impl ()<%
+        }
+%>, serviceThread(0){
+    construct();
+}
+
+<%=PREFIX%>_base::<%=PREFIX%>_base(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, CF::Properties capacities) :
+          <%=deviceType%>Device_impl (devMgr_ior, id, lbl, sftwrPrfl) <%
+        if (aggregateDevice) {
+%>, AggregateDevice_impl ()<%
+        }
+%>, serviceThread(0){
+    construct();
+}
+
+<%=PREFIX%>_base::<%=PREFIX%>_base(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, CF::Properties capacities, char *compDev) :
+          <%=deviceType%>Device_impl (devMgr_ior, id, lbl, sftwrPrfl, compDev) <%
+        if (aggregateDevice) {
+%>, AggregateDevice_impl ()<%
+        }
+%>, serviceThread(0){
+    construct();
+}
+<%}%>
+
+void <%=PREFIX%>_base::construct()
+{
+    Resource_impl::_started = false;
+    loadProperties();
+    serviceThread = 0;
+    
+    PortableServer::ObjectId_var oid;
+<%
+    for (Provides pro : provides) {
+        String entry = pro.getRepID();
+        IScaPortCodegenTemplate gen = portMap.get(entry);
+        portTempl.setPortRepId(entry);
+        portTempl.setPortName(pro.getProvidesName());
+        portTempl.setProvidesPort(true);
+        portTempl.setGenSupport(false);
+        portTempl.setGenClassDef(false);
+        portTempl.setGenClassImpl(false);
+        String inst = null;
+        if (MessagingPortTemplate.MESSAGECHANNEL_REPID.equals(entry)) {
+            inst = new MessagingPortTemplate().generateClassInstantiator(entry, true, softPkg, implSettings, portTempl, CodegenUtil.CPP);
+            inst += "(\""+pro.getProvidesName()+"\")";
+        } else if (gen != null) {
+            inst = gen.generateClassInstantiator(entry, true, softPkg, implSettings, portTempl, CodegenUtil.CPP);
+        } else {
+            inst = new PullPortTemplate().generateClassInstantiator(entry, true, softPkg, implSettings, portTempl, CodegenUtil.CPP);
+        }
+%>
+    <%=pro.getProvidesName()%> = new <%=inst.trim()%>;
+    oid = ossie::corba::RootPOA()->activate_object(<%=pro.getProvidesName()%>);
+<%
+    }
+    for (Uses use : uses) {
+        String entry = use.getRepID();
+        IScaPortCodegenTemplate gen = portMap.get(entry);
+        portTempl.setPortRepId(entry);
+        portTempl.setPortName(use.getUsesName());
+        portTempl.setProvidesPort(false);
+        portTempl.setGenSupport(false);
+        portTempl.setGenClassDef(false);
+        portTempl.setGenClassImpl(false);
+        String inst = null;
+        // Loop over provides ports to see if there is a matching interface and port name for the current uses port
+        // If so, ignore the uses port
+        // This is to support bi-directional ports
+        boolean foundMatchingProvides = false;
+        for (Provides pro : provides) {
+            String entryProvides = pro.getRepID();
+            if (entry.equals(entryProvides) && use.getUsesName().equals(pro.getProvidesName())) {
+                foundMatchingProvides = true;
+                break;
+            }
+        }
+        if (foundMatchingProvides == false){
+            if (PropertyChangeEventPortTemplate.EVENTCHANNEL_REPID.equals(entry) 
+                    && PropertyChangeEventPortTemplate.EVENTCHANNEL_NAME.equals(use.getUsesName())) {
+                inst = new PropertyChangeEventPortTemplate().generateClassInstantiator(entry, false, softPkg, implSettings, portTempl, CodegenUtil.CPP);
+                inst += "(\""+use.getUsesName()+"\")";
+            } else if (MessagingPortTemplate.MESSAGECHANNEL_REPID.equals(entry)) {
+        
+                inst = new MessagingPortTemplate().generateClassInstantiator(entry, false, softPkg, implSettings, portTempl, CodegenUtil.CPP);
+                inst += "(\""+use.getUsesName()+"\")";
+            
+            } else if (gen != null) {
+                inst = gen.generateClassInstantiator(entry, false, softPkg, implSettings, portTempl, CodegenUtil.CPP);
+            } else {
+                inst = new PullPortTemplate().generateClassInstantiator(entry, false, softPkg, implSettings, portTempl, CodegenUtil.CPP);
+            }
+%>
+    <%=use.getUsesName()%> = new <%=inst.trim()%>;
+    oid = ossie::corba::RootPOA()->activate_object(<%=use.getUsesName()%>);
+<%
+    	    if (PropertyChangeEventPortTemplate.EVENTCHANNEL_REPID.equals(entry) 
+                    && PropertyChangeEventPortTemplate.EVENTCHANNEL_NAME.equals(use.getUsesName())) {
+	    		for (CppProperties.Property prop : properties) {
+            		if (prop.getKinds().indexOf("event") != -1) {
+%>
+    <%=use.getUsesName()%>->registerProperty(this->_identifier, this->naming_service_name, this->getPropertyFromId("<%=CppHelper.escapeString(prop.getId())%>"));
+<%
+        		    }
+    		    }
+%>
+    this->registerPropertyChangePort(<%=use.getUsesName()%>);
+<%
+    	    }
+    	}  //if (foundMatchingProvides == false)
+    }
+    if ((provides.size() > 0) || (uses.size() > 0)) {
+%>
+
+<%
+}
+    for (Provides pro : provides) {
+%>
+    registerInPort(<%=pro.getProvidesName()%>);
+<%
+    }
+    for (Uses use : uses) {
+        String entry = use.getRepID();
+        // Loop over provides ports to see if there is a matching interface and port name for the current uses port
+        // If so, ignore the uses port
+        // This is to support bi-directional ports
+        boolean foundMatchingProvides = false;
+        for (Provides pro : provides) {
+            String entryProvides = pro.getRepID();
+            if (entry.equals(entryProvides) && use.getUsesName().equals(pro.getProvidesName())) {
+                foundMatchingProvides = true;
+                break;
+            }
+        }
+        if (foundMatchingProvides == false){
+%>
+    registerOutPort(<%=use.getUsesName()%>, <%=use.getUsesName()%>->_this());
+<%
+        }
+    }
+%>
+}
+
+/*******************************************************************************************
+    Framework-level functions
+    These functions are generally called by the framework to perform housekeeping.
+*******************************************************************************************/
+void <%=PREFIX%>_base::initialize() throw (CF::LifeCycle::InitializeError, CORBA::SystemException)
+{
+<%if (autoStart) {%>
+    try {
+        start();
+    } catch (CF::Resource::StartError& ex) {
+    	CF::StringSequence msg(1);
+    	msg[0] = ex.msg;
+        throw CF::LifeCycle::InitializeError(msg);
+    }
+<%}%>
+}
+
+void <%=PREFIX%>_base::start() throw (CORBA::SystemException, CF::Resource::StartError)
+{
+    boost::mutex::scoped_lock lock(serviceThreadLock);
+    if (serviceThread == 0) {
+<%
+    for (Provides pro : provides) {
+        String entry = pro.getRepID();
+        Interface intf = IdlUtil.getInstance().getInterface(search_paths, entry.split(":")[1], true); 
+        if (intf == null) {
+            throw new CoreException(new Status(IStatus.ERROR, CplusplusJetGeneratorPlugin.PLUGIN_ID, "Unable to find interface for " + entry));
+        }
+        
+        String interfaceName = intf.getName();
+        boolean hasPushPacketCall = false;
+        boolean hasPushPacketXMLCall = false;
+        boolean hasPushPacketFileCall = false;
+        for (Operation op : intf.getOperations()) {
+            int numParams = op.getParams().size();
+            if ("pushPacket".equals(op.getName()) && "dataFile".equals(interfaceName)) {
+                hasPushPacketFileCall = true;
+            } else if ("pushPacket".equals(op.getName()) && (numParams == 4)) {
+                hasPushPacketCall = true;
+            } else if ("pushPacket".equals(op.getName()) && "dataXML".equals(interfaceName)) {
+                hasPushPacketXMLCall = true;
+            }
+        }
+        if (hasPushPacketCall || hasPushPacketXMLCall || hasPushPacketFileCall) {
+%>
+        <%=pro.getProvidesName()%>->unblock();
+<%
+        }
+    }
+%>
+        serviceThread = new ProcessThread<<%=PREFIX%>_base>(this, 0.1);
+        serviceThread->start();
+    }
+    
+    if (!Resource_impl::started()) {
+    	Resource_impl::start();
+    }
+}
+
+void <%=PREFIX%>_base::stop() throw (CORBA::SystemException, CF::Resource::StopError)
+{
+    boost::mutex::scoped_lock lock(serviceThreadLock);
+    // release the child thread (if it exists)
+    if (serviceThread != 0) {
+<%
+    for (Provides pro : provides) {
+        String entry = pro.getRepID();
+        Interface intf = IdlUtil.getInstance().getInterface(search_paths, entry.split(":")[1], true);
+        if (intf == null) {
+            throw new CoreException(new Status(IStatus.ERROR, CplusplusJetGeneratorPlugin.PLUGIN_ID, "Unable to find interface for " + entry));
+        }
+        
+        String interfaceName = intf.getName();
+        boolean hasPushPacketCall = false;
+        boolean hasPushPacketXMLCall = false;
+        boolean hasPushPacketFileCall = false;
+        for (Operation op : intf.getOperations()) {
+            int numParams = op.getParams().size();
+            if ("pushPacket".equals(op.getName()) && (numParams == 4)) {
+                hasPushPacketCall = true;
+                break;
+            } else if ("pushPacket".equals(op.getName()) && "dataXML".equals(interfaceName)) {
+                hasPushPacketXMLCall = true;
+                break;
+            } else if ("pushPacket".equals(op.getName()) && "dataFile".equals(interfaceName)) {
+                hasPushPacketFileCall = true;
+                break;
+            }
+        }
+        if (hasPushPacketCall || hasPushPacketXMLCall || hasPushPacketFileCall) {
+%>
+        <%=pro.getProvidesName()%>->block();
+<%
+        }
+    }
+%>
+        if (!serviceThread->release(2)) {
+            throw CF::Resource::StopError(CF::CF_NOTSET, "Processing thread did not die");
+        }
+        serviceThread = 0;
+    }
+    
+    if (Resource_impl::started()) {
+    	Resource_impl::stop();
+    }
+}
+
+<%
+    if ((uses.size() > 0) || (provides.size() > 0)) {
+%>
+CORBA::Object_ptr <%=PREFIX%>_base::getPort(const char* _id) throw (CORBA::SystemException, CF::PortSupplier::UnknownPort)
+{
+
+    std::map<std::string, Port_Provides_base_impl *>::iterator p_in = inPorts.find(std::string(_id));
+    if (p_in != inPorts.end()) {
+
+<%
+        for (Provides pro : provides) {
+            String entry = pro.getRepID();
+            Interface intf = IdlUtil.getInstance().getInterface(search_paths, entry.split(":")[1], true); 
+            if (intf == null) {
+                throw new CoreException(new Status(IStatus.ERROR, CplusplusJetGeneratorPlugin.PLUGIN_ID, "Unable to find interface for " + entry));
+            }
+            String nameSpace = intf.getNameSpace();
+            String interfaceName = intf.getName();
+        	if (MessagingPortTemplate.MESSAGECHANNEL_REPID.equals(entry)) {
+%>
+        if (!strcmp(_id,"<%=pro.getProvidesName()%>")) {
+            MessageConsumerPort *ptr = dynamic_cast<MessageConsumerPort *>(p_in->second);
+            if (ptr) {
+                return <%=nameSpace%>::<%=interfaceName%>::_duplicate(ptr->_this());
+            }
+        }
+<%
+        	} else {
+%>
+        if (!strcmp(_id,"<%=pro.getProvidesName()%>")) {
+            <%=nameSpace%>_<%=interfaceName%>_In_i *ptr = dynamic_cast<<%=nameSpace%>_<%=interfaceName%>_In_i *>(p_in->second);
+            if (ptr) {
+                return <%=nameSpace%>::<%=interfaceName%>::_duplicate(ptr->_this());
+            }
+        }
+<%
+        	}
+        }
+%>
+    }
+
+    std::map<std::string, CF::Port_var>::iterator p_out = outPorts_var.find(std::string(_id));
+    if (p_out != outPorts_var.end()) {
+        return CF::Port::_duplicate(p_out->second);
+    }
+
+    throw (CF::PortSupplier::UnknownPort());
+}
+<%
+    }
+%>
+
+void <%=PREFIX%>_base::releaseObject() throw (CORBA::SystemException, CF::LifeCycle::ReleaseError)
+{
+    // This function clears the component running condition so main shuts down everything
+    try {
+        stop();
+    } catch (CF::Resource::StopError& ex) {
+        // TODO - this should probably be logged instead of ignored
+    }
+
+    // deactivate ports
+    releaseInPorts();
+    releaseOutPorts();
+
+<%
+    for (Provides pro : provides) {
+%>
+    delete(<%=pro.getProvidesName()%>);
+<%
+    }
+    for (Uses use : uses) {
+        String entry = use.getRepID();
+        // Loop over provides ports to see if there is a matching interface and port name for the current uses port
+        // If so, ignore the uses port
+        // This is to support bi-directional ports
+        boolean foundMatchingProvides = false;
+        for (Provides pro : provides) {
+            String entryProvides = pro.getRepID();
+            if (entry.equals(entryProvides) && use.getUsesName().equals(pro.getProvidesName())) {
+                foundMatchingProvides = true;
+                break;
+            }
+        }
+        if (foundMatchingProvides == false){
+%>
+    delete(<%=use.getUsesName()%>);
+<%
+        }
+    }
+%>
+
+    <%
+    if (!templ.isDevice()) {
+%> 
+    Resource_impl::releaseObject();
+    <%
+    } else {
+%>
+    <%=deviceType%>Device_impl::releaseObject();
+    <%
+    }
+%>
+}
+
+void <%=PREFIX%>_base::loadProperties()
+{
+<%
+    for (CppProperties.Property prop : properties) {
+        if (prop.hasValue() && (prop instanceof CppProperties.SimpleSeqProperty)) {
+%>
+    // Set the sequence with its initial values
+<%
+            for(String v : ((CppProperties.SimpleSeqProperty)prop).getCppValues()) {
+%>
+    <%=prop.getCppName()%>.push_back(<%=v%>);
+<%
+            }
+        } else if (prop instanceof CppProperties.StructSequenceProperty) {
+%>            
+        <%=prop.getCppName()%>.resize(<%=((CppProperties.StructSequenceProperty)prop).numberOfStructValues()%>);
+<%
+            Map<CppProperties.SimpleProperty, List<String>> myMap = ((CppProperties.StructSequenceProperty)prop).getValueMap(); 
+            for (CppProperties.SimpleProperty simple : myMap.keySet()) {
+                if (!myMap.get(simple).isEmpty()) {
+                    int i = 0;
+                    for (String val : myMap.get(simple)) {
+%>
+        <%=prop.getCppName()%>[<%=i%>].<%=simple.getCppName()%> = <%=val%>;
+<%
+                        i++;
+                    }
+                }
+            }
+        }
+        
+%>
+    addProperty(<%=prop.getCppName()%>,
+<%
+        if (prop.hasValue()) {
+%>
+                <%=prop.getCppValue()%>, 
+<%
+        }
+%>
+               "<%=CppHelper.escapeString(prop.getId())%>",
+<%
+        if (prop.hasName()) {
+%>
+               "<%=CppHelper.escapeString(prop.getName())%>",
+<%
+        } else {
+%>
+               "",
+<%
+        }
+%>
+               "<%=CppHelper.escapeString(prop.getMode())%>",
+               "<%=CppHelper.escapeString(prop.getUnits())%>",
+               "<%=CppHelper.escapeString(prop.getAction())%>",
+               "<%=CppHelper.escapeString(prop.getKinds())%>");
+
+<%
+    }
+%>
+}

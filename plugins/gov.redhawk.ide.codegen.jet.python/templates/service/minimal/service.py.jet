@@ -1,0 +1,111 @@
+<%@ jet package="gov.redhawk.ide.codegen.jet.python.template.service" imports="
+gov.redhawk.ide.codegen.ImplementationSettings
+gov.redhawk.ide.codegen.jet.TemplateParameter
+org.eclipse.core.runtime.Platform
+org.eclipse.core.runtime.IProduct
+org.eclipse.core.runtime.IPath
+org.eclipse.core.runtime.CoreException
+java.util.Date
+java.util.List
+gov.redhawk.model.sca.util.ModelUtil"
+class="MinimalServicePythonTemplate"
+skeleton="../../generator.skeleton" 
+%>
+<%
+	Date date = new Date(System.currentTimeMillis());
+	TemplateParameter templ = (TemplateParameter) argument;
+	List<IPath> search_paths = templ.getSearchPaths();
+	mil.jpeojtrs.sca.spd.Implementation impl = templ.getImpl();
+	ImplementationSettings implSettings = templ.getImplSettings();
+	mil.jpeojtrs.sca.spd.SoftPkg softPkg = (mil.jpeojtrs.sca.spd.SoftPkg) impl.eContainer();
+	String PREFIX = gov.redhawk.ide.codegen.util.CodegenFileHelper.getPreferredFilePrefix(softPkg, implSettings);
+%>
+#!/usr/bin/env python 
+#
+<%@ include file="../../utils/header.jetinc"%>
+
+import sys, signal, copy, os
+import logging
+
+from ossie.cf import CF, CF__POA #@UnusedImport
+from ossie.service import start_service
+from omniORB import CORBA, URI, PortableServer
+
+<%
+    String basePoa = null;
+    gov.redhawk.ide.idl.Interface intf = null;
+    if (softPkg.getDescriptor() != null) { // this is generally an error condition
+        final String repId = softPkg.getDescriptor().getComponent().getComponentRepID().getRepid();
+        final String interfaceName = repId.split(":")[1];
+        
+        // getInterface is extra fragile because it assumes MODULE/IFACE naming when in fact you could have
+        // MODULE/SUBMODULE/IFACE.  IdlUtil should accept full repIds.
+        try {
+            intf = gov.redhawk.ide.idl.IdlUtil.getInstance().getInterface(search_paths, interfaceName, true);
+        } catch (CoreException e) {
+			// PASS
+		} 
+    	final String importStmt = gov.redhawk.ide.codegen.python.utils.PythonGeneratorUtils.guessPythonImportForRepId(repId, true);
+    	if (importStmt != null) {
+    	    basePoa = gov.redhawk.ide.codegen.python.utils.PortHelper.idlToClassName(repId);
+%>
+<%=importStmt%>
+<%
+        }
+    }
+    
+    if (basePoa == null) {
+        basePoa = "object"; // fall-back behavior
+    }
+%>
+
+           
+class <%=PREFIX%>(<%=basePoa%>):
+    
+    def __init__(self, name="<%=PREFIX%>", execparams={}):
+        self.name = name
+        self._log = logging.getLogger(self.name)
+        logging.getLogger().setLevel(logging.DEBUG)
+       
+    def releaseObject(self):
+        pass
+
+<% 
+    if (intf != null) {
+        // Operations
+        for (gov.redhawk.ide.idl.Operation op : intf.getOperations()) {
+            int numParams = op.getParams().size();
+%>
+    def <%=op.getName()%>(self<%for (gov.redhawk.ide.idl.Param p : op.getParams()){%>, <%=p.getName()%><%}%>):
+        # TODO
+        pass
+
+<%      } // end "for (gov.redhawk.ide.idl.Operation op : intf.getOperations())" %>
+<%
+        // Attributes        
+        for (gov.redhawk.ide.idl.Attribute op : intf.getAttributes()) {
+%>        
+    def _get_<%=op.getName()%>(self):
+        # TODO
+        pass
+
+<%          if (!op.isReadonly()) {%>
+    def _set_<%=op.getName()%>(self, data):
+        # TODO:
+        pass
+
+<%          } // end "if (!op.isReadonly())" %>
+<%      } // end "for (Attribute op : intf.getAttributes())" %>
+<%   } // end "if (intf != null)" %>
+            
+if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        # If there are arguments, use standard service launch
+        # You may change the thread_policy to your preference
+        start_service(<%=PREFIX%>, thread_policy=PortableServer.SINGLE_THREAD_MODEL)  
+    else:
+        # Otherwise, assume we are being run manually so print out our IOR
+        orb = CORBA.ORB_init(sys.argv)
+        o = <%=PREFIX%>()
+        print orb.object_to_string(o._this())
+        orb.run()

@@ -1,0 +1,276 @@
+<%@ jet package="gov.redhawk.ide.codegen.jet.cplusplus.template.component.pull"
+imports="gov.redhawk.ide.RedhawkIdeActivator
+gov.redhawk.ide.codegen.CodegenUtil
+gov.redhawk.ide.codegen.ImplementationSettings
+gov.redhawk.ide.codegen.IPortTemplateDesc
+gov.redhawk.ide.codegen.IScaPortCodegenTemplate
+gov.redhawk.ide.codegen.PortRepToGeneratorMap
+gov.redhawk.ide.codegen.jet.TemplateParameter
+gov.redhawk.ide.codegen.jet.cplusplus.CplusplusJetGeneratorPlugin
+gov.redhawk.ide.codegen.jet.cplusplus.ports.PropertyChangeEventPortTemplate
+gov.redhawk.ide.codegen.jet.cplusplus.ports.PullPortTemplate
+gov.redhawk.ide.idl.IdlUtil
+gov.redhawk.ide.idl.Interface
+java.util.Arrays
+java.util.ArrayList
+java.util.HashMap
+java.util.HashSet
+java.util.List
+mil.jpeojtrs.sca.scd.Provides
+mil.jpeojtrs.sca.scd.Uses
+mil.jpeojtrs.sca.spd.Implementation
+mil.jpeojtrs.sca.spd.SoftPkg
+org.eclipse.core.runtime.CoreException
+org.eclipse.core.runtime.IPath
+org.eclipse.core.runtime.IStatus
+org.eclipse.core.runtime.Status
+org.eclipse.emf.common.util.EList"
+class="PullPortImplHTemplate"
+skeleton="../../generator.skeleton2"
+%><% 
+    TemplateParameter templ = (TemplateParameter) argument;
+    ImplementationSettings implSettings = templ.getImplSettings();
+    Implementation impl = templ.getImpl();
+    SoftPkg softPkg = (SoftPkg) impl.eContainer();
+    String PREFIX = gov.redhawk.ide.codegen.util.CodegenFileHelper.getPreferredFilePrefix(softPkg, implSettings);
+    EList<Uses> uses = softPkg.getDescriptor().getComponent().getComponentFeatures().getPorts().getUses();
+    EList<Provides> provides = softPkg.getDescriptor().getComponent().getComponentFeatures().getPorts().getProvides();
+    HashSet<String> usesReps = new HashSet<String>();
+    HashSet<String> providesReps = new HashSet<String>();
+    List<IPath> search_paths = Arrays.asList(RedhawkIdeActivator.getDefault().getDefaultIdlIncludePath());
+    TemplateParameter portTempl = new TemplateParameter(impl, implSettings, search_paths);
+    HashMap<String, IScaPortCodegenTemplate> portMap = new HashMap<String, IScaPortCodegenTemplate>();
+    boolean includeQueryablePort = false;
+    boolean includePropertyChange = false;
+    for (PortRepToGeneratorMap p : implSettings.getPortGenerators()) {
+        try {
+            IPortTemplateDesc template = CodegenUtil.getPortTemplate(p.getGenerator(), null);
+            if (template != null) {
+                portMap.put(p.getRepId(), template.getTemplate());
+            }
+        } catch (CoreException e) {
+            // TODO What to do here! Throw the exception and not generate anything?
+        }
+    }
+    for (Uses entry : uses) {
+        if (PropertyChangeEventPortTemplate.EVENTCHANNEL_REPID.equals(entry.getRepID()) 
+                && PropertyChangeEventPortTemplate.EVENTCHANNEL_NAME.equals(entry.getUsesName())) {
+            includePropertyChange = true;
+            continue;
+        }
+        usesReps.add(entry.getRepID());
+        if (!entry.getRepID().startsWith("IDL:BULKIO/")) {
+            includeQueryablePort = true;
+        }
+    }
+    for (Provides entry : provides) {
+        providesReps.add(entry.getRepID());
+        if (!entry.getRepID().startsWith("IDL:BULKIO/")) {
+            includeQueryablePort = true;
+        }
+    }
+    
+    if (!templ.isGenClassDef() && !templ.isGenClassImpl() && !templ.isGenSupport()) {
+        if (templ.isProvidesPort()) {
+		    for (Provides pro : provides) {
+		        String entry = pro.getRepID();
+		        if (templ.getPortRepId().equals(entry) && pro.getProvidesName().equals(templ.getPortName())) {
+			        Interface intf = IdlUtil.getInstance().getInterface(search_paths, entry.split(":")[1], true); 
+			        if (intf == null) {
+			            throw new CoreException(new Status(IStatus.ERROR, CplusplusJetGeneratorPlugin.PLUGIN_ID, "Unable to find interface for " + entry));
+			        }
+%><%=intf.getNameSpace()%>_<%=intf.getName()%>_In_i("<%=pro.getProvidesName()%>", this)<%
+                    break;
+                }
+		    }
+		} else {
+		    for (Uses use : uses) {
+		        String entry = use.getRepID();
+		        if (templ.getPortRepId().equals(entry) && use.getUsesName().equals(templ.getPortName())) {
+			        Interface intf = IdlUtil.getInstance().getInterface(search_paths, entry.split(":")[1], true); 
+			        if (intf == null) {
+			            throw new CoreException(new Status(IStatus.ERROR, CplusplusJetGeneratorPlugin.PLUGIN_ID, "Unable to find interface for " + entry));
+			        }
+%><%=intf.getNameSpace()%>_<%=intf.getName()%>_Out_i("<%=use.getUsesName()%>", this)<%
+                    break;
+	            }
+	        }
+	    }
+    } else if (templ.isGenClassDef()) {
+%>
+#ifndef PORT_H
+#define PORT_H
+
+#include "ossie/Port_impl.h"
+#include <queue>
+#include <list>
+#include <boost/thread/condition_variable.hpp>
+#include <boost/thread/locks.hpp>
+
+class <%=PREFIX%>_base;
+class <%=PREFIX%>_i;
+
+#define CORBA_MAX_TRANSFER_BYTES omniORB::giopMaxMsgSize()
+
+<%
+    if (includeQueryablePort) {
+%>
+#include "ossie/CF/QueryablePort.h"
+<%
+    }
+    List<String> neededHeaders = new ArrayList<String>();
+    for (Uses interim : uses) {
+        IScaPortCodegenTemplate gen = portMap.get(interim.getInterface().getName());
+        portTempl.setPortRepId(interim.getRepID());
+        portTempl.setPortName(interim.getName());
+        portTempl.setGenSupport(true);
+        portTempl.setGenClassDef(false);
+        portTempl.setGenClassImpl(false);
+        String hdrs = null;
+        if (gen != null) {
+            hdrs = gen.generateClassSupport(interim.getRepID(), false, softPkg, implSettings, portTempl, CodegenUtil.CPP);
+        } else {
+            hdrs = new PullPortTemplate().generateClassSupport(interim.getRepID(), false, softPkg, implSettings, portTempl, CodegenUtil.CPP);
+        }
+        if ((hdrs != null) && (hdrs.trim().length() != 0)) {
+            String[] hdrSplit = hdrs.split("\n");
+            for (String line : hdrSplit) {
+                neededHeaders.add(line);
+            }
+        }
+    }
+    for (Provides interim : provides) {
+        IScaPortCodegenTemplate gen = portMap.get(interim.getInterface().getName());
+        portTempl.setPortRepId(interim.getRepID());
+        portTempl.setPortName(interim.getName());
+        portTempl.setGenSupport(true);
+        portTempl.setGenClassDef(false);
+        portTempl.setGenClassImpl(false);
+        String hdrs = null;
+        if (gen != null) {
+            hdrs = gen.generateClassSupport(interim.getRepID(), true, softPkg, implSettings, portTempl, CodegenUtil.CPP);
+        } else {
+            hdrs = new PullPortTemplate().generateClassSupport(interim.getRepID(), true, softPkg, implSettings, portTempl, CodegenUtil.CPP);
+        }
+        if ((hdrs != null) && (hdrs.trim().length() != 0)) {
+            String[] hdrSplit = hdrs.split("\n");
+            for (String line : hdrSplit) {
+                if (!neededHeaders.contains(line)) {
+                    neededHeaders.add(line);
+                }
+            }
+        }
+    }
+    for (String hdr : neededHeaders) {
+%>
+<%=hdr%>
+<%
+    }
+%>
+<%
+    if (includePropertyChange) {
+%>
+<%=new PropertyChangeEventPortTemplate().generateClassDefinition(null, false, softPkg, implSettings, portTempl, CodegenUtil.CPP)%>
+<%
+    }
+    for (String intName : usesReps) {
+        IScaPortCodegenTemplate gen = portMap.get(intName);
+        portTempl.setPortRepId(intName);
+        portTempl.setGenSupport(false);
+        portTempl.setGenClassDef(true);
+        portTempl.setGenClassImpl(false);
+        if (gen != null) {
+%>
+<%=gen.generateClassDefinition(intName, false, softPkg, implSettings, portTempl, CodegenUtil.CPP)%>
+<%
+        } else {
+%>
+<%=new PullPortTemplate().generateClassDefinition(intName, false, softPkg, implSettings, portTempl, CodegenUtil.CPP)%>
+<%
+        }
+    }
+    boolean providesBULKIO = false;
+    for (Provides entry : provides) {
+        providesReps.add(entry.getRepID());
+        if (entry.getRepID().startsWith("IDL:BULKIO/")) {
+            providesBULKIO = true;
+        }
+    }
+    if (providesBULKIO) {
+%>
+
+class queueSemaphore
+{
+    private:
+        unsigned int maxValue;
+        unsigned int currValue;
+        boost::mutex mutex;
+        boost::condition_variable condition;
+
+    public:
+        queueSemaphore(unsigned int initialMaxValue):mutex(),condition() {
+        	maxValue = initialMaxValue;
+        }
+
+        void setMaxValue(unsigned int newMaxValue) {
+            boost::unique_lock<boost::mutex> lock(mutex);
+            maxValue = newMaxValue;
+        }
+
+        unsigned int getMaxValue(void) {
+			boost::unique_lock<boost::mutex> lock(mutex);
+			return maxValue;
+		}
+
+        void setCurrValue(unsigned int newValue) {
+        	boost::unique_lock<boost::mutex> lock(mutex);
+        	if (newValue < maxValue) {
+        		unsigned int oldValue = currValue;
+        		currValue = newValue;
+
+        		if (oldValue > newValue) {
+        			condition.notify_one();
+        		}
+        	}
+        }
+
+        void incr() {
+            boost::unique_lock<boost::mutex> lock(mutex);
+            while (currValue >= maxValue) {
+                condition.wait(lock);
+            }
+            ++currValue;
+        }
+
+        void decr() {
+            boost::unique_lock<boost::mutex> lock(mutex);
+            if (currValue > 0) {
+            	--currValue;
+            }
+            condition.notify_one();
+        }
+};        
+
+<%
+    }
+    for (String intName : providesReps) {
+        IScaPortCodegenTemplate gen = portMap.get(intName);
+        portTempl.setPortRepId(intName);
+        portTempl.setGenSupport(false);
+        portTempl.setGenClassDef(true);
+        portTempl.setGenClassImpl(false);
+        if (gen != null) {
+%>
+<%=gen.generateClassDefinition(intName, true, softPkg, implSettings, portTempl, CodegenUtil.CPP)%>
+<%
+        } else {
+%>
+<%=new PullPortTemplate().generateClassDefinition(intName, true, softPkg, implSettings, portTempl, CodegenUtil.CPP)%>
+<%
+        }
+    }
+%>
+#endif
+<%
+    } // end if genClassDef
+%>

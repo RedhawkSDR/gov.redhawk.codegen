@@ -1,0 +1,460 @@
+// ----------------------------------------------------------------------------------------
+// <%=nameSpace%>_<%=interfaceName%>_In_i definition
+// ----------------------------------------------------------------------------------------
+<%
+            if ("dataSDDS".equals(interfaceName)) {
+%>
+BULKIO_dataSDDS_In_i::BULKIO_dataSDDS_In_i(std::string port_name, <%=PREFIX%>_base *_parent) : Port_Provides_base_impl(port_name)
+{
+    parent = static_cast<<%=PREFIX%>_i *> (_parent);
+}
+
+BULKIO_dataSDDS_In_i::~BULKIO_dataSDDS_In_i()
+{
+}
+
+BULKIO::PortStatistics * BULKIO_dataSDDS_In_i::statistics()
+{
+    boost::mutex::scoped_lock lock(statUpdateLock);
+    BULKIO::PortStatistics_var recStat = new BULKIO::PortStatistics(stats.retrieve());
+    return recStat._retn();
+}
+
+BULKIO::PortUsageType BULKIO_dataSDDS_In_i::state()
+{
+    if (attachedStreamMap.size() == 0) {
+        return BULKIO::IDLE;
+    } else if (attachedStreamMap.size() == 1) {
+        return BULKIO::BUSY;
+    } else {
+        return BULKIO::ACTIVE;
+    }
+}
+
+BULKIO::StreamSRISequence * BULKIO_dataSDDS_In_i::attachedSRIs()
+{
+    boost::mutex::scoped_lock lock(sriUpdateLock);
+    BULKIO::StreamSRISequence_var sris = new BULKIO::StreamSRISequence();
+    sris->length(currentHs.size());
+    std::map<std::string, std::pair<BULKIO::StreamSRI, BULKIO::PrecisionUTCTime> >::iterator sriIter;
+    unsigned int idx = 0;
+
+    sriIter = currentHs.begin();
+    while (sriIter != currentHs.end()) {
+        sris[idx++] = (*sriIter).second.first;
+        sriIter++;
+    }
+    return sris._retn();
+}
+
+void BULKIO_dataSDDS_In_i::pushSRI(const BULKIO::StreamSRI& H, const BULKIO::PrecisionUTCTime& T)
+{
+    boost::mutex::scoped_lock lock(sriUpdateLock);
+    bool foundSRI = false;
+    BULKIO::StreamSRI tmpH = H;
+    std::map<std::string, std::pair<BULKIO::StreamSRI, BULKIO::PrecisionUTCTime> >::iterator sriIter;
+
+    sriIter = currentHs.begin();
+    while (sriIter != currentHs.end()) {
+        if (strcmp(H.streamID, (*sriIter).first.c_str()) == 0) {
+            foundSRI = true;
+            break;
+        }
+        sriIter++;
+    }
+    if (!foundSRI) {
+        currentHs.insert(std::make_pair(CORBA::string_dup(H.streamID), std::make_pair(H, T)));
+    } else {
+        (*sriIter).second = std::make_pair(H, T);
+    }
+}
+
+BULKIO::SDDSStreamDefinition* BULKIO_dataSDDS_In_i::getStreamDefinition(const char* attachId)
+{
+    std::map<std::string, BULKIO::SDDSStreamDefinition*>::iterator portIter2;
+    portIter2 = attachedStreamMap.begin();
+    // use: attachedPorts[(*portIter).first] :instead
+    while (portIter2 != attachedStreamMap.end()) {
+        if (strcmp((*portIter2).first.c_str(), attachId) == 0) {
+            return (*portIter2).second;
+        }
+        portIter2++;
+    }
+    return NULL;
+}
+
+char* BULKIO_dataSDDS_In_i::getUser(const char* attachId)
+{
+    std::map<std::string, std::string>::iterator portIter2;
+    portIter2 = attachedUsers.begin();
+    while (portIter2 != attachedUsers.end()) {
+        if (strcmp((*portIter2).first.c_str(), attachId) == 0) {
+            return CORBA::string_dup((*portIter2).second.c_str());
+        }
+        portIter2++;
+    }
+    return NULL;
+}
+
+BULKIO::dataSDDS::InputUsageState BULKIO_dataSDDS_In_i::usageState()
+{
+    if (attachedStreamMap.size() == 0) {
+        return BULKIO::dataSDDS::IDLE;
+    } else if (attachedStreamMap.size() == 1) {
+        return BULKIO::dataSDDS::BUSY;
+    } else {
+        return BULKIO::dataSDDS::ACTIVE;
+    }
+}
+
+BULKIO::SDDSStreamSequence* BULKIO_dataSDDS_In_i::attachedStreams()
+{
+    BULKIO::SDDSStreamSequence* seq = new BULKIO::SDDSStreamSequence();
+    seq->length(attachedStreamMap.size());
+    std::map<std::string, BULKIO::SDDSStreamDefinition*>::iterator portIter2;
+    portIter2 = attachedStreamMap.begin();
+    unsigned int i = 0;
+    while (portIter2 != attachedStreamMap.end()) {
+        (*seq)[i++] = *((*portIter2).second);
+        portIter2++;
+    }
+    return seq;
+}
+
+BULKIO::StringSequence* BULKIO_dataSDDS_In_i::attachmentIds()
+{
+    BULKIO::StringSequence* seq = new BULKIO::StringSequence();
+    seq->length(attachedStreamMap.size());
+    std::map<std::string, BULKIO::SDDSStreamDefinition*>::iterator portIter2;
+    portIter2 = attachedStreamMap.begin();
+    unsigned int i = 0;
+    while (portIter2 != attachedStreamMap.end()) {
+        (*seq)[i++] = CORBA::string_dup((*portIter2).first.c_str());
+        portIter2++;
+    }
+    return seq;
+}
+
+char* BULKIO_dataSDDS_In_i::attach(const BULKIO::SDDSStreamDefinition& stream, const char* userid) throw (BULKIO::dataSDDS::AttachError, BULKIO::dataSDDS::StreamInputError)
+{
+    std::string attachId;
+
+    attachId = parent->attach(stream, userid);
+    attachedStreamMap.insert(std::make_pair(attachId, new BULKIO::SDDSStreamDefinition(stream)));
+    attachedUsers.insert(std::make_pair(attachId, std::string(userid)));
+
+    return CORBA::string_dup(attachId.c_str());
+}
+
+void BULKIO_dataSDDS_In_i::detach(const char* attachId)
+{
+    parent->detach(attachId);
+    attachedStreamMap.erase(attachId);
+    attachedUsers.erase(attachId);
+}
+
+<%
+            } else {
+
+            boolean hasPushPacketCall = false;
+            boolean hasPushPacketXMLCall = false;
+            boolean hasPushPacketFileCall = false;
+            for (Operation op : iface.getOperations()) {
+                int numParams = op.getParams().size();
+                if ("pushPacket".equals(op.getName()) && "dataFile".equals(interfaceName)) {
+                    hasPushPacketFileCall = true;
+                } else if ("pushPacket".equals(op.getName()) && (numParams == 4)) {
+                    hasPushPacketCall = true;
+                } else if ("pushPacket".equals(op.getName()) && "dataXML".equals(interfaceName)) {
+                    hasPushPacketXMLCall = true;
+                }
+            }
+%>
+<%=nameSpace%>_<%=interfaceName%>_In_i::<%=nameSpace%>_<%=interfaceName%>_In_i(std::string port_name, <%=PREFIX%>_base *_parent) : 
+Port_Provides_base_impl(port_name)
+{
+    dataAvailable = new omni_condition(&dataAvailableMutex);
+    queueSem = new queueSemaphore(100);
+    blocking = false;
+    breakBlock = false;
+    parent = static_cast<<%=PREFIX%>_i *> (_parent);
+}
+
+<%=nameSpace%>_<%=interfaceName%>_In_i::~<%=nameSpace%>_<%=interfaceName%>_In_i()
+{
+    block();
+    while (workQueue.size() != 0) {
+        dataTransfer *tmp = workQueue.front();
+        workQueue.pop_front();
+        delete tmp;
+    }
+}
+
+BULKIO::PortStatistics * <%=nameSpace%>_<%=interfaceName%>_In_i::statistics()
+{
+    boost::mutex::scoped_lock lock(dataBufferLock);
+    BULKIO::PortStatistics_var recStat = new BULKIO::PortStatistics(stats.retrieve());
+    // NOTE: You must delete the object that this function returns!
+    return recStat._retn();
+}
+
+BULKIO::PortUsageType <%=nameSpace%>_<%=interfaceName%>_In_i::state()
+{
+    boost::mutex::scoped_lock lock(dataBufferLock);
+    if (workQueue.size() == queueSem->getMaxValue()) {
+        return BULKIO::BUSY;
+    } else if (workQueue.size() == 0) {
+        return BULKIO::IDLE;
+    } else {
+        return BULKIO::ACTIVE;
+    }
+
+    return BULKIO::BUSY;
+}
+
+BULKIO::StreamSRISequence * <%=nameSpace%>_<%=interfaceName%>_In_i::activeSRIs()
+{
+    boost::mutex::scoped_lock lock(sriUpdateLock);
+    BULKIO::StreamSRISequence seq_rtn;
+    std::map<std::string, std::pair<BULKIO::StreamSRI, bool> >::iterator currH;
+    int i = 0;
+    for (currH = currentHs.begin(); currH != currentHs.end(); currH++) {
+    	i++;
+    	seq_rtn.length(i);
+    	seq_rtn[i-1] = currH->second.first;
+    }
+    BULKIO::StreamSRISequence_var retSRI = new BULKIO::StreamSRISequence(seq_rtn);
+
+    // NOTE: You must delete the object that this function returns!
+    return retSRI._retn();
+}
+
+int <%=nameSpace%>_<%=interfaceName%>_In_i::getMaxQueueDepth()
+{
+    boost::mutex::scoped_lock lock(dataBufferLock);
+    return queueSem->getMaxValue();
+}
+
+int <%=nameSpace%>_<%=interfaceName%>_In_i::getCurrentQueueDepth()
+{
+    boost::mutex::scoped_lock lock(dataBufferLock);
+    return workQueue.size();
+}
+
+void <%=nameSpace%>_<%=interfaceName%>_In_i::setMaxQueueDepth(int newDepth)
+{
+    boost::mutex::scoped_lock lock(dataBufferLock);
+    queueSem->setMaxValue(newDepth);
+}
+
+void <%=nameSpace%>_<%=interfaceName%>_In_i::pushSRI(const BULKIO::StreamSRI& H)
+{
+    boost::mutex::scoped_lock lock(sriUpdateLock);
+    BULKIO::StreamSRI tmpH = H;
+    std::map<std::string, std::pair<BULKIO::StreamSRI, bool> >::iterator currH = currentHs.find(std::string(H.streamID));
+    if (currH == currentHs.end()) {
+    	currentHs[std::string(H.streamID)] = std::make_pair(tmpH, true);
+        if (H.blocking) {
+            boost::mutex::scoped_lock lock(dataBufferLock);
+            blocking = true;
+            queueSem->setCurrValue(workQueue.size());
+        }
+    } else {
+    	if (!parent->compareSRI(tmpH, currH->second.first)) {
+            currentHs[std::string(H.streamID)] = std::make_pair(tmpH, true);
+            if (H.blocking) {
+                boost::mutex::scoped_lock lock(dataBufferLock);
+                blocking = true;
+                queueSem->setCurrValue(workQueue.size());
+            }
+    	}
+    }
+}
+<%
+            for (Operation op : iface.getOperations()) {
+                int numParams = op.getParams().size();
+                if (!"pushPacket".equals(op.getName())) {
+                    continue;
+                }
+%>
+
+<%=op.getCxxReturnType()%><%=_cppHelper.pointerReturnValue(op.getCxxReturnType(), op.getReturnType(), op.isCxxReturnTypeVariableLength())%> <%=nameSpace%>_<%=interfaceName%>_In_i::<%=op.getName()%>(<%if (op.getParams().size() == 0) {%>)<%}
+                for (int i = 0; i < numParams; i++) {
+                %><%=op.getParams().get(i).getCxxType()%><%
+                %> <%=op.getParams().get(i).getName()%><%
+                    if (i == (numParams - 1)) {
+                        %>)<%
+                    } else {
+                        %>, <%
+                    }
+                } // end for params
+%>
+{
+    if (queueSem->getMaxValue() == 0) {
+        return;
+    }    
+    BULKIO::StreamSRI tmpH = {1, 0.0, 1.0, 1, 0, 0.0, 0.0, 0, 0, streamID, false, 0};
+    bool sriChanged = false;
+    bool portBlocking = false;
+
+    std::map<std::string, std::pair<BULKIO::StreamSRI, bool> >::iterator currH;
+    {
+        boost::mutex::scoped_lock lock(sriUpdateLock);
+
+        currH = currentHs.find(std::string(streamID));
+        if (currH != currentHs.end()) {
+            tmpH = currH->second.first;
+            sriChanged = currH->second.second;
+            currentHs[streamID] = std::make_pair(currH->second.first, false);
+        }
+    }
+
+    if (EOS) {
+        bool searchBlocking = false;
+        std::map<std::string, std::pair<BULKIO::StreamSRI, bool> >::iterator checkH = currentHs.begin();
+        while (checkH != currentHs.end()) {
+            if (std::string(checkH->second.first.streamID) == std::string(streamID)) {
+                checkH++;
+                continue;
+            }
+            if (checkH->second.first.blocking) {
+                searchBlocking = true;
+                break;
+            }
+            checkH++;
+        }
+        blocking = false;
+    }
+    portBlocking = blocking;
+    
+    if(portBlocking) {
+        queueSem->incr();
+        boost::mutex::scoped_lock lock(dataBufferLock);
+<%
+        if (!hasPushPacketXMLCall) {
+%>
+        stats.update(<%if ("dataFile".equals(interfaceName)) {%>1<%} else {%><%=op.getParams().get(0).getName()%>.length()<%}%>, workQueue.size()/queueSem->getMaxValue(), EOS, streamID, false);
+        <%=nameSpace%>_<%=interfaceName%>_In_i::dataTransfer *tmpIn = new <%=nameSpace%>_<%=interfaceName%>_In_i::dataTransfer(<%=op.getParams().get(0).getName()%>, T, EOS, streamID, tmpH, sriChanged, false);
+<%
+        } else {
+%>
+        stats.update(strlen(<%=op.getParams().get(0).getName()%>), workQueue.size()/queueSem->getMaxValue(), EOS, streamID, false);
+        <%=nameSpace%>_<%=interfaceName%>_In_i::dataTransfer *tmpIn = new <%=nameSpace%>_<%=interfaceName%>_In_i::dataTransfer(<%=op.getParams().get(0).getName()%>, EOS, streamID, tmpH, sriChanged, false);
+<%
+        }
+%>
+        workQueue.push_back(tmpIn);
+        dataAvailable->signal();
+    } else {
+        boost::mutex::scoped_lock lock(dataBufferLock);
+        bool flushToReport = false;
+        if (workQueue.size() == queueSem->getMaxValue()) { // reached maximum queue depth - flush the queue
+            flushToReport = true;
+            <%=nameSpace%>_<%=interfaceName%>_In_i::dataTransfer *tmp;
+            while (workQueue.size() != 0) {
+                tmp = workQueue.front();
+                workQueue.pop_front();
+                delete tmp;
+            }
+        }
+<%
+        if (!hasPushPacketXMLCall) {
+%>
+        stats.update(<%if ("dataFile".equals(interfaceName)) {%>1<%} else {%><%=op.getParams().get(0).getName()%>.length()<%}%>, workQueue.size()/queueSem->getMaxValue(), EOS, streamID, flushToReport);
+        <%=nameSpace%>_<%=interfaceName%>_In_i::dataTransfer *tmpIn = new <%=nameSpace%>_<%=interfaceName%>_In_i::dataTransfer(<%=op.getParams().get(0).getName()%>, T, EOS, streamID, tmpH, sriChanged, flushToReport);
+<%
+        } else {
+%>
+        stats.update(strlen(<%=op.getParams().get(0).getName()%>), workQueue.size()/queueSem->getMaxValue(), EOS, streamID, flushToReport);
+        <%=nameSpace%>_<%=interfaceName%>_In_i::dataTransfer *tmpIn = new <%=nameSpace%>_<%=interfaceName%>_In_i::dataTransfer(<%=op.getParams().get(0).getName()%>, EOS, streamID, tmpH, sriChanged, flushToReport);
+<%
+        }
+%>
+        workQueue.push_back(tmpIn);
+        dataAvailable->signal();
+    }
+}
+
+<%
+            } // end for operations
+%>
+
+void <%=nameSpace%>_<%=interfaceName%>_In_i::block()
+{
+    breakBlock = true;
+    dataAvailable->signal();
+}
+
+void <%=nameSpace%>_<%=interfaceName%>_In_i::unblock()
+{
+    breakBlock = false;
+}
+
+/*
+ * getPacket
+ *     description: retrieve data from the provides (input) port
+ *
+ *  timeout: the amount of time to wait for data before a NULL is returned.
+ *           Use 0.0 for non-blocking and -1 for blocking.
+ */
+<%=nameSpace%>_<%=interfaceName%>_In_i::dataTransfer *<%=nameSpace%>_<%=interfaceName%>_In_i::getPacket(float timeout)
+{
+    if (breakBlock) {
+        return NULL;
+    }
+    if (workQueue.size() == 0) {
+        if (timeout == 0.0) {
+            return NULL;
+        } else if (timeout > 0){
+            secs = (unsigned long)(trunc(timeout));
+            nsecs = (unsigned long)((timeout - secs) * 1e9);
+            omni_thread::get_time(&timeout_secs, &timeout_nsecs, secs, nsecs);
+            if (not dataAvailable->timedwait(timeout_secs, timeout_nsecs)) {
+                return NULL;
+            }
+            if (breakBlock) {
+                return NULL;
+            }
+        } else {
+            dataAvailable->wait();
+            if (breakBlock) {
+                return NULL;
+            }
+        }
+    }
+    boost::mutex::scoped_lock lock1(dataBufferLock);
+    <%=nameSpace%>_<%=interfaceName%>_In_i::dataTransfer *tmp = workQueue.front();
+    workQueue.pop_front();
+    
+    boost::mutex::scoped_lock lock2(sriUpdateLock);
+    if (tmp->EOS) {
+	    std::map<std::string, std::pair<BULKIO::StreamSRI, bool> >::iterator target = currentHs.find(std::string(tmp->streamID));
+        if (target != currentHs.end()) {
+            if (target->second.first.blocking) {
+                std::map<std::string, std::pair<BULKIO::StreamSRI, bool> >::iterator currH;
+                bool keepBlocking = false;
+                for (currH = currentHs.begin(); currH != currentHs.end(); currH++) {
+                    if (currH->second.first.blocking) {
+                        keepBlocking = true;
+                        break;
+                    }
+                }
+
+                if (!keepBlocking) {
+                    queueSem->setCurrValue(0);
+                    blocking = false;
+                }
+            }
+            currentHs.erase(target);
+        }
+    }
+
+    if (blocking) {
+        queueSem->decr();
+    }
+    
+    return tmp;
+}
+<%
+            }
+%>

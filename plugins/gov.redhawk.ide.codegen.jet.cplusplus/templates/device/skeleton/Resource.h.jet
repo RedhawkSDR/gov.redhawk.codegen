@@ -1,0 +1,126 @@
+<%@ jet package="gov.redhawk.ide.codegen.jet.cplusplus.template.device.skeleton"
+imports="gov.redhawk.ide.codegen.ImplementationSettings
+gov.redhawk.ide.codegen.jet.TemplateParameter
+gov.redhawk.ide.preferences.RedhawkIdePreferenceConstants
+mil.jpeojtrs.sca.scd.SupportsInterface
+mil.jpeojtrs.sca.spd.SoftPkg"
+class="DResourceHTemplate"
+skeleton="../../generator.skeleton"
+%>
+<%
+    TemplateParameter templ = (TemplateParameter) argument;
+    ImplementationSettings implSettings = templ.getImplSettings();
+    SoftPkg softPkg = (SoftPkg) templ.getImpl().eContainer();
+    String PREFIX = gov.redhawk.ide.codegen.util.CodegenFileHelper.getPreferredFilePrefix(softPkg, implSettings);
+    String deviceType = softPkg.getDescriptor().getComponent().getComponentType();
+    boolean aggregateDevice = false;
+    boolean execDevice = false;
+    boolean loadableDevice = false;
+    if (deviceType.contains(RedhawkIdePreferenceConstants.EXECUTABLE_DEVICE.toLowerCase())) {
+        deviceType = "Executable";
+        execDevice = true;
+    } else if (deviceType.contains(RedhawkIdePreferenceConstants.LOADABLE_DEVICE.toLowerCase())) {
+        deviceType = "Loadable";
+        loadableDevice = true;
+    } else { 
+        deviceType = "";
+    }
+    if (RedhawkIdePreferenceConstants.LOADABLE_DEVICE.toLowerCase().equals(deviceType)) {
+        deviceType = "Loadable";
+    }
+    for (SupportsInterface inter : softPkg.getDescriptor().getComponent().getComponentFeatures().getSupportsInterface()) {
+        if (inter.getSupportsName().contains(RedhawkIdePreferenceConstants.AGGREGATE_DEVICE)) {
+            aggregateDevice = true;
+        }
+    }
+%>
+#ifndef <%=PREFIX.toUpperCase()%>_IMPL_H
+#define <%=PREFIX.toUpperCase()%>_IMPL_H
+
+#include <stdlib.h>
+#include <string>
+#include <map>
+#include <list>
+
+#include "CF/cf.h"
+<%
+    if (aggregateDevice) {
+%>
+#include "CF/AggregateDevices.h"
+<%
+    }
+%>
+
+<% 
+    if (aggregateDevice) {
+%>
+#include "ossie/AggregateDevice_impl.h"
+<%
+    }
+%>
+#include "ossie/<%=deviceType%>Device_impl.h"
+#include "ossie/ossieSupport.h"
+using namespace std;
+#include <sys/time.h>
+#include <queue>
+#include <fstream>
+
+class <%=PREFIX%>_i;
+class <%=PREFIX%>_i : 
+	<% if (aggregateDevice) {
+	        if (execDevice) {%>public virtual POA_CF::AggregateExecutableDevice, <% } 
+            else if (loadableDevice) {%>public virtual POA_CF::AggregateLoadableDevice, <% }
+            else {%>public virtual POA_CF::AggregatePlainDevice, <% }
+	   } %>
+    <% if (execDevice) {%>public ExecutableDevice_impl <% } %>
+    <% else if (loadableDevice) {%>public LoadableDevice_impl <% } %>
+    <% else {%>public Device_impl <% } %>
+    <% if (aggregateDevice) { %> , public AggregateDevice_impl <% } %>
+{
+    public:
+        <%=PREFIX%>_i(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl);
+        <%=PREFIX%>_i(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, CF::Properties capacities);
+        <%=PREFIX%>_i(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, char *compositeDev);
+        <%=PREFIX%>_i(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl, CF::Properties capacities, char *compositeDev);
+        
+        void initResource(char *devMgr_ior, char *id, char *lbl, char *sftwrPrfl);
+
+        ~<%=PREFIX%>_i(void);
+
+        CORBA::Boolean allocateCapacity (const CF::Properties & capacities)
+                throw (CORBA::SystemException, CF::Device::InvalidCapacity, CF::Device::InvalidState);
+        void deallocateCapacity (const CF::Properties & capacities)
+                throw (CORBA::SystemException, CF::Device::InvalidCapacity, CF::Device::InvalidState);
+
+        CORBA::Object_ptr getPort( const char* _id ) throw (CF::PortSupplier::UnknownPort, CORBA::SystemException);
+
+        void releaseObject() throw (CF::LifeCycle::ReleaseError, CORBA::SystemException);
+
+    private:
+        // For component shutdown
+        string comp_uuid;
+
+        bool component_alive;
+
+        string naming_service_name;
+        ossie::ORB *orb;
+
+        // Threading stuff
+        omni_condition *data_in_signal;
+        omni_mutex data_in_signal_lock;
+        omni_mutex process_data_lock;
+        omni_mutex thread_exit_lock;
+        omni_mutex attribute_access;	// used when modifying variables
+<%
+    if (aggregateDevice) {
+%>
+        CF::DeviceSequence *devSeq;
+<%
+    }
+%>
+        // Functional members
+        // Housekeeping and data management variables
+        
+        bool thread_started;      
+};
+#endif

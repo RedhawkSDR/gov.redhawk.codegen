@@ -1,0 +1,497 @@
+<%@ jet package="gov.redhawk.ide.codegen.jet.python.template.device.workmodule" imports="gov.redhawk.ide.RedhawkIdeActivator
+gov.redhawk.ide.codegen.ImplementationSettings
+gov.redhawk.ide.codegen.Property
+gov.redhawk.ide.codegen.jet.TemplateParameter
+gov.redhawk.ide.codegen.jet.python.PythonJetGeneratorPlugin
+gov.redhawk.ide.codegen.python.utils.PortHelper
+gov.redhawk.ide.idl.Attribute
+gov.redhawk.ide.idl.IdlUtil
+gov.redhawk.ide.idl.Interface
+gov.redhawk.ide.idl.Operation
+gov.redhawk.ide.idl.Param
+gov.redhawk.ide.preferences.RedhawkIdePreferenceConstants
+java.util.Arrays
+java.util.HashSet
+java.util.List
+mil.jpeojtrs.sca.prf.Simple
+mil.jpeojtrs.sca.scd.Provides
+mil.jpeojtrs.sca.scd.SupportsInterface
+mil.jpeojtrs.sca.scd.Uses
+mil.jpeojtrs.sca.spd.Implementation
+mil.jpeojtrs.sca.spd.SoftPkg
+org.eclipse.core.runtime.CoreException
+org.eclipse.core.runtime.IPath
+org.eclipse.core.runtime.IStatus
+org.eclipse.core.runtime.Status
+org.eclipse.emf.common.util.EList"
+class="DevicePythonTemplate"
+skeleton="../../generator.skeleton2"%>
+<% 
+    TemplateParameter templ = (TemplateParameter) argument; 
+    ImplementationSettings implSettings = templ.getImplSettings(); 
+    Implementation impl = templ.getImpl(); 
+    SoftPkg softpkg = (SoftPkg) impl.eContainer();
+    String PREFIX = gov.redhawk.ide.codegen.util.CodegenFileHelper.getPreferredFilePrefix(softpkg, implSettings); 
+    EList<Uses> uses = softpkg.getDescriptor().getComponent().getComponentFeatures().getPorts().getUses(); 
+    EList<Provides> provides = softpkg.getDescriptor().getComponent().getComponentFeatures().getPorts().getProvides(); 
+    List<IPath> search_paths = Arrays.asList(RedhawkIdeActivator.getDefault().getDefaultIdlIncludePath()); 
+    String deviceType = softpkg.getDescriptor().getComponent().getComponentType();
+    boolean aggregateDevice = false;
+    boolean execDevice = false;
+    boolean loadableDevice = false;
+    boolean havePorts = false;
+    boolean workModule = false;
+    if (deviceType.contains(RedhawkIdePreferenceConstants.EXECUTABLE_DEVICE.toLowerCase())) { 
+        deviceType = "Executable"; execDevice = true;
+    } else if (deviceType.contains(RedhawkIdePreferenceConstants.LOADABLE_DEVICE.toLowerCase())) { 
+        deviceType = "Loadable"; loadableDevice = true;
+    } else { 
+        deviceType = "";
+    } 
+    for (SupportsInterface inter : softpkg.getDescriptor().getComponent().getComponentFeatures().getSupportsInterface()) {
+        if (inter.getSupportsName().contains(RedhawkIdePreferenceConstants.AGGREGATE_DEVICE)) {
+            aggregateDevice = true;
+        }
+    }
+    HashSet<String> nsSet = new HashSet<String>();
+    if (uses.size() > 0) {
+        havePorts = true;
+        for (Uses tempUse : uses) {
+           nsSet.add(tempUse.getRepID().split(":")[1].split("/")[0]);
+        }
+    }
+    if (provides.size() > 0) {
+        havePorts = true;
+        for (Provides tempProvide : provides) {
+           nsSet.add(tempProvide.getRepID().split(":")[1].split("/")[0]);
+        }
+    } 
+    for (String file : templ.getSourceFiles()) {
+        if ("WorkModule.py".equals(file)) {
+            workModule = true;
+            break;
+        }
+    }
+    for (Property tempProp : implSettings.getProperties()) {
+        if (tempProp.getId().equals("use_workmodule")) {
+            if (Boolean.parseBoolean(tempProp.getValue())) {
+                workModule = true;
+                break;
+            }
+        }
+    }
+%>
+#!/usr/bin/env python
+from ossie.cf import CF, CF__POA
+from ossie.device import <%=deviceType%>Device, <% if (aggregateDevice) {%>AggregateDevice,<%} %>start_device
+import commands, os, sys
+import logging
+
+<% 
+    if (havePorts) { 
+        for (String ns : nsSet) {
+            String lowerNS = ns.toLowerCase();
+%>
+from <%=lowerNS%>.<%=lowerNS%>Interfaces import <%=ns%>, <%=ns%>__POA <%
+        }
+    }
+%>
+import time, signal, copy
+<% 
+    if (havePorts) { 
+%>
+import threading
+<% 
+    }
+    if (workModule) { 
+%>
+import WorkModule
+<%
+    }
+%>
+
+from <%= PREFIX %>Props import PROPERTIES
+
+<% 
+    // Ports 
+    if (havePorts) {
+        if (provides.size() > 0) {
+%>
+
+'''provides port(s)'''
+<%
+        }
+
+        // Provides Ports
+        for (Provides tempProvide : provides) {
+            String intName = tempProvide.getRepID();
+            Interface iface = IdlUtil.getInstance().getInterface(search_paths, intName.split(":")[1], true);
+            if (iface == null) {
+            	throw new CoreException(new Status(IStatus.ERROR, PythonJetGeneratorPlugin.PLUGIN_ID, "Unable to find interface for " + intName));
+            }
+            String nameSpace = iface.getNameSpace();
+            String interfaceName = iface.getName();
+%>
+
+class <%=nameSpace%>_<%=interfaceName%>_in_i(<%=nameSpace%>__POA.<%=interfaceName%>):
+    def __init__(self, parent, name):
+        self.parent = parent
+        self.name = name
+<% 
+            // Provides Operations
+            for (Operation op : iface.getOperations()) {
+                int numParams = op.getParams().size();
+%>
+
+    def <%=op.getName()%>(self<%for (Param p : op.getParams()){%>, <%=p.getName()%><%}%>):
+<%        
+                if ("pushPacket".equals(op.getName()) && (workModule)) {        
+%>        
+        # Queue the incoming data to be later worked on in the Workmodule
+        # TODO:
+        self.parent.work_mod.queueData(<%=op.getParams().get(0).getName()%>, <%=numParams == 4 ? "T" : "None"%>, <%=numParams == 4 ? "EOS" : "None"%>, <%=numParams == 4 ? "streamID" : "None"%>)
+<%
+                }  else { // End if statement pushPacket conditional                
+%>
+        # Optionally manipulate or output incoming data
+        # TODO:
+<%
+                } // End else statement pushPacket
+%>
+        pass
+<%
+            } // end for Provides Operations
+            for (Attribute op : iface.getAttributes()) {
+%>
+
+    def _get_<%=op.getName()%>(self):
+        # TODO:
+        pass
+<%
+                if (!op.isReadonly()) {
+%>
+
+    def _set_<%=op.getName()%>(self, data):
+        # TODO:
+        pass
+
+<%
+                } // end if !readonly
+            } // end Provides Attributes
+        } // end for Provides Ports %>
+
+<% 
+        // Uses Ports
+        if (uses.size() > 0) {
+%>
+
+'''uses port(s)'''
+<%
+        }
+        for (Uses tempUse : uses) {
+            String intName = tempUse.getRepID(); 
+            Interface iface = IdlUtil.getInstance().getInterface(search_paths, intName.split(":")[1], true);
+            boolean bulkioData = false;
+            if (iface == null) {
+            	throw new CoreException(new Status(IStatus.ERROR, PythonJetGeneratorPlugin.PLUGIN_ID, "Unable to find interface for " + intName));
+            }
+            String nameSpace = iface.getNameSpace();
+            String interfaceName = iface.getName();
+            // Check to see if this is a BULKIO data port
+            boolean pushSRIFlag = false;
+            boolean pushPacketFlag = false;
+            if ("BULKIO".equals(nameSpace)){
+                for (Operation op : iface.getOperations()){
+                    if ("pushSRI".equals(op.getName())) {
+                        pushSRIFlag = true;
+                    }
+                    if ("pushPacket".equals(op.getName())) {
+                        pushPacketFlag = true;
+                    }
+                }
+                bulkioData = (pushSRIFlag && pushPacketFlag);
+            } // end if BULKIO namespace
+%>
+
+class <%=nameSpace%>_<%=interfaceName%>_out_i(CF__POA.Port):
+    def __init__(self, parent, name):
+        self.parent = parent
+        self.name = name
+        self.outPorts = {}
+<%
+                if (bulkioData){
+%>
+        self.refreshSRI = False
+        self.defaultStreamSRI = BULKIO.StreamSRI(1, 0.0, 0.001, 1, 200, 0.0, 0.001, 1, 1, "sampleStream", [])
+<%
+                }
+%>
+        self.port_lock = threading.Lock()
+
+    def connectPort(self, connection, connectionId):
+        self.port_lock.acquire()
+        port = connection._narrow(<%=nameSpace%>__POA.<%=interfaceName%>)
+        self.outPorts[str(connectionId)] = port
+<%
+                if (bulkioData) {
+%>
+        self.refreshSRI = True
+<%
+                }
+%>
+        self.port_lock.release()
+
+    def disconnectPort(self, connectionId):
+        self.port_lock.acquire()
+        if self.outPorts.has_key(str(connectionId)):
+            self.outPorts.pop(str(connectionId), None)
+        else:
+            self.port_lock.release()
+            return
+        self.port_lock.release()
+<%
+                // Operations (function calls)
+                for (Operation op : iface.getOperations()) {
+                    boolean returnType = PortHelper.hasReturn(op);
+%>
+
+    def <%=op.getName()%>(self<%for (Param p : op.getParams()){%>, <%=p.getName()%><%}%>):
+<%
+                    if (returnType) {
+                        if (op.getReturnType().contains("string")) { 
+%>
+        retVal = ""
+<%
+                        } else if (PortHelper.getNumReturns(op) == 1) {
+%>
+        retVal = None
+<%
+                        } else {
+%>
+        retVal = []
+<%
+                        }
+                    }
+                    if (bulkioData && "pushSRI".equals(op.getName())) {
+%>
+        self.defaultStreamSRI = <%
+                        boolean first_param = true;
+                        for (Param p : op.getParams()) {
+                            if (first_param) { 
+                                first_param=false;
+                            }
+%><%=p.getName()%><%
+                        }
+                    }
+                    if (bulkioData && "pushPacket".equals(op.getName())) {
+%>
+        if self.refreshSRI:
+            self.pushSRI(self.defaultStreamSRI)
+<%
+                    }
+%>
+        self.port_lock.acquire()
+        try:
+            for port in self.outPorts:
+                if self.outPorts[port] != None:
+                <%
+                    if (returnType) {
+%>retVal =<%
+                    }
+%> self.outPorts[port].<%=op.getName()%>(<%
+                    boolean first_param = true;
+                    for (Param p : op.getParams()) {
+                        if (first_param) { 
+                            first_param=false;
+                        } else {
+%>, <%
+                        }
+%><%=p.getName()%><%
+                    }
+%>)
+        except:
+            self.parent._log.exception("The call to <%=op.getName()%> failed")
+        self.port_lock.release()
+<%
+                    if (returnType) {
+%>
+        return retVal
+<%
+                    }
+                } // end Operations
+            for (Attribute op : iface.getAttributes()) {
+%>
+
+    def _get_<%=op.getName()%>(self):
+        # TODO:
+        pass
+<%
+                if (!op.isReadonly()) {
+%>
+
+    def _set_<%=op.getName()%>(self, data):
+        # TODO:
+        pass
+
+<%
+                } // end if !readonly
+            } // end Provides Attributes
+        } // end for  Uses Ports
+    } // end Ports
+%>
+
+class <%=PREFIX%>(CF__POA.<% 
+    if (aggregateDevice) {%>Aggregate<%
+        if ("Executable".equals(deviceType)) {%><%=deviceType%><% 
+        } else if ("Loadable".equals(deviceType)) {%><%=deviceType%><%
+        } else {%>Plain<%
+        }%>Device,<%
+    } else {%><%=deviceType%>Device, <%
+    }%><%=deviceType%>Device<%
+    if (aggregateDevice) {%>, AggregateDevice<%}%>):
+    def __init__(self, devmgr, uuid, label, softwareProfile, compositeDevice, execparams):
+<% 
+    if (execDevice) {
+%>
+        ExecutableDevice.__init__(self, devmgr, uuid, label, softwareProfile, compositeDevice, execparams, PROPERTIES)
+<% 
+    } else if (loadableDevice) {
+%>
+        LoadableDevice.__init__(self, devmgr, uuid, label, softwareProfile, compositeDevice, execparams, PROPERTIES)
+<% 
+    } else {
+%>
+        Device.__init__(self, devmgr, uuid, label, softwareProfile, compositeDevice, execparams, PROPERTIES)
+<% 
+    }
+    if (aggregateDevice) {
+%>
+        AggregateDevice.__init__(self)
+<%
+    }
+%>
+<%
+    if (havePorts) {
+%>
+        self.ports = {}
+<%
+    }
+%>    
+<%
+    if (havePorts && (provides.size() > 0)) {
+%>
+
+        '''provides'''
+<% 
+        for (Provides tempProvide : provides) {
+            Interface iface = IdlUtil.getInstance().getInterface(search_paths, tempProvide.getRepID().split(":")[1], true);
+            if (iface == null) {
+            	throw new CoreException(new Status(IStatus.ERROR, PythonJetGeneratorPlugin.PLUGIN_ID, "Unable to find interface for " + tempProvide.getRepID()));
+            }
+            String nameSpace = iface.getNameSpace();
+            String interfaceName = iface.getName();
+%>
+        portRef = <%=nameSpace%>_<%=interfaceName%>_in_i(self, "<%=tempProvide.getProvidesName()%>")
+        self.ports['<%=tempProvide.getProvidesName()%>'] = portRef
+<% 
+        }
+    } // end if has provides ports
+    if (havePorts && (uses.size() > 0)) {
+%>    
+
+        '''uses'''
+<% 
+        for (Uses tempUse : uses) { 
+            Interface iface = IdlUtil.getInstance().getInterface(search_paths, tempUse.getRepID().split(":")[1], true);
+            if (iface == null) {
+            	throw new CoreException(new Status(IStatus.ERROR, PythonJetGeneratorPlugin.PLUGIN_ID, "Unable to find interface for " + tempUse.getRepID()));
+            }
+            String nameSpace = iface.getNameSpace();
+            String interfaceName = iface.getName();
+%>
+        portRef = <%=nameSpace%>_<%=interfaceName%>_out_i(self, "<%=tempUse.getUsesName()%>")
+        self.ports['<%=tempUse.getUsesName()%>'] = portRef
+<%
+        }
+    } // end if have uses ports
+%>
+
+    def getPort(self, name):
+        if self.ports.has_key(name):
+            return self.ports[str(name)]._this()
+        raise CF.PortSupplier.UnknownPort()
+
+<%
+    if (workModule) {
+%>
+    def releaseObject(self):
+        self.work_mod.Release()
+<%
+    }
+%>
+
+    ###########################################
+    # CF::LifeCycle
+    ###########################################
+    # This function is called by the framework during construction of the waveform
+    #    it is called before configure() is called, so whatever values you set in the xml properties file
+    #    won't be available when this is called. I wouldn't have done it in this order, but this
+    #    is what the spec call for
+    def initialize(self):
+<% 
+    if (workModule) { 
+%>
+        self.work_mod = WorkModule.WorkClass(self)
+<% 
+    } else {
+%>
+        pass 
+<%
+    } 
+    
+%>
+    ###########################################
+    # CF::TestableObject
+    ###########################################
+    # Allows for the ability to perform stand alone testing of an SCA Component - useful for built in test (BIT) operations.
+    # This function will need to run the test specified by the TestID, along with the values provided by testValues.
+    def runTest(self, properties, testid):
+        # TODO:
+        pass
+       
+    ###########################################
+    # CF::Device
+    ###########################################
+<%
+    for (Simple simple : softpkg.getPropertyFile().getProperties().getSimple()) { 
+        if ("allocation".equals(simple.getKind().get(0).getType().getName())) {
+            if ("external".equals(simple.getAction().getType().getName())) {
+%>
+    # overrides allocateCapacity for <%=simple.getName()%>
+    def allocate_<%=simple.getName()%>(self, value):
+        # Allocate space for the following property  
+        # TODO:
+        pass
+<%
+            }
+        }
+        if ("readwrite".equals(simple.getMode().getName())) {
+%>
+    # overrides deallocateCapacity for <%=simple.getName()%>
+    def deallocate_<%=simple.getName()%>(self, value):
+        # Deallocate space for the property
+        # TODO:
+        pass
+<% 
+        }
+    } // end for simple properties
+
+%>
+
+###########################################                    
+# program execution
+###########################################
+if __name__ == "__main__":
+    logging.getLogger().setLevel(logging.WARN)
+    logging.debug("Starting Device")
+    start_device(<%=PREFIX%>)

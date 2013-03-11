@@ -1,0 +1,33 @@
+<%@ jet package="gov.redhawk.ide.idl.generator.internal"
+imports="gov.redhawk.ide.idl.generator.newidl.GeneratorArgs"
+class="BuildShTemplate"
+skeleton="../generator.skeleton"
+%><%
+    final GeneratorArgs args = (GeneratorArgs) argument;
+    final String rpmname = args.getInterfaceName().toLowerCase() + "Interfaces";
+    final String version = args.getInterfaceVersion();
+%>
+#!/bin/sh
+config_ac='configure.ac'
+make_am='Makefile.am'
+makefile='Makefile'
+
+if [ "$1" == 'clean' ]; then
+  make clean
+elif [ "$1" == 'rpm' ]; then
+  # A very simplistic RPM build scenario
+  mydir=`dirname $0`
+  tmpdir=`mktemp -d`
+  cp -r ${mydir} ${tmpdir}/<%=rpmname%>-<%=version%>
+  tar czf ${tmpdir}/<%=rpmname%>-<%=version%>.tar.gz --exclude=".svn" -C ${tmpdir} <%=rpmname%>-<%=version%>
+  rpmbuild -ta ${tmpdir}/<%=rpmname%>-<%=version%>.tar.gz
+  rm -rf $tmpdir
+else
+  # Checks if build is newer than makefile (based on modification time)
+  if [[ $config_ac -nt $makefile || $make_am -nt $makefile ]]; then
+    ./reconf
+    ./configure
+  fi
+  make
+  exit 0
+fi

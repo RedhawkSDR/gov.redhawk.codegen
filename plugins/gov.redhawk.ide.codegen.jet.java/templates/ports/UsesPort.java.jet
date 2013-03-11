@@ -1,0 +1,352 @@
+<%@ jet package="gov.redhawk.ide.codegen.jet.java.template.component"
+imports="gov.redhawk.ide.RedhawkIdeActivator
+gov.redhawk.ide.codegen.ImplementationSettings
+gov.redhawk.ide.codegen.Property
+gov.redhawk.ide.codegen.java.PortHelper
+gov.redhawk.ide.codegen.jet.java.JavaJetGeneratorPlugin
+gov.redhawk.ide.codegen.jet.java.JavaTemplateParameter
+gov.redhawk.ide.codegen.java.JavaCodegenProperty
+gov.redhawk.ide.codegen.java.StructJavaCodegenProperty
+gov.redhawk.ide.codegen.java.JavaGeneratorUtils
+gov.redhawk.ide.idl.IdlJavaUtil
+java.util.ArrayList
+java.util.Arrays
+java.util.List
+java.util.Map
+mil.jpeojtrs.sca.prf.AbstractProperty
+mil.jpeojtrs.sca.spd.SoftPkg
+org.eclipse.core.runtime.CoreException
+org.eclipse.core.runtime.IPath
+org.eclipse.core.runtime.IStatus
+org.eclipse.core.runtime.Status
+org.jacorb.idl.Interface
+org.jacorb.idl.Operation
+org.jacorb.idl.ParamDecl
+org.jacorb.idl.ScopedName"
+class="UsesPortJavaTemplate"
+skeleton="../generator.skeleton2" 
+%>
+<%
+    JavaTemplateParameter template = (JavaTemplateParameter) argument;
+    ImplementationSettings implSettings = template.getImplSettings();
+    List<IPath> search_paths = Arrays.asList(RedhawkIdeActivator.getDefault().getDefaultIdlIncludePath());
+    List<String> packages = new ArrayList<String>();
+    SoftPkg softPkg = template.getSoftPkg();
+    String PREFIX = gov.redhawk.ide.codegen.util.CodegenFileHelper.getPreferredFilePrefix(softPkg, implSettings);
+    String pkg = template.getPackage();
+    boolean pushXMLPacketCall = false;
+    boolean pushPacketCall = false;
+    boolean pushSRICall = false;
+    Map<String, AbstractProperty> properties = JavaGeneratorUtils.createPropertiesSet(softPkg, "prop");
+    List<JavaCodegenProperty> javaProperties = JavaGeneratorUtils.createJavaProps(1, properties);
+    String dataTransfer = "";
+    String type = "";
+    Interface iface = IdlJavaUtil.getInstance().getInterface(search_paths, template.getPortRepId().split(":")[1], true);
+    if (iface == null) {
+        throw new CoreException(new Status(IStatus.ERROR, JavaJetGeneratorPlugin.PLUGIN_ID, "Unable to find interface for " + template.getPortRepId()));
+    }
+
+    boolean useJNI = false;
+    for (Property tempProp : implSettings.getProperties()) {
+        if ("use_jni".equals(tempProp.getId())) {
+            useJNI = Boolean.parseBoolean(tempProp.getValue());
+        }
+    }
+
+    String nameSpace = iface.pack_name;
+    String interfaceName = iface.name();
+    String helperName = interfaceName + "Helper";
+    if (useJNI && "BULKIO".equals(nameSpace)) {
+        helperName = nameSpace + ".jni." + helperName;
+    }
+    boolean dataSDDSPort = interfaceName.contains("dataSDDS");
+    for (Operation op : IdlJavaUtil.getOperations(iface)) {
+        if ("pushPacket".equals(IdlJavaUtil.getOpName(op))) {
+            dataTransfer = IdlJavaUtil.getParamType(IdlJavaUtil.getParams(op)[0]);
+            if (IdlJavaUtil.getParams(op).length == 4) {
+                pushPacketCall = true;
+            } else {
+                pushXMLPacketCall = true;
+            }
+        } else if ("pushSRI".equals(IdlJavaUtil.getOpName(op))) {
+            pushSRICall = true;
+        }
+    }
+    packages.add(iface.pack_name);
+    if (template.isGenClassDef() && template.isGenSupport()) {
+%>
+package <%=pkg + ".ports"%>;
+
+<%
+    }
+    if (template.isGenSupport()) {
+%>
+import java.util.HashMap;
+import java.util.Map;
+
+import org.ossie.component.QueryableUsesPort;
+import java.util.ArrayList;
+import java.util.List;
+import CF.PropertiesHelper;
+import CF.DataType;
+import org.omg.CORBA.ORB;
+import org.omg.CORBA.Any;
+import <%=pkg%>.<%=PREFIX%>.*;
+<%
+        if ("BULKIO".equals(nameSpace)) {
+%>
+import java.util.Map.Entry;
+import ExtendedCF.UsesConnection;
+<%
+            if (dataSDDSPort) {
+%>
+import BULKIO.dataSDDSPackage.AttachError;
+import BULKIO.dataSDDSPackage.DetachError;
+import BULKIO.dataSDDSPackage.InputUsageState;
+import BULKIO.dataSDDSPackage.StreamInputError;
+<%
+            }
+        }
+    	if (nameSpace.equals("ExtendedEvent") && interfaceName.equals("MessageEvent")) {
+%>
+import org.ossie.events.*;
+<%
+    	} else {
+        	for (String pack : packages) {
+%>
+import <%=pack%>.*;
+<%
+        	}
+    	}
+    } // end if template.isGenSupport()
+    if (nameSpace.equals("ExtendedEvent") && interfaceName.equals("MessageEvent")) {
+%>
+/**
+ * @generated
+ */
+public class <%=nameSpace%>_<%=interfaceName%>OutPort extends MessageSupplierPort {
+    public <%=nameSpace%>_<%=interfaceName%>OutPort(String portName) {
+		super(portName);
+	}
+
+<%
+		if (javaProperties != null) {
+			for (JavaCodegenProperty property : javaProperties) {
+				if (property instanceof StructJavaCodegenProperty) {
+                    StructJavaCodegenProperty structProperty = (StructJavaCodegenProperty) property;
+					for (String kindValue : structProperty.getKindValues()) {
+						if (kindValue.equals("message")) {
+%>
+    public void sendMessage(final <%=property.getId().substring(1,property.getId().length()-1)%>_struct message) {
+    	final List<DataType> outProps = new ArrayList<DataType>();
+    	final List<DataType> propStruct = new ArrayList<DataType>();
+    	Any propStruct_any = ORB.init().create_any();
+<%
+					for (final String name : structProperty.getFields().keySet()) {
+%>
+    	propStruct.add(new DataType("<%=name%>", message.<%=name%>.toAny()));
+<%
+					}
+%>
+    	PropertiesHelper.insert(propStruct_any, propStruct.toArray(new DataType[propStruct.size()]));
+    	outProps.add(new DataType(<%=property.getId()%>, propStruct_any));
+    	Any outProps_any = ORB.init().create_any();
+    	PropertiesHelper.insert(outProps_any, outProps.toArray(new DataType[outProps.size()]));
+    	this.push(outProps_any);
+    }
+    
+    public void sendMessages(final ArrayList<<%=property.getId().substring(1,property.getId().length()-1)%>_struct> messages) {
+    	final List<DataType> outProps = new ArrayList<DataType>();
+		for (<%=property.getId().substring(1,property.getId().length()-1)%>_struct message : messages) {
+	    	final List<DataType> propStruct = new ArrayList<DataType>();
+	    	Any propStruct_any = ORB.init().create_any();
+<%
+					for (final String name : structProperty.getFields().keySet()) {
+%>
+    		propStruct.add(new DataType("<%=name%>", message.<%=name%>.toAny()));
+<%
+					}
+%>
+	    	PropertiesHelper.insert(propStruct_any, propStruct.toArray(new DataType[propStruct.size()]));
+	    	outProps.add(new DataType(<%=property.getId()%>, propStruct_any));
+		}
+    	Any outProps_any = ORB.init().create_any();
+    	PropertiesHelper.insert(outProps_any, outProps.toArray(new DataType[outProps.size()]));
+    	this.push(outProps_any);
+    }
+<%
+						}
+					}
+				}
+			} 
+		}
+%>
+}
+<%
+	} else if (template.isGenClassDef()) {
+%>
+
+<%
+        if ("BULKIO".equals(nameSpace)) {
+%>
+<%@ include file="BULKIO_UsesPort.jetinc"%>
+<%
+        } else {
+%>
+/**
+ * @generated
+ */
+public class <%=nameSpace%>_<%=interfaceName%>OutPort extends QueryableUsesPort<<%=interfaceName%>Operations> implements <%=interfaceName%>Operations {
+
+    /**
+     * Map of connection Ids to port objects
+     * @generated
+     */
+    protected Map<String, <%=interfaceName%>Operations> outConnections = new HashMap<String, <%=interfaceName%>Operations>();
+
+    /**
+     * @generated
+     */
+    public <%=nameSpace%>_<%=interfaceName%>OutPort(String portName) 
+    {
+        super(portName);
+
+        this.outConnections = new HashMap<String, <%=interfaceName%>Operations>();
+        //begin-user-code
+        //end-user-code
+    }
+
+    /**
+     * @generated
+     */
+    protected <%=interfaceName%>Operations narrow(org.omg.CORBA.Object connection) 
+    {
+        <%=interfaceName%>Operations ops = <%=helperName%>.narrow(connection);
+        
+        //begin-user-code 
+        //end-user-code 
+        
+        return ops; 
+    }
+
+    public void connectPort(final org.omg.CORBA.Object connection, final String connectionId) throws CF.PortPackage.InvalidPort, CF.PortPackage.OccupiedPort
+    {
+        try {
+            // don't want to process while command information is coming in
+            synchronized (this.updatingPortsLock) {
+                super.connectPort(connection, connectionId);
+                final <%=interfaceName%>Operations port = <%=helperName%>.narrow(connection);
+                this.outConnections.put(connectionId, port);
+                this.active = true;
+            }
+        } catch (final Throwable t) {
+            t.printStackTrace();
+        }
+
+    }
+
+    public void disconnectPort(final String connectionId) {
+        // don't want to process while command information is coming in
+        synchronized (this.updatingPortsLock) {
+            super.disconnectPort(connectionId);
+            this.outConnections.remove(connectionId);
+            this.active = (this.outConnections.size() != 0);
+        }
+    }
+
+<%
+            for (Operation op : IdlJavaUtil.getOperations(iface)) {
+                ScopedName[] raises = IdlJavaUtil.getRaises(op);
+                String throwsString = (raises.length > 0) ? "throws " + raises[0].resolvedName() : "";
+                for (int i = 1; i < raises.length; ++i) {
+                    throwsString += ", " + raises[i].resolvedName();
+                }
+                ParamDecl[] params = IdlJavaUtil.getParams(op);
+%>
+    /**
+     * @generated
+     */
+    public <%=IdlJavaUtil.getReturnType(op)%> <%=IdlJavaUtil.getOpName(op)%>(<%
+                if (params.length == 0) {%>) <%=throwsString%>
+    {
+<%
+                }
+                for (int i = 0; i < params.length; i++) {
+%><%=IdlJavaUtil.getParamType(params[i])%> <%=params[i].simple_declarator.name()%><%
+                    if (i == (params.length - 1)) {
+%>) <%=throwsString%>
+    {
+<%
+                    } else {
+%>, <%
+                    }
+                }  
+
+                if (!"void".equals(IdlJavaUtil.getReturnType(op))) {
+%>
+        <%=IdlJavaUtil.getReturnType(op)%> retval = <%=IdlJavaUtil.getInitialValue(op)%>;
+        
+<%
+                }
+%>
+        synchronized(this.updatingPortsLock) {    // don't want to process while command information is coming in
+            if (this.active) {
+                //begin-user-code
+                //end-user-code
+                
+                for (<%=interfaceName%>Operations p : this.outConnections.values()) {
+                    
+<%if (!"void".equals(IdlJavaUtil.getReturnType(op))) {%>retval = <%}%>p.<%=IdlJavaUtil.getOpName(op)%>(<%
+                if (params.length == 0) {
+%>);<%
+                }
+        
+                for (int i = 0; i < params.length; i++) {
+%><%=params[i].simple_declarator.name()%><%
+                    if (i == (params.length - 1)) {
+%>);<%
+                    } else {
+%>, <%
+                    }
+                }
+%>
+                }
+            }
+        }    // don't want to process while command information is coming in
+        
+        //begin-user-code
+        //end-user-code
+        
+        return<%
+                if (!"void".equals(IdlJavaUtil.getReturnType(op))) {
+%> retval<%
+                }
+%>;
+    }
+<%    
+            }
+            
+            for (Operation op : IdlJavaUtil.getOperations(iface)) {
+                ParamDecl[] params = IdlJavaUtil.getParams(op);
+                if ((!"pushSRI".equals(IdlJavaUtil.getOpName(op))) && (!"pushPacket".equals(IdlJavaUtil.getOpName(op)))) {
+                    int counter = 0;
+                    for (ParamDecl par : params) {
+                        String iteratorBase = IdlJavaUtil.getParamType(par);
+                        if (iteratorBase.endsWith("[]")) {
+%>
+
+    /**
+     * @generated
+     */
+    protected <%=iteratorBase%> Sequence_<%=IdlJavaUtil.getOpName(op)%>_<%=counter++%>;
+<%
+                        }
+                    }
+                }
+            }
+        } // end if !BULKIO
+%>
+}
+<%
+    } // end if template.isGenClassDef()
+%>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<!--
+	This file is protected by Copyright. Please refer to the COPYRIGHT file distributed with this 
+	source distribution.
+
+	This file is part of REDHAWK IDE.
+	
+	All rights reserved.  This program and the accompanying materials are made available under 
+	the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at 
+	http://www.eclipse.org/legal/epl-v10.html
+-->
+<plugin>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            category="gov.redhawk.ide.ui.category.sca_development"
+            class="gov.redhawk.ide.idl.ui.views.IDLBrowser"
+            id="gov.redhawk.ide.ui.idlbrowser"
+            name="%view.name.idlBrowser"
+            restorable="true">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            canFinishEarly="false"
+            category="gov.redhawk.ide.ui.wizards.category.sca"
+            class="gov.redhawk.ide.idl.ui.wizard.NewScaIDLProjectWizard"
+            finalPerspective="gov.redhawk.ide.ui.perspectives.sca"
+            hasPages="true"
+            icon="icons/etool16/newprj_wiz.gif"
+            id="gov.redhawk.ide.ui.wizards.newidl"
+            name="SCA IDL Project"
+            preferredPerspectives="gov.redhawk.ide.ui.wizards.category.sca, org.eclipse.cdt.ui.CPerspective, org.python.pydev.ui.PythonPerspective"
+            project="true">
+      </wizard>
+      <primaryWizard
+            id="gov.redhawk.ide.ui.wizards.newidl">
+      </primaryWizard>
+   </extension>
+</plugin>

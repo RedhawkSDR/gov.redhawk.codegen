@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<!--
+	This file is protected by Copyright. Please refer to the COPYRIGHT file distributed with this 
+	source distribution.
+
+	This file is part of REDHAWK IDE.
+	
+	All rights reserved.  This program and the accompanying materials are made available under 
+	the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at 
+	http://www.eclipse.org/legal/epl-v10.html
+-->
+<plugin>
+
+   <extension
+         point="gov.redhawk.ide.codegen.codegens">
+      <codegen
+            associatedPerspectiveId="org.eclipse.jdt.ui.JavaPerspective"
+            autoGenerate="false"
+            class="gov.redhawk.ide.codegen.jet.java.JavaGenerator"
+            compiler="/usr/bin/javac"
+            compilerVersion="1.5"
+            humanLanguage="EN"
+            id="gov.redhawk.ide.codegen.jet.java.JavaGenerator"
+            language="Java"
+            languageVersion="1.5"
+            name="Java Code Generator"
+            notDefaultable="false"
+            priority="high"
+            runtime="/usr/bin/java"
+            runtimeVersion="1.5">
+         <description>
+            This is the Jet generator for Java components and devices.
+         </description>
+         <operatingSystem
+               default="true"
+               os="Linux">
+         </operatingSystem>
+         <componenttype
+               type="resource">
+         </componenttype>
+         <componenttype
+               type="device">
+         </componenttype>
+      </codegen>
+   </extension>
+   <extension
+         point="gov.redhawk.ide.codegen.codegenTemplate">
+      <template
+            class="gov.redhawk.ide.codegen.jet.java.pattern.LegacyTemplate"
+            codegenId="gov.redhawk.ide.codegen.jet.java.JavaGenerator"
+            hasSettings="true"
+            id="gov.redhawk.ide.codegen.jet.java.pattern.LegacyTemplate"
+            name="Legacy Project"
+            notDefaultable="true"
+            selectable="false"
+            usesPortTemplates="false">
+         <description>
+            This is the template for previously generated projects prior to template definitions.
+         </description>
+         <property
+               default_value="FALSE"
+               deprecated="true"
+               key="auto_start"
+               name="Auto start"
+               required="true">
+            <description>
+               When this property is set, the generated code's initialize function is tied to the start function, which in turn starts the processing thread. 
+	When the property is not set, the start function needs to be explicitly called to start the processing thread.
+            </description>
+         </property>
+         <property
+               default_value="TRUE"
+               key="queued_ports"
+               name="Enable queued ports"
+               required="true">
+            <description>
+               Set this to true to use queue's for sending and receiving port data
+            </description>
+         </property>
+         <property
+               default_value=""
+               key="java_package"
+               name="Name of the Java package"
+               required="true">
+            <description>
+               The package that the generated component should be named.
+            </description>
+         </property>
+         <componenttype
+               type="resource">
+         </componenttype>
+         <componenttype
+               type="device">
+         </componenttype>
+      </template>
+      <template
+            class="gov.redhawk.ide.codegen.jet.java.pattern.ManualTemplate"
+            codegenId="gov.redhawk.ide.codegen.jet.java.JavaGenerator"
+            hasSettings="true"
+            id="gov.redhawk.ide.codegen.jet.java.pattern.ManualTemplate"
+            name="Manual Generator"
+            notDefaultable="true"
+            selectable="true"
+            usesPortTemplates="false">
+         <description>
+            By default this only prepares the project for future Java development and generates a basic component outline.
+         </description>
+         <property
+               default_value="TRUE"
+               key="generate_skeleton"
+               name="Generate skeleton code"
+               required="true">
+            <description>
+               Whether or not to generate a skeleton code implementation
+            </description>
+         </property>
+         <property
+               default_value=""
+               key="java_package"
+               name="Name of the Java package"
+               required="true">
+            <description>
+               The package that the generated component should be named.
+            </description>
+         </property>
+         <componenttype
+               type="resource">
+         </componenttype>
+         <componenttype
+               type="device">
+         </componenttype>
+         <componenttype
+               type="service">
+         </componenttype>
+      </template>
+      <template
+            class="gov.redhawk.ide.codegen.jet.java.pattern.PullPortDataTemplate"
+            codegenId="gov.redhawk.ide.codegen.jet.java.JavaGenerator"
+            hasSettings="true"
+            id="gov.redhawk.ide.codegen.jet.java.JavaGenerator"
+            name="Pull Port Data"
+            notDefaultable="false"
+            portCodegenId="gov.redhawk.ide.codegen.jet.java.portHandler"
+            selectable="true"
+            usesPortTemplates="true">
+         <description>
+            This template will queue all data inside each input port. It is the developers responsibility to pull the data from the port's queue for processing.
+         </description>
+         <property
+               default_value="TRUE"
+               deprecated="true"
+               key="queued_ports"
+               name="Enable queued ports"
+               required="true">
+            <description>
+               Set this to true to use queue's for sending and receiving port data
+            </description>
+         </property>
+         <property
+               default_value=""
+               key="java_package"
+               name="Name of the Java package"
+               required="true">
+            <description>
+               The package that the generated component should be named.
+            </description>
+         </property>
+         <property
+               default_value="FALSE"
+               deprecated="true"
+               key="auto_start"
+               name="Auto Start the Component"
+               required="true">
+         </property>
+         <componenttype
+               type="resource">
+         </componenttype>
+         <componenttype
+               type="device">
+         </componenttype>
+         <property
+               default_value="TRUE"
+               deprecated="false"
+               key="use_jni"
+               name="Use JNI interfaces for BULKIO"
+               required="true">
+         </property>
+      </template>
+   </extension>
+   <extension
+         point="gov.redhawk.ide.codegen.portGenerator">
+      <portHandler
+            class="gov.redhawk.ide.codegen.jet.java.ports.PullPortTemplate"
+            id="gov.redhawk.ide.codegen.jet.java.portHandler"
+            name="Default Java Port Generator"
+            pullInputData="true">
+         <description>
+            This is the default REDHAWK provided port generator. It uses the Pull Data pattern for port generation.
+         </description>
+         <interfaces>
+            <portInterface
+                  idlInterface="IDL:BULKIO/.*:1.0">
+            </portInterface>
+            <portInterface
+                  idlInterface="IDL:REDHAWK/.*:1.0">
+            </portInterface>
+         </interfaces>
+         <language
+               name="Java">
+         </language>
+      </portHandler>
+   </extension>
+   <extension
+         point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType
+            delegate="gov.redhawk.ide.codegen.jet.java.JavaComponentLaunchDelegate"
+            delegateDescription="The Redhawk Java component launcher supports launching local components in run or debug modes"
+            delegateName="Redhawk JDT Launcher"
+            id="gov.redhawk.ide.codegen.jet.java.launching.localJavaComponent"
+            migrationDelegate="org.eclipse.jdt.internal.launching.JavaMigrationDelegate"
+            modes="run, debug"
+            name="Local Java Component"
+            sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
+            sourcePathComputerId="org.eclipse.jdt.launching.sourceLookup.javaSourcePathComputer">
+      </launchConfigurationType>
+   </extension>
+   <extension
+         point="org.eclipse.emf.validation.constraintProviders">
+      <constraintProvider
+            cache="true">
+         <package
+               namespaceUri="http://www.redhawk.gov/model/codegen">
+         </package>
+         <constraints
+               categories="gov.redhawk.validation.category">
+            <constraint
+                  class="gov.redhawk.ide.codegen.jet.java.JavaPackageNameValidator"
+                  id="java_package"
+                  isEnabledByDefault="true"
+                  lang="java"
+                  mode="Live"
+                  name="Java Package"
+                  severity="WARNING"
+                  statusCode="1">
+               <message>
+                  {0}
+               </message>
+               <target
+                     class="ImplementationSettings">
+                  <event
+                        name="Set">
+                     <feature
+                           name="properties">
+                     </feature>
+                  </event>
+                  <event
+                        name="Unset">
+                     <feature
+                           name="properties">
+                     </feature>
+                  </event>
+                  <event
+                        name="Add">
+                     <feature
+                           name="properties">
+                     </feature>
+                  </event>
+                  <event
+                        name="Remove">
+                     <feature
+                           name="properties">
+                     </feature>
+                  </event>
+               </target>
+            </constraint>
+         </constraints>
+         </constraintProvider>
+   </extension>
+</plugin>

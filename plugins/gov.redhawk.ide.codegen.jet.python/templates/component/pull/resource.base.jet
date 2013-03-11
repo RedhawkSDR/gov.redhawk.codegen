@@ -1,0 +1,548 @@
+<%@ jet package="gov.redhawk.ide.codegen.jet.python.template.component.pull" imports="gov.redhawk.ide.codegen.CodegenUtil
+gov.redhawk.ide.codegen.IPortTemplateDesc
+gov.redhawk.ide.codegen.IScaPortCodegenTemplate
+gov.redhawk.ide.codegen.ImplementationSettings
+gov.redhawk.ide.codegen.PortRepToGeneratorMap
+gov.redhawk.ide.codegen.Property
+gov.redhawk.ide.codegen.jet.TemplateParameter
+gov.redhawk.ide.codegen.jet.python.ports.PropertyChangeEventPortTemplate
+gov.redhawk.ide.codegen.jet.python.ports.PullPortTemplate
+gov.redhawk.ide.codegen.python.utils.PropertyToPython
+gov.redhawk.ide.codegen.python.utils.SimpleToPython
+gov.redhawk.ide.codegen.python.utils.SimpleSequenceToPython
+gov.redhawk.ide.codegen.python.utils.StructToPython
+gov.redhawk.ide.codegen.python.utils.StructSequenceToPython
+gov.redhawk.ide.codegen.python.utils.StructValues
+gov.redhawk.ide.codegen.python.utils.PortHelper
+gov.redhawk.ide.preferences.RedhawkIdePreferenceConstants
+gov.redhawk.sca.util.StringUtil
+gov.redhawk.sca.util.StringUpdateStrategy
+java.util.ArrayList
+java.util.Collections
+java.util.Date
+java.util.HashMap
+java.util.HashSet
+java.util.List
+java.util.Map
+mil.jpeojtrs.sca.prf.Properties
+mil.jpeojtrs.sca.prf.Simple
+mil.jpeojtrs.sca.prf.SimpleSequence
+mil.jpeojtrs.sca.prf.Struct
+mil.jpeojtrs.sca.prf.StructSequence
+mil.jpeojtrs.sca.scd.Provides
+mil.jpeojtrs.sca.scd.Uses
+mil.jpeojtrs.sca.spd.Implementation
+mil.jpeojtrs.sca.spd.SoftPkg
+org.eclipse.core.runtime.CoreException
+org.eclipse.core.runtime.IPath
+org.eclipse.core.runtime.Platform
+org.eclipse.core.runtime.IProduct
+org.eclipse.emf.common.util.EList
+gov.redhawk.model.sca.util.ModelUtil"
+class="ResourceBaseTemplate"
+skeleton="../../generator.skeleton2"%>
+<%
+	Date date = new Date(System.currentTimeMillis());
+%>
+#!/usr/bin/env python
+#
+# AUTO-GENERATED CODE.  DO NOT MODIFY!
+<%@ include file="../../utils/setup.jetinc"%>
+<%@ include file="genProperties.jetinc"%>
+<%@ include file="../../utils/header.jetinc"%>
+<%
+    includePorts = false;
+%>
+<%@ include file="../../utils/imports.jetinc"%>
+<%
+    List<String> imports = new ArrayList<String>();
+    boolean foundUsesMessageEvent = false;
+    for (String intName : usesReps) {
+        if (intName.equals("IDL:ExtendedEvent/MessageEvent:1.0")) {
+%>
+from ossie import events
+<%
+        	foundUsesMessageEvent = true;
+        	break;
+        }
+    }
+    if (!foundUsesMessageEvent) {
+    	for (String intName : providesReps) {
+        	if (intName.equals("IDL:ExtendedEvent/MessageEvent:1.0")) {
+%>
+from ossie import events
+<%
+	        	break;
+    	    }
+    	}
+    }
+    for (String intName : usesReps) {
+        IScaPortCodegenTemplate gen = portMap.get(intName);
+        portTempl.setPortRepId(intName);
+        portTempl.setGenSupport(true);
+        portTempl.setGenClassDef(false);
+        portTempl.setGenClassImpl(false);
+        String imp = "";
+        if (gen != null) {
+            imp = gen.generateClassSupport(intName, false, softPkg, implSettings, portTempl, CodegenUtil.PYTHON);
+        } else {
+            imp = new PullPortTemplate().generateClassSupport(intName, false, softPkg, implSettings, portTempl, CodegenUtil.PYTHON);
+        }
+        for (String s : imp.split("\n")) {
+            if ((s.trim().length() > 0) && !imports.contains(s)) {
+                imp = new PropertyChangeEventPortTemplate().generateClassSupport(intName, false, softPkg, implSettings, portTempl, CodegenUtil.PYTHON);
+                if (s.contains("ExtendedEvent")) {
+                    continue;
+        		}
+                imports.add(s);
+            }
+        }
+    }
+    if (includePropertyChange) {
+        imports.add(new PropertyChangeEventPortTemplate().generateClassSupport(null, false, softPkg, implSettings, portTempl, CodegenUtil.PYTHON));
+    }
+    for (String intName : providesReps) {
+        IScaPortCodegenTemplate gen = portMap.get(intName);
+        portTempl.setPortRepId(intName);
+        portTempl.setGenSupport(true);
+        portTempl.setGenClassDef(false);
+        portTempl.setGenClassImpl(false);
+        String imp = "";
+        if (gen != null) {
+            imp = gen.generateClassSupport(intName, true, softPkg, implSettings, portTempl, CodegenUtil.PYTHON);
+        } else {
+            imp = new PullPortTemplate().generateClassSupport(intName, true, softPkg, implSettings, portTempl, CodegenUtil.PYTHON);
+        }
+        for (String s : imp.split("\n")) {
+            if ((s.trim().length() > 0) && !imports.contains(s)) {
+                imp = new PropertyChangeEventPortTemplate().generateClassSupport(intName, false, softPkg, implSettings, portTempl, CodegenUtil.PYTHON);
+                if (s.contains("ExtendedEvent")) {
+                    continue;
+        		}
+                imports.add(s);
+            }
+        }
+    }
+    for (String imp : imports) {
+%>
+<%=imp%>
+<%
+    }
+%>
+
+NOOP = -1
+NORMAL = 0
+FINISH = 1
+class ProcessThread(threading.Thread):
+    def __init__(self, target, pause=0.0125):
+        threading.Thread.__init__(self)
+        self.setDaemon(True)
+        self.target = target
+        self.pause = pause
+        self.stop_signal = threading.Event()
+
+    def stop(self):
+        self.stop_signal.set()
+
+    def updatePause(self, pause):
+        self.pause = pause
+
+    def run(self):
+        state = NORMAL
+        while (state != FINISH) and (not self.stop_signal.isSet()):
+            state = self.target()
+            if (state == NOOP):
+                # If there was no data to process sleep to avoid spinning
+                time.sleep(self.pause)
+
+class <%=PREFIX%>_base(CF__POA.<% if (isResource) { %>Resource, Resource<% } else { if (aggregateDevice) {%>Aggregate<%
+        if ("Executable".equals(deviceType)) {%><%=deviceType%><% 
+        } else if ("Loadable".equals(deviceType)) {%><%=deviceType%><%
+        } else {%>Plain<%
+        }%>Device,<%
+    } else {%><%=deviceType%>Device, <%
+    }%><%=deviceType%>Device<%
+    if (aggregateDevice) {%>, AggregateDevice<%} }%>):
+        # These values can be altered in the __init__ of your derived class
+
+        PAUSE = 0.0125 # The amount of time to sleep if process return NOOP
+        TIMEOUT = 5.0 # The amount of time to wait for the process thread to die when stop() is called
+        DEFAULT_QUEUE_SIZE = 100 # The number of BulkIO packets that can be in the queue before pushPacket will block
+        
+<% if (isResource) { %>
+        def __init__(self, identifier, execparams):
+            loggerName = (execparams['NAME_BINDING'].replace('/', '.')).rsplit("_", 1)[0]
+            Resource.__init__(self, identifier, execparams, loggerName=loggerName)
+<% } else { %>
+        def __init__(self, devmgr, uuid, label, softwareProfile, compositeDevice, execparams):
+<%
+    if (execDevice) {
+%>
+            ExecutableDevice.__init__(self, devmgr, uuid, label, softwareProfile, compositeDevice, execparams)
+<% 
+    } else if (loadableDevice) {
+%>
+            LoadableDevice.__init__(self, devmgr, uuid, label, softwareProfile, compositeDevice, execparams)
+<% 
+    } else {
+%>
+            Device.__init__(self, devmgr, uuid, label, softwareProfile, compositeDevice, execparams)
+<% 
+    }
+    if (aggregateDevice) {
+%>
+            AggregateDevice.__init__(self)
+<%
+    } 
+ } 
+%>
+            self.threadControlLock = threading.RLock()
+            self.process_thread = None
+            # self.auto_start is deprecated and is only kept for API compatability
+            # with 1.7.X and 1.8.0 components.  This variable may be removed
+            # in future releases
+            self.auto_start = <%if (autoStart) {%>True<%} else {%>False<%}%>
+            
+        def initialize(self):
+            <%=OSSIENAME%>.initialize(self)
+            
+            # Instantiate the default implementations for all ports on this component
+<%
+    for (Provides provide : provides) {
+        if (provide.getRepID().equals("IDL:ExtendedEvent/MessageEvent:1.0")) {
+%>
+            self.port_<%=PortHelper.cleanName(provide.getProvidesName())%> = events.MessageConsumerPort(thread_sleep=0.1)
+<%
+        } else {
+	        String portInitializer = null;
+    	    IScaPortCodegenTemplate gen = portMap.get(provide.getRepID());
+        	portTempl.setPortRepId(provide.getRepID());
+	        portTempl.setGenSupport(false);
+    	    portTempl.setGenClassDef(false);
+        	portTempl.setGenClassImpl(false);
+	        if (gen != null) {
+    	        portInitializer = gen.generateClassInstantiator(provide.getRepID(), true, softPkg, implSettings, portTempl, CodegenUtil.PYTHON);
+        	}
+	        if ((portInitializer == null) || "".equals(portInitializer.trim())) {
+    	        if ("BULKIO".equals(provide.getRepID().split(":")[1].split("/")[0])) {
+        	        portInitializer = "Port" + PortHelper.idlToCamelPortClass(provide.getRepID()) + "In_i(self, \"" + provide.getProvidesName() + "\", self.DEFAULT_QUEUE_SIZE)";
+            	} else {
+	                portInitializer = "Port" + PortHelper.idlToCamelPortClass(provide.getRepID()) + "In_i(self, \"" + provide.getProvidesName() + "\")";
+    	        }
+        	}
+%>
+            self.port_<%=PortHelper.cleanName(provide.getProvidesName())%> = <%=portInitializer%>
+<% 
+    	}
+    }
+%>
+
+<%
+    for (Uses use : uses) {
+        String entry = use.getRepID();
+        // Loop over provides ports to see if there is a matching interface and port name for the current uses port
+        // If so, ignore the uses port
+        // This is to support bi-directional ports
+        boolean foundMatchingProvides = false;
+        for (Provides pro : provides) {
+            String entryProvides = pro.getRepID();
+            if (entry.equals(entryProvides) && use.getUsesName().equals(pro.getProvidesName())) {
+                foundMatchingProvides = true;
+                break;
+            }
+        }
+        if (foundMatchingProvides == false){    
+            if (use.getRepID().equals("IDL:ExtendedEvent/MessageEvent:1.0")) {
+%>
+            self.port_<%=PortHelper.cleanName(use.getUsesName())%> = events.MessageSupplierPort()
+<%
+            } else {
+                String portInitializer = null;
+                IScaPortCodegenTemplate gen = portMap.get(use.getRepID());
+                portTempl.setPortRepId(use.getRepID());
+                portTempl.setGenSupport(false);
+                portTempl.setGenClassDef(false);
+                portTempl.setGenClassImpl(false);
+                if (gen != null) {
+                    portInitializer = gen.generateClassInstantiator(use.getRepID(), false, softPkg, implSettings, portTempl, CodegenUtil.PYTHON);
+                } else if (PropertyChangeEventPortTemplate.EVENTCHANNEL_NAME.equals(use.getUsesName()) && PropertyChangeEventPortTemplate.EVENTCHANNEL_REPID.equals(use.getRepID())) {
+                    portInitializer = new PropertyChangeEventPortTemplate().generateClassInstantiator(null, false, softPkg, implSettings, portTempl, CodegenUtil.PYTHON);
+                }
+                if (portInitializer == null || "".equals(portInitializer.trim())) {
+                    portInitializer = "Port" + PortHelper.idlToCamelPortClass(use.getRepID()) + "Out_i(self, \"" + use.getUsesName() + "\")";
+                }
+%>
+            self.port_<%=PortHelper.cleanName(use.getUsesName())%> = <%=portInitializer%>
+<%
+            }
+        } // if (foundMatchingProvides == false)
+    } // end uses loop
+    
+    if (autoStart) { 
+%>
+            
+            # Autostart the Resource
+            if self.auto_start:
+                try:
+                    self.start()
+                except Exception, e:
+                    raise CF.Resource.InitializeError(CF.CF_NOTSET, "Error autostarting component: " + str(e))
+<%
+    }
+%>
+
+        def start(self):
+            self.threadControlLock.acquire()
+            try:
+                <%=OSSIENAME%>.start(self)
+                if self.process_thread == None:
+                    self.process_thread = ProcessThread(target=self.process, pause=self.PAUSE)
+                    self.process_thread.start()
+            finally:
+                self.threadControlLock.release()
+
+        def process(self):
+            """The process method should process a single "chunk" of data and then return.  This method will be called
+            from the processing thread again, and again, and again until it returns FINISH or stop() is called on the
+            component.  If no work is performed, then return NOOP"""
+            raise NotImplementedError
+
+        def stop(self):
+            self.threadControlLock.acquire()
+            try:
+                process_thread = self.process_thread
+                self.process_thread = None
+
+                if process_thread != None:
+                    process_thread.stop()
+                    process_thread.join(self.TIMEOUT)
+                    if process_thread.isAlive():
+                        raise CF.Resource.StopError(CF.CF_NOTSET, "Processing thread did not die")
+                <%=OSSIENAME%>.stop(self)
+            finally:
+                self.threadControlLock.release()
+
+        def releaseObject(self):
+            try:
+                self.stop()
+            except Exception:
+                self._log.exception("Error stopping")
+            self.threadControlLock.acquire()
+            try:
+                <%=OSSIENAME%>.releaseObject(self)
+            finally:
+                self.threadControlLock.release()
+
+        ######################################################################
+        # PORTS
+        # 
+        # DO NOT ADD NEW PORTS HERE.  You can add ports in your derived class, in the SCD xml file, 
+        # or via the IDE.
+        
+<%
+    if (havePorts) {
+%>
+        def compareSRI(self, a, b):
+            if a.hversion != b.hversion:
+                return False
+            if a.xstart != b.xstart:
+                return False
+            if a.xdelta != b.xdelta:
+                return False
+            if a.xunits != b.xunits:
+                return False
+            if a.subsize != b.subsize:
+                return False
+            if a.ystart != b.ystart:
+                return False
+            if a.ydelta != b.ydelta:
+                return False
+            if a.yunits != b.yunits:
+                return False
+            if a.mode != b.mode:
+                return False
+            if a.streamID != b.streamID:
+                return False
+            if a.blocking != b.blocking:
+                return False
+            if len(a.keywords) != len(b.keywords):
+                return False
+            for keyA, keyB in zip(a.keywords, b.keywords):
+                if keyA.value._t != keyB.value._t:
+                    return False
+                if keyA.value._v != keyB.value._v:
+                    return False
+            return True
+<%
+        if (provides.size() > 0) {
+            for (String intName : providesReps) {
+        		if (intName.equals("IDL:ExtendedEvent/MessageEvent:1.0")) {
+            		continue;
+        		}
+                IScaPortCodegenTemplate gen = portMap.get(intName);
+                portTempl.setPortRepId(intName);
+                portTempl.setGenSupport(false);
+                portTempl.setGenClassDef(true);
+                portTempl.setGenClassImpl(false);
+                if (gen != null) {
+%>
+<%=gen.generateClassDefinition(intName, true, softPkg, implSettings, portTempl, CodegenUtil.PYTHON)%>
+<%
+                } else {
+%>
+<%=new PullPortTemplate().generateClassDefinition(intName, true, softPkg, implSettings, portTempl, CodegenUtil.PYTHON)%>
+<%
+                }
+            }
+        }
+        
+        if (uses.size() > 0) {
+            if (includePropertyChange) {
+%>
+<%=new PropertyChangeEventPortTemplate().generateClassDefinition(null, false, softPkg, implSettings, portTempl, CodegenUtil.PYTHON)%>
+<%
+            }
+            for (String intName : usesReps) {
+        		if (intName.equals("IDL:ExtendedEvent/MessageEvent:1.0")) {
+            		continue;
+        		}
+                IScaPortCodegenTemplate gen = portMap.get(intName);
+                portTempl.setPortRepId(intName);
+                portTempl.setGenSupport(false);
+                portTempl.setGenClassDef(true);
+                portTempl.setGenClassImpl(false);
+                if (gen != null) {
+%>
+<%=gen.generateClassDefinition(intName, false, softPkg, implSettings, portTempl, CodegenUtil.PYTHON)%>
+<%
+        		} else {
+%>
+<%=new PullPortTemplate().generateClassDefinition(intName, false, softPkg, implSettings, portTempl, CodegenUtil.PYTHON)%>
+<%
+                }
+            }
+        } // end if uses > 0
+        for (Provides provide : provides) {
+            if (generateGetters) {
+%>
+
+        def get_port_<%=provide.getProvidesName()%>(self):
+            # You must implement this function and return an
+            # instance of Port<%=PortHelper.idlToCamelPortClass(provide.getRepID())%>
+            raise NotImplementedError
+<%
+            }
+%>
+
+        port_<%=PortHelper.cleanName(provide.getProvidesName())%> = providesport(name="<%=provide.getProvidesName()%>",
+                                            repid="<%=provide.getRepID()%>",
+                                            type_="<%if (!provide.getPortType().isEmpty()) {%><%=provide.getPortType().get(0).getType().getName()%>"<% } else {%>control"<%}%>,
+                                            <% if (generateGetters) {%>
+                                            fget=get_port_<%=provide.getProvidesName()%><% } %>)
+<%
+        } // end provides loop
+        for (Uses use : uses) {
+            String entry = use.getRepID();
+            // Loop over provides ports to see if there is a matching interface and port name for the current uses port
+            // If so, ignore the uses port
+            // This is to support bi-directional ports
+            boolean foundMatchingProvides = false;
+            for (Provides pro : provides) {
+                String entryProvides = pro.getRepID();
+                if (entry.equals(entryProvides) && use.getUsesName().equals(pro.getProvidesName())) {
+                    foundMatchingProvides = true;
+                    break;
+                }
+            }
+            if (foundMatchingProvides == false){
+                if (generateGetters) {
+%>
+
+        def get_port_<%=use.getUsesName()%>(self):
+            # You must implement this function and return an
+            # instance of Port<%=PortHelper.idlToCamelPortClass(use.getRepID())%>
+            raise NotImplementedError
+<%
+                }
+%>
+
+        port_<%=PortHelper.cleanName(use.getUsesName())%> = usesport(name="<%=use.getUsesName()%>",
+                                            repid="<%=use.getRepID()%>",
+                                            type_="<%if (!use.getPortType().isEmpty()) {%><%=use.getPortType().get(0).getType().getName()%>"<% } else {%>control"<%}%>,
+                                            <% if (generateGetters) {%>
+                                            fget=get_port_<%=use.getUsesName()%><% } %>)
+<%    
+            } // if (foundMatchingProvides == false)
+        } // end uses loop
+    } // end if havePorts
+%>        
+
+        ######################################################################
+        # PROPERTIES
+        # 
+        # DO NOT ADD NEW PROPERTIES HERE.  You can add properties in your derived class, in the PRF xml file
+        # or by using the IDE.
+<%@ include file="../../utils/properties.jetinc"%>
+<% 
+    // Ports 
+    if (havePorts) {
+        if (provides.size() > 0) {
+%>
+
+'''provides port(s)'''
+<%
+            // Provides Ports
+            for (String intName : providesReps) {
+                if (intName.equals("IDL:ExtendedEvent/MessageEvent:1.0")) {
+                	continue;
+                }
+                IScaPortCodegenTemplate gen = portMap.get(intName);
+                portTempl.setPortRepId(intName);
+                portTempl.setGenSupport(false);
+                portTempl.setGenClassDef(false);
+                portTempl.setGenClassImpl(true);
+                if (gen != null) {
+%>
+<%=gen.generateClassImplementation(intName, true, softPkg, implSettings, portTempl, CodegenUtil.PYTHON)%>
+<%
+                } else {
+%>
+<%=new PullPortTemplate().generateClassImplementation(intName, true, softPkg, implSettings, portTempl, CodegenUtil.PYTHON)%>
+<%
+                }
+            } // end for provides ports
+        } //end if provides ports
+        
+        // Uses Ports
+        if (uses.size() > 0) {
+%>
+
+'''uses port(s)'''
+<%
+            if (includePropertyChange) {
+%>
+<%=new PropertyChangeEventPortTemplate().generateClassImplementation(null, false, softPkg, implSettings, portTempl, CodegenUtil.PYTHON)%>
+<%
+            }
+            for (String intName : usesReps) {
+                if (intName.equals("IDL:ExtendedEvent/MessageEvent:1.0")) {
+                	continue;
+                }
+                IScaPortCodegenTemplate gen = portMap.get(intName);
+                portTempl.setPortRepId(intName);
+                portTempl.setGenSupport(false);
+                portTempl.setGenClassDef(false);
+                portTempl.setGenClassImpl(true);
+                if (gen != null) {
+%>
+<%=gen.generateClassImplementation(intName, false, softPkg, implSettings, portTempl, CodegenUtil.PYTHON)%>
+<%
+                } else {
+%>
+<%=new PullPortTemplate().generateClassImplementation(intName, false, softPkg, implSettings, portTempl, CodegenUtil.PYTHON)%>
+<%
+                }
+            } // end for Uses Ports
+        } // end if uses ports
+    } // end if Ports 
+%>

@@ -1,0 +1,31 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Jet Java Code Generator Plug-in
+Bundle-SymbolicName: gov.redhawk.ide.codegen.jet.java;singleton:=true
+Bundle-Version: 6.0.0.qualifier
+Bundle-Activator: gov.redhawk.ide.codegen.jet.java.JavaJetGeneratorPlugin
+Require-Bundle: org.eclipse.core.runtime;bundle-version="3.6.0",
+ gov.redhawk.sca.model;bundle-version="1.0.0",
+ gov.redhawk.ide;bundle-version="1.0.0",
+ gov.redhawk.ide.codegen;bundle-version="1.0.0",
+ gov.redhawk.ide.codegen.jet;bundle-version="1.0.0",
+ gov.redhawk.ide.idl;bundle-version="1.0.0",
+ org.eclipse.core.resources;bundle-version="3.4.2",
+ gov.redhawk.ide.codegen.java;bundle-version="2.0.0",
+ org.jacorb.idl;bundle-version="2.3.0",
+ org.eclipse.jdt.core;bundle-version="3.4.4",
+ org.eclipse.emf.ant;bundle-version="2.6.1",
+ org.eclipse.emf.codegen;bundle-version="2.6.0",
+ org.eclipse.emf.edit;bundle-version="2.6.0",
+ org.eclipse.emf.transaction;bundle-version="1.4.0",
+ org.eclipse.ui;bundle-version="3.6.1",
+ gov.redhawk.sca.util;bundle-version="2.1.0",
+ gov.redhawk.ide.debug;bundle-version="1.0.0",
+ org.eclipse.jdt.launching;bundle-version="3.5.100",
+ org.eclipse.core.databinding;bundle-version="1.3.100",
+ mil.jpeojtrs.sca.validator;bundle-version="3.0.0"
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Export-Package: gov.redhawk.ide.codegen.jet.java
+Bundle-ClassPath: .
+Bundle-Vendor: United States Government

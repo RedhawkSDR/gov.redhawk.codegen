@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Manual Code Generator Plug-in
+Bundle-SymbolicName: gov.redhawk.ide.codegen.manual;singleton:=true
+Bundle-Version: 5.1.0.qualifier
+Bundle-Activator: gov.redhawk.ide.codegen.manual.ManualGeneratorPlugin
+Require-Bundle: org.eclipse.core.runtime;bundle-version="3.6.0",
+ gov.redhawk.ide.codegen;bundle-version="1.0.0",
+ mil.jpeojtrs.sca.spd;bundle-version="2.2.2",
+ org.eclipse.core.resources;bundle-version="3.4.2",
+ gov.redhawk.sca.model;bundle-version="14.0.0",
+ gov.redhawk.ide.codegen.cplusplus;bundle-version="6.0.0",
+ gov.redhawk.ide.codegen.java;bundle-version="6.0.0",
+ gov.redhawk.ide.codegen.python;bundle-version="6.0.0"
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Export-Package: gov.redhawk.ide.codegen.manual
+Bundle-Vendor: United States Government

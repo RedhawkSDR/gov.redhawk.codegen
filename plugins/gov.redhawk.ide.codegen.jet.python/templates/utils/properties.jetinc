@@ -1,0 +1,151 @@
+<%  
+    List<String> simpleNames = new ArrayList<String>();
+    for (Simple tempSimple : properties.getSimple()) {
+        String simpleName = SimpleToPython.getName(tempSimple);
+        String simple = StringUtil.defaultCreateUniqueString(simpleName, simpleNames);
+        simpleNames.add(simple); %>       
+        <%=simple%> = simple_property(<%=PropertyToPython.getPythonId(tempSimple.getId())%>,
+                                            <% if (tempSimple.getName() != null ) { %>
+                                          <%=PropertyToPython.getPythonName(tempSimple.getName())%>, <% } %>
+                                          <%=PropertyToPython.getPythonType(tempSimple.getType())%>,
+                                          <% if (tempSimple.getValue() != null ) { %>
+                                          defvalue=<%=PropertyToPython.getPythonValue(tempSimple.getValue(), tempSimple.getType())%>,<%}%>
+                                          <% if (tempSimple.getUnits() != null ) { %>
+                                          <%=PropertyToPython.getPythonUnits(tempSimple.getUnits())%>, <% } %>
+                                          <%=PropertyToPython.getPythonMode(tempSimple.getMode())%>,
+                                          <%=PropertyToPython.getPythonAction(tempSimple.getAction())%>,
+                                          <%=PropertyToPython.getPythonKinds(tempSimple.getKind())%>
+                                          <% if (tempSimple.getDescription() != null ) { %>,
+                                          <%=PropertyToPython.getPythonDescription(tempSimple.getDescription())%> 
+                                          <%}%>
+                                          )
+<%
+    }
+    List<String> seqNames = new ArrayList<String>();
+    for (SimpleSequence simpleSeq : properties.getSimpleSequence()) {
+        String seqName = SimpleSequenceToPython.getName(simpleSeq);
+        String seq = StringUtil.defaultCreateUniqueString(seqName, seqNames);
+        seqNames.add(seq); %> 
+        <%=seq%> = simpleseq_property(<%=PropertyToPython.getPythonId(simpleSeq.getId())%>,
+                                          <% if (simpleSeq.getName() != null ) { %>
+                                          <%=PropertyToPython.getPythonName(simpleSeq.getName())%>, <% } %>  
+                                          <%=PropertyToPython.getPythonType(simpleSeq.getType())%>,
+                                          <%=SimpleSequenceToPython.getPythonValues(simpleSeq.getValues(), simpleSeq.getType())%>,
+                                          <% if (simpleSeq.getUnits() != null ) { %>
+                                          <%=PropertyToPython.getPythonUnits(simpleSeq.getUnits())%>, <% } %>
+                                          <%=PropertyToPython.getPythonMode(simpleSeq.getMode())%>,
+                                          <%=PropertyToPython.getPythonAction(simpleSeq.getAction())%>,
+                                          <%=PropertyToPython.getPythonKinds(simpleSeq.getKind())%>
+                                          <% if (simpleSeq.getDescription() != null ) { %>,
+                                          <%=PropertyToPython.getPythonDescription(simpleSeq.getDescription())%> 
+                                          <%}%>
+                                          )
+<%
+    }
+    List<String> structNames = new ArrayList<String>();
+    List<String> structSeqNames = new ArrayList<String>();
+    
+    List<Struct> propertyStructs = new ArrayList<Struct>(properties.getStruct());
+    for (StructSequence seq : properties.getStructSequence()) {
+        propertyStructs.add(seq.getStruct());
+    }
+    char [][] filter = {{' ', '_'}, {'-', '_'}}; // TODO: This is so, so, disgusting
+    for (Struct struct : propertyStructs) {
+        String structName = StructToPython.getName(struct);
+        String className = PortHelper.nameToCamelCase(StringUtil.defaultCreateUniqueString(structName, structNames));
+        className = StringUtil.cleanUp(className, filter);
+        structNames.add(className);
+%>
+        class <%=className%>(object):
+<%
+        List<String> structSimpleNames = new ArrayList<String>();
+        Map<String, Simple> uniqueNameToSimpleMap = new HashMap<String, Simple>(); 
+        for (Simple simple : struct.getSimple()) { 
+            String baseName = SimpleToPython.getName(simple);
+            String myName = StringUtil.defaultCreateUniqueString(baseName, structSimpleNames);
+            structSimpleNames.add(myName);
+            uniqueNameToSimpleMap.put(myName, simple);%>
+            <%=myName%> = simple_property(<%=PropertyToPython.getPythonId(simple.getId())%>,
+                                          <% if (simple.getName() != null ) { %>
+                                          <%=PropertyToPython.getPythonName(simple.getName())%>, <% } %>
+                                          <%=PropertyToPython.getPythonType(simple.getType())%>,
+                                          <% if (simple.getValue() != null ) { %>
+                                          defvalue=<%=PropertyToPython.getPythonValue(simple.getValue(), simple.getType())%>,<%}%>
+                                          )
+<%
+        }
+        if (struct.eContainer() instanceof StructSequence) {%>
+        
+            <%=StructToPython.getConstructorDef(structSimpleNames, uniqueNameToSimpleMap)%>
+            <%for (String name : structSimpleNames) {%>
+                self.<%=name%> = <%=name%>
+            <%}%>
+        <%} else {%>
+        
+            def __init__(self, **kw):
+                """Construct an initialized instance of this struct definition"""
+                for attrname, classattr in type(self).__dict__.items():
+                    if type(classattr) == simple_property:
+                        classattr.initialize(self)
+                for k,v in kw.items():
+                    setattr(self,k,v)
+          <%}%>
+
+            def __str__(self):
+                """Return a string representation of this structure"""
+                d = {}
+        <% for (String propName : structSimpleNames) { %>
+                d["<%=propName%>"] = self.<%=propName%>
+        <% } %>
+                return str(d)
+
+            def getId(self):
+                return "<%=struct.getId()%>"
+
+            def isStruct(self):
+                return True
+
+            def getMembers(self):
+                return [<% 
+                for (String propName : structSimpleNames) { 
+                	%>("<%=propName%>",self.<%=propName%>)<%
+                	if (structSimpleNames.indexOf(propName)!=structSimpleNames.size()-1) {
+                		%>,<%
+                	}
+                } %>]
+
+        <% if (!(struct.eContainer() instanceof StructSequence)) {%>
+        
+        <%=structName%> = struct_property(<%=PropertyToPython.getPythonId(struct.getId())%>,
+                                          <% if (struct.getName() != null ) { %>
+                                          <%=PropertyToPython.getPythonName(struct.getName())%>, <% } %>
+                                          <%=StructToPython.getStructDef(className)%>,
+                                          <%=StructToPython.getPythonConfigurationKinds(struct.getConfigurationKind())%>,
+                                          <%=PropertyToPython.getPythonMode(struct.getMode())%>
+                                          <% if (struct.getDescription() != null ) { %>,
+                                          <%=PropertyToPython.getPythonDescription(struct.getDescription())%> 
+                                          <%}%>
+                                          )
+<%
+        } else { //StructSequence
+            StructSequence structSeq = (StructSequence) struct.eContainer();
+            String structSeqName = StructSequenceToPython.getName(structSeq);
+            String uniqueStructSeqName = StringUtil.defaultCreateUniqueString(structSeqName, structSeqNames);
+            structSeqNames.add(uniqueStructSeqName);
+            StructValues values = new StructValues(structSeq);%>
+                
+        <%=uniqueStructSeqName%> = structseq_property(<%=PropertyToPython.getPythonId(structSeq.getId())%>,
+                                          <% if (structSeq.getName() != null ) { %>
+                                          <%=PropertyToPython.getPythonName(structSeq.getName())%>, <% } %>
+                                          <%=StructToPython.getStructDef(className)%>,                          
+                                          <%=StructSequenceToPython.getPythonStructValue(className, values)%>,
+                                          <%=StructToPython.getPythonConfigurationKinds(structSeq.getConfigurationKind())%>,
+                                          <%=PropertyToPython.getPythonMode(structSeq.getMode())%>
+                                          <% if (structSeq.getDescription() != null ) { %>,
+                                          <%=PropertyToPython.getPythonDescription(structSeq.getDescription())%> 
+                                          <%}%>
+                                          )
+<%    
+        }         
+    }
+%>

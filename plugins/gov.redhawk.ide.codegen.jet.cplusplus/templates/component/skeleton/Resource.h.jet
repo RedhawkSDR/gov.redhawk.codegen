@@ -1,0 +1,92 @@
+<%@ jet package="gov.redhawk.ide.codegen.jet.cplusplus.template.component.skeleton"
+imports="gov.redhawk.ide.codegen.ImplementationSettings
+mil.jpeojtrs.sca.spd.SoftPkg
+mil.jpeojtrs.sca.spd.Implementation
+gov.redhawk.ide.codegen.jet.TemplateParameter"
+class="ResourceHTemplate"
+skeleton="../../generator.skeleton"
+%>
+<%
+    TemplateParameter templ = (TemplateParameter) argument;
+    ImplementationSettings implSettings = templ.getImplSettings();
+    Implementation impl = templ.getImpl();
+    SoftPkg softPkg = (SoftPkg) impl.eContainer();
+    String PREFIX = gov.redhawk.ide.codegen.util.CodegenFileHelper.getPreferredFilePrefix(softPkg, implSettings);
+%>
+#ifndef <%=PREFIX.toUpperCase()%>_IMPL_H
+#define <%=PREFIX.toUpperCase()%>_IMPL_H
+
+#include <stdlib.h>
+#include <string>
+#include <map>
+#include <list>
+
+#include "CF/cf.h"
+
+#include "ossie/Resource_impl.h"
+#include "ossie/ossieSupport.h"
+using namespace std;
+#include <sys/time.h>
+#include <queue>
+#include <fstream>
+
+class <%=PREFIX%>_i;
+class <%=PREFIX%>_i : public Resource_impl, public omni_thread
+{
+
+    public:
+        <%=PREFIX%>_i(const char *uuid, omni_condition *con, const char *, ossie::ORB *);
+
+        ~<%=PREFIX%>_i(void);
+
+        char *identifier () throw (CORBA::SystemException);
+
+        // CF::Resource
+        void start() throw (CF::Resource::StartError, CORBA::SystemException);
+
+        void stop() throw (CF::Resource::StopError, CORBA::SystemException);
+
+        // CF::LifeCycle
+        void releaseObject() throw (CF::LifeCycle::ReleaseError, CORBA::SystemException);
+
+        void initialize() throw (CF::LifeCycle::InitializeError, CORBA::SystemException);
+
+        // CF::PortSupplier
+        CORBA::Object* getPort (const char *) throw (CF::PortSupplier::UnknownPort, CORBA::SystemException);
+
+        // CF::PropertySet
+        void configure(const CF::Properties&) throw (CORBA::SystemException, CF::PropertySet::InvalidConfiguration, CF::PropertySet::PartialConfiguration);
+
+        void query (CF::Properties & configProperties) throw (CF::UnknownProperties, CORBA::SystemException);
+
+        // CF::TestableObject
+        void runTest (CORBA::ULong TestID, CF::Properties & testValues) throw (CF::UnknownProperties, CF::TestableObject::UnknownTest, CORBA::SystemException);
+
+        // main omni_thread function
+        void run(void *args);
+
+
+
+    private:
+        // For component shutdown
+        omni_condition *component_running;
+        std::string comp_uuid;
+
+        bool component_alive;
+
+        std::string naming_service_name;
+        
+        ossie::ORB *orb;
+
+        // Threading stuff
+        omni_condition *data_in_signal;
+        omni_mutex data_in_signal_lock;
+        omni_mutex process_data_lock;
+        omni_mutex thread_exit_lock;
+        omni_mutex attribute_access;	// used when modifying variables
+
+        // Functional members
+        // Housekeeping and data management variables
+        bool thread_started;
+};
+#endif

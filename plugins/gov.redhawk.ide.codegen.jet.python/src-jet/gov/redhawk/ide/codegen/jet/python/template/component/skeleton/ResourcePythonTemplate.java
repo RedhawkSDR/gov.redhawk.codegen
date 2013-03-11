@@ -1,0 +1,60 @@
+/*******************************************************************************
+ * This file is protected by Copyright. 
+ * Please refer to the COPYRIGHT file distributed with this source distribution.
+ *
+ * This file is part of REDHAWK IDE.
+ *
+ * All rights reserved.  This program and the accompanying materials are made available under 
+ * the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at 
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************/
+// BEGIN GENERATED CODE
+package gov.redhawk.ide.codegen.jet.python.template.component.skeleton;
+
+import gov.redhawk.ide.codegen.ImplementationSettings;
+import gov.redhawk.ide.codegen.jet.TemplateParameter;
+
+	/**
+    * @generated
+    */
+
+public class ResourcePythonTemplate
+{
+
+  protected static String nl;
+  public static synchronized ResourcePythonTemplate create(String lineSeparator)
+  {
+    nl = lineSeparator;
+    ResourcePythonTemplate result = new ResourcePythonTemplate();
+    nl = null;
+    return result;
+  }
+
+  public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
+  protected final String TEXT_1 = "#!/usr/bin/env python " + NL + "#" + NL + "from ossie.cf import CF, CF__POA #@UnusedImport" + NL + "import omniORB.COS.CosNaming as CosNaming # Directly import CosNaming so PyDev doesn't get confused" + NL + "from omniORB import CORBA, URI" + NL + "import sys, signal, copy" + NL + "" + NL + "" + NL + "class ";
+  protected final String TEXT_2 = "(CF__POA.Resource):" + NL + "    def __init__(self, execparams):" + NL + "        self.execparams = execparams" + NL + "        self._identifier = execparams[\"COMPONENT_IDENTIFIER\"]" + NL + "" + NL + "    def _get_identifier(self):" + NL + "        \"\"\"The readonly identifier attribute shall contain the unique" + NL + "        identifier for a Resource instance." + NL + "        \"\"\"" + NL + "        return self._identifier" + NL + "" + NL + "    def initialize(self):" + NL + "        \"\"\"" + NL + "        The purpose of the initialize operation is to provide a mechanism to" + NL + "        set a component to a known initial state. For example, data structures" + NL + "        may be set to initial values, memory may be allocated, hardware devices" + NL + "        may be configured to some state, etc.  " + NL + "" + NL + "        The initialize operation shall raise an CF.LifeCycle.InitializeError" + NL + "        exception when an initialization error occurs." + NL + "" + NL + "        This function is the first call made by the framework after" + NL + "        constructing the component.  " + NL + "        \"\"\"" + NL + "        pass # TODO: add your implementation here" + NL + "" + NL + "    def start(self):" + NL + "        \"\"\"The start operation is provided to command the resource implementing" + NL + "        this interface to start internal processing." + NL + "" + NL + "        The start operation shall raise the CF.Resource.StartError exception if an error" + NL + "        occurs while starting the resource." + NL + "" + NL + "        IMPORTANT: The start() operation will not be called unless your component" + NL + "        is the waveform assembly controller *or* the assembly controller explicitly" + NL + "        tells your component to start." + NL + "        \"\"\"" + NL + "        pass # TODO: add your implementation here" + NL + "" + NL + "    def stop(self):" + NL + "        \"\"\"The stop operation is provided to command the resource implementing" + NL + "        this interface to stop internal processing." + NL + "" + NL + "        The stop operation shall not inhibit subsequent configure, query, and start operations." + NL + "" + NL + "        The stop operation shall raise the CF.Resource.StopError exception if" + NL + "        an error occurs while stopping the resource." + NL + "        " + NL + "        IMPORTANT: The stop() operation will not be called unless your component" + NL + "        is the waveform assembly controller *or* the assembly controller explicitly" + NL + "        tells your component to start." + NL + "        \"\"\"" + NL + "" + NL + "        pass # TODO: add your implementation here" + NL + "" + NL + "    def releaseObject(self):" + NL + "        \"\"\"The purpose of the releaseObject operation is to provide a means by" + NL + "        which an instantiated component may be torn down." + NL + "" + NL + "        The releaseObject operation shall raise a CF.LifeCycle.ReleaseError" + NL + "        exception when a release error occurs." + NL + "        \"\"\"" + NL + "" + NL + "        pass # TODO: add your implementation here" + NL + "" + NL + "    def getPort(self, name):" + NL + "        \"\"\"The getPort operation provides a mechanism to obtain a specific" + NL + "        consumer or producer port. A port supplier may contain zero-to-many" + NL + "        consumer and producer port components. The exact number is specified in" + NL + "        the components software profile SCD (section 3.1.3.5). Multiple input" + NL + "        and/or output ports provide flexibility for port suppliers that manage" + NL + "        varying priority levels and categories of incoming and outgoing" + NL + "        messages, provide multi-threaded message handling, or other special" + NL + "        message processing." + NL + "" + NL + "        The getPort operation shall return the CORBA object reference that is" + NL + "        associated with the input port name." + NL + "" + NL + "        The getPort operation shall raise an UnknownPort exception if the port" + NL + "        name is invalid." + NL + "        \"\"\"" + NL + "" + NL + "        raise CF.PortSupplier.UnknownPort() # TODO: add your implementation here" + NL + "" + NL + "    def runTest(self, properties, testid):" + NL + "        \"\"\"The runTest operation allows components to be black box tested." + NL + "        This allows built-in tests (BITs) to be implemented which provide a" + NL + "        means to isolate faults (both software and hardware) within the system." + NL + "" + NL + "        The runTest operation shall raise the CF.TestableObject.UnknownTest" + NL + "        exception when there is no underlying test implementation that is" + NL + "        associated with the input testId given.  " + NL + "        " + NL + "        The runTest operation shall raise the CF.UnknownProperties exception" + NL + "        when the input parameter testValues contains any CF DataTypes that are" + NL + "        not known by the components test implementation or any values that are" + NL + "        out of range for the requested test. The exception parameter" + NL + "        invalidProperties shall contain the invalid testValues properties id(s)" + NL + "        that are not known by the component or the value(s) are out of range." + NL + "        \"\"\"" + NL + "" + NL + "        raise CF.TestableObject.UnknownTest(\"unknown test: %s\" % str(testid)) # TODO: add your implementation here" + NL + "" + NL + "    def configure(self, configProperties):" + NL + "        \"\"\"The configure operation allows id/value pair configuration" + NL + "        properties to be assigned to components implementing this interface." + NL + "" + NL + "        The configure operation shall raise a" + NL + "        CF.PropertySet.PartialConfiguration exception when some configuration" + NL + "        properties were successfully set and some configuration properties were" + NL + "        not successfully set.  " + NL + "        " + NL + "        The configure operation shall raise an" + NL + "        CF.PropertySet.InvalidConfiguration exception when a configuration" + NL + "        error occurs and no configuration properties were successfully set." + NL + "        \"\"\"" + NL + "        pass # TODO: add your implementation here" + NL + "" + NL + "    def query(self, configProperties):" + NL + "        \"\"\"The query operation shall return all component properties when the" + NL + "        inout parameter configProperties is zero size. The query operation" + NL + "        shall return only those id/value pairs specified in the" + NL + "        configProperties parameter if the parameter is not zero size. Valid" + NL + "        properties for the query operation shall be all configure properties" + NL + "        (simple properties whose kind elements kindtype attribute is" + NL + "        configure) whose mode attribute is readwrite or readonly and any" + NL + "        allocation properties with an action value of \"external\" as referenced" + NL + "        in the component's SPD." + NL + "" + NL + "        The query operation shall raise the CF.UnknownProperties exception when" + NL + "        one or more properties being requested are not known by the component." + NL + "        \"\"\"" + NL + "        return [] # TODO: add your implementation here" + NL + "        " + NL + "if __name__ == '__main__':" + NL + "    # This code is boilerplate startup code for a component" + NL + "    def __exit_handler(signum, frame):" + NL + "        raise SystemExit" + NL + "" + NL + "    # Turn the SCA execparams into a dictionary" + NL + "    args = copy.copy(sys.argv[1:])" + NL + "    execparams = {}" + NL + "    while len(args) > 0:" + NL + "        try:" + NL + "            paramid = args.pop(0)" + NL + "            paramvalue = args.pop(0)" + NL + "            execparams[paramid] = paramvalue" + NL + "        except IndexError:" + NL + "            pass" + NL + "" + NL + "    # Verify that the required parameters were provided" + NL + "    for reqparam in (\"NAMING_CONTEXT_IOR\", \"COMPONENT_IDENTIFIER\", \"NAME_BINDING\"):" + NL + "        if not execparams.has_key(reqparam):" + NL + "            sys.exit(-1)" + NL + "" + NL + "" + NL + "    orb = None" + NL + "    signal.signal(signal.SIGINT, __exit_handler)" + NL + "    signal.signal(signal.SIGTERM, __exit_handler)" + NL + "    try:" + NL + "        try:" + NL + "            # ORB initialization" + NL + "            orb = CORBA.ORB_init()" + NL + "            obj_poa = orb.resolve_initial_references(\"RootPOA\")" + NL + "            poaManager = obj_poa._get_the_POAManager()" + NL + "            poaManager.activate()" + NL + "" + NL + "            # Create the component servant object" + NL + "            component_Obj = ";
+  protected final String TEXT_3 = "(execparams)" + NL + "            component_Var = component_Obj._this()" + NL + "" + NL + "            # Bind it to the naming context" + NL + "            rootContext = orb.string_to_object(execparams['NAMING_CONTEXT_IOR'])" + NL + "            if rootContext == None:" + NL + "                raise SystemExit, \"Failed to lookup naming context\"" + NL + "            rootContext = rootContext._narrow(CosNaming.NamingContext)" + NL + "            name = URI.stringToName(execparams['NAME_BINDING'])" + NL + "            rootContext.rebind(name, component_Var)" + NL + "" + NL + "            # Enter the ORB run loop" + NL + "            orb.run()" + NL + "        except SystemExit:" + NL + "            pass" + NL + "        except KeyboardInterrupt:" + NL + "            pass" + NL + "        except:" + NL + "            sys.exit(-1)" + NL + "    finally:" + NL + "        if orb:" + NL + "            orb.destroy()";
+
+    /**
+    * {@inheritDoc}
+    */
+
+    public String generate(Object argument)
+  {
+    final StringBuffer stringBuffer = new StringBuffer();
+    
+	TemplateParameter templ = (TemplateParameter) argument;
+	mil.jpeojtrs.sca.spd.Implementation impl = templ.getImpl();
+	ImplementationSettings implSettings = templ.getImplSettings();
+	mil.jpeojtrs.sca.spd.SoftPkg softPkg = (mil.jpeojtrs.sca.spd.SoftPkg) impl.eContainer();
+	String PREFIX = gov.redhawk.ide.codegen.util.CodegenFileHelper.getPreferredFilePrefix(softPkg, implSettings);
+    
+
+    stringBuffer.append(TEXT_1);
+    stringBuffer.append(PREFIX);
+    stringBuffer.append(TEXT_2);
+    stringBuffer.append(PREFIX);
+    stringBuffer.append(TEXT_3);
+    return stringBuffer.toString();
+  }
+} 

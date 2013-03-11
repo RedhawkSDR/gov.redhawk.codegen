@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/gov.redhawk.ide.codegen_1.8.3.qualifier.jar" id="gov.redhawk.ide.codegen" version="1.8.3.qualifier">
+      <category name="gov.redhawk.codegen"/>
+   </feature>
+   <feature url="features/gov.redhawk.ide.codegen.sdk_1.8.3.qualifier.jar" id="gov.redhawk.ide.codegen.sdk" version="1.8.3.qualifier">
+      <category name="gov.redhawk.codegen"/>
+   </feature>
+   <category-def name="gov.redhawk.codegen" label="REDHAWK Codegen"/>
+</site>

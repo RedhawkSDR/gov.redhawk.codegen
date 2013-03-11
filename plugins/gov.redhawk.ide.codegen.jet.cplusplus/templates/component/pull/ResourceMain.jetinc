@@ -1,0 +1,5 @@
+int main(int argc, char* argv[])
+{
+    <%=PREFIX%>_i* <%=PREFIX%>_servant;
+    Resource_impl::start_component(<%=PREFIX%>_servant, argc, argv);
+}

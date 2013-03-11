@@ -1,0 +1,69 @@
+<%@ jet package="gov.redhawk.ide.codegen.jet.cplusplus.template.component.skeleton"
+imports="gov.redhawk.ide.codegen.jet.TemplateParameter
+mil.jpeojtrs.sca.spd.SoftPkg
+mil.jpeojtrs.sca.spd.Implementation
+gov.redhawk.ide.codegen.ImplementationSettings"
+class="MainCppTemplate"
+skeleton="../../generator.skeleton"
+%>
+<% 
+    TemplateParameter templ = (TemplateParameter) argument;
+    ImplementationSettings implSettings = templ.getImplSettings();
+    Implementation impl = templ.getImpl();
+    SoftPkg softPkg = (SoftPkg) impl.eContainer();
+    String PREFIX = gov.redhawk.ide.codegen.util.CodegenFileHelper.getPreferredFilePrefix(softPkg, implSettings);
+%>
+#include <iostream>
+#include "ossie/ossieSupport.h"
+
+#include "<%=PREFIX%>.h"
+
+
+int main(int argc, char* argv[])
+
+{
+    ossie::ORB *orb = new ossie::ORB;
+    omni_mutex component_running_mutex;
+    omni_condition *component_running = new omni_condition(&component_running_mutex);
+    
+    std::string naming_context_ior("");
+    std::string component_identifier("");
+    std::string name_binding("");
+
+    for (int i=0; i < argc; i++) {
+        if (strcmp("NAMING_CONTEXT_IOR", argv[i]) == 0) {
+            naming_context_ior = argv[++i];
+        } else if (strcmp("COMPONENT_IDENTIFIER", argv[i]) == 0) {
+            component_identifier = argv[++i];
+        } else if (strcmp("NAME_BINDING", argv[i]) == 0) {
+            name_binding = argv[++i];
+        }
+    }
+
+    if ((name_binding == "") or (component_identifier == "") or (naming_context_ior == "")) {
+        exit(-1);
+    }
+
+    <%=PREFIX%>_i* <%=PREFIX%>_servant;
+    CF::Resource_var <%=PREFIX%>_var;
+
+    // Create the <%=PREFIX%> component servant and object reference
+
+    <%=PREFIX%>_servant = new <%=PREFIX%>_i(component_identifier.c_str(), component_running, name_binding.c_str(), orb);
+    <%=PREFIX%>_var = <%=PREFIX%>_servant->_this();
+    
+    CORBA::Object_var applicationObject = orb->orb->string_to_object(naming_context_ior.c_str());
+    CosNaming::NamingContext_ptr applicationContext = CosNaming::NamingContext::_narrow(applicationObject);
+    
+    orb->bind_object_to_name((CORBA::Object_ptr) <%=PREFIX%>_var, applicationContext, name_binding.c_str());
+
+    // This bit is ORB specific
+    // omniorb is threaded and the servants are running at this point
+    // so we block on the condition
+    // The releaseObject method clear the condition and the component exits
+
+    component_running->wait();
+    orb->unbind_name(applicationContext, name_binding.c_str());
+    orb->orb->shutdown(0);
+
+}

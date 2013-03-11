@@ -1,0 +1,118 @@
+<%@ jet package="gov.redhawk.ide.codegen.jet.python.template.component.workmodule" imports="gov.redhawk.ide.codegen.jet.TemplateParameter
+gov.redhawk.model.sca.util.ModelUtil
+java.util.Date
+java.util.Iterator
+java.util.List
+mil.jpeojtrs.sca.prf.Kind
+mil.jpeojtrs.sca.prf.Properties
+mil.jpeojtrs.sca.prf.Simple
+mil.jpeojtrs.sca.prf.SimpleSequence
+mil.jpeojtrs.sca.spd.Implementation
+mil.jpeojtrs.sca.spd.SoftPkg
+org.eclipse.emf.common.util.EList"
+class="LegacyResourcePropertiesTemplate"
+skeleton="../../generator.skeleton"%>
+<% 
+    TemplateParameter templ = (TemplateParameter) argument;
+    Implementation impl = templ.getImpl();
+    SoftPkg softPkg = (SoftPkg) impl.eContainer();
+    Properties properties = softPkg.getPropertyFile().getProperties();
+    Date date = new Date(System.currentTimeMillis());
+%>
+#!/usr/bin/env python
+#
+# AUTO-GENERATED CODE.  DO NOT MODIFY!
+#
+# Source: <%=ModelUtil.getPrfFileName(softPkg.getPropertyFile())%>
+# Generated on: <%= date.toString() %>
+
+
+PROPERTIES = (
+<%
+    EList<Simple> simpleList = properties.getSimple();
+    EList<SimpleSequence> sseqList = properties.getSimpleSequence();
+    Iterator<Simple> simpleIter = simpleList.iterator();
+    Iterator<SimpleSequence> sseqIterator = sseqList.iterator();
+    while (simpleIter.hasNext()) {
+         Simple tempSimple = simpleIter.next();
+%>
+              (
+              # ID
+              <% if (tempSimple.getId() != null ) { %>
+              u'<%=tempSimple.getId()%>',<% } else { %>
+              None, <% } %>
+              # NAME  
+              <% if (tempSimple.getName() != null ) { %> 
+              u'<%=tempSimple.getName()%>', <% } else { %>
+              None, <% } %>
+              # TYPE
+              <% if (tempSimple.getType() != null ) { %> 
+              u'<%=tempSimple.getType().getLiteral()%>', <% } else { %>
+              None, <% } %>
+              # MODE
+              <% if (tempSimple.getMode() != null ) { %> 
+              u'<%=tempSimple.getMode().getLiteral()%>',  <% } else { %>
+              u'readwrite', <% } %>
+              # DEFAULT
+              <% if (tempSimple.getValue() != null ) { %>
+              <% if ((tempSimple.getType().getLiteral() == "string") || (tempSimple.getType().getLiteral() == "char")) { %> 
+              '<%=tempSimple.getValue()%>', <% } else { %>
+              <%=tempSimple.getValue()%>, <% } } else { %>
+              None, <% } %>
+              # UNITS 
+              <% if (tempSimple.getUnits() != null ) { %> 
+              '<%=tempSimple.getUnits()%>', <% } else { %>
+              None, <% } %>
+              # ACTION
+              <% if (tempSimple.getAction() != null ) { %> 
+              u'<%=tempSimple.getAction().getType().toString()%>', <% } else { %>
+              u'external',<% } %>
+              # KINDS
+              <% if (!tempSimple.getKind().isEmpty()) { %>
+              (u<% for (Kind tempKind : tempSimple.getKind()) { %>'<%=tempKind.getType().getLiteral()%>', <% } %>),<% } else { %>
+              (u'configure', ),<% } %>
+              ),
+<%
+    }
+    while (sseqIterator.hasNext()) {
+        SimpleSequence tempSSimple = sseqIterator.next();
+%>
+              (
+              # ID 
+              <% if (tempSSimple.getId() != null ) { %> 
+              u'<%=tempSSimple.getId()%>', <% } else { %>
+              None, <% } %>
+              # NAME
+              <% if (tempSSimple.getName() != null ) { %> 
+              u'<%=tempSSimple.getName()%>',  <% } else { %>
+              None, <% } %>
+              # TYPE
+              <% if (tempSSimple.getType() != null ) { %> 
+              u'<%=tempSSimple.getType().getLiteral()%>', <% } else { %>
+              None, <% } %>
+              # MODE
+              <% if (tempSSimple.getMode() != null ) { %> 
+              u'<%=tempSSimple.getMode().getLiteral()%>', <% } else { %>
+              u'readwrite', <% } %>
+              # DEFAULT
+              <% if (tempSSimple.getValues() != null) { %> <% List<String> values = tempSSimple.getValues().getValue(); %> <% Iterator<String> iterator = values.iterator(); %>
+                ( <% while (iterator.hasNext()) { %> '<%=iterator.next()%>', <% } %> ) , <% } else { %>
+                None, <% } %>
+                
+              # UNITS
+              <% if (tempSSimple.getUnits() != null ) { %> 
+              '<%=tempSSimple.getUnits()%>', <% } else { %>
+              None, <% } %>
+              # ACTION
+              <% if (tempSSimple.getAction() != null ) { %> 
+              u'<%=tempSSimple.getAction().getType().toString()%>', <% } else { %>
+              u'external', <% } %>
+              # KINDS
+              <% if (!tempSSimple.getKind().isEmpty()) { %>
+              (u<% for (Kind tempKind : tempSSimple.getKind()) { %>'<%=tempKind.getType().getLiteral()%>', <% } %>),<% } else { %>
+              (u'configure', ),<% } %>
+              ),
+<% 
+    }
+%>
+             )

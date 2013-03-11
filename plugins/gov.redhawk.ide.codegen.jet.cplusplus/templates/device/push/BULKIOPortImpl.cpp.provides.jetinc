@@ -1,0 +1,303 @@
+// ----------------------------------------------------------------------------------------
+// <%=nameSpace%>_<%=interfaceName%>_In_i definition
+// ----------------------------------------------------------------------------------------
+<%
+            if ("dataSDDS".equals(interfaceName)) {
+%>
+BULKIO_dataSDDS_In_i::BULKIO_dataSDDS_In_i(std::string port_name, <%=PREFIX%>_i *_parent) : Port_Provides_base_impl(port_name)
+{
+    parent = _parent;
+}
+
+BULKIO_dataSDDS_In_i::~BULKIO_dataSDDS_In_i()
+{
+}
+
+BULKIO::PortStatistics * BULKIO_dataSDDS_In_i::statistics()
+{
+    boost::mutex::scoped_lock lock(statUpdateLock);
+    BULKIO::PortStatistics_var recStat = new BULKIO::PortStatistics(stats.retrieve());
+    return recStat._retn();
+}
+
+BULKIO::PortUsageType BULKIO_dataSDDS_In_i::state()
+{
+    if (attachedStreamMap.size() == 0) {
+        return BULKIO::IDLE;
+    } else if (attachedStreamMap.size() == 1) {
+        return BULKIO::BUSY;
+    } else {
+        return BULKIO::ACTIVE;
+    }
+}
+
+BULKIO::StreamSRISequence * BULKIO_dataSDDS_In_i::attachedSRIs()
+{
+    boost::mutex::scoped_lock lock(sriUpdateLock);
+    BULKIO::StreamSRISequence_var sris = new BULKIO::StreamSRISequence(currentHs.size());
+    std::map<std::string, std::pair<BULKIO::StreamSRI, BULKIO::PrecisionUTCTime> >::iterator sriIter;
+    unsigned int idx = 0;
+
+    sriIter = currentHs.begin();
+    while (sriIter != currentHs.end()) {
+        sris[idx] = (*sriIter).second.first;
+        sriIter++;
+    }
+    return sris._retn();
+}
+
+void BULKIO_dataSDDS_In_i::pushSRI(const BULKIO::StreamSRI& H, const BULKIO::PrecisionUTCTime& T)
+{
+    boost::mutex::scoped_lock lock(sriUpdateLock);
+    bool foundSRI = false;
+    BULKIO::StreamSRI tmpH = H;
+    std::map<std::string, std::pair<BULKIO::StreamSRI, BULKIO::PrecisionUTCTime> >::iterator sriIter;
+
+    sriIter = currentHs.begin();
+    while (sriIter != currentHs.end()) {
+        if (H.streamID == (*sriIter).second.first.streamID) {
+            foundSRI = true;
+            break;
+        }
+        sriIter++;
+    }
+    if (!foundSRI) {
+        currentHs.insert(std::make_pair(CORBA::string_dup(H.streamID), std::make_pair(H, T)));
+    } else {
+        (*sriIter).second = std::make_pair(H, T);
+    }
+}
+
+BULKIO::SDDSStreamDefinition* BULKIO_dataSDDS_In_i::getStreamDefinition(const char* attachId) {
+    std::map<std::string, BULKIO::SDDSStreamDefinition*>::iterator portIter2;
+    portIter2 = attachedStreamMap.begin();
+    // use: attachedPorts[(*portIter).first] :instead
+    while (portIter2 != attachedStreamMap.end()) {
+        if (strcmp((*portIter2).first.c_str(), attachId) == 0) {
+            return (*portIter2).second;
+        }
+        portIter2++;
+    }
+    return NULL;
+}
+
+char* BULKIO_dataSDDS_In_i::getUser(const char* attachId)
+{
+    std::map<std::string, std::string>::iterator portIter2;
+    portIter2 = attachedUsers.begin();
+    while (portIter2 != attachedUsers.end()) {
+        if (strcmp((*portIter2).first.c_str(), attachId) == 0) {
+            return CORBA::string_dup((*portIter2).second.c_str());
+        }
+        portIter2++;
+    }
+    return NULL;
+}
+
+BULKIO::dataSDDS::InputUsageState BULKIO_dataSDDS_In_i::usageState() {
+    if (attachedStreamMap.size() == 0) {
+        return BULKIO::dataSDDS::IDLE;
+    } else if (attachedStreamMap.size() == 1) {
+        return BULKIO::dataSDDS::BUSY;
+    } else {
+        return BULKIO::dataSDDS::ACTIVE;
+    }
+}
+
+BULKIO::SDDSStreamSequence* BULKIO_dataSDDS_In_i::attachedStreams() {
+    BULKIO::SDDSStreamSequence* seq = new BULKIO::SDDSStreamSequence();
+    seq->length(attachedStreamMap.size());
+    std::map<std::string, BULKIO::SDDSStreamDefinition*>::iterator portIter2;
+    portIter2 = attachedStreamMap.begin();
+    int i = 0;
+    while (portIter2 != attachedStreamMap.end()) {
+        (*seq)[i++] = *((*portIter2).second);
+        portIter2++;
+    }
+    return seq;
+}
+
+BULKIO::StringSequence* BULKIO_dataSDDS_In_i::attachmentIds() {
+    BULKIO::StringSequence* seq = new BULKIO::StringSequence();
+    seq->length(attachedStreamMap.size());
+    std::map<std::string, BULKIO::SDDSStreamDefinition*>::iterator portIter2;
+    portIter2 = attachedStreamMap.begin();
+    int i = 0;
+    while (portIter2 != attachedStreamMap.end()) {
+        (*seq)[i++] = CORBA::string_dup((*portIter2).first.c_str());
+        portIter2++;
+    }
+    return seq;
+}
+
+char* BULKIO_dataSDDS_In_i::attach(const BULKIO::SDDSStreamDefinition& stream, const char* userid) throw (BULKIO::dataSDDS::AttachError, BULKIO::dataSDDS::StreamInputError) {
+    std::string attachId;
+
+    attachId = parent->attach(name, stream, userid);
+    attachedStreamMap.insert(std::make_pair(attachId, new BULKIO::SDDSStreamDefinition(stream)));
+    attachedUsers.insert(std::make_pair(attachId, std::string(userid)));
+
+    return CORBA::string_dup(attachId.c_str());
+}
+
+void BULKIO_dataSDDS_In_i::detach(const char* attachId) {
+    attachedStreamMap.erase(attachId);
+    attachedUsers.erase(attachId);
+}
+
+<%
+            } else {
+%>
+<%=nameSpace%>_<%=interfaceName%>_In_i::<%=nameSpace%>_<%=interfaceName%>_In_i(std::string port_name, <%=PREFIX%>_i *_parent) : 
+Port_Provides_base_impl(port_name)
+{
+    currentState = BULKIO::IDLE;
+}
+
+<%=nameSpace%>_<%=interfaceName%>_In_i::~<%=nameSpace%>_<%=interfaceName%>_In_i()
+{
+}
+
+BULKIO::PortStatistics * <%=nameSpace%>_<%=interfaceName%>_In_i::statistics()
+{
+    boost::mutex::scoped_lock lock(sriUpdateLock);
+    BULKIO::PortStatistics_var recStat = new BULKIO::PortStatistics(stats.retrieve());
+    // NOTE: You must delete the object that this function returns!
+    return recStat._retn();
+}
+
+BULKIO::PortUsageType <%=nameSpace%>_<%=interfaceName%>_In_i::state()
+{
+    return currentState;
+}
+
+BULKIO::StreamSRISequence * <%=nameSpace%>_<%=interfaceName%>_In_i::activeSRIs()
+{
+    boost::mutex::scoped_lock lock(sriUpdateLock);
+    BULKIO::StreamSRISequence_var retSRI = new BULKIO::StreamSRISequence(currentHs);
+    // NOTE: You must delete the object that this function returns!
+    return retSRI._retn();
+}
+
+void <%=nameSpace%>_<%=interfaceName%>_In_i::pushSRI(const BULKIO::StreamSRI& H)
+{
+    parent->pushSRI(name, H);
+}
+
+<%
+        for (Operation op : iface.getOperations()) {
+            if (!"pushPacket".equals(op.getName())) {
+                continue;
+            }
+            int numParams = op.getParams().size();
+            boolean pushPacketCall = false;
+            boolean hasPushPacketFileCall = false;
+            boolean hasPushPacketXMLCall = false;
+            int numVector = 0;
+            ArrayList<String> vectorList = new ArrayList<String>();
+            if (numParams == 4) {
+                if (!"dataFile".equals(interfaceName)) {
+                    pushPacketCall = true;
+                } else {
+                    hasPushPacketFileCall = true;
+                }
+            }
+            if ("dataXML".equals(interfaceName)) {
+                hasPushPacketXMLCall = true;
+            }
+%>
+<%=op.getCxxReturnType()%><%=_cppHelper.pointerReturnValue(op.getCxxReturnType(), op.getReturnType(), op.isCxxReturnTypeVariableLength())%> <%=nameSpace%>_<%=interfaceName%>_In_i::<%=op.getName()%>(<%
+            if (op.getParams().size() == 0) {
+%>)<%
+            }
+            for (int i = 0; i < numParams; i++) {
+                String iteratorBase = _cppHelper.getBaseSequenceMapping(op.getParams().get(i).getCxxType());
+                if (iteratorBase.length() > 11) {
+                    if (iteratorBase.substring(0,11).equals("std::vector")) {
+                        numVector++;
+                        vectorList.add(op.getParams().get(i).getName());
+                    }
+                }
+%><%=op.getParams().get(i).getCxxType()%> <%=op.getParams().get(i).getName()%><%
+                if (i == (numParams - 1)) {
+%>)<%
+                } else {
+%>, <%
+                }
+            } // end for params
+%>
+{
+<%
+            String ppFirstParam = "";
+            if (pushPacketCall) {
+                String firstParam = op.getParams().get(0).getName();
+                if (memcpyBuffer) {
+                    ppFirstParam = "new_message,";
+%>
+    new_message.resize(<%=firstParam%>.length());
+    memcpy(&new_message[0], &<%=firstParam%>[0], <%=firstParam%>.length() * sizeof(<%=firstParam%>[0]));
+    
+<%
+                } else {
+                    ppFirstParam = "new_message, length,";
+                    String dataTransfer = op.getParams().get(0).getCxxType();
+                    int beginningIndex = dataTransfer.startsWith("const") ? 6 : 0;
+                    if (dataTransfer.endsWith("&")) {
+                        dataTransfer = dataTransfer.substring(beginningIndex, dataTransfer.length() - 1);
+                    } else {
+                        dataTransfer = dataTransfer.substring(beginningIndex, dataTransfer.length());
+                    }
+%>
+
+    // This is somewhat dangerous. The const_cast<> removes the const on the data
+    // sequence that's passed in so we can call get_buffer on it. get_buffer(1)
+    // essentially steals the buffer out of the sequence from OmniORB. However,
+    // once you do this you MUST delete the buffer when you're done with it
+    // otherwise you'll run out of memory.  By doing this, we reduce the transfers
+    // to one memcpy/connection for the send process.
+    //
+    // MAKE SURE TO DELETE THIS BUFFER!!!!!
+    unsigned long length = <%=firstParam%>.length();
+    new_message = const_cast<<%=dataTransfer%>*>(&<%=firstParam%>)->get_buffer(1);
+    
+<%
+                } // end else !memcpyBuffer
+            } // end if pushPacket
+%>
+
+    parent-><%=op.getName()%>(name<%
+            if (numParams != 0) {
+%>, <%
+            } else {
+%>);<%
+        	} // end params = 0
+	        for (int j = 0; j < numParams; j++) {
+	            String paramName = op.getParams().get(j).getName();
+	            if (pushPacketCall && (j == 0)) {
+%><%=ppFirstParam%><%
+	              continue;
+	            }
+%><%=paramName%><%
+	            if (j == (numParams - 1)) {
+%>);<%
+        		} else {
+%>, <%
+        		}
+    		} // end for params
+            if (!hasPushPacketXMLCall) {
+%>
+    stats.update(<%if ("dataFile".equals(interfaceName)) {%>1<%} else {%><%=op.getParams().get(0).getName()%>.length()<%}%>, EOS, streamID);
+<%
+            } else {
+%>
+    stats.update(strlen(<%=op.getParams().get(0).getName()%>), EOS, streamID);
+<%
+            } // end if pushPacket !pushpacketxml
+%>
+}
+<%
+        } // end for operations
+%>
+<%
+        } // end else !dataSDDS
+%>

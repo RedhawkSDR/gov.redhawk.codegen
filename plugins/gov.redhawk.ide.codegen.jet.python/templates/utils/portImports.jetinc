@@ -1,0 +1,38 @@
+from ossie.resource import usesport, providesport
+
+<%
+    boolean includedUUID = false;
+    boolean extraIncludes = false;
+    for (String ns : nsList) {
+        boolean isBulkio = "BULKIO".equalsIgnoreCase(ns);
+        if ("CF".equalsIgnoreCase(ns)) {
+            continue;
+        }
+
+        if (isBulkio && !extraIncludes) {
+%>
+from ossie.cf import ExtendedCF
+from omniORB import CORBA
+import struct #@UnresolvedImport
+<%
+            extraIncludes = true;
+        }
+        if (isBulkio && !isResource && !includedUUID) {
+%>
+from ossie.utils import uuid
+<%
+            includedUUID = true;
+        }
+
+        String importNS = ns;
+        if (isBulkio || "REDHAWK".equalsIgnoreCase(ns)) {
+            importNS = ns.toLowerCase() + "." + ns.toLowerCase() + "Interfaces";
+        } else {
+            importNS = "redhawk." + ns.toLowerCase() + "Interfaces";
+        }
+%>
+
+<%if (!ns.startsWith("Cos")) {%>from <%=importNS%> <%}%>import <%=ns%>, <%=ns%>__POA #@UnusedImport 
+<%
+    }
+%>

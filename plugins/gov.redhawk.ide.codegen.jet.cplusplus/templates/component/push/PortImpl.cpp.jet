@@ -1,0 +1,341 @@
+<%@ jet package="gov.redhawk.ide.codegen.jet.cplusplus.template.component.push"
+imports="gov.redhawk.ide.RedhawkIdeActivator
+gov.redhawk.ide.codegen.ImplementationSettings
+gov.redhawk.ide.codegen.Property
+gov.redhawk.ide.codegen.cplusplus.CppHelper
+gov.redhawk.ide.codegen.jet.TemplateParameter
+gov.redhawk.ide.codegen.jet.cplusplus.CplusplusJetGeneratorPlugin
+gov.redhawk.ide.idl.IdlUtil
+gov.redhawk.ide.idl.Interface
+gov.redhawk.ide.idl.Operation
+java.util.ArrayList
+java.util.Arrays
+java.util.HashSet
+java.util.List
+mil.jpeojtrs.sca.scd.Provides
+mil.jpeojtrs.sca.scd.Uses
+mil.jpeojtrs.sca.spd.Implementation
+mil.jpeojtrs.sca.spd.SoftPkg
+org.eclipse.core.runtime.CoreException
+org.eclipse.core.runtime.IPath
+org.eclipse.core.runtime.IStatus
+org.eclipse.core.runtime.Status
+org.eclipse.emf.common.util.EList"
+class="PortImplCppTemplate"
+skeleton="../../generator.skeleton2" 
+%><%
+    TemplateParameter templ = (TemplateParameter) argument;
+    ImplementationSettings implSettings = templ.getImplSettings();
+    Implementation impl = templ.getImpl();
+    SoftPkg softpkg = (SoftPkg) impl.eContainer();
+    String PREFIX = gov.redhawk.ide.codegen.util.CodegenFileHelper.getPreferredFilePrefix(softpkg, implSettings);
+    EList<Uses> uses = softpkg.getDescriptor().getComponent().getComponentFeatures().getPorts().getUses();
+    EList<Provides> provides = softpkg.getDescriptor().getComponent().getComponentFeatures().getPorts().getProvides();
+    List<IPath> search_paths = Arrays.asList(RedhawkIdeActivator.getDefault().getDefaultIdlIncludePath());
+    boolean memcpyBuffer = false;
+    for (Property tempProp : implSettings.getProperties()) {
+        if ("memcpy_buffer".equals(tempProp.getId())) {
+            if (Boolean.parseBoolean(tempProp.getValue())) {
+                memcpyBuffer = true;
+                break;
+            }
+        }
+    }
+%>
+/****************************************************************************
+
+
+    WARNING:
+        This is auto-generated code, and you should modify it only if you
+        know exactly what you're doing. All input and output functionality
+        should only be accessed through the main component file
+
+
+****************************************************************************/
+
+#include "port_impl.h"
+#include "<%=PREFIX%>.h"
+<%
+    CppHelper _cppHelper = new CppHelper();
+    HashSet<String> usesList = new HashSet<String>();
+    for (Uses entry : uses) {
+        String intName = entry.getRepID();
+        usesList.add(intName);
+    }
+    HashSet<String> providesList = new HashSet<String>();
+    for (Provides entry : provides) {
+        String intName = entry.getRepID();
+        providesList.add(intName);
+    }
+    
+    for (String entry : usesList) {
+        Interface iface = IdlUtil.getInstance().getInterface(search_paths, entry.split(":")[1], true); 
+        if (iface == null) {
+            throw new CoreException(new Status(IStatus.ERROR, CplusplusJetGeneratorPlugin.PLUGIN_ID, "Unable to find interface for " + entry));
+        }
+        
+        String nameSpace = iface.getNameSpace();
+        String interfaceName = iface.getName();
+        if ("BULKIO".equals(nameSpace)) {
+%>
+<%@ include file="BULKIOPortImpl.cpp.uses.jetinc"%>
+<%
+        } else {
+%>
+
+// ----------------------------------------------------------------------------------------
+// <%=nameSpace%>_<%=interfaceName%>_Out_i definition
+// ----------------------------------------------------------------------------------------
+<%=nameSpace%>_<%=interfaceName%>_Out_i::<%=nameSpace%>_<%=interfaceName%>_Out_i(std::string port_name) : 
+Port_Uses_base_impl(port_name)
+{
+    recConnectionsRefresh = false;
+    recConnections.length(0);
+}
+
+<%=nameSpace%>_<%=interfaceName%>_Out_i::~<%=nameSpace%>_<%=interfaceName%>_Out_i()
+{
+}
+<% 
+        for (Operation op : iface.getOperations()) {
+            int numParams = op.getParams().size();
+            boolean pushPacketCall = false;
+            int numVector = 0;
+            ArrayList<String> vectorList = new ArrayList<String>();
+%>
+
+<%=op.getCxxReturnType()%><%=_cppHelper.pointerReturnValue(op.getCxxReturnType(), op.getReturnType(), op.isCxxReturnTypeVariableLength())%> <%=nameSpace%>_<%=interfaceName%>_Out_i::<%=op.getName()%>(<%
+            if (numParams == 0) {
+%>)<%
+            }
+            for (int i = 0; i < numParams; i++) {
+                String iteratorBase = _cppHelper.getBaseSequenceMapping(op.getParams().get(i).getCxxType());
+                if (iteratorBase.length() > 11) {
+                    if (iteratorBase.substring(0, 11).equals("std::vector")) {
+                        numVector++;
+                        vectorList.add(op.getParams().get(i).getName());
+                    }
+                }
+
+%><%=_cppHelper.getCppMapping(op.getParams().get(i).getCxxType())%> <%=op.getParams().get(i).getName()%><%
+                if (i == (numParams - 1)) {
+%>)<%
+                } else {
+%>, <%
+                }
+            } // end for params
+%>
+{
+<%
+            if (!"void".equals(op.getCxxReturnType())) {
+%>
+    <%=op.getCxxReturnType()%><%=_cppHelper.pointerReturnValue(op.getCxxReturnType(), op.getReturnType(), op.isCxxReturnTypeVariableLength())%> retval = <%=_cppHelper.getInitialValue(op.getCxxReturnType(), op.getReturnType(), op.isCxxReturnTypeVariableLength())%>;
+<%
+            }
+%>
+    std::vector < std::pair < <%=nameSpace%>::<%=interfaceName%>_var, std::string > >::iterator i;
+
+    updatingPortsLock.lock();    // don't want to process while command information is coming in
+
+<%
+            if (pushPacketCall) {
+%>
+    std::copy(begin, end, data);
+
+<%
+            } else {
+                for (int i = 0; i < numVector; i++) {
+%>
+    Sequence_<%=op.getName()%>_<%=i%>.length(<%=vectorList.get(i)%>.size());
+    memcpy(&Sequence_<%=op.getName()%>_<%=i%>[0], &<%=vectorList.get(i)%>[0], <%=vectorList.get(i)%>.size() * sizeof(<%=vectorList.get(i)%>[0]));
+
+<%
+		        }
+		    }
+%>
+    if (active) {
+        for (i = outConnections.begin(); i != outConnections.end(); ++i) {
+            try {
+                
+            <%
+            if (!"void".equals(op.getCxxReturnType())) {
+%>retval =<%
+            }
+%>((*i).first)-><%=op.getName()%>(<%
+            if (numParams == 0) {
+%>);<%
+            }
+            for (int j = 0; j < numParams; j++) {
+                String paramName = op.getParams().get(j).getName();
+                boolean vectorParam = false;
+                for (int i = 0; i < numVector; i++) {
+                    if (paramName.equals(vectorList.get(i))) {
+%>Sequence_<%=op.getName()%>_<%=i%><%
+                        vectorParam = true;
+                        break;
+                    }
+                }
+                if (!vectorParam) {
+%><%=paramName%><%
+                }
+                if (j == (numParams - 1)) {
+%>);<%
+                } else {
+%>, <%
+                }
+            } // end for params
+%>
+            } catch(...) {
+                std::cout << "Call to <%=op.getName()%> by <%=nameSpace%>_<%=interfaceName%>_Out_i failed" << std::endl;
+            }
+        }
+    }
+
+    updatingPortsLock.unlock();    // don't want to process while command information is coming in
+
+    return<% if (!"void".equals(op.getCxxReturnType())) {%> retval<%}%>;
+}<%
+            } // end for Operations
+        } //end if !BulkIO
+	} // end for usesList
+
+    for (String entry : providesList) {
+        Interface iface = IdlUtil.getInstance().getInterface(search_paths, entry.split(":")[1], true);
+        if (iface == null) {
+            throw new CoreException(new Status(IStatus.ERROR, CplusplusJetGeneratorPlugin.PLUGIN_ID, "Unable to find interface for " + entry));
+        }
+        
+        String nameSpace = iface.getNameSpace();
+        String interfaceName = iface.getName();
+        if ("BULKIO".equals(nameSpace)) {
+%>
+<%@ include file="BULKIOPortImpl.cpp.provides.jetinc"%>
+<%
+        } else {
+%>
+
+// ----------------------------------------------------------------------------------------
+// <%=nameSpace%>_<%=interfaceName%>_In_i definition
+// ----------------------------------------------------------------------------------------
+<%=nameSpace%>_<%=interfaceName%>_In_i::<%=nameSpace%>_<%=interfaceName%>_In_i(std::string port_name, <%=PREFIX%>_i *_parent) : 
+Port_Provides_base_impl(port_name)
+{
+}
+
+<%=nameSpace%>_<%=interfaceName%>_In_i::~<%=nameSpace%>_<%=interfaceName%>_In_i()
+{
+}
+<%
+        for (Operation op : iface.getOperations()) {
+            int numParams = op.getParams().size();
+            int numVector = 0;
+            ArrayList<String> vectorList = new ArrayList<String>();
+%>
+
+<%=op.getCxxReturnType()%><%=_cppHelper.pointerReturnValue(op.getCxxReturnType(), op.getReturnType(), op.isCxxReturnTypeVariableLength())%> <%=nameSpace%>_<%=interfaceName%>_In_i::<%=op.getName()%>(<%
+            if (op.getParams().size() == 0) {
+%>)<%
+            }
+            for (int i = 0; i < numParams; i++) {
+                String iteratorBase = _cppHelper.getBaseSequenceMapping(op.getParams().get(i).getCxxType());
+                if (iteratorBase.length() > 11) {
+                    if (iteratorBase.substring(0,11).equals("std::vector")) {
+                        numVector++;
+                        vectorList.add(op.getParams().get(i).getName());
+                    }
+                }
+%><%=op.getParams().get(i).getCxxType()%> <%=op.getParams().get(i).getName()%><%
+                if (i == (numParams - 1)) {
+%>)<%
+                } else {
+%>, <%
+                }
+            } // end for params
+%>
+{
+<%
+            if (!"void".equals(op.getCxxReturnType())) {
+%>
+    
+    <%
+                if ("char*".equals(op.getCxxReturnType())) {
+%>char<%
+                } else {
+%><%=op.getCxxReturnType()%><%=_cppHelper.pointerReturnValue(op.getCxxReturnType(), op.getReturnType(), op.isCxxReturnTypeVariableLength())%><%
+                }
+%> tmpVal<%
+                if ("char*".equals(op.getCxxReturnType())) {
+%>[255]<%
+                }
+%>;
+<%
+            } // end if !returnType == void
+            for (int i = 0; i < numVector; i++) {
+%>
+    vector_<%=op.getName()%>_<%=i%>.resize(<%=vectorList.get(i)%>.length());
+    memcpy(&vector_<%=op.getName()%>_<%=i%>[0], &<%=vectorList.get(i)%>[0], <%=vectorList.get(i)%>.length() * sizeof(<%=vectorList.get(i)%>[0]));
+    
+<%
+            } // end numVectors
+%>
+
+    <%
+    		if ("char*".equals(op.getCxxReturnType())) {
+%>    strcpy(tmpVal, <%
+            } else if (!"void".equals(op.getCxxReturnType())) {
+%>    tmpVal = <%
+            } else {
+%>    <%
+            }
+%>parent-><%=op.getName()%>(name<%
+            if (numParams != 0) {
+%>, <%
+            } else {
+%>)<%
+            	if ("char*".equals(op.getCxxReturnType())) {
+%>.c_str())<%
+            	}
+%>;<%
+        	} // end params = 0
+	        for (int j = 0; j < numParams; j++) {
+	            String paramName = op.getParams().get(j).getName();
+	            boolean vectorParam = false;
+	            for (int k = 0; k < numVector; k++) {
+	                if (paramName.equals(vectorList.get(k))) {
+%>vector_<%=op.getName()%>_<%=k%><%
+	                    vectorParam = true;
+	                    break;
+                	}
+            	}
+            	if (!vectorParam) {
+%><%=paramName%><%
+            	}
+	            if (j == (numParams - 1)) {
+	                if ("char*".equals(op.getCxxReturnType())) {
+%>).c_str()<%
+            		}
+%>);<%
+        		} else {
+%>, <%
+        		}
+    		} // end for params
+            if (!"void".equals(op.getCxxReturnType())) {
+%>
+    return <%
+                if ("char*".equals(op.getCxxReturnType())) {
+%>CORBA::string_dup(<%
+                }
+%>tmpVal<%
+                if ("char*".equals(op.getCxxReturnType())) {
+%>)<%
+                }
+%>; 
+<%
+            } // end if !returnType == void
+%>
+}
+<%
+        } // end for operations
+        } // end else !BULKIO
+    } // end for providesList
+%>

@@ -1,0 +1,4 @@
+gov.redhawk.ide.idl/debug=false
+gov.redhawk.ide.idl/debug/idlJavaUtil=false
+gov.redhawk.ide.idl/debug/interfacesFromFile=false
+gov.redhawk.ide.idl/debug/modelBuilder=false

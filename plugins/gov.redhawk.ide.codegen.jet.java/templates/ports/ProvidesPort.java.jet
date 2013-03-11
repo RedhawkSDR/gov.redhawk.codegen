@@ -1,0 +1,129 @@
+<%@ jet package="gov.redhawk.ide.codegen.jet.java.template.component"
+imports="gov.redhawk.ide.RedhawkIdeActivator
+gov.redhawk.ide.codegen.ImplementationSettings
+gov.redhawk.ide.codegen.Property
+gov.redhawk.ide.codegen.java.PortHelper
+gov.redhawk.ide.codegen.jet.java.JavaJetGeneratorPlugin
+gov.redhawk.ide.codegen.jet.java.JavaTemplateParameter
+gov.redhawk.ide.idl.IdlJavaUtil
+java.util.ArrayList
+java.util.Arrays
+java.util.List
+org.eclipse.core.runtime.CoreException
+org.eclipse.core.runtime.IPath
+org.eclipse.core.runtime.IStatus
+org.eclipse.core.runtime.Status
+org.jacorb.idl.Interface
+org.jacorb.idl.Operation
+org.jacorb.idl.ParamDecl
+org.jacorb.idl.ScopedName"
+class="ProvidesPortJavaTemplate"
+skeleton="../generator.skeleton2"
+%>
+<%
+    JavaTemplateParameter template = (JavaTemplateParameter) argument;
+    ImplementationSettings implSettings = template.getImplSettings();
+    List<IPath> search_paths = Arrays.asList(RedhawkIdeActivator.getDefault().getDefaultIdlIncludePath());
+    List<String> packages = new ArrayList<String>();
+    String pkg = template.getPackage();
+    mil.jpeojtrs.sca.spd.SoftPkg softPkg = template.getSoftPkg();
+    String PREFIX = gov.redhawk.ide.codegen.util.CodegenFileHelper.getPreferredFilePrefix(softPkg, implSettings);
+    Interface iface = IdlJavaUtil.getInstance().getInterface(search_paths, template.getPortRepId().split(":")[1], true);
+    if (iface == null) {
+    	throw new CoreException(new Status(IStatus.ERROR, JavaJetGeneratorPlugin.PLUGIN_ID, "Unable to find interface for " + template.getPortRepId())); 
+    }
+
+    boolean useJNI = false;
+    for (Property tempProp : implSettings.getProperties()) {
+        if ("use_jni".equals(tempProp.getId())) {
+            useJNI = Boolean.parseBoolean(tempProp.getValue());
+        }
+    }
+
+    String nameSpace = iface.pack_name;
+    String interfaceName = iface.name();
+    packages.add(iface.pack_name);
+    boolean isBulkio = "BULKIO".equals(nameSpace);
+    String poaClass = interfaceName + "POA";
+    if (useJNI && isBulkio) {
+        poaClass = nameSpace + ".jni." + poaClass;
+    }
+
+    if (template.isGenClassDef() && template.isGenSupport()) {
+%>
+package <%=pkg + ".ports"%>;
+
+<%
+    }
+    if (template.isGenSupport()) {
+        if (isBulkio) {   
+%>
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Iterator;
+import java.util.Map;
+import org.omg.CORBA.TCKind;
+import org.ossie.properties.AnyUtils;
+import CF.DataType;
+
+<%
+            if ("dataSDDS".equals(interfaceName)) {
+%>
+import BULKIO.dataSDDSPackage.AttachError;
+import BULKIO.dataSDDSPackage.DetachError;
+import BULKIO.dataSDDSPackage.InputUsageState;
+import BULKIO.dataSDDSPackage.StreamInputError;
+<%
+            } else {
+%>
+import java.util.ArrayDeque;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+<%
+            }
+        }
+%>
+
+import <%=pkg%>.<%=PREFIX%>;
+
+<%
+        for (String pack : packages) {
+%>
+import <%=pack%>.*;
+<%
+        }
+    } // end if template.isGenSupport()
+    if (template.isGenClassDef()) {
+%>
+/**
+ * @generated
+ */
+public class <%=nameSpace%>_<%=interfaceName%>InPort extends <%=poaClass%> {
+
+    /**
+     * @generated
+     */
+    protected <%=PREFIX%> parent;
+    
+    /**
+     * @generated
+     */
+    protected String name;
+
+<%
+        if ("BULKIO".equals(nameSpace)) {
+%>    
+    <%@ include file="BULKIO_ProvidesPort.jetinc"%>
+<%
+        } else { // else not BULKIO
+%>
+    <%@ include file="GenericProvidesPort.jetinc"%>
+<%
+        } // end of else nameSpace
+%>
+
+}
+<%
+    } // end if template.isGenClassDef()
+%>

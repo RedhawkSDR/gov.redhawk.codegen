@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Sandbox Tests
+Bundle-SymbolicName: gov.redhawk.ide.sandbox.console.py.tests
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: gov.redhawk.ide.sandbox.console.py.tests.SandboxTestsActivator
+Require-Bundle: org.eclipse.core.runtime;bundle-version="3.6.0",
+ gov.redhawk.ide.sandbox.console.py;bundle-version="1.0.0",
+ org.junit;bundle-version="4.8.1",
+ org.eclipse.ui;bundle-version="3.6.1",
+ gov.redhawk.ide.sdr.ui;bundle-version="3.2.0",
+ gov.redhawk.ide.debug.ui;bundle-version="1.0.0"
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Export-Package: gov.redhawk.ide.sandbox.console.py.tests
+Bundle-Vendor: United States Government

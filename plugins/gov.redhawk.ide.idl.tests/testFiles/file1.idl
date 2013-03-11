@@ -1,0 +1,29 @@
+#ifndef _FILE_ONE_IDL_
+#define _FILE_ONE_IDL_
+
+//#include <ossie/CF/cf.idl>
+#include <ossie/CF/cf.idl>
+
+module EXAMPLE {
+    typedef short MyType;
+    const short MY_CONST_ZERO = 0;
+    const short MY_CONST_ONE = 1;
+
+    typedef sequence<string> StringArray;
+
+    struct AStructure {
+        short field1;
+        long field2;
+        double field3;
+    };
+
+    exception MajorError {
+        MyType error_code;
+        string message;
+    };
+
+    interface SomeInterface {
+        void someFunc(in CF::DataType a, out string b);
+    };
+};
+#endif
