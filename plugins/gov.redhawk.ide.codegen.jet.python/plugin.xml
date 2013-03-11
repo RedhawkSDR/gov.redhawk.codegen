@@ -251,7 +251,7 @@
    </extension>
    <extension
          id="gov.redhawk.ide.codegen.jet.python.sourceinclude"
-         name="Redhawk C++ auto-inclusion builder"
+         name="REDHAWK C++ auto-inclusion builder"
          point="org.eclipse.core.resources.builders">
       <builder
             callOnEmptyDelta="true"

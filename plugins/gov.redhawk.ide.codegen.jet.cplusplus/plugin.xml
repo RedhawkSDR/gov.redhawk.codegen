@@ -225,7 +225,7 @@ If false, the data will be taken from the sequence and it is the component's res
    </extension>
    <extension
          id="gov.redhawk.ide.codegen.jet.cplusplus.builder"
-         name="Redhawk C++ auto-inclusion builder"
+         name="REDHAWK C++ auto-inclusion builder"
          point="org.eclipse.core.resources.builders">
       <builder
             callOnEmptyDelta="true"

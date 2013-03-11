@@ -215,8 +215,8 @@
          point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
             delegate="gov.redhawk.ide.codegen.jet.java.JavaComponentLaunchDelegate"
-            delegateDescription="The Redhawk Java component launcher supports launching local components in run or debug modes"
-            delegateName="Redhawk JDT Launcher"
+            delegateDescription="The REDHAWK Java component launcher supports launching local components in run or debug modes"
+            delegateName="REDHAWK JDT Launcher"
             id="gov.redhawk.ide.codegen.jet.java.launching.localJavaComponent"
             migrationDelegate="org.eclipse.jdt.internal.launching.JavaMigrationDelegate"
             modes="run, debug"
