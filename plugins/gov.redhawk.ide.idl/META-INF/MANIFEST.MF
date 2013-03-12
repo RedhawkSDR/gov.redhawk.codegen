@@ -23,4 +23,4 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: gov.redhawk.ide.idl,
  gov.redhawk.ide.idl.generator.internal;x-friends:="gov.redhawk.ide.idl.tests",
  gov.redhawk.ide.idl.generator.newidl
-Bundle-Vendor: United States Government
+Bundle-Vendor: REDHAWK

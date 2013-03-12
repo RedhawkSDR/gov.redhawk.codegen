@@ -12,5 +12,5 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: gov.redhawk.ide.codegen.jet,
  gov.redhawk.ide.codegen.jet.template
-Bundle-Vendor: United States Government
+Bundle-Vendor: REDHAWK
 Import-Package: gov.redhawk.model.sca.util

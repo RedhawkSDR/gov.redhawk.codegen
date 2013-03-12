@@ -20,4 +20,4 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: gov.redhawk.ide.codegen.python,
  gov.redhawk.ide.codegen.python.utils
 Bundle-ClassPath: .
-Bundle-Vendor: United States Government
+Bundle-Vendor: REDHAWK
