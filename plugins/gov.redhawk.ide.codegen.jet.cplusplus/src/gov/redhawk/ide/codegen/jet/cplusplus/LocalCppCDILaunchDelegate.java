@@ -70,17 +70,19 @@ public class LocalCppCDILaunchDelegate extends LocalCDILaunchDelegate implements
 		if (projectName.length() > 0) {
 			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 			ICProjectDescription projDesc = CoreModel.getDefault().getProjectDescription(project);
-			ICConfigurationDescription configDesc = projDesc.getActiveConfiguration();
-			String configId = configDesc.getId();
-			ICDebugConfiguration[] debugConfigs = CDebugCorePlugin.getDefault().getActiveDebugConfigurations();
-			outer: for (int i = 0; i < debugConfigs.length; ++i) {
-				ICDebugConfiguration debugConfig = debugConfigs[i];
-				String[] patterns = debugConfig.getSupportedBuildConfigPatterns();
-				if (patterns != null) {
-					for (int j = 0; j < patterns.length; ++j) {
-						if (configId.matches(patterns[j])) {
-							defaultDebugger = debugConfig.getID();
-							break outer;
+			if (projDesc != null) {
+				ICConfigurationDescription configDesc = projDesc.getActiveConfiguration();
+				String configId = configDesc.getId();
+				ICDebugConfiguration[] debugConfigs = CDebugCorePlugin.getDefault().getActiveDebugConfigurations();
+				outer: for (int i = 0; i < debugConfigs.length; ++i) {
+					ICDebugConfiguration debugConfig = debugConfigs[i];
+					String[] patterns = debugConfig.getSupportedBuildConfigPatterns();
+					if (patterns != null) {
+						for (int j = 0; j < patterns.length; ++j) {
+							if (configId.matches(patterns[j])) {
+								defaultDebugger = debugConfig.getID();
+								break outer;
+							}
 						}
 					}
 				}
