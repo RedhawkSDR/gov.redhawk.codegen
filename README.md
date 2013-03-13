@@ -8,25 +8,15 @@ This is the automatic code generator module of the REDHAWK IDE.  It provides plu
 
 REDHAWK Website: [www.redhawkSDR.org](http://www.redhawksdr.org)
 
-Overview and Getting Started Guide: [PDF](LINK_TBD "PDF") [HTML](Link_TBD "HTML")
+Overview and Getting Started Guide: [PDF](http://sourceforge.net/projects/redhawksdr/files/Documentation/REDHAWK_Overview_v1.0.pdf/download "PDF") [HTML](http://redhawksdr.github.com/Documentation/gettingstarted/main.html "HTML")
 
-Full REDHAWK Manual: [PDF](LINK_TBD "PDF") [HTML](Link_TBD "HTML")
+Full REDHAWK Manual: [PDF](http://sourceforge.net/projects/redhawksdr/files/Documentation/REDHAWK_Manual_v1.0.pdf/download "PDF") [HTML](http://redhawksdr.github.com/Documentation/main.html "HTML")
  
 ## Copyrights
 
-Copyright © 2012, 2013, United States Government, as represented by the Secretary of Defense.  All rights reserved. 
+This work is protected by Copyright. Please refer to the [Copyright File](COPYRIGHT) for updated copyright           information.
 
-Copyright © 2009, 2010 Northrop Grumman Corporation.
-The U.S. Government has Unlimited Rights in this documentation pursuant to the appropriate DFARS clause.  
+## License
 
-Copyright © 2009, 2010, 2011, 2012 Axios, Inc.
-The U.S. Government has Unlimited Rights in this documentation pursuant to the appropriate DFARS clause.  
+REDHAWK IDE is licensed under the Eclipse Public License (EPL).
 
-Copyright © 2009, 2010, 2011 2012 Rincon Research Corporation.
-The U.S. Government has Unlimited Rights in this documentation pursuant to the appropriate DFARS clause.  
-
-Copyright © 2010, 2011 Artemis Communications, LLC.
-The U.S. Government has Unlimited Rights in this documentation pursuant to the appropriate DFARS clause.  
-
-Copyright © 2009, 2010, 2011, 2012 Ventura Solutions, Inc.
-The U.S. Government has Unlimited Rights in this documentation pursuant to the appropriate DFARS clause.
