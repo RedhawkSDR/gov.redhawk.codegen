@@ -20,52 +20,6 @@
       </launchConfigurationTypeImage>
    </extension>
    <extension
-         point="org.eclipse.debug.ui.launchShortcuts">
-      <shortcut
-            class="gov.redhawk.ide.codegen.jet.python.ui.PyDevLaunchShortcut"
-            icon="icons/RedHawk_Logo16x.gif"
-            id="gov.redhawk.ide.codegen.jet.python.ui.shortcut"
-            label="Local Python Component"
-            modes="run,debug">
-         <description
-               description="Debug a Python component"
-               mode="debug">
-         </description>
-         <description
-               description="Launch a Python component"
-               mode="run">
-         </description>
-         <contextualLaunch>
-            <enablement>
-               <with
-                     variable="selection">
-                  <count
-                        value="1">
-                  </count>
-                  <iterate
-                        ifEmpty="false"
-                        operator="and">
-                     <adapt
-                           type="org.eclipse.core.resources.IFile">
-                        <and>
-                           <test
-                                 property="org.eclipse.core.resources.name"
-                                 value="*.spd.xml">
-                           </test>
-                           <test
-                                 args="gov.redhawk.ide.codegen.jet.python.PythonGenerator"
-                                 forcePluginActivation="true"
-                                 property="gov.redhawk.ide.codegen.containsType">
-                           </test>
-                        </and>
-                     </adapt>
-                  </iterate>
-               </with>
-            </enablement>
-         </contextualLaunch>
-      </shortcut>
-   </extension>
-   <extension
          point="org.eclipse.debug.ui.launchConfigurationTabGroups">
       <launchConfigurationTabGroup
             class="gov.redhawk.ide.codegen.jet.python.ui.PyDevLaunchConfigurationTabGroup"

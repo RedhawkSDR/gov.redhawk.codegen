@@ -18,8 +18,8 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "gov.redhawk.ide.sandbox.console.py.messages"; //$NON-NLS-1$
-	public static String RHLocalConsoleFactory_PY_ERROR;
-	public static String RHLocalConsoleFactory_PY_INIT;
+	public static String RHLocalConsoleFactory_PY_ERROR; // SUPPRESS CHECKSTYLE MemberName
+	public static String RHLocalConsoleFactory_PY_INIT; // SUPPRESS CHECKSTYLE MemberName
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(Messages.BUNDLE_NAME, Messages.class);

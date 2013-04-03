@@ -158,7 +158,7 @@ void BULKIO_dataSDDS_Out_i::pushSRI(const BULKIO::StreamSRI& H, const BULKIO::Pr
             try {
                 ((*i).first)->pushSRI(H, T);
             } catch(...) {
-                std::cout << "Call to pushSRI by BULKIO_dataSDDS_Out_i failed" << std::endl;
+                LOG_ERROR(BULKIO_dataSDDS_Out_i,"Call to pushSRI by BULKIO_dataSDDS_Out_i failed");
             }
         }
     }
@@ -213,7 +213,7 @@ void <%=nameSpace%>_<%=interfaceName%>_Out_i::pushSRI(const BULKIO::StreamSRI& H
             try {
                 ((*i).first)->pushSRI(H);
             } catch(...) {
-                std::cout << "Call to pushSRI by <%=nameSpace%>_<%=interfaceName%>_Out_i failed" << std::endl;
+                LOG_ERROR(<%=nameSpace%>_<%=interfaceName%>_Out_i, "Call to pushSRI by <%=nameSpace%>_<%=interfaceName%>_Out_i failed");
             }
         }
     }

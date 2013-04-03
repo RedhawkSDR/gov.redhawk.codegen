@@ -27,51 +27,5 @@
             type="gov.redhawk.ide.codegen.jet.cplusplus.launchComponentApplication">
       </launchConfigurationTabGroup>
    </extension>
-   <extension
-         point="org.eclipse.debug.ui.launchShortcuts">
-      <shortcut
-            class="gov.redhawk.ide.codegen.jet.cplusplus.ui.CppLaunchShortcut"
-            icon="icons/RedHawk_Logo16x.gif"
-            id="gov.redhawk.ide.codegen.jet.cplusplus.ui.shortcut"
-            label="Local C++ Component"
-            modes="run,debug">
-         <description
-               description="Launch a C++ component"
-               mode="run">
-         </description>
-         <description
-               description="Debug a C++ component"
-               mode="debug">
-         </description>
-         <contextualLaunch>
-            <enablement>
-               <with
-                     variable="selection">
-                  <count
-                        value="1">
-                  </count>
-                  <iterate
-                        ifEmpty="false"
-                        operator="and">
-                     <adapt
-                           type="org.eclipse.core.resources.IFile">
-                        <and>
-                           <test
-                                 property="org.eclipse.core.resources.name"
-                                 value="*.spd.xml">
-                           </test>
-                           <test
-                                 args="gov.redhawk.ide.codegen.jet.cplusplus.CplusplusGenerator"
-                                 forcePluginActivation="true"
-                                 property="gov.redhawk.ide.codegen.containsType">
-                           </test>
-                        </and>
-                     </adapt>
-                  </iterate>
-               </with>
-            </enablement>
-         </contextualLaunch>
-      </shortcut>
-   </extension>
 
 </plugin>

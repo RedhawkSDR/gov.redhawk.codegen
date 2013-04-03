@@ -7,17 +7,17 @@ Bundle-Activator: gov.redhawk.ide.sandbox.console.py.RHLocalConsolePlugin
 Bundle-Vendor: REDHAWK
 Require-Bundle: org.eclipse.ui;bundle-version="3.6.1",
  org.eclipse.core.runtime;bundle-version="3.6.0",
- org.python.pydev.debug;bundle-version="1.6.4",
+ org.python.pydev.debug;bundle-version="2.7.1",
  org.eclipse.ui.console;bundle-version="3.5.0",
  gov.redhawk.ide.debug;bundle-version="1.0.0";visibility:=reexport,
- org.python.pydev.core;bundle-version="1.6.4",
- org.python.pydev;bundle-version="1.6.4",
- gov.redhawk.sandbox;bundle-version="1.0.0";visibility:=reexport,
+ org.python.pydev.core;bundle-version="2.7.1",
+ org.python.pydev;bundle-version="2.7.1",
  gov.redhawk.core.resourceFactory;bundle-version="1.0.0",
  org.apache.commons.io;bundle-version="1.3.2",
  org.eclipse.debug.ui;bundle-version="3.6.1",
  org.eclipse.jface.text;bundle-version="3.6.1",
- org.eclipse.core.variables;bundle-version="3.2.400"
+ org.eclipse.core.variables;bundle-version="3.2.400",
+ com.aptana.interactive_console;bundle-version="2.7.1"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .

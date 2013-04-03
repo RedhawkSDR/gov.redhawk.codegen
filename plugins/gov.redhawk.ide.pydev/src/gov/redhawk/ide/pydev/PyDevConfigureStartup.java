@@ -23,6 +23,7 @@ import org.eclipse.ui.IStartup;
 import org.eclipse.ui.PlatformUI;
 import org.python.pydev.plugin.PydevPlugin;
 
+@Deprecated
 public class PyDevConfigureStartup implements IStartup {
 
 	private int result = 0;

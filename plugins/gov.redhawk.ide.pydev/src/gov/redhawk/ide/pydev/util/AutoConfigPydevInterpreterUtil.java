@@ -24,12 +24,12 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.python.pydev.core.IInterpreterInfo;
 import org.python.pydev.core.IInterpreterManager;
 import org.python.pydev.core.MisconfigurationException;
-import org.python.pydev.core.REF;
-import org.python.pydev.core.Tuple;
 import org.python.pydev.core.docutils.StringUtils;
 import org.python.pydev.plugin.PydevPlugin;
 import org.python.pydev.runners.SimplePythonRunner;
 import org.python.pydev.ui.pythonpathconf.InterpreterInfo;
+
+import com.aptana.shared_core.structure.Tuple;
 
 public final class AutoConfigPydevInterpreterUtil {
 
@@ -76,7 +76,7 @@ public final class AutoConfigPydevInterpreterUtil {
 
 			InterpreterInfo info;
 			try {
-				info = (InterpreterInfo) man.getDefaultInterpreterInfo(submonitor.newChild(1));
+				info = (InterpreterInfo) man.getDefaultInterpreterInfo(true);
 			} catch (final MisconfigurationException e) {
 				throw new CoreException(new Status(IStatus.ERROR, RedhawkIdePyDevPlugin.PLUGIN_ID, "Error with pydev configuration", e));
 			}
@@ -91,10 +91,8 @@ public final class AutoConfigPydevInterpreterUtil {
 				}
 
 				if ((ossiePath == null) || (ossiePath.trim().length() == 0)) {
-					throw new CoreException(new Status(IStatus.ERROR,
-					        RedhawkIdePyDevPlugin.PLUGIN_ID,
-					        "OSSIEHOME environment variable not defined, auto config failed.",
-					        null));
+					throw new CoreException(new Status(IStatus.ERROR, RedhawkIdePyDevPlugin.PLUGIN_ID,
+					        "OSSIEHOME environment variable not defined, auto config failed.", null));
 				}
 
 				configured = info.libs.contains(ossiePath + "/lib/python" + info.getVersion() + "/site-packages") // Prefix-style
@@ -102,27 +100,21 @@ public final class AutoConfigPydevInterpreterUtil {
 
 				configured &= info.libs.contains(ossiePath + "/lib");
 				if (configured == false) {
-					RedhawkIdePyDevPlugin.getDefault()
-					        .getLog()
-					        .log(new Status(IStatus.WARNING, RedhawkIdePyDevPlugin.PLUGIN_ID, "PyDev configuration has incorrect $OSSIHOME Python paths"));
+					RedhawkIdePyDevPlugin.getDefault().getLog().log(
+					        new Status(IStatus.WARNING, RedhawkIdePyDevPlugin.PLUGIN_ID, "PyDev configuration has incorrect $OSSIHOME Python paths"));
 				}
 
 				if (attemptFixes) {
 					if (info.getEnvVariables() == null) {
-						info.setEnvVariables(new String[] {
-							"IDE_REF=${IDE_REF}"
-						});
+						info.setEnvVariables(new String[] { "IDE_REF=${IDE_REF}" });
 					} else {
-						info.updateEnv(new String[] {
-							"IDE_REF=${IDE_REF}"
-						});
+						info.updateEnv(new String[] { "IDE_REF=${IDE_REF}" });
 					}
-					man.saveInterpretersInfoModulesManager();
+					man.setInfos(new InterpreterInfo[]{info}, null, null);
 				} else {
 					if (info.getEnvVariables() == null || Arrays.asList(info.getEnvVariables()).contains("IDE_REF=${IDE_REF}")) {
-						RedhawkIdePyDevPlugin.getDefault()
-						        .getLog()
-						        .log(new Status(IStatus.WARNING, RedhawkIdePyDevPlugin.PLUGIN_ID, "PyDev configuration lacks IDE_REF environment variable"));
+						RedhawkIdePyDevPlugin.getDefault().getLog().log(
+						        new Status(IStatus.WARNING, RedhawkIdePyDevPlugin.PLUGIN_ID, "PyDev configuration lacks IDE_REF environment variable"));
 						configured &= false;
 					}
 				}
@@ -147,15 +139,9 @@ public final class AutoConfigPydevInterpreterUtil {
 			final SubMonitor submonitor = SubMonitor.convert(monitor);
 			final IInterpreterManager man = PydevPlugin.getPythonInterpreterManager(true);
 			man.clearCaches();
-			man.setInfos(new ArrayList<IInterpreterInfo>());
-			File script = null;
-			script = PydevPlugin.getScriptWithinPySrc("interpreterInfo.py");
-			final Tuple<String, String> outTup = new SimplePythonRunner().runAndGetOutputWithInterpreter("python",
-			        REF.getFileAbsolutePath(script),
-			        null,
-			        null,
-			        null,
-			        submonitor.newChild(50));
+			File script = PydevPlugin.getScriptWithinPySrc("interpreterInfo.py");
+			final Tuple<String, String> outTup = new SimplePythonRunner().runAndGetOutputWithInterpreter("python", script.getAbsolutePath(), null, null,
+			        null, submonitor.newChild(50), null);
 
 			final InterpreterInfo info = InterpreterInfo.fromString(outTup.o1, manualConfigure);
 
@@ -171,10 +157,8 @@ public final class AutoConfigPydevInterpreterUtil {
 				}
 
 				if ((ossiePath == null) || (ossiePath.trim().length() == 0)) {
-					throw new CoreException(new Status(IStatus.ERROR,
-					        RedhawkIdePyDevPlugin.PLUGIN_ID,
-					        "OSSIEHOME environment variable not defined, auto config failed.",
-					        null));
+					throw new CoreException(new Status(IStatus.ERROR, RedhawkIdePyDevPlugin.PLUGIN_ID,
+					        "OSSIEHOME environment variable not defined, auto config failed.", null));
 				}
 				if (!new File(ossiePath).exists()) {
 					throw new CoreException(new Status(IStatus.ERROR, RedhawkIdePyDevPlugin.PLUGIN_ID, "OSSIEHOME=" + ossiePath
@@ -192,36 +176,12 @@ public final class AutoConfigPydevInterpreterUtil {
 				info.restoreCompiledLibs(submonitor.newChild(50)); // SUPPRESS CHECKSTYLE MagicNumber
 				info.setName("Python");
 				if (info.getEnvVariables() == null) {
-					info.setEnvVariables(new String[] {
-						"IDE_REF=${IDE_REF}"
-					});
+					info.setEnvVariables(new String[] { "IDE_REF=${IDE_REF}" });
 				} else {
-					info.updateEnv(new String[] {
-						"IDE_REF=${IDE_REF}"
-					});
+					info.updateEnv(new String[] { "IDE_REF=${IDE_REF}" });
 				}
-				man.addInterpreterInfo(info);
-
-				man.setPersistedString(man.getStringToPersist(new InterpreterInfo[] {
-					info
-				}));
-
-				man.setInfos(Arrays.asList(new IInterpreterInfo[] {
-					info
-				}));
-
-				// This line is needed for Python 2.5. 2.5 throws an exception when
-				// it parses the test directory.
-				//
-
-				try {
-					man.restorePythopathForInterpreters(submonitor.newChild(200), null); // SUPPRESS CHECKSTYLE MagicNumber
-				} catch (final Exception e) {
-					// PASS
-				}
-
-				man.saveInterpretersInfoModulesManager();
-
+				
+				man.setInfos(new IInterpreterInfo[0], null, null);
 				PydevPlugin.setPythonInterpreterManager(man);
 			}
 		} finally {

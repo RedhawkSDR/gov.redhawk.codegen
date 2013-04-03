@@ -44,6 +44,9 @@ skeleton="../../generator.skeleton2"
         if (iface != null) {
             String nameSpace = iface.getNameSpace();
             String interfaceName = iface.getName();
+%>
+PREPARE_ALT_LOGGING(<%=nameSpace%>_<%=interfaceName%>_Out_i,<%=PREFIX%>_i)
+<%
             if ("BULKIO".equals(nameSpace)) {
 %>
 <%@ include file="BULKIOPortImpl.cpp.uses.jetinc"%>
@@ -142,7 +145,7 @@ Port_Uses_base_impl(port_name)
                 } // end for params
 %>
             } catch(...) {
-                std::cout << "Call to <%=op.getName()%> by <%=nameSpace%>_<%=interfaceName%>_Out_i failed" << std::endl;
+                LOG_ERROR(<%=nameSpace%>_<%=interfaceName%>_Out_i, "Call to <%=op.getName()%> by <%=nameSpace%>_<%=interfaceName%>_Out_i failed");
             }
         }
     }
@@ -173,7 +176,7 @@ Port_Uses_base_impl(port_name)
             try {
                 retval = ((*i).first)-><%=op.getName()%>();
             } catch(...) {
-                std::cout << "Call to <%=op.getName()%> by <%=nameSpace%>_<%=interfaceName%>_Out_i failed" << std::endl;
+                LOG_ERROR(<%=nameSpace%>_<%=interfaceName%>_Out_i, "Call to <%=op.getName()%> by <%=nameSpace%>_<%=interfaceName%>_Out_i failed");
             }
         }
     }
@@ -195,7 +198,7 @@ void <%=nameSpace%>_<%=interfaceName%>_Out_i::<%=op.getName()%>(<%=_cppHelper.ge
             try {
                 ((*i).first)-><%=op.getName()%>(data);
             } catch(...) {
-                std::cout << "Call to <%=op.getName()%> by <%=nameSpace%>_<%=interfaceName%>_Out_i failed" << std::endl;
+                LOG_ERROR(<%=nameSpace%>_<%=interfaceName%>_Out_i, "Call to <%=op.getName()%> by <%=nameSpace%>_<%=interfaceName%>_Out_i failed");
             }
         }
     }

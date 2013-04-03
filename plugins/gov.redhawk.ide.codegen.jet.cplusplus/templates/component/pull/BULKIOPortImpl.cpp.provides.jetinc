@@ -402,6 +402,7 @@ void <%=nameSpace%>_<%=interfaceName%>_In_i::unblock()
     if (breakBlock) {
         return NULL;
     }
+    boost::mutex::scoped_lock lock1(dataBufferLock);
     if (workQueue.size() == 0) {
         if (timeout == 0.0) {
             return NULL;
@@ -422,7 +423,6 @@ void <%=nameSpace%>_<%=interfaceName%>_In_i::unblock()
             }
         }
     }
-    boost::mutex::scoped_lock lock1(dataBufferLock);
     <%=nameSpace%>_<%=interfaceName%>_In_i::dataTransfer *tmp = workQueue.front();
     workQueue.pop_front();
     

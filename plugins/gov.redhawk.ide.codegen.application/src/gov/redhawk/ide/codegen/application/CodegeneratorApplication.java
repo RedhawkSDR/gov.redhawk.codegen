@@ -21,14 +21,12 @@ import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.Property;
 import gov.redhawk.ide.codegen.RedhawkCodegenActivator;
 import gov.redhawk.ide.codegen.WaveDevSettings;
-import gov.redhawk.ide.codegen.jet.cplusplus.CplusplusBuilder;
 import gov.redhawk.ide.codegen.util.CodegenFileHelper;
 import gov.redhawk.ide.codegen.util.ProjectCreator;
 import gov.redhawk.ide.dcd.generator.newdevice.DeviceProjectCreator;
 import gov.redhawk.ide.pydev.util.AutoConfigPydevInterpreterUtil;
 import gov.redhawk.ide.spd.generator.newcomponent.ComponentProjectCreator;
 import gov.redhawk.ide.util.ResourceUtils;
-import gov.redhawk.model.sca.util.ModelUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,13 +54,13 @@ import org.eclipse.cdt.core.settings.model.ICProjectDescriptionManager;
 import org.eclipse.cdt.core.settings.model.ICProjectDescriptionPreferences;
 import org.eclipse.cdt.internal.core.LocalProjectScope;
 import org.eclipse.cdt.internal.core.pdom.indexer.IndexerPreferences;
-import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -90,8 +88,6 @@ import org.osgi.service.prefs.BackingStoreException;
 // CHECKSTYLE:OFF Ignore Special File
 public class CodegeneratorApplication implements IApplication {
 	private static final String PLUGIN_ID = "gov.redhawk.ide.codegen.application";
-
-	private boolean done = true;
 
 	private static final String PROP_VM = "eclipse.vm"; //$NON-NLS-1$
 
@@ -309,9 +305,9 @@ public class CodegeneratorApplication implements IApplication {
 				final SubMonitor monitor = SubMonitor.convert(progress_monitor, 2);
 				final IProject project = ComponentProjectCreator.createEmptyProject(projectName, locationURI, monitor.newChild(1));
 
-				ComponentProjectCreator.createComponentFiles(project, spd.getId(), "", monitor.newChild(1));
+				ComponentProjectCreator.createComponentFiles(project, spd.getName(), spd.getId(), "", monitor.newChild(1));
 
-				ProjectCreator.addImplementation(project, impl, settings, monitor.newChild(1));
+				ProjectCreator.addImplementation(project, spd.getName(), impl, settings, monitor.newChild(1));
 
 				// Setup the IDL Path
 				ResourceUtils.createIdlLibraryResource(project, monitor.newChild(1));
@@ -353,9 +349,9 @@ public class CodegeneratorApplication implements IApplication {
 
 				final IProject project = DeviceProjectCreator.createEmptyProject(projectName, locationURI, monitor.newChild(1));
 
-				DeviceProjectCreator.createDeviceFiles(project, spd.getId(), "", deviceType, false, monitor.newChild(1));
+				DeviceProjectCreator.createDeviceFiles(project, spd.getName(), spd.getId(), "", deviceType, false, monitor.newChild(1));
 
-				ProjectCreator.addImplementation(project, impl, settings, monitor.newChild(1));
+				ProjectCreator.addImplementation(project, spd.getName(), impl, settings, monitor.newChild(1));
 
 				// Setup the IDL Path
 				ResourceUtils.createIdlLibraryResource(project, monitor.newChild(1));
@@ -553,37 +549,14 @@ public class CodegeneratorApplication implements IApplication {
 					continue;
 				} else {
 					System.out.println("\nDone generating " + currLang + " code!");
-					if ("c++".equals(currLang.toLowerCase())) {
-						final IProject p = ModelUtil.getProject(settings);
-						//disableCDTProjectIndexer(p);
-
-						// Ensure that the Makefile.am.ide is generated
-						this.done = false;
-						((Workspace) p.getWorkspace()).getBuildManager().build(p, 0, CplusplusBuilder.BUILDER_NAME, null, new NullProgressMonitor() {
-							@Override
-							public void done() {
-								super.done();
-								CodegeneratorApplication.this.done = true;
-							}
-						});
-					}
 				}
 			} else {
 				System.err.println("No generator specified for implementation: " + implName + ". No code generated.");
 			}
 		}
+		
+		project.build(IncrementalProjectBuilder.FULL_BUILD, monitor.newChild(1));
 
-		//CCorePlugin.getIndexManager().joinIndexer(IIndexManager.FOREVER, new NullProgressMonitor());
-		if (!this.done) {
-			System.out.println("Waiting for Makefile.am.ide to generate");
-			while (!this.done) {
-				try {
-					Thread.sleep(100);
-				} catch (final InterruptedException e) {
-					// pass
-				}
-			}
-		}
 	}
 
 	private WaveDevSettings getWaveDevSettings(final ResourceSet set, final SoftPkg softPkg, final String codegenId, final String templateId)

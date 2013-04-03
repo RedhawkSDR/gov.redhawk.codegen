@@ -11,10 +11,5 @@
 	http://www.eclipse.org/legal/epl-v10.html
 -->
 <plugin>
-   <extension
-         point="org.eclipse.ui.startup">
-      <startup
-            class="gov.redhawk.ide.pydev.PyDevConfigureStartup"></startup>
-   </extension>
 
 </plugin>

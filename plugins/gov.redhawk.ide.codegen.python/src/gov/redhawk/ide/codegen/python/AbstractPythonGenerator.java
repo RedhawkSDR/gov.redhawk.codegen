@@ -125,11 +125,7 @@ public abstract class AbstractPythonGenerator extends AbstractCodeGenerator {
 			}
 		}
 
-		try {
-			pythonNature.rebuildPath();
-		} catch (final CoreException e) {
-			retStatus.add(new Status(IStatus.WARNING, PythonGeneratorPlugin.PLUGIN_ID, "Unable to rebuild Python Path", e));
-		}
+		pythonNature.rebuildPath();
 
 		return retStatus;
 	}

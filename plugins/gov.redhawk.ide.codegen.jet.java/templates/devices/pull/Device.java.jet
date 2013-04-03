@@ -349,7 +349,7 @@ for (String prop : properties.keySet()) {
  	 * Call back class for <%=prop%>
  	 *
  	 * -User can custom design allocation and deallocation
- 	 * -Otherwise basic auto alloc / dealloc will be user
+ 	 * -Otherwise basic auto alloc / dealloc will be used
  	 *
  	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -362,7 +362,7 @@ for (String prop : properties.keySet()) {
     		 *		true  -> successful allocate
     		 *		false -> failure to allocate
     		 */
-		logger.trace("Attempting user defined allocate");
+			logger.trace("Attempting user defined allocate");
     		return false;
     	}
 		public boolean deallocate(DataType t){
@@ -371,7 +371,7 @@ for (String prop : properties.keySet()) {
     		 *      true  -> if user specifies their own function
     		 *      false -> if no deallocate function is defined
     		 */
-		logger.trace("Attempting user defined deallocate");
+			logger.trace("Attempting user defined deallocate");
     		 return false;
     	}
     }

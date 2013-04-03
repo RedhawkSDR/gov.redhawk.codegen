@@ -68,7 +68,9 @@ public class SimpleSequenceToPython {
 			} else if (PropertyValueType.OCTET.equals(type)) {
 				builder.append("\"");
 				for (String value : values.getValue()) {
-					Byte b = Byte.parseByte(value);
+					// Java does not support unsigned bytes so a short is used here instead.
+					// Values > 127  would cause exceptions otherwise.  Fixes bug #265
+					short b = Short.parseShort(value);
 					builder.append("\\x" + String.format("%02x", b));
 				}
 				builder.append("\"");

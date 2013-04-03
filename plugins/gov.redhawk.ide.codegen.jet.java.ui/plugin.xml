@@ -39,51 +39,6 @@
             id="gov.redhawk.ide.codegen.jet.java.ui.localJavaComponent">
       </launchConfigurationTypeImage>
    </extension>
-   <extension
-         point="org.eclipse.debug.ui.launchShortcuts">
-      <shortcut
-            class="gov.redhawk.ide.codegen.jet.java.internal.ui.JavaComponentLaunchShortcut"
-            icon="icons/RedHawk_Logo16x.gif"
-            id="gov.redhawk.ide.codegen.jet.java.ui.shortcut"
-            label="Local Java Component"
-            modes="run,debug">
-         <contextualLaunch>
-            <enablement>
-               <with
-                     variable="selection">
-                  <count
-                        value="1">
-                  </count>
-                  <iterate
-                        ifEmpty="false"
-                        operator="and">
-                     <adapt
-                           type="org.eclipse.core.resources.IFile">
-                        <and>
-                           <test
-                                 property="org.eclipse.core.resources.name"
-                                 value="*.spd.xml">
-                           </test>
-                           <test
-                                 args="gov.redhawk.ide.codegen.jet.java.JavaGenerator"
-                                 forcePluginActivation="true"
-                                 property="gov.redhawk.ide.codegen.containsType">
-                           </test>
-                        </and>
-                     </adapt>
-                  </iterate>
-               </with>
-            </enablement></contextualLaunch>
-         <description
-               description="Launch a local java component"
-               mode="run">
-         </description>
-         <description
-               description="Debug a local java component"
-               mode="debug">
-         </description>
-      </shortcut>
-   </extension>
 
 
 </plugin>

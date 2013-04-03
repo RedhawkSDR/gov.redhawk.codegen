@@ -60,7 +60,7 @@ public class PullPortImplHTemplate
   protected final String TEXT_4 = "_";
   protected final String TEXT_5 = "_Out_i(\"";
   protected final String TEXT_6 = "\", this)";
-  protected final String TEXT_7 = NL + "#ifndef PORT_H" + NL + "#define PORT_H" + NL + "" + NL + "#include \"ossie/Port_impl.h\"" + NL + "#include <queue>" + NL + "#include <list>" + NL + "#include <boost/thread/condition_variable.hpp>" + NL + "#include <boost/thread/locks.hpp>" + NL + "" + NL + "class ";
+  protected final String TEXT_7 = NL + "#ifndef PORT_H" + NL + "#define PORT_H" + NL + "" + NL + "#include \"ossie/Port_impl.h\"" + NL + "#include \"ossie/debug.h\"" + NL + "#include <queue>" + NL + "#include <list>" + NL + "#include <boost/thread/condition_variable.hpp>" + NL + "#include <boost/thread/locks.hpp>" + NL + "" + NL + "class ";
   protected final String TEXT_8 = "_base;" + NL + "class ";
   protected final String TEXT_9 = "_i;" + NL + "" + NL + "#define CORBA_MAX_TRANSFER_BYTES omniORB::giopMaxMsgSize()" + NL;
   protected final String TEXT_10 = NL + "#include \"ossie/CF/QueryablePort.h\"";

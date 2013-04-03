@@ -178,15 +178,18 @@ class <%=PREFIX%>_base(CF__POA.<% if (isResource) { %>Resource, Resource<% } els
 <%
     if (execDevice) {
 %>
-            ExecutableDevice.__init__(self, devmgr, uuid, label, softwareProfile, compositeDevice, execparams)
+            loggerName = (execparams['DEVICE_LABEL'].replace('/', '.')).rsplit("_", 1)[0]
+            ExecutableDevice.__init__(self, devmgr, uuid, label, softwareProfile, compositeDevice, execparams,loggerName=loggerName)
 <% 
     } else if (loadableDevice) {
 %>
-            LoadableDevice.__init__(self, devmgr, uuid, label, softwareProfile, compositeDevice, execparams)
+            loggerName = (execparams['DEVICE_LABEL'].replace('/', '.')).rsplit("_", 1)[0]
+            LoadableDevice.__init__(self, devmgr, uuid, label, softwareProfile, compositeDevice, execparams,loggerName=loggerName)
 <% 
     } else {
 %>
-            Device.__init__(self, devmgr, uuid, label, softwareProfile, compositeDevice, execparams)
+            loggerName = (execparams['DEVICE_LABEL'].replace('/', '.')).rsplit("_", 1)[0]
+            Device.__init__(self, devmgr, uuid, label, softwareProfile, compositeDevice, execparams,loggerName=loggerName)
 <% 
     }
     if (aggregateDevice) {

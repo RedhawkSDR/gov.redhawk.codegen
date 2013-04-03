@@ -11,16 +11,17 @@
 package gov.redhawk.ide.codegen.jet.python;
 
 import gov.redhawk.ide.debug.ScaLauncherUtil;
-import gov.redhawk.sca.launch.ScaLaunchConfigurationConstants;
+import gov.redhawk.ide.debug.SpdLauncherUtil;
+import mil.jpeojtrs.sca.spd.SoftPkg;
 
 import org.eclipse.core.externaltools.internal.IExternalToolConstants;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.model.ILaunchConfigurationDelegate;
-import org.eclipse.emf.common.util.URI;
 import org.python.pydev.debug.ui.launching.RegularLaunchConfigurationDelegate;
 
 /**
@@ -34,16 +35,27 @@ public class LocalPythonComponentDelegate extends RegularLaunchConfigurationDele
 	@Override
 	public void launch(final ILaunchConfiguration conf, final String mode, final ILaunch launch, final IProgressMonitor monitor) throws CoreException {
 		final ILaunchConfigurationWorkingCopy workingCopy = conf.getWorkingCopy();
-		insertProgramArguments(launch, workingCopy);
-		super.launch(workingCopy, mode, launch, monitor);
-		ScaLauncherUtil.postLaunch(launch);
+		final SoftPkg spd = SpdLauncherUtil.getSpd(conf);
+		insertProgramArguments(spd, launch, workingCopy);
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
+		try {
+			super.launch(workingCopy, mode, launch, subMonitor.newChild(90));
+			SpdLauncherUtil.postLaunch(spd, workingCopy, mode, launch, subMonitor.newChild(10));
+		} finally {
+			if (monitor != null) {
+				monitor.done();
+			}
+		}
 	}
 
-	protected void insertProgramArguments(final ILaunch launch, final ILaunchConfigurationWorkingCopy configuration) throws CoreException {
+	/**
+	 * @since 9.0
+	 */
+	protected void insertProgramArguments(final SoftPkg spd, final ILaunch launch, final ILaunchConfigurationWorkingCopy configuration) throws CoreException {
 		final String args = configuration.getAttribute(IExternalToolConstants.ATTR_TOOL_ARGUMENTS, "");
-		final URI spdURI = URI.createPlatformResourceURI(configuration.getAttribute(ScaLaunchConfigurationConstants.ATT_PROFILE, ""), true);
-		final String scaArgs = ScaLauncherUtil.getSpdProgramArguments(spdURI, launch, configuration);
-		configuration.setAttribute(IExternalToolConstants.ATTR_TOOL_ARGUMENTS, args + " " + scaArgs);
+		final String scaArgs = SpdLauncherUtil.insertProgramArguments(spd, args, launch, configuration);
+		configuration.setAttribute(IExternalToolConstants.ATTR_TOOL_ARGUMENTS, scaArgs);
+		configuration.setAttribute(ScaLauncherUtil.LAUNCH_ATT_PROGRAM_ARGUMENT_MAP, ScaLauncherUtil.createMap(scaArgs));
 	}
 
 }

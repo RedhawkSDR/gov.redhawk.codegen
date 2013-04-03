@@ -11,14 +11,15 @@
 package gov.redhawk.ide.codegen.jet.java;
 
 import gov.redhawk.ide.debug.ScaLauncherUtil;
-import gov.redhawk.sca.launch.ScaLaunchConfigurationConstants;
+import gov.redhawk.ide.debug.SpdLauncherUtil;
+import mil.jpeojtrs.sca.spd.SoftPkg;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.JavaLaunchDelegate;
 
@@ -44,11 +45,19 @@ public class JavaComponentLaunchDelegate extends JavaLaunchDelegate {
 	public void launch(final ILaunchConfiguration configuration, final String mode, final ILaunch launch, final IProgressMonitor monitor) throws CoreException {
 		final String arguments = configuration.getAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, ""); //$NON-NLS-1$
 		final ILaunchConfigurationWorkingCopy copy = configuration.getWorkingCopy();
-		final URI spdURI = URI.createPlatformResourceURI(configuration.getAttribute(ScaLaunchConfigurationConstants.ATT_PROFILE, ""), true);
-		final String args = ScaLauncherUtil.getSpdProgramArguments(spdURI, launch, configuration);
-		copy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, arguments + " " + args);
-		super.launch(copy, mode, launch, monitor);
-		ScaLauncherUtil.postLaunch(launch);
+		final SoftPkg spd = SpdLauncherUtil.getSpd(configuration);
+		final String args = SpdLauncherUtil.insertProgramArguments(spd, arguments, launch, configuration);
+		copy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, args);
+		copy.setAttribute(ScaLauncherUtil.LAUNCH_ATT_PROGRAM_ARGUMENT_MAP, ScaLauncherUtil.createMap(args));
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
+		try {
+			super.launch(copy, mode, launch, subMonitor.newChild(90));
+			SpdLauncherUtil.postLaunch(spd, copy, mode, launch, subMonitor.newChild(10));
+		} finally {
+			if (monitor != null) {
+				monitor.done();
+			}
+		}
 	}
 
 }

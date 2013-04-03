@@ -11,7 +11,8 @@
 package gov.redhawk.ide.codegen.jet.cplusplus;
 
 import gov.redhawk.ide.debug.ScaLauncherUtil;
-import gov.redhawk.sca.launch.ScaLaunchConfigurationConstants;
+import gov.redhawk.ide.debug.SpdLauncherUtil;
+import mil.jpeojtrs.sca.spd.SoftPkg;
 
 import org.eclipse.cdt.core.model.CoreModel;
 import org.eclipse.cdt.core.settings.model.ICConfigurationDescription;
@@ -24,11 +25,11 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.model.ILaunchConfigurationDelegate;
-import org.eclipse.emf.common.util.URI;
 
 /**
  * @since 9.0
@@ -50,16 +51,28 @@ public class LocalCppCDILaunchDelegate extends LocalCDILaunchDelegate implements
 		if (copy.getAttribute(ICDTLaunchConfigurationConstants.ATTR_DEBUGGER_ID, (String) null) == null) {
 			copy.setAttribute(ICDTLaunchConfigurationConstants.ATTR_DEBUGGER_ID, getDefaultDebugger(config));
 		}
-		insertProgramArguments(launch, copy);
-		super.launch(copy, mode, launch, monitor);
-		ScaLauncherUtil.postLaunch(launch);
+		final SoftPkg spd = SpdLauncherUtil.getSpd(config);
+		insertProgramArguments(spd, launch, copy);
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
+		try {
+			super.launch(copy, mode, launch, subMonitor.newChild(90));
+			SpdLauncherUtil.postLaunch(spd, copy, mode, launch, subMonitor.newChild(10));
+		} finally {
+			if (monitor != null) {
+				monitor.done();
+			}
+		}
 	}
 
-	protected void insertProgramArguments(final ILaunch launch, final ILaunchConfigurationWorkingCopy configuration) throws CoreException {
+	/**
+	 * @since 10.0
+	 */
+	protected void insertProgramArguments(final SoftPkg spd, final ILaunch launch, final ILaunchConfigurationWorkingCopy configuration) throws CoreException {
 		final String args = configuration.getAttribute(ICDTLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, "");
-		final URI spdURI = URI.createPlatformResourceURI(configuration.getAttribute(ScaLaunchConfigurationConstants.ATT_PROFILE, ""), true);
-		final String newArgs = ScaLauncherUtil.getSpdProgramArguments(spdURI, launch, configuration);
-		configuration.setAttribute(ICDTLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, args + " " + newArgs);
+
+		final String newArgs = SpdLauncherUtil.insertProgramArguments(spd, args, launch, configuration);
+		configuration.setAttribute(ICDTLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, newArgs);
+		configuration.setAttribute(ScaLauncherUtil.LAUNCH_ATT_PROGRAM_ARGUMENT_MAP, ScaLauncherUtil.createMap(newArgs));
 	}
 
 	public String getDefaultDebugger(final ILaunchConfiguration config) throws CoreException {

@@ -93,6 +93,7 @@ skeleton="../../generator.skeleton2"
 %>
 class BULKIO_dataSDDS_Out_i : public Port_Uses_base_impl, public virtual POA_BULKIO::UsesPortStatisticsProvider
 {
+ENABLE_LOGGING
 public:
     BULKIO_dataSDDS_Out_i(std::string port_name, <%=PREFIX%>_base *_parent);
 
@@ -355,6 +356,7 @@ protected:
 %>
 class <%=nameSpace%>_<%=interfaceName%>_Out_i : public MessageSupplierPort
 {
+    ENABLE_LOGGING
     public:
         <%=nameSpace%>_<%=interfaceName%>_Out_i(std::string port_name) : MessageSupplierPort(port_name) {
         };
@@ -420,6 +422,7 @@ class <%=nameSpace%>_<%=interfaceName%>_Out_i : public MessageSupplierPort
 %>
 class <%=nameSpace%>_<%=interfaceName%>_Out_i : public Port_Uses_base_impl, public <%if (isBULKIO) {%>virtual POA_BULKIO::UsesPortStatisticsProvider<%} else {%>POA_ExtendedCF::QueryablePort<%}%>
 {
+    ENABLE_LOGGING
     public:
         <%=nameSpace%>_<%=interfaceName%>_Out_i(std::string port_name, <%=PREFIX%>_base *_parent);
         ~<%=nameSpace%>_<%=interfaceName%>_Out_i();
@@ -489,7 +492,7 @@ class <%=nameSpace%>_<%=interfaceName%>_Out_i : public Port_Uses_base_impl, publ
                         ((*port).first)->pushPacket(<%=op.getParams().get(0).getName()%>, T, EOS, streamID.c_str());
                         stats[(*port).second].update(1, 0, 0, streamID);
                     } catch(...) {
-                        std::cout << "Call to pushPacket by <%=nameSpace%>_<%=interfaceName%>_Out_i failed" << std::endl;
+                        LOG_ERROR(<%=nameSpace%>_<%=interfaceName%>_Out_i, "Call to pushPacket by <%=nameSpace%>_<%=interfaceName%>_Out_i failed");
                     }
                 }
             }
@@ -544,7 +547,7 @@ class <%=nameSpace%>_<%=interfaceName%>_Out_i : public Port_Uses_base_impl, publ
                         ((*port).first)->pushPacket(<%=op.getParams().get(0).getName()%>, EOS, streamID.c_str());
                         stats[(*port).second].update(strlen(<%=op.getParams().get(0).getName()%>), 0, 0, streamID);
                     } catch(...) {
-                        std::cout << "Call to pushPacket by <%=nameSpace%>_<%=interfaceName%>_Out_i failed" << std::endl;
+                        LOG_ERROR(<%=nameSpace%>_<%=interfaceName%>_Out_i, "Call to pushPacket by <%=nameSpace%>_<%=interfaceName%>_Out_i failed");
                     }
                 }
             }
@@ -615,7 +618,7 @@ class <%=nameSpace%>_<%=interfaceName%>_Out_i : public Port_Uses_base_impl, publ
                         ((*port).first)->pushPacket(seq, T, EOS, streamID.c_str());
                         stats[(*port).second].update(data.size(), 0, 0, streamID);
                     } catch(...) {
-                        std::cout << "Call to pushPacket by <%=nameSpace%>_<%=interfaceName%>_Out_i failed" << std::endl;
+                        LOG_ERROR(<%=nameSpace%>_<%=interfaceName%>_Out_i, "Call to pushPacket by <%=nameSpace%>_<%=interfaceName%>_Out_i failed");
                     }
                 }
             }

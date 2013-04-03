@@ -10,6 +10,8 @@
  *******************************************************************************/
 package gov.redhawk.ide.idl.ui.wizard;
 
+import gov.redhawk.ui.validation.ProjectNameValidator;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -17,9 +19,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
-import java.util.regex.Pattern;
 
-import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
@@ -89,9 +89,6 @@ public class ScaIDLProjectPropertiesWizardPage extends WizardNewProjectCreationP
 	/** The module version text */
 	private Text versionText;
 
-	/** Validator regular expression for the project name */
-	private static final String VALID_IMPL_NAME_REGEX = "^[A-Za-z][A-Za-z0-9_-]*";
-
 	protected ScaIDLProjectPropertiesWizardPage(final String pageName) {
 		super(pageName);
 		setTitle("Create a SCA IDL Project");
@@ -158,6 +155,8 @@ public class ScaIDLProjectPropertiesWizardPage extends WizardNewProjectCreationP
 
 	@Override
 	protected boolean validatePage() {
+		ProjectNameValidator nameValidator = new ProjectNameValidator();
+		
 		if (!super.validatePage()) {
 			return false;
 		}
@@ -170,21 +169,13 @@ public class ScaIDLProjectPropertiesWizardPage extends WizardNewProjectCreationP
 			return false;
 		}
 
-		IStatus status = validateProjectName(getProjectName());
+		IStatus status = nameValidator.validate(getProjectName());
 		if (!status.isOK()) {
 			setMessage(status.getMessage());
 			return false;
 		}
 
 		return true;
-	}
-
-	private IStatus validateProjectName(String projectName) {
-		if (!Pattern.matches(VALID_IMPL_NAME_REGEX, projectName)) {
-			return ValidationStatus.error("Invalid character present in project name.");
-		}
-
-		return ValidationStatus.ok();
 	}
 
 	private void validate() {

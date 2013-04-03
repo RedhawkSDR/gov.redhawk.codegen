@@ -31,7 +31,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.python.core.PyObject;
@@ -135,7 +134,7 @@ public final class IdlUtil extends AbstractIdlUtil {
 		IInterpreterInfo info = null;
 		try {
 			if (pyman != null) {
-				info = pyman.getDefaultInterpreterInfo(new NullProgressMonitor());
+				info = pyman.getDefaultInterpreterInfo(true);
 				command = info.getExecutableOrJar();
 			}
 		} catch (final MisconfigurationException e) {
@@ -228,7 +227,7 @@ public final class IdlUtil extends AbstractIdlUtil {
 							
 							final PyObject tuple_cxxReturnType = tmpattr.__getitem__(new PyString("cxxReturnType"));
 							final String attr_cxxReturnType = tuple_cxxReturnType.__getitem__(0).toString();
-							final Boolean atrr_cxxReturnTypeVariable = (tuple_cxxReturnType.__getitem__(1).__int__().getValue() != 0);
+							final Boolean atrr_cxxReturnTypeVariable = (tuple_cxxReturnType.__getitem__(1).__int__().__nonzero__());
 							
 							final String attr_cxxType = tmpattr.__getitem__(new PyString("cxxType")).toString();
 
@@ -249,7 +248,7 @@ public final class IdlUtil extends AbstractIdlUtil {
 							
 							final PyObject tuple_cxxReturnType = tmpop.__getitem__(new PyString("cxxReturnType"));
 							final String op_cxxReturnType = tuple_cxxReturnType.__getitem__(0).toString();
-							final Boolean op_cxxReturnTypeVariable = (tuple_cxxReturnType.__getitem__(1).__int__().getValue() != 0);
+							final Boolean op_cxxReturnTypeVariable = (tuple_cxxReturnType.__getitem__(1).__int__().__nonzero__());
 
 							// create new Operation
 							final Operation new_operation = new Operation(op_name, op_returnType, op_cxxReturnType, op_cxxReturnTypeVariable);
@@ -335,7 +334,7 @@ public final class IdlUtil extends AbstractIdlUtil {
 		// Check the info for the default interpreter
 		IInterpreterInfo info;
 		try {
-			info = interpreterManager.getDefaultInterpreterInfo(new NullProgressMonitor());
+			info = interpreterManager.getDefaultInterpreterInfo(true);
 		} catch (MisconfigurationException e) {
 			return new Status(IStatus.ERROR, RedhawkIdeIdlPlugin.PLUGIN_ID, ERROR_MSG_PYDEV_MISCONFIGURATION, e);
 		}

@@ -18,18 +18,16 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.debug.core.Launch;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.console.IConsoleFactory;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.python.pydev.core.IInterpreterInfo;
 import org.python.pydev.core.IInterpreterManager;
 import org.python.pydev.core.IPythonNature;
-import org.python.pydev.core.Tuple4;
-import org.python.pydev.debug.newconsole.PydevConsole;
 import org.python.pydev.debug.newconsole.PydevConsoleFactory;
 import org.python.pydev.debug.newconsole.PydevConsoleInterpreter;
-import org.python.pydev.debug.newconsole.env.IProcessFactory;
+import org.python.pydev.debug.newconsole.env.PydevIProcessFactory;
+import org.python.pydev.debug.newconsole.env.PydevIProcessFactory.PydevConsoleLaunchInfo;
 import org.python.pydev.plugin.PydevPlugin;
 
 /**
@@ -48,7 +46,7 @@ public class RHLocalConsoleFactory implements IConsoleFactory {
 	public void openConsole() {
 		final PydevConsoleFactory factory = new PydevConsoleFactory();
 		try {
-			final IProcessFactory processFactory = new IProcessFactory();
+			final PydevIProcessFactory processFactory = new PydevIProcessFactory();
 
 			final IInterpreterManager interpreterManager = PydevPlugin.getPythonInterpreterManager();
 			final IInterpreterInfo[] interpreters = interpreterManager.getInterpreterInfos();
@@ -60,13 +58,11 @@ public class RHLocalConsoleFactory implements IConsoleFactory {
 			final Collection<String> pythonPath = interpreterInfo.getPythonPath();
 			final IPythonNature nature = null;
 			final List<IPythonNature> natures = new ArrayList<IPythonNature>();
-			final Tuple4<Launch, Process, Integer, IInterpreterInfo> tuple = processFactory.createLaunch(interpreterManager, interpreterInfo, pythonPath,
-			        nature, natures);
+			PydevConsoleLaunchInfo info = processFactory.createLaunch(interpreterManager, interpreterInfo, pythonPath, nature, natures);
 
-			final PydevConsoleInterpreter interpreter = PydevConsoleFactory.createPydevInterpreter(tuple.o1, tuple.o2, tuple.o3, tuple.o4,
-			        processFactory.getNaturesUsed());
+			final PydevConsoleInterpreter interpreter = PydevConsoleFactory.createPydevInterpreter(info, processFactory.getNaturesUsed());
 			final String additionalInitialComands = NLS.bind(Messages.RHLocalConsoleFactory_PY_INIT, ScaDebugPlugin.getInstance().getSandbox());
-			final PydevConsole console = factory.createConsole(interpreter, additionalInitialComands);
+			factory.createConsole(interpreter, additionalInitialComands);
 			// TODO Clear the console after initial commands executed
 			//			console.addListener(new IScriptConsoleListener() {
 			//				private boolean clear = false;

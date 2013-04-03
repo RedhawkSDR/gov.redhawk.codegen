@@ -102,6 +102,7 @@ skeleton="../../generator.skeleton2"
 #define PORT_H
 
 #include "ossie/Port_impl.h"
+#include "ossie/debug.h"
 #include <queue>
 #include <list>
 #include <boost/thread/condition_variable.hpp>
