@@ -249,25 +249,30 @@ void <%=nameSpace%>_<%=interfaceName%>_In_i::setMaxQueueDepth(int newDepth)
 
 void <%=nameSpace%>_<%=interfaceName%>_In_i::pushSRI(const BULKIO::StreamSRI& H)
 {
-    boost::mutex::scoped_lock lock(sriUpdateLock);
-    BULKIO::StreamSRI tmpH = H;
-    std::map<std::string, std::pair<BULKIO::StreamSRI, bool> >::iterator currH = currentHs.find(std::string(H.streamID));
-    if (currH == currentHs.end()) {
-    	currentHs[std::string(H.streamID)] = std::make_pair(tmpH, true);
-        if (H.blocking) {
-            boost::mutex::scoped_lock lock(dataBufferLock);
-            blocking = true;
-            queueSem->setCurrValue(workQueue.size());
-        }
-    } else {
-    	if (!parent->compareSRI(tmpH, currH->second.first)) {
-            currentHs[std::string(H.streamID)] = std::make_pair(tmpH, true);
+    bool updateSem = false;
+    {
+        boost::mutex::scoped_lock lock(sriUpdateLock);
+        BULKIO::StreamSRI tmpH = H;
+        std::map<std::string, std::pair<BULKIO::StreamSRI, bool> >::iterator currH = currentHs.find(std::string(H.streamID));
+        if (currH == currentHs.end()) {
+    	    currentHs[std::string(H.streamID)] = std::make_pair(tmpH, true);
             if (H.blocking) {
-                boost::mutex::scoped_lock lock(dataBufferLock);
-                blocking = true;
-                queueSem->setCurrValue(workQueue.size());
+                updateSem = true;
             }
-    	}
+        } else {
+            if (!parent->compareSRI(tmpH, currH->second.first)) {
+                currentHs[std::string(H.streamID)] = std::make_pair(tmpH, true);
+                if (H.blocking) {
+                    updateSem = true;
+                }
+    	    }
+        }
+    }
+    
+    if (updateSem) {
+        boost::mutex::scoped_lock lock(dataBufferLock);
+        blocking = true;
+        queueSem->setCurrValue(workQueue.size());
     }
 }
 <%
