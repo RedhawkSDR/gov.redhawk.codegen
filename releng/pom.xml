@@ -17,6 +17,9 @@
 
 
 	<properties>
+	        <juno>http://pinkman:8080/nexus/content/repositories/juno</juno>
+                <juno-3.8>http://pinkman:8080/nexus/content/repositories/juno-3.8</juno-3.8>
+                <orbit>http://pinkman:8080/nexus/content/repositories/orbit</orbit>   
 		<gov.redhawk.common-p2-url>http://pinkman.villains.techma.com/p2/tycho/gov.redhawk.common/SNAPSHOT/</gov.redhawk.common-p2-url>
 		<gov.redhawk.rcp-p2-url>http://pinkman.villains.techma.com/p2/tycho/gov.redhawk.rcp/SNAPSHOT/</gov.redhawk.rcp-p2-url>
 		<nxm-rcp-p2-url>http://pinkman.villains.techma.com/p2/nxm-ui-build/nxm.rcp.ui/develop/latest/</nxm-rcp-p2-url>
@@ -33,19 +36,19 @@
 		<repository>
 			<id>juno-3.8</id>
 			<layout>p2</layout>
-			<url>http://pinkman.villains.techma.com/p2/eclipse/juno-3.8</url>
+			<url>${juno-3.8}</url>
 		</repository>
 
 		<repository>
 			<id>juno</id>
 			<layout>p2</layout>
-			<url>http://pinkman.villains.techma.com/p2/eclipse/juno</url>
+			<url>${juno}</url>
 		</repository>
 
 		<repository>
 			<id>orbit</id>
 			<layout>p2</layout>
-			<url>http://pinkman.villains.techma.com/p2/eclipse/orbit/</url>
+			<url>${orbit}</url>
 		</repository>
 
 		<repository>
