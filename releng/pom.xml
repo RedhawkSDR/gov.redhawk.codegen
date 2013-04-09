@@ -99,9 +99,9 @@
         </repository>
 
         <repository>
-            <id>org.jacorb</id>
+            <id>jacorb</id>
             <layout>p2</layout>
-            <url>${org.jacorb}</url>
+            <url>${jacorb}</url>
         </repository>
 
         <repository>
