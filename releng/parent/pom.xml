@@ -10,6 +10,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <tycho-version>0.16.0</tycho-version>
         <tycho-extras-version>${tycho-version}</tycho-extras-version>
+        <checkstyle-config>http://download.redhawksdr.org/redhawk-checkstyle/checkstyle.xml</checkstyle-config>
     </properties>
 
     <build>
@@ -35,7 +36,6 @@
                 <artifactId>maven-pmd-plugin</artifactId>
                 <version>3.0.1</version>
                 <configuration>
-                    <linkXref>true</linkXref>
                     <sourceEncoding>utf-8</sourceEncoding>
                     <minimumTokens>100</minimumTokens>
                     <targetJdk>1.6</targetJdk>
@@ -56,17 +56,19 @@
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>2.10</version>
                 <configuration>
-                    <configLocation>CheckStyle.xml</configLocation>
+                    <configLocation>${checkstyle-config}</configLocation>
                     <enableRulesSummary>false</enableRulesSummary>
+                    <useFile>true</useFile>
                 </configuration>
                 <executions>
                     <execution>
                         <goals>
                            <goal>check</goal>
+                           <goal>checkstyle</goal>
                         </goals>
                     </execution>
                 </executions>
-            </plugin>  
+            </plugin>
             <plugin>
                 <groupId>org.eclipse.tycho.extras</groupId>
                 <artifactId>tycho-source-feature-plugin</artifactId>
@@ -144,6 +146,7 @@
                 <version>${tycho-version}</version>
                 <configuration>
                     <failIfNoTests>false</failIfNoTests>
+                    <testFailureIgnore>true</testFailureIgnore>
                 </configuration>
             </plugin>
 
