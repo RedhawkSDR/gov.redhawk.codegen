@@ -22,10 +22,9 @@
         <nxm>http://download.redhawksdr.org/nxm/releases/3.3.1</nxm>
         <nxm-rcp>http://download.redhawksdr.org/nxm-rcp/releases/1.0</nxm-rcp>
         <redhawk-core-framework>http://download.redhawksdr.org/redhawk-core-framework/releases/1.8</redhawk-core-framework>
-        <bulkioInterfaces>http://download.redhawksdr.org/bulkioInterfaces/releases/1.8</bulkioInterfaces>
         <mil.jpeojtrs.sca>http://download.redhawksdr.org/mil.jpeojtrs.sca/releases/1.8</mil.jpeojtrs.sca>
-        <gov.redhawk.core>http://download.redhawksdr.org/gov.redhawk.core/releases/1.8</gov.redhawk.core>  
-        <gov.redhawk.ide>http://download.redhawksdr.org/gov.redhawk.ide/releases/1.8</gov.redhawk.ide>  
+        <gov.redhawk.core>http://download.redhawksdr.org/gov.redhawk.core/releases/1.8</gov.redhawk.core>
+        <gov.redhawk.ide>http://download.redhawksdr.org/gov.redhawk.ide/releases/1.8</gov.redhawk.ide>
         <jacorb>http://download.redhawksdr.org/p2/misc/org.jacorb/</jacorb>
         <pydev>http://pydev.org/updates/</pydev>
     </properties>
@@ -59,12 +58,6 @@
             <id>redhawk-core-framework</id>
             <layout>p2</layout>
             <url>${redhawk-core-framework}</url>
-        </repository>
-        
-        <repository>
-            <id>bulkioInterfaces</id>
-            <layout>p2</layout>
-            <url>${bulkioInterfaces}</url>
         </repository>
 
         <repository>
@@ -127,7 +120,7 @@
         <!--<module>../tests/gov.redhawk.ide.sandbox.console.py.tests</module>-->
         <module>p2</module>
     </modules>
-    
+
     <build>
         <plugins>
             <plugin>
