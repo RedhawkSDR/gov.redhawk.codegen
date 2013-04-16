@@ -18,15 +18,14 @@
 
     <properties>
         <eclipse>http://download.eclipse.org/releases/juno</eclipse>
-        <eclipse-3.8>http://download.eclipse.org/eclipse/updates/3.8</eclipse-3.8>
+        <eclipse-updates>http://download.eclipse.org/eclipse/updates/4.2</eclipse-updates>
+        <eclipse-support>http://download.eclipse.org/eclipse/updates/3.8</eclipse-support>
         <orbit>http://download.eclipse.org/tools/orbit/downloads/drops/R20130118183705/repository</orbit>
         <nxm>http://download.redhawksdr.org/nxm/releases/3.3.1</nxm>
         <nxm-rcp>http://download.redhawksdr.org/nxm-rcp/releases/1.0</nxm-rcp>
-        <redhawk-core-framework>http://download.redhawksdr.org/redhawk-core-framework/releases/1.9</redhawk-core-framework>
-        <bulkioInterfaces>http://download.redhawksdr.org/bulkioInterfaces/releases/1.9</bulkioInterfaces>
         <mil.jpeojtrs.sca>http://download.redhawksdr.org/mil.jpeojtrs.sca/releases/1.9</mil.jpeojtrs.sca>
-        <gov.redhawk.common>http://download.redhawksdr.org/gov.redhawk.common/releases/1.9</gov.redhawk.common>
-        <gov.redhawk.rcp>http://download.redhawksdr.org/gov.redhawk.rcp/releases/1.9</gov.redhawk.rcp>
+        <gov.redhawk.core>http://download.redhawksdr.org/gov.redhawk.core/releases/1.9</gov.redhawk.core>
+        <gov.redhawk.core.rcp>http://download.redhawksdr.org/gov.redhawk.core/rcp/releases/1.9</gov.redhawk.core.rcp>
         <gov.redhawk.ide>http://download.redhawksdr.org/gov.redhawk.ide/releases/1.9</gov.redhawk.ide>
         <jacorb>http://download.redhawksdr.org/p2/misc/org.jacorb/</jacorb>
         <pydev>http://pydev.org/updates/</pydev>
@@ -34,13 +33,19 @@
 
     <repositories>
         <repository>
-            <id>eclipse-3.8</id>
+            <id>eclipse-support</id>
             <layout>p2</layout>
-            <url>${eclipse-3.8}</url>
+            <url>${eclipse-support}</url>
         </repository>
 
         <repository>
-            <id>juno</id>
+            <id>eclipse-updates</id>
+            <layout>p2</layout>
+            <url>${eclipse-updates}</url>
+        </repository>
+
+        <repository>
+            <id>eclipse</id>
             <layout>p2</layout>
             <url>${eclipse}</url>
         </repository>
@@ -64,32 +69,21 @@
         </repository>
 
         <repository>
-            <id>redhawk-core-framework</id>
-            <layout>p2</layout>
-            <url>${redhawk-core-framework}</url>
-        </repository>
-        
-        <repository>
-            <id>bulkioInterfaces</id>
-            <layout>p2</layout>
-            <url>${bulkioInterfaces}</url>
-        </repository>
-        <repository>
             <id>mil.jpeojtrs.sca</id>
             <layout>p2</layout>
             <url>${mil.jpeojtrs.sca}</url>
         </repository>
 
         <repository>
-            <id>gov.redhawk.common</id>
+            <id>gov.redhawk.core</id>
             <layout>p2</layout>
-            <url>${gov.redhawk.common}</url>
+            <url>${gov.redhawk.core}</url>
         </repository>
 
         <repository>
-            <id>gov.redhawk.rcp</id>
+            <id>gov.redhawk.core.rcp</id>
             <layout>p2</layout>
-            <url>${gov.redhawk.rcp}</url>
+            <url>${gov.redhawk.core.rcp}</url>
         </repository>
 
         <repository>
@@ -109,7 +103,6 @@
             <layout>p2</layout>
             <url>${pydev}</url>
         </repository>
-
     </repositories>
 
     <modules>
@@ -134,13 +127,13 @@
         <module>../plugins/gov.redhawk.ide.linuxtools.cdt.autotools.macros</module>
         <module>../plugins/gov.redhawk.ide.pydev</module>
         <module>../plugins/gov.redhawk.ide.sandbox.console.py</module>
-        <module>../tests/gov.redhawk.ide.codegen.tests</module>
+        <!--<module>../tests/gov.redhawk.ide.codegen.tests</module>-->
         <module>../tests/gov.redhawk.ide.idl.tests</module>
         <module>../tests/gov.redhawk.ide.pydev.tests</module>
-        <module>../tests/gov.redhawk.ide.sandbox.console.py.tests</module>
+        <!--<module>../tests/gov.redhawk.ide.sandbox.console.py.tests</module>-->
         <module>p2</module>
     </modules>
-    
+
     <build>
         <plugins>
             <plugin>
