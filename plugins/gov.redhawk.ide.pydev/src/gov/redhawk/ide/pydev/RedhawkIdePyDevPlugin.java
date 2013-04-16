@@ -138,7 +138,7 @@ public class RedhawkIdePyDevPlugin extends AbstractUIPlugin {
 		}
 	};
 
-	private final ScopedPreferenceAccessor preferenceAccessor = new ScopedPreferenceAccessor(new InstanceScope(), RedhawkIdeActivator.PLUGIN_ID);
+	private final ScopedPreferenceAccessor preferenceAccessor = new ScopedPreferenceAccessor(InstanceScope.INSTANCE, RedhawkIdeActivator.PLUGIN_ID);
 
 	private final IPreferenceChangeListener ossiehomePreferenceChangeListener = new IPreferenceChangeListener() {
 
@@ -172,7 +172,7 @@ public class RedhawkIdePyDevPlugin extends AbstractUIPlugin {
 		RedhawkIdePyDevPlugin.getDefault().getPreferenceAccessor().addPreferenceChangeListener(this.ossiehomePreferenceChangeListener);
 
 		// Check to see if the Undefined Variable From Input preference has been set yet
-		final IEclipsePreferences prefs = new InstanceScope().getNode(AnalysisPlugin.getPluginID());
+		final IEclipsePreferences prefs = InstanceScope.INSTANCE.getNode(AnalysisPlugin.getPluginID());
 		final int preference = prefs.getInt(AnalysisPreferenceInitializer.SEVERITY_UNDEFINED_IMPORT_VARIABLE, RedhawkIdePyDevPlugin.IMPORT_PREFERENCE_UNSET);
 
 		switch (preference) {
@@ -220,7 +220,7 @@ public class RedhawkIdePyDevPlugin extends AbstractUIPlugin {
 
 	public IPreferenceStore getRedhawkIdePreferenceStore() {
 		if (this.idePreferenceStore == null) {
-			this.idePreferenceStore = new ScopedPreferenceStore(new InstanceScope(), RedhawkIdeActivator.PLUGIN_ID);
+			this.idePreferenceStore = new ScopedPreferenceStore(InstanceScope.INSTANCE, RedhawkIdeActivator.PLUGIN_ID);
 		}
 		return this.idePreferenceStore;
 	}

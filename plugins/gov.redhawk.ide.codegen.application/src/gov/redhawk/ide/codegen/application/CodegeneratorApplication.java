@@ -83,6 +83,7 @@ import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.osgi.service.datalocation.Location;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
+import org.eclipse.ui.internal.ide.actions.OpenWorkspaceAction;
 import org.osgi.service.prefs.BackingStoreException;
 
 // CHECKSTYLE:OFF Ignore Special File
@@ -752,7 +753,7 @@ public class CodegeneratorApplication implements IApplication {
 					final Properties props = new Properties();
 					props.setProperty(IndexerPreferences.KEY_INDEXER_ID, IPDOMManager.ID_NO_INDEXER);
 					IndexerPreferences.setProperties(null, IndexerPreferences.SCOPE_INSTANCE, props);
-					new InstanceScope().getNode(CCorePlugin.PLUGIN_ID).flush();
+					InstanceScope.INSTANCE.getNode(CCorePlugin.PLUGIN_ID).flush();
 				} catch (final BackingStoreException e) {
 					CCorePlugin.log(e);
 				}
@@ -799,7 +800,7 @@ public class CodegeneratorApplication implements IApplication {
 			protected IStatus run(final IProgressMonitor monitor) {
 				try {
 					new LocalProjectScope(project).getNode(CCorePlugin.PLUGIN_ID).flush();
-					new InstanceScope().getNode(CCorePlugin.PLUGIN_ID).flush();
+					InstanceScope.INSTANCE.getNode(CCorePlugin.PLUGIN_ID).flush();
 				} catch (final BackingStoreException e) {
 					CCorePlugin.log(e);
 				}

@@ -12,6 +12,7 @@ package gov.redhawk.ide.sandbox.console.py;
 
 
 import gov.redhawk.ide.sandbox.console.py.SandboxConsole.ITerminateListener;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;

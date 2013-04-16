@@ -14,14 +14,17 @@ import gov.redhawk.ide.RedhawkIdeActivator;
 import gov.redhawk.ide.codegen.application.CodegeneratorApplication;
 import gov.redhawk.ide.sdr.LoadState;
 import gov.redhawk.ide.sdr.ui.SdrUiPlugin;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
 import junit.framework.TestCase;
 import junit.textui.TestRunner;
+
 import org.eclipse.core.externaltools.internal.IExternalToolConstants;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
