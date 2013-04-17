@@ -47,7 +47,7 @@ public class SandboxConsole extends PydevConsole {
 	}
 
 	/**
-	 * @since 2.0
+	 * @since 3.0
 	 */
 	protected SandboxConsole(PydevConsoleInterpreter interpreter, Sandbox sandbox) {
 		super(interpreter, NLS.bind(Messages.RHLocalConsoleFactory_PY_INIT, sandbox.toString()));
@@ -98,7 +98,7 @@ public class SandboxConsole extends PydevConsole {
 	}
 
 	/**
-	 * @since 2.0
+	 * @since 3.0
 	 */
 	public static SandboxConsole create(PydevConsoleInterpreter interpreter, Sandbox sandbox) {
 		final SandboxConsole console = new SandboxConsole(interpreter, sandbox);
