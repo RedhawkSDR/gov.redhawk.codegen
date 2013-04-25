@@ -152,10 +152,10 @@ public class IdlJavaUtil extends AbstractIdlUtil {
 	public static String getReturnType(final Operation op) {
 		if (op instanceof OpDecl) {
 			final OpDecl od = (OpDecl) op;
-			return od.opTypeSpec.getJavaTypeName().replaceAll("java.lang.", "");
+			return od.opTypeSpec.typeName().replaceAll("java.lang.", "");
 		} else if (op instanceof Method) {
 			final Method m = (Method) op;
-			return (m.resultType != null) ? m.resultType.getJavaTypeName().replaceAll("java.lang.", "") : "void"; // SUPPRESS CHECKSTYLE AvoidInline
+			return (m.resultType != null) ? m.resultType.typeName().replaceAll("java.lang.", "") : "void"; // SUPPRESS CHECKSTYLE AvoidInline
 		}
 		return "";
 	}
@@ -165,7 +165,7 @@ public class IdlJavaUtil extends AbstractIdlUtil {
 	 */
 	public static String getParamType(final ParamDecl p) {
 		if (p.paramAttribute == ParamDecl.MODE_IN) {
-			return p.paramTypeSpec.getJavaTypeName().replaceAll("java.lang.", "");
+			return p.paramTypeSpec.typeName().replaceAll("java.lang.", "");
 		}
 		return p.paramTypeSpec.holderName();
 	}
