@@ -15,6 +15,9 @@
             priority="high"
             runtime="python"
             runtimeVersion="2.4.4">
+         <description>
+            New Python code generator using Jinja2
+         </description>
          <operatingSystem
                default="true"
                os="Linux">
@@ -25,9 +28,6 @@
          <componenttype
                type="device">
          </componenttype>
-         <description>
-            New Python code generator using Jinja2
-         </description>
       </codegen>
    </extension>
    <extension
@@ -35,8 +35,8 @@
       <template
             class="gov.redhawk.ide.codegen.jinja.python.template.PullPortTemplate"
             codegenId="gov.redhawk.ide.codegen.jinja.python.PythonGenerator"
-            hasSettings="true"
-            id="gov.redhawk.ide.codegen.jinja.python.template.PullPortTemplate"
+            hasSettings="false"
+            id="redhawk.codegen.jinja.python.component.pull"
             name="Pull Port Data"
             notDefaultable="false"
             selectable="true"
