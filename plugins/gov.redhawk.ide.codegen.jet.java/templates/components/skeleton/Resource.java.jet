@@ -152,7 +152,7 @@ public class <%=PREFIX%> extends Resource_impl implements Runnable {
         Interface iface = intMap.get(p.getRepID());
         for (Operation op : IdlJavaUtil.getOperations(iface)) {
             if ("pushPacket".equals(IdlJavaUtil.getOpName(op))) {
-                String type = IdlJavaUtil.getParams(op)[0].paramTypeSpec.getJavaTypeName();
+                String type = IdlJavaUtil.getParams(op)[0].paramTypeSpec.typeName();
 %>
     private ArrayBlockingQueue<<%=type%>> inputQueue<%=inArrayCount++%>;
 <%
@@ -225,7 +225,7 @@ public class <%=PREFIX%> extends Resource_impl implements Runnable {
         Interface iface = intMap.get(p.getRepID());
         for (Operation op : IdlJavaUtil.getOperations(iface)) {
             if ("pushPacket".equals(IdlJavaUtil.getOpName(op))) {
-                String type = IdlJavaUtil.getParams(op)[0].paramTypeSpec.getJavaTypeName();
+                String type = IdlJavaUtil.getParams(op)[0].paramTypeSpec.typeName();
                 String additional = type.contains("[]") ? "[0]" : "()";
 %>
         this.inputQueue<%=inArrayCount++%>.add(new <%=type.replaceAll("\\[\\]", "")%><%=additional%>);
@@ -280,7 +280,7 @@ public class <%=PREFIX%> extends Resource_impl implements Runnable {
             Interface iface = intMap.get(p.getRepID());
             for (Operation op : IdlJavaUtil.getOperations(iface)) {
                 if ("pushPacket".equals(IdlJavaUtil.getOpName(op))) {
-                    String type = IdlJavaUtil.getParams(op)[0].paramTypeSpec.getJavaTypeName();
+                    String type = IdlJavaUtil.getParams(op)[0].paramTypeSpec.typeName();
 %>
 	        // Wait for signal that data is ready (or signal to exit service loop)
 	        <%=type%> inputData<%=inArrayCount%> = null;
