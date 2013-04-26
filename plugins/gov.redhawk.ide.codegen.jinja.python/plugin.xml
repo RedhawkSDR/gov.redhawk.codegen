@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="gov.redhawk.ide.codegen.codegens">
+      <codegen
+            associatedPerspectiveId="org.python.pydev.ui.PythonPerspective"
+            autoGenerate="false"
+            class="gov.redhawk.ide.codegen.jinja.python.PythonGenerator"
+            id="gov.redhawk.ide.codegen.jinja.python.PythonGenerator"
+            language="Python"
+            languageVersion="2.4"
+            name="New Python Code Generator"
+            notDefaultable="false"
+            priority="high"
+            runtime="python"
+            runtimeVersion="2.4.4">
+         <operatingSystem
+               default="true"
+               os="Linux">
+         </operatingSystem>
+         <componenttype
+               type="resource">
+         </componenttype>
+         <componenttype
+               type="device">
+         </componenttype>
+         <description>
+            New Python code generator using Jinja2
+         </description>
+      </codegen>
+   </extension>
+   <extension
+         point="gov.redhawk.ide.codegen.codegenTemplate">
+      <template
+            class="gov.redhawk.ide.codegen.jinja.python.template.PullPortTemplate"
+            codegenId="gov.redhawk.ide.codegen.jinja.python.PythonGenerator"
+            hasSettings="true"
+            id="gov.redhawk.ide.codegen.jinja.python.template.PullPortTemplate"
+            name="Pull Port Data"
+            notDefaultable="false"
+            selectable="true"
+            usesPortTemplates="false">
+         <description>
+            This is the generator for Python components and devices.
+         </description>
+         <componenttype
+               type="resource">
+         </componenttype>
+         <componenttype
+               type="device">
+         </componenttype>
+      </template>
+   </extension>
+
+</plugin>
