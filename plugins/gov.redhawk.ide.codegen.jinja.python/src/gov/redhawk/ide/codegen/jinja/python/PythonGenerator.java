@@ -2,7 +2,6 @@ package gov.redhawk.ide.codegen.jinja.python;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -29,12 +28,12 @@ import org.python.pydev.core.IInterpreterManager;
 import org.python.pydev.plugin.PydevPlugin;
 
 import gov.redhawk.ide.codegen.FileToCRCMap;
-import gov.redhawk.ide.codegen.IScaComponentCodegen;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.Property;
 import gov.redhawk.model.sca.util.ModelUtil;
+import gov.redhawk.ide.codegen.jinja.JinjaGenerator;
 
-public class PythonGenerator implements IScaComponentCodegen {
+public class PythonGenerator extends JinjaGenerator {
 
 	public PythonGenerator() {
 		// TODO Auto-generated constructor stub
@@ -62,30 +61,6 @@ public class PythonGenerator implements IScaComponentCodegen {
 		return arguments;
 	}
 	
-	public IStatus generate(ImplementationSettings implSettings,
-			Implementation impl, PrintStream out, PrintStream err,
-			IProgressMonitor monitor, String[] generateFiles,
-			boolean shouldGenerate, List<FileToCRCMap> crcMap) {
-		final IResource resource = ModelUtil.getResource(implSettings);
-		final IProject project = resource.getProject();
-		final SoftPkg softpkg = impl.getSoftPkg();
-		
-		ArrayList<String> arguments = new ArrayList<String>();
-		arguments.add("redhawk-codegen");
-		arguments.add("-C");
-		arguments.add(project.getLocation().toOSString());
-		arguments.addAll(settingsToArguments(implSettings, softpkg));
-		String[] command = arguments.toArray(new String[arguments.size()]);
-		
-		try {
-			java.lang.Process process = java.lang.Runtime.getRuntime().exec(command);
-			process.waitFor();
-		} catch (final Exception e) {
-			return new Status(IStatus.ERROR, PythonGeneratorPlugin.PLUGIN_ID, "Generation failed");
-		}
-		return new Status(IStatus.OK, PythonGeneratorPlugin.PLUGIN_ID, "Generation complete");
-	}
-
 	public Code getInitialCodeSettings(SoftPkg softPkg,	ImplementationSettings settings, Implementation impl) {
 		String outputDir = settings.getOutputDir();
 		if (outputDir != null && !"".equals(outputDir) && outputDir.charAt(0) == '/') {
@@ -111,29 +86,6 @@ public class PythonGenerator implements IScaComponentCodegen {
 			IProgressMonitor monitor) {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	public HashMap<String, Boolean> getGeneratedFiles(ImplementationSettings implSettings, SoftPkg softpkg)	throws CoreException {
-		HashMap<String, Boolean> fileList = new HashMap<String, Boolean>();
-		
-		ArrayList<String> arguments = new ArrayList<String>();
-		arguments.add("redhawk-codegen");
-		arguments.add("-l");
-		arguments.addAll(settingsToArguments(implSettings, softpkg));
-		String[] command = arguments.toArray(new String[arguments.size()]);
-		
-		try {
-			java.lang.Process process = java.lang.Runtime.getRuntime().exec(command);
-			InputStreamReader instream = new InputStreamReader(process.getInputStream());
-			BufferedReader reader = new BufferedReader(instream);
-			String line;
-			while ((line = reader.readLine()) != null) {
-				fileList.put(line, true);
-			}
-		} catch (final Exception e) {
-			return null;
-		}
-		return fileList;
 	}
 
 	public boolean shouldGenerate() {
