@@ -23,6 +23,7 @@ import gov.redhawk.ide.codegen.IScaComponentCodegen;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.Property;
 import gov.redhawk.model.sca.util.ModelUtil;
+import gov.redhawk.sca.util.SubMonitor;
 
 public abstract class JinjaGenerator implements IScaComponentCodegen {
 
@@ -54,6 +55,8 @@ public abstract class JinjaGenerator implements IScaComponentCodegen {
 		final IResource resource = ModelUtil.getResource(implSettings);
 		final IProject project = resource.getProject();
 		final SoftPkg softpkg = impl.getSoftPkg();
+		
+		configureProject(project, implSettings, null);
 		
 		ArrayList<String> arguments = new ArrayList<String>();
 		arguments.add("redhawk-codegen");
@@ -103,5 +106,15 @@ public abstract class JinjaGenerator implements IScaComponentCodegen {
 			return null;
 		}
 		return fileList;
+	}
+	
+
+	public IStatus validate() {
+		return new Status(IStatus.OK, JinjaGeneratorPlugin.PLUGIN_ID, "Validation ok");
+	}
+	
+	protected IStatus configureProject(IProject project, ImplementationSettings implSettings, IProgressMonitor monitor)
+	{
+		return new Status(IStatus.OK, JinjaGeneratorPlugin.PLUGIN_ID, "Configured");
 	}
 }
