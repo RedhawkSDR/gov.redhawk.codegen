@@ -20,9 +20,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.python.pydev.core.IInterpreterManager;
-import org.python.pydev.core.IPythonNature;
 import org.python.pydev.plugin.PydevPlugin;
-import org.python.pydev.plugin.nature.PythonNature;
 
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.model.sca.util.ModelUtil;

@@ -23,7 +23,6 @@ import gov.redhawk.ide.codegen.IScaComponentCodegen;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.Property;
 import gov.redhawk.model.sca.util.ModelUtil;
-import gov.redhawk.sca.util.SubMonitor;
 
 public abstract class JinjaGenerator implements IScaComponentCodegen {
 
