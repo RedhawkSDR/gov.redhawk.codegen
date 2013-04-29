@@ -1,4 +1,4 @@
-package gov.redhawk.ide.codegen.jinja.python.template;
+package gov.redhawk.ide.codegen.jinja.template;
 
 import java.util.List;
 
@@ -9,11 +9,7 @@ import org.eclipse.core.runtime.CoreException;
 import gov.redhawk.ide.codegen.IScaComponentCodegenTemplate;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 
-public class PullPortTemplate implements IScaComponentCodegenTemplate {
-
-	public PullPortTemplate() {
-		// TODO Auto-generated constructor stub
-	}
+public class JinjaTemplate implements IScaComponentCodegenTemplate {
 
 	public List<String> getExecutableFileNames(
 			ImplementationSettings implSettings, SoftPkg softPkg) {

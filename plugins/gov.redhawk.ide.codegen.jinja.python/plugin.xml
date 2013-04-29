@@ -33,7 +33,7 @@
    <extension
          point="gov.redhawk.ide.codegen.codegenTemplate">
       <template
-            class="gov.redhawk.ide.codegen.jinja.python.template.PullPortTemplate"
+            class="gov.redhawk.ide.codegen.jinja.template.JinjaTemplate"
             codegenId="gov.redhawk.ide.codegen.jinja.python.PythonGenerator"
             hasSettings="false"
             id="redhawk.codegen.jinja.python.component.pull"
