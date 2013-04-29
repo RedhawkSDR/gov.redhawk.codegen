@@ -40,8 +40,7 @@ public abstract class JinjaGenerator implements IScaComponentCodegen {
 		arguments.add("--template");
 		arguments.add(implSettings.getTemplate());
 		for (Property property : implSettings.getProperties()) {
-			arguments.add("-B"+property.getId());
-			arguments.add(property.getValue());
+			arguments.add("-B"+property.getId()+"="+property.getValue());
 		}
 		arguments.add(spdFile);
 		
@@ -63,9 +62,20 @@ public abstract class JinjaGenerator implements IScaComponentCodegen {
 		arguments.addAll(settingsToArguments(implSettings, softpkg));
 		String[] command = arguments.toArray(new String[arguments.size()]);
 		
+		// Print the command to the console.
+		for (String arg : command) {
+		  out.print(arg + " ");
+		}
+		out.println();
+		
 		try {
 			java.lang.Process process = java.lang.Runtime.getRuntime().exec(command);
-			process.waitFor();
+			InputStreamReader instream = new InputStreamReader(process.getInputStream());
+			BufferedReader reader = new BufferedReader(instream);
+			String line;
+			while ((line = reader.readLine()) != null) {
+				out.println(line);
+			}
 		} catch (final Exception e) {
 			return new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Generation failed");
 		}
