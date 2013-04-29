@@ -1,5 +1,9 @@
 package gov.redhawk.ide.codegen.jinja.python;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +23,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.python.pydev.core.IInterpreterManager;
 import org.python.pydev.plugin.PydevPlugin;
@@ -27,7 +32,6 @@ import gov.redhawk.ide.codegen.FileToCRCMap;
 import gov.redhawk.ide.codegen.IScaComponentCodegen;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.Property;
-import gov.redhawk.ide.util.ResourceUtils;
 import gov.redhawk.model.sca.util.ModelUtil;
 
 public class PythonGenerator implements IScaComponentCodegen {
@@ -100,23 +104,57 @@ public class PythonGenerator implements IScaComponentCodegen {
 		return null;
 	}
 
-	public HashMap<String, Boolean> getGeneratedFiles(
-			ImplementationSettings implSettings, SoftPkg softpkg)
-			throws CoreException {
+	public HashMap<String, Boolean> getGeneratedFiles(ImplementationSettings implSettings, SoftPkg softpkg)	throws CoreException {
 		HashMap<String, Boolean> fileList = new HashMap<String, Boolean>();
 		
+		final IResource resource = ModelUtil.getResource(implSettings);
+		final IProject project = resource.getProject();
+		
+		final IPath workspaceRoot = project.getWorkspace().getRoot().getLocation();
+		String spdFile = workspaceRoot.toOSString() + softpkg.eResource().getURI().toPlatformString(true);
+		
+		ArrayList<String> arguments = new ArrayList<String>();
+		arguments.add("redhawk-codegen");
+		arguments.add("-l");
+		arguments.add("--impl");
+		arguments.add(implSettings.getId());
+		arguments.add("--impldir");
+		arguments.add(implSettings.getOutputDir());
+		arguments.add("--template");
+		arguments.add(implSettings.getTemplate());
+		for (Property property : implSettings.getProperties()) {
+			arguments.add("-B"+property.getId());
+			arguments.add(property.getValue());
+		}
+		arguments.add(spdFile);
+		String[] command = arguments.toArray(new String[arguments.size()]);
+		
+		try {
+			java.lang.Process process = java.lang.Runtime.getRuntime().exec(command);
+			InputStreamReader instream = new InputStreamReader(process.getInputStream());
+			BufferedReader reader = new BufferedReader(instream);
+			String line;
+			while ((line = reader.readLine()) != null) {
+				fileList.put(line, true);
+			}
+		} catch (final Exception e) {
+			return null;
+		}
 		return fileList;
 	}
 
 	public boolean shouldGenerate() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
-	public IFile getDefaultFile(Implementation impl,
-			ImplementationSettings implSettings) {
-		// TODO Auto-generated method stub
-		return null;
+	public IFile getDefaultFile(Implementation impl, ImplementationSettings implSettings) {
+		final IResource resource = ModelUtil.getResource(implSettings);
+		final IProject project = resource.getProject();
+
+		final SoftPkg softpkg = impl.getSoftPkg();
+		final String prefix = softpkg.getName();
+		final String defaultFilename = implSettings.getOutputDir() + File.separator + prefix + ".py";
+	    return project.getFile(new Path(defaultFilename));
 	}
 
 	public IStatus validate() {
