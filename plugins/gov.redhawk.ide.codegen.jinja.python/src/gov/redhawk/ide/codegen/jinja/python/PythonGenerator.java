@@ -40,23 +40,15 @@ public class PythonGenerator implements IScaComponentCodegen {
 		// TODO Auto-generated constructor stub
 	}
 
-	public IStatus generate(ImplementationSettings implSettings,
-			Implementation impl, PrintStream out, PrintStream err,
-			IProgressMonitor monitor, String[] generateFiles,
-			boolean shouldGenerate, List<FileToCRCMap> crcMap) {
+	protected List<String> settingsToArguments(ImplementationSettings implSettings, SoftPkg softpkg) {
+		List<String> arguments = new ArrayList<String>();
 		final IResource resource = ModelUtil.getResource(implSettings);
-		final SoftPkg softpkg = impl.getSoftPkg();
 		final IProject project = resource.getProject();
-		
 		final IPath workspaceRoot = project.getWorkspace().getRoot().getLocation();
 		String spdFile = workspaceRoot.toOSString() + softpkg.eResource().getURI().toPlatformString(true);
-		
-		ArrayList<String> arguments = new ArrayList<String>();
-		arguments.add("redhawk-codegen");
-		arguments.add("-C");
-		arguments.add(project.getLocation().toOSString());
+
 		arguments.add("--impl");
-		arguments.add(impl.getId());
+		arguments.add(implSettings.getId());
 		arguments.add("--impldir");
 		arguments.add(implSettings.getOutputDir());
 		arguments.add("--template");
@@ -66,6 +58,23 @@ public class PythonGenerator implements IScaComponentCodegen {
 			arguments.add(property.getValue());
 		}
 		arguments.add(spdFile);
+		
+		return arguments;
+	}
+	
+	public IStatus generate(ImplementationSettings implSettings,
+			Implementation impl, PrintStream out, PrintStream err,
+			IProgressMonitor monitor, String[] generateFiles,
+			boolean shouldGenerate, List<FileToCRCMap> crcMap) {
+		final IResource resource = ModelUtil.getResource(implSettings);
+		final IProject project = resource.getProject();
+		final SoftPkg softpkg = impl.getSoftPkg();
+		
+		ArrayList<String> arguments = new ArrayList<String>();
+		arguments.add("redhawk-codegen");
+		arguments.add("-C");
+		arguments.add(project.getLocation().toOSString());
+		arguments.addAll(settingsToArguments(implSettings, softpkg));
 		String[] command = arguments.toArray(new String[arguments.size()]);
 		
 		try {
@@ -107,26 +116,10 @@ public class PythonGenerator implements IScaComponentCodegen {
 	public HashMap<String, Boolean> getGeneratedFiles(ImplementationSettings implSettings, SoftPkg softpkg)	throws CoreException {
 		HashMap<String, Boolean> fileList = new HashMap<String, Boolean>();
 		
-		final IResource resource = ModelUtil.getResource(implSettings);
-		final IProject project = resource.getProject();
-		
-		final IPath workspaceRoot = project.getWorkspace().getRoot().getLocation();
-		String spdFile = workspaceRoot.toOSString() + softpkg.eResource().getURI().toPlatformString(true);
-		
 		ArrayList<String> arguments = new ArrayList<String>();
 		arguments.add("redhawk-codegen");
 		arguments.add("-l");
-		arguments.add("--impl");
-		arguments.add(implSettings.getId());
-		arguments.add("--impldir");
-		arguments.add(implSettings.getOutputDir());
-		arguments.add("--template");
-		arguments.add(implSettings.getTemplate());
-		for (Property property : implSettings.getProperties()) {
-			arguments.add("-B"+property.getId());
-			arguments.add(property.getValue());
-		}
-		arguments.add(spdFile);
+		arguments.addAll(settingsToArguments(implSettings, softpkg));
 		String[] command = arguments.toArray(new String[arguments.size()]);
 		
 		try {
