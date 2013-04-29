@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="gov.redhawk.ide.codegen.codegens">
+      <codegen
+            autoGenerate="false"
+            class="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusGenerator"
+            compiler="/usr/bin/gcc"
+            compilerVersion="4.1.2"
+            humanLanguage="EN"
+            id="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusGenerator"
+            language="C++"
+            languageVersion="0"
+            name="New C++ Code Generator"
+            notDefaultable="false"
+            priority="high">
+         <description>
+            Jinja-based C++ code generator for components and devices.
+         </description>
+         <operatingSystem
+               default="true"
+               os="Linux">
+         </operatingSystem>
+         <processor
+               default="true"
+               proc_type="x86">
+         </processor>
+         <processor
+               default="true"
+               proc_type="x86_64">
+         </processor>
+         <componenttype
+               type="resource">
+         </componenttype>
+         <componenttype
+               type="device">
+         </componenttype>
+      </codegen>
+   </extension>
+   <extension
+         point="gov.redhawk.ide.codegen.codegenTemplate">
+      <template
+            class="gov.redhawk.ide.codegen.jinja.template.JinjaTemplate"
+            codegenId="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusGenerator"
+            hasSettings="false"
+            id="redhawk.codegen.jinja.cpp.component.pull"
+            name="Pull Port Data"
+            notDefaultable="false"
+            selectable="true"
+            usesPortTemplates="false">
+         <description>
+            This template will queue all data inside each input port. It is the developers responsibility to pull the data from the port's queue for processing.
+         </description>
+         <componenttype
+               type="resource">
+         </componenttype>
+         <componenttype
+               type="device">
+         </componenttype>
+      </template>
+   </extension>
+
+</plugin>

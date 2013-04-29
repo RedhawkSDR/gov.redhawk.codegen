@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Jinja C++ Code Generator UI
+Bundle-SymbolicName: gov.redhawk.ide.codegen.jinja.cplusplus.ui;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: REDHAWK
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Require-Bundle: gov.redhawk.ide.codegen.ui;bundle-version="7.0.0"

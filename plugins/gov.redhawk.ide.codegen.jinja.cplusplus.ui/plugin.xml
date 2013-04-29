@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="gov.redhawk.ide.codegen.ui.codegenPages">
+      <codegenPage
+            compositeClass="gov.redhawk.ide.codegen.ui.BooleanGeneratorDisplayFactory"
+            id="gov.redhawk.ide.codegen.ui.internal.DefaultGeneratorPropertiesWizardPage"
+            name="Boolean Codegen Properties Page"
+            wizardClass="gov.redhawk.ide.codegen.ui.BooleanGeneratorDisplayFactory">
+         <codegenId
+               targetCodegenId="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusGenerator">
+         </codegenId>
+      </codegenPage>
+   </extension>
+
+</plugin>
