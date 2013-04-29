@@ -15,6 +15,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
@@ -76,13 +77,17 @@ public class PythonGenerator extends JinjaGenerator {
 	    return project.getFile(new Path(defaultFilename));
 	}
 
+	@Override
 	public IStatus validate() {
+		final MultiStatus status = new MultiStatus(PythonGeneratorPlugin.PLUGIN_ID, IStatus.OK, "Validation status", null);
+		status.add(super.validate());
 		final IInterpreterManager interpreterManager = PydevPlugin.getPythonInterpreterManager();
 		if (!interpreterManager.isConfigured()) {
-			return new Status(IStatus.ERROR, PythonGeneratorPlugin.PLUGIN_ID, "Configure the Python Interpreter before attempting code generation.");
+			status.add(new Status(IStatus.ERROR, PythonGeneratorPlugin.PLUGIN_ID, "Configure the Python Interpreter before attempting code generation."));
 		} else {
-			return new Status(IStatus.OK, PythonGeneratorPlugin.PLUGIN_ID, "Validation ok");
-		}		
+			status.add(new Status(IStatus.OK, PythonGeneratorPlugin.PLUGIN_ID, "Validation ok"));
+		}
+		return status;
 	}
 
 	@Override
