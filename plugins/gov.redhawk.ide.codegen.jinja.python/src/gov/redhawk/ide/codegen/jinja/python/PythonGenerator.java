@@ -12,16 +12,22 @@ import mil.jpeojtrs.sca.spd.SpdFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 import org.python.pydev.core.IInterpreterManager;
+import org.python.pydev.core.IPythonNature;
 import org.python.pydev.plugin.PydevPlugin;
+import org.python.pydev.plugin.nature.PythonNature;
 
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.model.sca.util.ModelUtil;
 import gov.redhawk.ide.codegen.jinja.JinjaGenerator;
+import gov.redhawk.ide.codegen.python.PythonGeneratorPlugin;
+import gov.redhawk.ide.codegen.python.utils.PythonGeneratorUtils;
 
 public class PythonGenerator extends JinjaGenerator {
 
@@ -79,4 +85,34 @@ public class PythonGenerator extends JinjaGenerator {
 		}		
 	}
 
+	@Override
+	protected IStatus configureProject(IProject project, ImplementationSettings implSettings, IProgressMonitor monitor) {
+		final SubMonitor progress = SubMonitor.convert(monitor, "Configuring Python project", 2);
+
+		// Check to see if interpreter manager is configured
+		final IInterpreterManager interpreterManager = PydevPlugin.getPythonInterpreterManager();
+		if (!interpreterManager.isConfigured()) {
+			return new Status(IStatus.ERROR, PythonGeneratorPlugin.PLUGIN_ID, "You must configure a python interpreter to generate code.");
+		}
+
+		// Add (if necessary) a Python nature to the project. 
+		try {
+			PythonGeneratorUtils.addPythonProjectNature(project, progress.newChild(1));
+		} catch (final CoreException e) {
+			return new Status(IStatus.ERROR, PythonGeneratorPlugin.PLUGIN_ID,
+					"Unable to determine if the project has been configured with the python nature; cannot proceed with code generation", e);
+		}
+
+		// Add the output directory to the Python source path.
+		final String destinationDirectory = project.getFolder(implSettings.getOutputDir()).getFullPath().toString();
+		try {
+			PythonGeneratorUtils.addPythonSourcePath(project, destinationDirectory, progress.newChild(1));
+		} catch (final CoreException e) {
+			return new Status(IStatus.ERROR, PythonGeneratorPlugin.PLUGIN_ID,
+			        "Unable to set the python source path; cannot proceed with code generation", e);
+		}
+
+		return new Status(IStatus.OK, PythonGeneratorPlugin.PLUGIN_ID, "Python project configured");
+	}
+	
 }
