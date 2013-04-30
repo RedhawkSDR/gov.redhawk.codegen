@@ -2,6 +2,7 @@ package gov.redhawk.ide.codegen.jinja;
 
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.Property;
+import gov.redhawk.ide.codegen.jinja.utils.InputRedirector;
 import gov.redhawk.model.sca.util.ModelUtil;
 
 import java.io.BufferedReader;
@@ -67,15 +68,14 @@ public class JinjaGenerator {
 				}
 				out.println();
 
-				final InputStreamReader instream = new InputStreamReader(process.getInputStream());
-				final BufferedReader reader = new BufferedReader(instream);
-				String line;
-				while ((line = reader.readLine()) != null) {
-					out.println(line);
-				}
-			} else {
-				process.waitFor();
+				Thread outThread = new Thread(new InputRedirector(process.getInputStream(), out));
+				outThread.start();
 			}
+			if (err != null) {
+				Thread errThread = new Thread(new InputRedirector(process.getErrorStream(), err));
+				errThread.start();
+			}
+			process.waitFor();
 		} catch (final Exception e) {
 			return new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Generation failed");
 		}
