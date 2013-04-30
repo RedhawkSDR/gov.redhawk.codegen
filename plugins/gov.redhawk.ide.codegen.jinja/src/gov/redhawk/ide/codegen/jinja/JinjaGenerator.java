@@ -56,6 +56,14 @@ public class JinjaGenerator {
 		}
 	}
 
+	private String prependPath(final String path, final String filename) {
+		if (filename.startsWith(".." + File.separator)) {
+			return filename.substring(3);
+		} else {
+			return path + File.separator + filename;
+		}
+	}
+
 	public IStatus generate(final ImplementationSettings implSettings, final Implementation impl, final PrintStream out, final PrintStream err,
 	        final IProgressMonitor monitor, final String[] generateFiles) {
 		final IResource resource = ModelUtil.getResource(implSettings);
@@ -67,10 +75,17 @@ public class JinjaGenerator {
 		arguments.add("-C");
 		arguments.add(project.getLocation().toOSString());
 		arguments.addAll(settingsToArguments(implSettings, softpkg));
+		if (generateFiles != null) {
+			for (final String fileName : generateFiles) {
+				arguments.add(prependPath(implSettings.getOutputDir(), fileName));
+			}
+		}
 		final String[] command = arguments.toArray(new String[arguments.size()]);
 
 		try {
 			final java.lang.Process process = java.lang.Runtime.getRuntime().exec(command);
+			Thread outThread = null;
+			Thread errThread = null;
 			if (out != null) {
 				// Print the command to the console.
 				for (final String arg : command) {
@@ -78,14 +93,20 @@ public class JinjaGenerator {
 				}
 				out.println();
 
-				final Thread outThread = new Thread(new InputRedirector(process.getInputStream(), out));
+				outThread = new Thread(new InputRedirector(process.getInputStream(), out));
 				outThread.start();
 			}
 			if (err != null) {
-				final Thread errThread = new Thread(new InputRedirector(process.getErrorStream(), err));
+				errThread = new Thread(new InputRedirector(process.getErrorStream(), err));
 				errThread.start();
 			}
 			process.waitFor();
+			if (outThread != null) {
+				outThread.join();
+			}
+			if (errThread != null) {
+				errThread.join();
+			}
 		} catch (final Exception e) {
 			return new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Generation failed");
 		}
