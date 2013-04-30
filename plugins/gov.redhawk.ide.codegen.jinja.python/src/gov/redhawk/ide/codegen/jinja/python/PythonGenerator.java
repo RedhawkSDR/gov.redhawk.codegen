@@ -82,7 +82,7 @@ public class PythonGenerator extends AbstractPythonGenerator {
 			String componentName, PrintStream out, PrintStream err,
 			IProgressMonitor monitor, String[] generateFiles,
 			List<FileToCRCMap> crcMap) throws CoreException {
-		generator.generate(implSettings, impl, out, err, monitor, generateFiles, true, crcMap);
+		generator.generate(implSettings, impl, out, err, monitor, generateFiles);
 	}
 
 	@Override

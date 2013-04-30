@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
-import gov.redhawk.ide.codegen.FileToCRCMap;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.Property;
 import gov.redhawk.model.sca.util.ModelUtil;
@@ -48,8 +47,7 @@ public class JinjaGenerator {
 	
 	public IStatus generate(ImplementationSettings implSettings,
 			Implementation impl, PrintStream out, PrintStream err,
-			IProgressMonitor monitor, String[] generateFiles,
-			boolean shouldGenerate, List<FileToCRCMap> crcMap) {
+			IProgressMonitor monitor, String[] generateFiles) {
 		final IResource resource = ModelUtil.getResource(implSettings);
 		final IProject project = resource.getProject();
 		final SoftPkg softpkg = impl.getSoftPkg();

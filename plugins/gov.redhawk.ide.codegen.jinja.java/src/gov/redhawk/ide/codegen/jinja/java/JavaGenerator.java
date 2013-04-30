@@ -69,7 +69,7 @@ public class JavaGenerator extends AbstractJavaGenerator {
 			String componentName, IProgressMonitor monitor,
 			String[] generateFiles, List<FileToCRCMap> crcMap)
 			throws CoreException {
-		generator.generate(implSettings, impl, null, null, monitor, generateFiles, true, crcMap);
+		generator.generate(implSettings, impl, null, null, monitor, generateFiles);
 	}
 
 	@Override
