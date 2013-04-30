@@ -46,7 +46,7 @@ public class JinjaGenerator {
 
 		return arguments;
 	}
-	
+
 	private String relativePath(final String dir, final String path) {
 		final String prefix = dir + File.separator;
 		if (path.startsWith(prefix)) {
@@ -78,11 +78,11 @@ public class JinjaGenerator {
 				}
 				out.println();
 
-				Thread outThread = new Thread(new InputRedirector(process.getInputStream(), out));
+				final Thread outThread = new Thread(new InputRedirector(process.getInputStream(), out));
 				outThread.start();
 			}
 			if (err != null) {
-				Thread errThread = new Thread(new InputRedirector(process.getErrorStream(), err));
+				final Thread errThread = new Thread(new InputRedirector(process.getErrorStream(), err));
 				errThread.start();
 			}
 			process.waitFor();
@@ -113,7 +113,7 @@ public class JinjaGenerator {
 				// Check for a trailing asterisk denoting changes.
 				final boolean changed = fileName.endsWith("*");
 				if (changed) {
-					fileName = fileName.substring(0, fileName.length()-1);
+					fileName = fileName.substring(0, fileName.length() - 1);
 				}
 				fileList.put(fileName, !changed);
 			}
