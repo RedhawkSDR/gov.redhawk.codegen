@@ -46,6 +46,15 @@ public class JinjaGenerator {
 
 		return arguments;
 	}
+	
+	private String relativePath(final String dir, final String path) {
+		final String prefix = dir + File.separator;
+		if (path.startsWith(prefix)) {
+			return path.substring(prefix.length());
+		} else {
+			return ".." + File.separator + path;
+		}
+	}
 
 	public IStatus generate(final ImplementationSettings implSettings, final Implementation impl, final PrintStream out, final PrintStream err,
 	        final IProgressMonitor monitor, final String[] generateFiles) {
@@ -99,12 +108,8 @@ public class JinjaGenerator {
 			String fileName;
 			while ((fileName = reader.readLine()) != null) {
 				// Adjust the path of the output to be relative to the output directory.
-				final String outputDir = implSettings.getOutputDir()+File.separator;
-				if (fileName.startsWith(outputDir)) {
-					fileName = fileName.substring(outputDir.length());
-				} else {
-					fileName = ".." + File.separator + fileName;
-				}
+				fileName = relativePath(implSettings.getOutputDir(), fileName);
+
 				// Check for a trailing asterisk denoting changes.
 				final boolean changed = fileName.endsWith("*");
 				if (changed) {
