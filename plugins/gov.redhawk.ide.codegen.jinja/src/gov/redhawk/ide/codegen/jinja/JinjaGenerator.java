@@ -19,12 +19,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
 import gov.redhawk.ide.codegen.FileToCRCMap;
-import gov.redhawk.ide.codegen.IScaComponentCodegen;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.Property;
 import gov.redhawk.model.sca.util.ModelUtil;
 
-public abstract class JinjaGenerator implements IScaComponentCodegen {
+public class JinjaGenerator {
 
 	protected List<String> settingsToArguments(ImplementationSettings implSettings, SoftPkg softpkg) {
 		List<String> arguments = new ArrayList<String>();
@@ -55,8 +54,6 @@ public abstract class JinjaGenerator implements IScaComponentCodegen {
 		final IProject project = resource.getProject();
 		final SoftPkg softpkg = impl.getSoftPkg();
 		
-		configureProject(project, implSettings, null);
-		
 		ArrayList<String> arguments = new ArrayList<String>();
 		arguments.add("redhawk-codegen");
 		arguments.add("-C");
@@ -64,19 +61,23 @@ public abstract class JinjaGenerator implements IScaComponentCodegen {
 		arguments.addAll(settingsToArguments(implSettings, softpkg));
 		String[] command = arguments.toArray(new String[arguments.size()]);
 		
-		// Print the command to the console.
-		for (String arg : command) {
-		  out.print(arg + " ");
-		}
-		out.println();
-		
 		try {
 			java.lang.Process process = java.lang.Runtime.getRuntime().exec(command);
-			InputStreamReader instream = new InputStreamReader(process.getInputStream());
-			BufferedReader reader = new BufferedReader(instream);
-			String line;
-			while ((line = reader.readLine()) != null) {
-				out.println(line);
+			if (out != null) {
+				// Print the command to the console.
+				for (String arg : command) {
+				  out.print(arg + " ");
+				}
+				out.println();
+				
+				InputStreamReader instream = new InputStreamReader(process.getInputStream());
+				BufferedReader reader = new BufferedReader(instream);
+				String line;
+				while ((line = reader.readLine()) != null) {
+					out.println(line);
+				}
+			} else {
+				process.waitFor();
 			}
 		} catch (final Exception e) {
 			return new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Generation failed");
@@ -110,10 +111,5 @@ public abstract class JinjaGenerator implements IScaComponentCodegen {
 
 	public IStatus validate() {
 		return new Status(IStatus.OK, JinjaGeneratorPlugin.PLUGIN_ID, "Validation ok");
-	}
-	
-	protected IStatus configureProject(IProject project, ImplementationSettings implSettings, IProgressMonitor monitor)
-	{
-		return new Status(IStatus.OK, JinjaGeneratorPlugin.PLUGIN_ID, "Configured");
 	}
 }
