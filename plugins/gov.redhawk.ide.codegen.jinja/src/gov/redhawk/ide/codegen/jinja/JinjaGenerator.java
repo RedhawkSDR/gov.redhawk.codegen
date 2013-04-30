@@ -1,5 +1,9 @@
 package gov.redhawk.ide.codegen.jinja;
 
+import gov.redhawk.ide.codegen.ImplementationSettings;
+import gov.redhawk.ide.codegen.Property;
+import gov.redhawk.model.sca.util.ModelUtil;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
@@ -18,18 +22,14 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
-import gov.redhawk.ide.codegen.ImplementationSettings;
-import gov.redhawk.ide.codegen.Property;
-import gov.redhawk.model.sca.util.ModelUtil;
-
 public class JinjaGenerator {
 
-	protected List<String> settingsToArguments(ImplementationSettings implSettings, SoftPkg softpkg) {
-		List<String> arguments = new ArrayList<String>();
+	protected List<String> settingsToArguments(final ImplementationSettings implSettings, final SoftPkg softpkg) {
+		final List<String> arguments = new ArrayList<String>();
 		final IResource resource = ModelUtil.getResource(implSettings);
 		final IProject project = resource.getProject();
 		final IPath workspaceRoot = project.getWorkspace().getRoot().getLocation();
-		String spdFile = workspaceRoot.toOSString() + softpkg.eResource().getURI().toPlatformString(true);
+		final String spdFile = workspaceRoot.toOSString() + softpkg.eResource().getURI().toPlatformString(true);
 
 		arguments.add("--impl");
 		arguments.add(implSettings.getId());
@@ -37,39 +37,38 @@ public class JinjaGenerator {
 		arguments.add(implSettings.getOutputDir());
 		arguments.add("--template");
 		arguments.add(implSettings.getTemplate());
-		for (Property property : implSettings.getProperties()) {
-			arguments.add("-B"+property.getId()+"="+property.getValue());
+		for (final Property property : implSettings.getProperties()) {
+			arguments.add("-B" + property.getId() + "=" + property.getValue());
 		}
 		arguments.add(spdFile);
-		
+
 		return arguments;
 	}
-	
-	public IStatus generate(ImplementationSettings implSettings,
-			Implementation impl, PrintStream out, PrintStream err,
-			IProgressMonitor monitor, String[] generateFiles) {
+
+	public IStatus generate(final ImplementationSettings implSettings, final Implementation impl, final PrintStream out, final PrintStream err,
+	        final IProgressMonitor monitor, final String[] generateFiles) {
 		final IResource resource = ModelUtil.getResource(implSettings);
 		final IProject project = resource.getProject();
 		final SoftPkg softpkg = impl.getSoftPkg();
-		
-		ArrayList<String> arguments = new ArrayList<String>();
+
+		final ArrayList<String> arguments = new ArrayList<String>();
 		arguments.add("redhawk-codegen");
 		arguments.add("-C");
 		arguments.add(project.getLocation().toOSString());
 		arguments.addAll(settingsToArguments(implSettings, softpkg));
-		String[] command = arguments.toArray(new String[arguments.size()]);
-		
+		final String[] command = arguments.toArray(new String[arguments.size()]);
+
 		try {
-			java.lang.Process process = java.lang.Runtime.getRuntime().exec(command);
+			final java.lang.Process process = java.lang.Runtime.getRuntime().exec(command);
 			if (out != null) {
 				// Print the command to the console.
-				for (String arg : command) {
-				  out.print(arg + " ");
+				for (final String arg : command) {
+					out.print(arg + " ");
 				}
 				out.println();
-				
-				InputStreamReader instream = new InputStreamReader(process.getInputStream());
-				BufferedReader reader = new BufferedReader(instream);
+
+				final InputStreamReader instream = new InputStreamReader(process.getInputStream());
+				final BufferedReader reader = new BufferedReader(instream);
 				String line;
 				while ((line = reader.readLine()) != null) {
 					out.println(line);
@@ -83,19 +82,19 @@ public class JinjaGenerator {
 		return new Status(IStatus.OK, JinjaGeneratorPlugin.PLUGIN_ID, "Generation complete");
 	}
 
-	public HashMap<String, Boolean> getGeneratedFiles(ImplementationSettings implSettings, SoftPkg softpkg)	throws CoreException {
-		HashMap<String, Boolean> fileList = new HashMap<String, Boolean>();
-		
-		ArrayList<String> arguments = new ArrayList<String>();
+	public HashMap<String, Boolean> getGeneratedFiles(final ImplementationSettings implSettings, final SoftPkg softpkg) throws CoreException {
+		final HashMap<String, Boolean> fileList = new HashMap<String, Boolean>();
+
+		final ArrayList<String> arguments = new ArrayList<String>();
 		arguments.add("redhawk-codegen");
 		arguments.add("-l");
 		arguments.addAll(settingsToArguments(implSettings, softpkg));
-		String[] command = arguments.toArray(new String[arguments.size()]);
-		
+		final String[] command = arguments.toArray(new String[arguments.size()]);
+
 		try {
-			java.lang.Process process = java.lang.Runtime.getRuntime().exec(command);
-			InputStreamReader instream = new InputStreamReader(process.getInputStream());
-			BufferedReader reader = new BufferedReader(instream);
+			final java.lang.Process process = java.lang.Runtime.getRuntime().exec(command);
+			final InputStreamReader instream = new InputStreamReader(process.getInputStream());
+			final BufferedReader reader = new BufferedReader(instream);
 			String line;
 			while ((line = reader.readLine()) != null) {
 				fileList.put(line, true);
@@ -105,7 +104,6 @@ public class JinjaGenerator {
 		}
 		return fileList;
 	}
-	
 
 	public IStatus validate() {
 		return new Status(IStatus.OK, JinjaGeneratorPlugin.PLUGIN_ID, "Validation ok");

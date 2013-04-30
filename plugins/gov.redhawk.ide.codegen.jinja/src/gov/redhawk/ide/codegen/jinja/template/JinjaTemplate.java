@@ -1,31 +1,28 @@
 package gov.redhawk.ide.codegen.jinja.template;
 
+import gov.redhawk.ide.codegen.IScaComponentCodegenTemplate;
+import gov.redhawk.ide.codegen.ImplementationSettings;
+
 import java.util.List;
 
 import mil.jpeojtrs.sca.spd.SoftPkg;
 
 import org.eclipse.core.runtime.CoreException;
 
-import gov.redhawk.ide.codegen.IScaComponentCodegenTemplate;
-import gov.redhawk.ide.codegen.ImplementationSettings;
-
 public class JinjaTemplate implements IScaComponentCodegenTemplate {
 
-	public List<String> getExecutableFileNames(
-			ImplementationSettings implSettings, SoftPkg softPkg) {
+	public List<String> getExecutableFileNames(final ImplementationSettings implSettings, final SoftPkg softPkg) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public List<String> getAllGeneratedFileNames(
-			ImplementationSettings implSettings, SoftPkg softPkg) {
+	public List<String> getAllGeneratedFileNames(final ImplementationSettings implSettings, final SoftPkg softPkg) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public String generateFile(String fileName, SoftPkg softPkg,
-			ImplementationSettings implSettings, Object helperObject)
-			throws CoreException {
+	public String generateFile(final String fileName, final SoftPkg softPkg, final ImplementationSettings implSettings, final Object helperObject)
+	        throws CoreException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -35,8 +32,7 @@ public class JinjaTemplate implements IScaComponentCodegenTemplate {
 		return false;
 	}
 
-	public String getDefaultFilename(SoftPkg softPkg,
-			ImplementationSettings implSettings, String srcDir) {
+	public String getDefaultFilename(final SoftPkg softPkg, final ImplementationSettings implSettings, final String srcDir) {
 		// TODO Auto-generated method stub
 		return null;
 	}

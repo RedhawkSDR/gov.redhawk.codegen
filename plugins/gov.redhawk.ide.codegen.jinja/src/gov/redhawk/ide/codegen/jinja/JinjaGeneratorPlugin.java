@@ -1,23 +1,24 @@
 package gov.redhawk.ide.codegen.jinja;
 
-import org.osgi.framework.BundleContext;
 import org.eclipse.core.runtime.Plugin;
+import org.osgi.framework.BundleContext;
 
 public class JinjaGeneratorPlugin extends Plugin {
 
 	public static final String PLUGIN_ID = "gov.redhawk.ide.codegen.jinja";
-	
+
 	private static BundleContext context;
 
 	static BundleContext getContext() {
-		return context;
+		return JinjaGeneratorPlugin.context;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
 	 */
-	public void start(BundleContext bundleContext) throws Exception {
+	@Override
+	public void start(final BundleContext bundleContext) throws Exception {
 		JinjaGeneratorPlugin.context = bundleContext;
 	}
 
@@ -25,7 +26,8 @@ public class JinjaGeneratorPlugin extends Plugin {
 	 * (non-Javadoc)
 	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
 	 */
-	public void stop(BundleContext bundleContext) throws Exception {
+	@Override
+	public void stop(final BundleContext bundleContext) throws Exception {
 		JinjaGeneratorPlugin.context = null;
 	}
 
