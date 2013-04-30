@@ -6,6 +6,7 @@ import gov.redhawk.ide.codegen.jinja.utils.InputRedirector;
 import gov.redhawk.model.sca.util.ModelUtil;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -95,9 +96,21 @@ public class JinjaGenerator {
 			final java.lang.Process process = java.lang.Runtime.getRuntime().exec(command);
 			final InputStreamReader instream = new InputStreamReader(process.getInputStream());
 			final BufferedReader reader = new BufferedReader(instream);
-			String line;
-			while ((line = reader.readLine()) != null) {
-				fileList.put(line, true);
+			String fileName;
+			while ((fileName = reader.readLine()) != null) {
+				// Adjust the path of the output to be relative to the output directory.
+				final String outputDir = implSettings.getOutputDir()+File.separator;
+				if (fileName.startsWith(outputDir)) {
+					fileName = fileName.substring(outputDir.length());
+				} else {
+					fileName = ".." + File.separator + fileName;
+				}
+				// Check for a trailing asterisk denoting changes.
+				final boolean changed = fileName.endsWith("*");
+				if (changed) {
+					fileName = fileName.substring(0, fileName.length()-1);
+				}
+				fileList.put(fileName, !changed);
 			}
 		} catch (final Exception e) {
 			return null;
