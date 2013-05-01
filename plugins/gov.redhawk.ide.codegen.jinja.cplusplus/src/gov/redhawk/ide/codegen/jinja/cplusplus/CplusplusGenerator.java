@@ -13,14 +13,17 @@ import mil.jpeojtrs.sca.spd.SpdFactory;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 
 import gov.redhawk.ide.codegen.FileToCRCMap;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.cplusplus.AbstractCplusplusGenerator;
 import gov.redhawk.ide.codegen.jinja.JinjaGenerator;
+import gov.redhawk.model.sca.util.ModelUtil;
 
 public class CplusplusGenerator extends AbstractCplusplusGenerator {
 
@@ -58,8 +61,13 @@ public class CplusplusGenerator extends AbstractCplusplusGenerator {
 
 	public IFile getDefaultFile(Implementation impl,
 			ImplementationSettings implSettings) {
-		// TODO Auto-generated method stub
-		return null;
+		final IResource resource = ModelUtil.getResource(implSettings);
+		final IProject project = resource.getProject();
+
+		final SoftPkg softpkg = impl.getSoftPkg();
+		final String prefix = softpkg.getName();
+		final String defaultFilename = implSettings.getOutputDir() + File.separator + prefix + ".cpp";
+	    return project.getFile(new Path(defaultFilename));
 	}
 
 	public IStatus validate() {
@@ -73,6 +81,7 @@ public class CplusplusGenerator extends AbstractCplusplusGenerator {
 			String[] generateFiles, List<FileToCRCMap> crcMap)
 			throws CoreException {
 		generator.generate(implSettings, impl, null, null, monitor, generateFiles);
+		project.refreshLocal(IProject.DEPTH_INFINITE, monitor);
 	}
 
 	@Override

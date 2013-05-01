@@ -8,6 +8,7 @@ Bundle-Vendor: REDHAWK
 Require-Bundle: org.eclipse.core.runtime,
  gov.redhawk.ide.codegen;bundle-version="9.2.0",
  gov.redhawk.ide.codegen.jinja;bundle-version="1.0.0",
- gov.redhawk.ide.codegen.cplusplus;bundle-version="6.0.0"
+ gov.redhawk.ide.codegen.cplusplus;bundle-version="6.0.0",
+ gov.redhawk.sca.model;bundle-version="18.0.0"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
