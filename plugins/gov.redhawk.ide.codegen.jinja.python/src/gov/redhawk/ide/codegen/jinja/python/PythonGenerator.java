@@ -1,5 +1,12 @@
 package gov.redhawk.ide.codegen.jinja.python;
 
+import gov.redhawk.ide.codegen.FileToCRCMap;
+import gov.redhawk.ide.codegen.ImplementationSettings;
+import gov.redhawk.ide.codegen.jinja.JinjaGenerator;
+import gov.redhawk.ide.codegen.python.AbstractPythonGenerator;
+import gov.redhawk.ide.codegen.python.PythonGeneratorPlugin;
+import gov.redhawk.model.sca.util.ModelUtil;
+
 import java.io.File;
 import java.io.PrintStream;
 import java.util.HashMap;
@@ -21,18 +28,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Path;
 
-import gov.redhawk.ide.codegen.FileToCRCMap;
-import gov.redhawk.ide.codegen.ImplementationSettings;
-import gov.redhawk.model.sca.util.ModelUtil;
-import gov.redhawk.ide.codegen.jinja.JinjaGenerator;
-import gov.redhawk.ide.codegen.python.AbstractPythonGenerator;
-import gov.redhawk.ide.codegen.python.PythonGeneratorPlugin;
-
 public class PythonGenerator extends AbstractPythonGenerator {
 
 	private final JinjaGenerator generator = new JinjaGenerator();
 
-	public Code getInitialCodeSettings(SoftPkg softPkg,	ImplementationSettings settings, Implementation impl) {
+	@Override
+	public Code getInitialCodeSettings(final SoftPkg softPkg, final ImplementationSettings settings, final Implementation impl) {
 		String outputDir = settings.getOutputDir();
 		if (outputDir != null && !"".equals(outputDir) && outputDir.charAt(0) == '/') {
 			outputDir = outputDir.substring(1);
@@ -58,40 +59,37 @@ public class PythonGenerator extends AbstractPythonGenerator {
 		return true;
 	}
 
-	public IFile getDefaultFile(Implementation impl, ImplementationSettings implSettings) {
+	@Override
+	public IFile getDefaultFile(final Implementation impl, final ImplementationSettings implSettings) {
 		final IResource resource = ModelUtil.getResource(implSettings);
 		final IProject project = resource.getProject();
 
 		final SoftPkg softpkg = impl.getSoftPkg();
 		final String prefix = softpkg.getName();
 		final String defaultFilename = implSettings.getOutputDir() + File.separator + prefix + ".py";
-	    return project.getFile(new Path(defaultFilename));
+		return project.getFile(new Path(defaultFilename));
 	}
 
 	@Override
 	public IStatus validate() {
 		final MultiStatus status = new MultiStatus(PythonGeneratorPlugin.PLUGIN_ID, IStatus.OK, "Validation failed", null);
 		status.add(super.validate());
-		status.add(generator.validate());
+		status.add(this.generator.validate());
 		return status;
 	}
 
 	@Override
-	protected void generateCode(Implementation impl,
-			ImplementationSettings implSettings, IProject project,
-			String componentName, PrintStream out, PrintStream err,
-			IProgressMonitor monitor, String[] generateFiles,
-			List<FileToCRCMap> crcMap) throws CoreException {
-		generator.generate(implSettings, impl, out, err, monitor, generateFiles);
+	protected void generateCode(final Implementation impl, final ImplementationSettings implSettings, final IProject project, final String componentName,
+	        final PrintStream out, final PrintStream err, final IProgressMonitor monitor, final String[] generateFiles, final List<FileToCRCMap> crcMap)
+	        throws CoreException {
+		this.generator.generate(implSettings, impl, out, err, monitor, generateFiles);
 		// Refresh the project so that generated files are picked up.
-		project.refreshLocal(IProject.DEPTH_INFINITE, monitor);
+		project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 	}
 
 	@Override
-	public HashMap<String, Boolean> getGeneratedFiles(
-			ImplementationSettings implSettings, SoftPkg softpkg)
-			throws CoreException {
-		return generator.getGeneratedFiles(implSettings, softpkg);
+	public HashMap<String, Boolean> getGeneratedFiles(final ImplementationSettings implSettings, final SoftPkg softpkg) throws CoreException {
+		return this.generator.getGeneratedFiles(implSettings, softpkg);
 	}
-	
+
 }
