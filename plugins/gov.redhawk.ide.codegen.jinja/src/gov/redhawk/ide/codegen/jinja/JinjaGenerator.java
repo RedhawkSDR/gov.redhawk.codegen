@@ -49,7 +49,7 @@ public class JinjaGenerator {
 
 		return arguments;
 	}
-
+	
 	private String relativePath(final String dir, final String path) {
 		final String prefix = dir + File.separator;
 		if (path.startsWith(prefix)) {
@@ -75,9 +75,18 @@ public class JinjaGenerator {
 
 		final ArrayList<String> arguments = new ArrayList<String>();
 		arguments.add(JinjaGenerator.EXECUTABLE_NAME);
+		
+		// Force overwrite of existing files; we assume that the user has already signed off on this. 
+		arguments.add("-f");
+		
+		// Set base output directory to the project location.
 		arguments.add("-C");
 		arguments.add(project.getLocation().toOSString());
+		
+		// Turn the settings into command-line flags, and the SPD file into the first positional argument.
 		arguments.addAll(settingsToArguments(implSettings, softpkg));
+		
+		// If a file list was specified, add it to the command arguments.
 		if (generateFiles != null) {
 			for (final String fileName : generateFiles) {
 				arguments.add(prependPath(implSettings.getOutputDir(), fileName));
