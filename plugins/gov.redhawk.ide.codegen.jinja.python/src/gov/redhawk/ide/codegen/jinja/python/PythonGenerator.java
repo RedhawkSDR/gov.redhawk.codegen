@@ -83,6 +83,8 @@ public class PythonGenerator extends AbstractPythonGenerator {
 			IProgressMonitor monitor, String[] generateFiles,
 			List<FileToCRCMap> crcMap) throws CoreException {
 		generator.generate(implSettings, impl, out, err, monitor, generateFiles);
+		// Refresh the project so that generated files are picked up.
+		project.refreshLocal(IProject.DEPTH_INFINITE, monitor);
 	}
 
 	@Override
