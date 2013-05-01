@@ -91,6 +91,10 @@ public class JinjaGenerator {
 
 		// If a file list was specified, add it to the command arguments.
 		if (generateFiles != null) {
+			if (generateFiles.length == 0) {
+				// Don't inadvertently regenerate everything!
+				return new Status(IStatus.OK, JinjaGeneratorPlugin.PLUGIN_ID, "Nothing to do");
+			}
 			for (final String fileName : generateFiles) {
 				arguments.add(prependPath(implSettings.getOutputDir(), fileName));
 			}
