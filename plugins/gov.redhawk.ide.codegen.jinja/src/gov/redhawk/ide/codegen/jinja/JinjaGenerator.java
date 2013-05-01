@@ -1,5 +1,6 @@
 package gov.redhawk.ide.codegen.jinja;
 
+import gov.redhawk.ide.RedhawkIdeActivator;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.Property;
 import gov.redhawk.ide.codegen.jinja.utils.InputRedirector;
@@ -25,6 +26,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
 public class JinjaGenerator {
+
+	private static final String EXECUTABLE_NAME = "redhawk-codegen";
 
 	protected List<String> settingsToArguments(final ImplementationSettings implSettings, final SoftPkg softpkg) {
 		final List<String> arguments = new ArrayList<String>();
@@ -71,7 +74,7 @@ public class JinjaGenerator {
 		final SoftPkg softpkg = impl.getSoftPkg();
 
 		final ArrayList<String> arguments = new ArrayList<String>();
-		arguments.add("redhawk-codegen");
+		arguments.add(JinjaGenerator.EXECUTABLE_NAME);
 		arguments.add("-C");
 		arguments.add(project.getLocation().toOSString());
 		arguments.addAll(settingsToArguments(implSettings, softpkg));
@@ -117,7 +120,7 @@ public class JinjaGenerator {
 		final HashMap<String, Boolean> fileList = new HashMap<String, Boolean>();
 
 		final ArrayList<String> arguments = new ArrayList<String>();
-		arguments.add("redhawk-codegen");
+		arguments.add(JinjaGenerator.EXECUTABLE_NAME);
 		arguments.add("-l");
 		arguments.addAll(settingsToArguments(implSettings, softpkg));
 		final String[] command = arguments.toArray(new String[arguments.size()]);
@@ -145,6 +148,13 @@ public class JinjaGenerator {
 	}
 
 	public IStatus validate() {
-		return new Status(IStatus.OK, JinjaGeneratorPlugin.PLUGIN_ID, "Validation ok");
+		final IPath ossiehome = RedhawkIdeActivator.getDefault().getRuntimePath();
+		final File codegen = ossiehome.append("bin").append(JinjaGenerator.EXECUTABLE_NAME).toFile();
+		if (!codegen.exists()) {
+			return new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Code generator '" + JinjaGenerator.EXECUTABLE_NAME + "' not found");
+		} else if (!codegen.canExecute()) {
+			return new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Code generator '" + JinjaGenerator.EXECUTABLE_NAME + "' not executable");
+		}
+		return new Status(IStatus.OK, JinjaGeneratorPlugin.PLUGIN_ID, "Code generator '" + JinjaGenerator.EXECUTABLE_NAME + "' is installed");
 	}
 }
