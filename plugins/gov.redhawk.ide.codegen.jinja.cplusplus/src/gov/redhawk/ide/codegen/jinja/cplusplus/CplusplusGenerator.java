@@ -1,5 +1,11 @@
 package gov.redhawk.ide.codegen.jinja.cplusplus;
 
+import gov.redhawk.ide.codegen.FileToCRCMap;
+import gov.redhawk.ide.codegen.ImplementationSettings;
+import gov.redhawk.ide.codegen.cplusplus.AbstractCplusplusGenerator;
+import gov.redhawk.ide.codegen.jinja.JinjaGenerator;
+import gov.redhawk.model.sca.util.ModelUtil;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
@@ -19,17 +25,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 
-import gov.redhawk.ide.codegen.FileToCRCMap;
-import gov.redhawk.ide.codegen.ImplementationSettings;
-import gov.redhawk.ide.codegen.cplusplus.AbstractCplusplusGenerator;
-import gov.redhawk.ide.codegen.jinja.JinjaGenerator;
-import gov.redhawk.model.sca.util.ModelUtil;
-
 public class CplusplusGenerator extends AbstractCplusplusGenerator {
 
 	private final JinjaGenerator generator = new JinjaGenerator();
 
-	public Code getInitialCodeSettings(SoftPkg softPkg, ImplementationSettings settings, Implementation impl) {
+	@Override
+	public Code getInitialCodeSettings(final SoftPkg softPkg, final ImplementationSettings settings, final Implementation impl) {
 		String outputDir = settings.getOutputDir();
 		if (outputDir == null) {
 			outputDir = "";
@@ -55,39 +56,35 @@ public class CplusplusGenerator extends AbstractCplusplusGenerator {
 		return code;
 	}
 
+	@Override
 	public boolean shouldGenerate() {
 		return true;
 	}
 
-	public IFile getDefaultFile(Implementation impl,
-			ImplementationSettings implSettings) {
+	@Override
+	public IFile getDefaultFile(final Implementation impl, final ImplementationSettings implSettings) {
 		final IResource resource = ModelUtil.getResource(implSettings);
 		final IProject project = resource.getProject();
 
 		final SoftPkg softpkg = impl.getSoftPkg();
 		final String prefix = softpkg.getName();
 		final String defaultFilename = implSettings.getOutputDir() + File.separator + prefix + ".cpp";
-	    return project.getFile(new Path(defaultFilename));
+		return project.getFile(new Path(defaultFilename));
 	}
 
 	public IStatus validate() {
-		return generator.validate();
+		return this.generator.validate();
 	}
 
 	@Override
-	protected void generateCode(Implementation impl,
-			ImplementationSettings implSettings, IProject project,
-			String componentName, IProgressMonitor monitor,
-			String[] generateFiles, List<FileToCRCMap> crcMap)
-			throws CoreException {
-		generator.generate(implSettings, impl, null, null, monitor, generateFiles);
-		project.refreshLocal(IProject.DEPTH_INFINITE, monitor);
+	protected void generateCode(final Implementation impl, final ImplementationSettings implSettings, final IProject project, final String componentName,
+	        final IProgressMonitor monitor, final String[] generateFiles, final List<FileToCRCMap> crcMap) throws CoreException {
+		this.generator.generate(implSettings, impl, null, null, monitor, generateFiles);
+		project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 	}
 
 	@Override
-	public HashMap<String, Boolean> getGeneratedFiles(ImplementationSettings implSettings,
-			SoftPkg softpkg)
-			throws CoreException {
-		return generator.getGeneratedFiles(implSettings, softpkg);
+	public HashMap<String, Boolean> getGeneratedFiles(final ImplementationSettings implSettings, final SoftPkg softpkg) throws CoreException {
+		return this.generator.getGeneratedFiles(implSettings, softpkg);
 	}
 }

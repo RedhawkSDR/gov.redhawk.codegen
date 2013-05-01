@@ -6,18 +6,19 @@ import org.osgi.framework.BundleContext;
 public class CplusplusGeneratorPlugin extends Plugin {
 
 	public static final String PLUGIN_ID = "gov.redhawk.ide.codegen.jinja.cplusplus";
-	
+
 	private static BundleContext context;
 
 	static BundleContext getContext() {
-		return context;
+		return CplusplusGeneratorPlugin.context;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
 	 */
-	public void start(BundleContext bundleContext) throws Exception {
+	@Override
+	public void start(final BundleContext bundleContext) throws Exception {
 		CplusplusGeneratorPlugin.context = bundleContext;
 	}
 
@@ -25,7 +26,8 @@ public class CplusplusGeneratorPlugin extends Plugin {
 	 * (non-Javadoc)
 	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
 	 */
-	public void stop(BundleContext bundleContext) throws Exception {
+	@Override
+	public void stop(final BundleContext bundleContext) throws Exception {
 		CplusplusGeneratorPlugin.context = null;
 	}
 
