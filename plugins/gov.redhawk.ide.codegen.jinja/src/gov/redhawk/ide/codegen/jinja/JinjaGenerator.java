@@ -29,13 +29,8 @@ public class JinjaGenerator {
 
 	private static final String EXECUTABLE_NAME = "redhawk-codegen";
 
-	protected List<String> settingsToArguments(final ImplementationSettings implSettings, final SoftPkg softpkg) {
+	private List<String> settingsToOptions(final ImplementationSettings implSettings) {
 		final List<String> arguments = new ArrayList<String>();
-		final IResource resource = ModelUtil.getResource(implSettings);
-		final IProject project = resource.getProject();
-		final IPath workspaceRoot = project.getWorkspace().getRoot().getLocation();
-		final String spdFile = workspaceRoot.toOSString() + softpkg.eResource().getURI().toPlatformString(true);
-
 		arguments.add("--impl");
 		arguments.add(implSettings.getId());
 		arguments.add("--impldir");
@@ -45,11 +40,17 @@ public class JinjaGenerator {
 		for (final Property property : implSettings.getProperties()) {
 			arguments.add("-B" + property.getId() + "=" + property.getValue());
 		}
-		arguments.add(spdFile);
 
 		return arguments;
 	}
-	
+
+	private String getSpdFile(final SoftPkg softpkg) {
+		final IResource resource = ModelUtil.getResource(softpkg);
+		final IProject project = resource.getProject();
+		final IPath workspaceRoot = project.getWorkspace().getRoot().getLocation();
+		return workspaceRoot.toOSString() + softpkg.eResource().getURI().toPlatformString(true);
+	}
+
 	private String relativePath(final String dir, final String path) {
 		final String prefix = dir + File.separator;
 		if (path.startsWith(prefix)) {
@@ -71,21 +72,23 @@ public class JinjaGenerator {
 	        final IProgressMonitor monitor, final String[] generateFiles) {
 		final IResource resource = ModelUtil.getResource(implSettings);
 		final IProject project = resource.getProject();
-		final SoftPkg softpkg = impl.getSoftPkg();
 
 		final ArrayList<String> arguments = new ArrayList<String>();
 		arguments.add(JinjaGenerator.EXECUTABLE_NAME);
-		
+
 		// Force overwrite of existing files; we assume that the user has already signed off on this. 
 		arguments.add("-f");
-		
+
 		// Set base output directory to the project location.
 		arguments.add("-C");
 		arguments.add(project.getLocation().toOSString());
-		
-		// Turn the settings into command-line flags, and the SPD file into the first positional argument.
-		arguments.addAll(settingsToArguments(implSettings, softpkg));
-		
+
+		// Turn the settings into command-line flags.
+		arguments.addAll(settingsToOptions(implSettings));
+
+		// The SPD file is the first positional argument.
+		arguments.add(getSpdFile(impl.getSoftPkg()));
+
 		// If a file list was specified, add it to the command arguments.
 		if (generateFiles != null) {
 			for (final String fileName : generateFiles) {
@@ -130,8 +133,16 @@ public class JinjaGenerator {
 
 		final ArrayList<String> arguments = new ArrayList<String>();
 		arguments.add(JinjaGenerator.EXECUTABLE_NAME);
+
+		// List the files that would be generated.
 		arguments.add("-l");
-		arguments.addAll(settingsToArguments(implSettings, softpkg));
+
+		// Turn the settings into command-line flags.
+		arguments.addAll(settingsToOptions(implSettings));
+
+		// The SPD file is the first positional argument.
+		arguments.add(getSpdFile(softpkg));
+
 		final String[] command = arguments.toArray(new String[arguments.size()]);
 
 		try {
