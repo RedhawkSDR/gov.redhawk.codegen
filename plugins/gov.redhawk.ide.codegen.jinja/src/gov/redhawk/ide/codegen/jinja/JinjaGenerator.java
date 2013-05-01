@@ -113,7 +113,7 @@ public class JinjaGenerator {
 		return new Status(IStatus.OK, JinjaGeneratorPlugin.PLUGIN_ID, "Generation complete");
 	}
 
-	public HashMap<String, Boolean> getGeneratedFiles(final ImplementationSettings implSettings, final SoftPkg softpkg) throws CoreException {
+	public HashMap<String, Boolean> list(final ImplementationSettings implSettings, final SoftPkg softpkg) throws CoreException {
 		final HashMap<String, Boolean> fileList = new HashMap<String, Boolean>();
 
 		final ArrayList<String> arguments = new ArrayList<String>();

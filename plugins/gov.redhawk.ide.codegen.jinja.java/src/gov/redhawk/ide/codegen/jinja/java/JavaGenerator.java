@@ -90,6 +90,6 @@ public class JavaGenerator extends AbstractJavaGenerator {
 
 	@Override
 	public HashMap<String, Boolean> getGeneratedFiles(final ImplementationSettings implSettings, final SoftPkg softpkg) throws CoreException {
-		return this.generator.getGeneratedFiles(implSettings, softpkg);
+		return this.generator.list(implSettings, softpkg);
 	}
 }
