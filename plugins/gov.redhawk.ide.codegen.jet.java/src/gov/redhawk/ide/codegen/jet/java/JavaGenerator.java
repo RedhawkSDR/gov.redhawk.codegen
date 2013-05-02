@@ -17,7 +17,7 @@ import gov.redhawk.ide.codegen.IScaComponentCodegenTemplate;
 import gov.redhawk.ide.codegen.ITemplateDesc;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.RedhawkCodegenActivator;
-import gov.redhawk.ide.codegen.java.AbstractJavaGenerator;
+import gov.redhawk.ide.codegen.java.AbstractJavaCodeGenerator;
 import gov.redhawk.ide.codegen.java.JavaGeneratorUtils;
 import gov.redhawk.ide.idl.IdlJavaUtil;
 import gov.redhawk.ide.preferences.RedhawkIdePreferenceConstants;
@@ -27,6 +27,7 @@ import gov.redhawk.model.sca.util.ModelUtil;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -61,7 +62,7 @@ import org.eclipse.emf.codegen.merge.java.JMerger;
 import org.eclipse.emf.codegen.merge.java.facade.ast.ASTFacadeHelper;
 import org.eclipse.emf.common.util.EList;
 
-public class JavaGenerator extends AbstractJavaGenerator {
+public class JavaGenerator extends AbstractJavaCodeGenerator {
 	/**
 	 * @since 6.0
 	 */
@@ -84,7 +85,7 @@ public class JavaGenerator extends AbstractJavaGenerator {
 	}
 
 	public JavaGenerator(final ImplementationSettings implSettings, final Implementation impl, final IProgressMonitor monitor) {
-		super(implSettings, impl, monitor);
+		super();
 
 		// Initialize the JMerge functionality
 		final JControlModel controlModel = new JControlModel();
@@ -104,7 +105,7 @@ public class JavaGenerator extends AbstractJavaGenerator {
 	 * @since 4.0
 	 */
 	@Override
-	protected void generateCode(final Implementation impl, final ImplementationSettings implSettings, final IProject project, final String componentName,
+	protected void generateCode(final Implementation impl, final ImplementationSettings implSettings, final IProject project, final String componentName, PrintStream out, PrintStream err,
 	        final IProgressMonitor monitor, String[] generateFiles, final List<FileToCRCMap> crcMap) throws CoreException {
 		final ITemplateDesc template = CodegenUtil.getTemplate(implSettings.getTemplate(), implSettings.getGeneratorId());
 		final JavaTemplateParameter templ = new JavaTemplateParameter(impl, implSettings, getPackage(impl, implSettings));
