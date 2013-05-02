@@ -69,8 +69,8 @@ public class JinjaGenerator {
 		}
 	}
 
-	public IStatus generate(final ImplementationSettings implSettings, final Implementation impl, final PrintStream out, final PrintStream err,
-	        final IProgressMonitor monitor, final String[] generateFiles) {
+	public void generate(final ImplementationSettings implSettings, final Implementation impl, final PrintStream out, final PrintStream err,
+	        final IProgressMonitor monitor, final String[] generateFiles) throws CoreException {
 		final IResource resource = ModelUtil.getResource(implSettings);
 		final IProject project = resource.getProject();
 
@@ -94,7 +94,7 @@ public class JinjaGenerator {
 		if (generateFiles != null) {
 			if (generateFiles.length == 0) {
 				// Don't inadvertently regenerate everything!
-				return new Status(IStatus.OK, JinjaGeneratorPlugin.PLUGIN_ID, "Nothing to do");
+				return;
 			}
 			for (final String fileName : generateFiles) {
 				arguments.add(prependPath(implSettings.getOutputDir(), fileName));
@@ -114,8 +114,8 @@ public class JinjaGenerator {
 		Process process = null;
 		try {
 			process = java.lang.Runtime.getRuntime().exec(command);
-		} catch (final IOException ex) {
-			return new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Unable to run generation");
+		} catch (final IOException e) {
+			throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Exception running '" + JinjaGenerator.EXECUTABLE_NAME + "'", e));
 		}
 
 		// In order to poll both output (with the confusing name "getInputStream") and error,
@@ -136,8 +136,8 @@ public class JinjaGenerator {
 			// This is highly unlikely to occur, but log it just in case.
 			JinjaGeneratorPlugin.logError("Interrupted waiting for standard error", e);
 		}
-		
-		return new Status(IStatus.OK, JinjaGeneratorPlugin.PLUGIN_ID, "Generation complete");
+
+		return;
 	}
 
 	public HashMap<String, Boolean> list(final ImplementationSettings implSettings, final SoftPkg softpkg) throws CoreException {
@@ -183,7 +183,8 @@ public class JinjaGenerator {
 				fileList.put(fileName, !changed);
 			}
 		} catch (final IOException e) {
-			throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Exception reading standard out from '" + JinjaGenerator.EXECUTABLE_NAME + "'", e));
+			throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Exception reading standard out from '"
+			        + JinjaGenerator.EXECUTABLE_NAME + "'", e));
 		} finally {
 			try {
 				reader.close();
