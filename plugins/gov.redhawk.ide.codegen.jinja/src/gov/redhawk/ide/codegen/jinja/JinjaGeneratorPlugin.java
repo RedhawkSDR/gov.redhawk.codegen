@@ -1,34 +1,46 @@
 package gov.redhawk.ide.codegen.jinja;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.core.runtime.Status;
 import org.osgi.framework.BundleContext;
 
 public class JinjaGeneratorPlugin extends Plugin {
 
 	public static final String PLUGIN_ID = "gov.redhawk.ide.codegen.jinja";
 
-	private static BundleContext context;
+	private static JinjaGeneratorPlugin plugin;
 
-	static BundleContext getContext() {
-		return JinjaGeneratorPlugin.context;
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
+	 */
+	@Override
+	public void start(final BundleContext context) throws Exception {
+		super.start(context);
+		JinjaGeneratorPlugin.plugin = this;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
+	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
 	@Override
-	public void start(final BundleContext bundleContext) throws Exception {
-		JinjaGeneratorPlugin.context = bundleContext;
+	public void stop(final BundleContext context) throws Exception {
+		JinjaGeneratorPlugin.plugin = null;
+		super.stop(context);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
+	/**
+	 * Returns the shared instance
+	 *
+	 * @return the shared instance
 	 */
-	@Override
-	public void stop(final BundleContext bundleContext) throws Exception {
-		JinjaGeneratorPlugin.context = null;
+	public static JinjaGeneratorPlugin getDefault() {
+		return JinjaGeneratorPlugin.plugin;
 	}
 
+	public static final void logError(final String msg, final Throwable e) {
+		JinjaGeneratorPlugin.getDefault().getLog().log(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, msg, e));
+	}
 }
