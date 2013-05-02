@@ -119,6 +119,13 @@
         <module>../plugins/gov.redhawk.ide.codegen.jet.java.ui</module>
         <module>../plugins/gov.redhawk.ide.codegen.jet.python</module>
         <module>../plugins/gov.redhawk.ide.codegen.jet.python.ui</module>
+        <module>../plugins/gov.redhawk.ide.codegen.jinja</module>
+        <module>../plugins/gov.redhawk.ide.codegen.jinja.cplusplus</module>
+        <module>../plugins/gov.redhawk.ide.codegen.jinja.cplusplus.ui</module>
+        <module>../plugins/gov.redhawk.ide.codegen.jinja.java</module>
+        <module>../plugins/gov.redhawk.ide.codegen.jinja.java.ui</module>
+        <module>../plugins/gov.redhawk.ide.codegen.jinja.python</module>
+        <module>../plugins/gov.redhawk.ide.codegen.jinja.python.ui</module>
         <module>../plugins/gov.redhawk.ide.codegen.manual</module>
         <module>../plugins/gov.redhawk.ide.codegen.python</module>
         <module>../plugins/gov.redhawk.ide.cplusplus.utils</module>
