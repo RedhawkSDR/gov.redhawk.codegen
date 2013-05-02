@@ -2,11 +2,12 @@ package gov.redhawk.ide.codegen.jinja.cplusplus;
 
 import gov.redhawk.ide.codegen.FileToCRCMap;
 import gov.redhawk.ide.codegen.ImplementationSettings;
-import gov.redhawk.ide.codegen.cplusplus.AbstractCplusplusGenerator;
+import gov.redhawk.ide.codegen.cplusplus.AbstractCplusplusCodeGenerator;
 import gov.redhawk.ide.codegen.jinja.JinjaGenerator;
 import gov.redhawk.model.sca.util.ModelUtil;
 
 import java.io.File;
+import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.List;
 
@@ -25,7 +26,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 
-public class CplusplusGenerator extends AbstractCplusplusGenerator {
+public class CplusplusGenerator extends AbstractCplusplusCodeGenerator {
 
 	private final JinjaGenerator generator = new JinjaGenerator();
 
@@ -78,8 +79,9 @@ public class CplusplusGenerator extends AbstractCplusplusGenerator {
 
 	@Override
 	protected void generateCode(final Implementation impl, final ImplementationSettings implSettings, final IProject project, final String componentName,
-	        final IProgressMonitor monitor, final String[] generateFiles, final List<FileToCRCMap> crcMap) throws CoreException {
-		this.generator.generate(implSettings, impl, null, null, monitor, generateFiles);
+	        final PrintStream out, final PrintStream err, final IProgressMonitor monitor, final String[] generateFiles, final List<FileToCRCMap> crcMap)
+	        throws CoreException {
+		this.generator.generate(implSettings, impl, out, err, monitor, generateFiles);
 		project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 	}
 

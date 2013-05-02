@@ -15,7 +15,7 @@ import gov.redhawk.ide.codegen.FileToCRCMap;
 import gov.redhawk.ide.codegen.IScaComponentCodegenTemplate;
 import gov.redhawk.ide.codegen.ITemplateDesc;
 import gov.redhawk.ide.codegen.ImplementationSettings;
-import gov.redhawk.ide.codegen.cplusplus.AbstractCplusplusGenerator;
+import gov.redhawk.ide.codegen.cplusplus.AbstractCplusplusCodeGenerator;
 import gov.redhawk.ide.codegen.jet.TemplateParameter;
 import gov.redhawk.ide.codegen.util.CodegenFileHelper;
 import gov.redhawk.ide.idl.IdlUtil;
@@ -24,6 +24,7 @@ import gov.redhawk.ide.util.ResourceUtils;
 import gov.redhawk.model.sca.util.ModelUtil;
 
 import java.io.File;
+import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,7 +51,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 
-public class CplusplusGenerator extends AbstractCplusplusGenerator {
+public class CplusplusGenerator extends AbstractCplusplusCodeGenerator {
 
 	/**
 	 * @since 9.0
@@ -63,7 +64,7 @@ public class CplusplusGenerator extends AbstractCplusplusGenerator {
 
 	@Override
 	protected void generateCode(final Implementation impl, final ImplementationSettings implSettings, final IProject project, final String componentName,
-	        final IProgressMonitor monitor, String[] generateFiles, final List<FileToCRCMap> crcMap) throws CoreException {
+	        final PrintStream out, final PrintStream err, final IProgressMonitor monitor, String[] generateFiles, final List<FileToCRCMap> crcMap) throws CoreException {
 		final int CREATE_DIR_WORK = 1;
 		final int FILE_GEN_WORK = 98;
 		final int ADD_BUILDER_WORK = 1;
