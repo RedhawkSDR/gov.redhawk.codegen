@@ -8,6 +8,7 @@ import gov.redhawk.model.sca.util.ModelUtil;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -149,11 +150,17 @@ public class JinjaGenerator {
 
 		final String[] command = arguments.toArray(new String[arguments.size()]);
 
+		Process process = null;
 		try {
-			final java.lang.Process process = java.lang.Runtime.getRuntime().exec(command);
-			final InputStreamReader instream = new InputStreamReader(process.getInputStream());
-			final BufferedReader reader = new BufferedReader(instream);
-			String fileName;
+			process = java.lang.Runtime.getRuntime().exec(command);
+		} catch (final IOException e) {
+			return null;
+		}
+
+		final InputStreamReader instream = new InputStreamReader(process.getInputStream());
+		final BufferedReader reader = new BufferedReader(instream);
+		String fileName;
+		try {
 			while ((fileName = reader.readLine()) != null) {
 				// Adjust the path of the output to be relative to the output directory.
 				fileName = relativePath(implSettings.getOutputDir(), fileName);
@@ -165,8 +172,14 @@ public class JinjaGenerator {
 				}
 				fileList.put(fileName, !changed);
 			}
-		} catch (final Exception e) {
+		} catch (final IOException e) {
 			return null;
+		} finally {
+			try {
+				reader.close();
+			} catch (final IOException e) {
+				// Ignore failure
+			}
 		}
 		return fileList;
 	}
