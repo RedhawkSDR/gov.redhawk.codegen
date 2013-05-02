@@ -102,34 +102,41 @@ public class JinjaGenerator {
 		}
 		final String[] command = arguments.toArray(new String[arguments.size()]);
 
-		try {
-			final java.lang.Process process = java.lang.Runtime.getRuntime().exec(command);
-			Thread outThread = null;
-			Thread errThread = null;
-			if (out != null) {
-				// Print the command to the console.
-				for (final String arg : command) {
-					out.print(arg + " ");
-				}
-				out.println();
-
-				outThread = new Thread(new InputRedirector(process.getInputStream(), out));
-				outThread.start();
-			}
-			if (err != null) {
-				errThread = new Thread(new InputRedirector(process.getErrorStream(), err));
-				errThread.start();
-			}
-			process.waitFor();
-			if (outThread != null) {
-				outThread.join();
-			}
-			if (errThread != null) {
-				errThread.join();
-			}
-		} catch (final Exception e) {
-			return new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Generation failed");
+		// Print the command to the console.
+		for (final String arg : command) {
+			out.print(arg + " ");
 		}
+		out.println();
+
+		// Launch the code generator.
+		// NB: The process has implicitly exited (and been cleaned up by the JVM) when
+		//     standard out/error are closed, so there is no need to explicitly wait for it.
+		Process process = null;
+		try {
+			process = java.lang.Runtime.getRuntime().exec(command);
+		} catch (final IOException ex) {
+			return new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Unable to run generation");
+		}
+
+		// In order to poll both output (with the confusing name "getInputStream") and error,
+		// create a thread for each, redirecting to the respective PrintStream objects.
+		final Thread outThread = new Thread(new InputRedirector(process.getInputStream(), out));
+		final Thread errThread = new Thread(new InputRedirector(process.getErrorStream(), err));
+		outThread.start();
+		errThread.start();
+		try {
+			outThread.join();
+		} catch (final InterruptedException e) {
+			// This is highly unlikely to occur, but log it just in case.
+			JinjaGeneratorPlugin.logError("Interrupted waiting for standard out", e);
+		}
+		try {
+			errThread.join();
+		} catch (final InterruptedException e) {
+			// This is highly unlikely to occur, but log it just in case.
+			JinjaGeneratorPlugin.logError("Interrupted waiting for standard error", e);
+		}
+		
 		return new Status(IStatus.OK, JinjaGeneratorPlugin.PLUGIN_ID, "Generation complete");
 	}
 
@@ -150,17 +157,20 @@ public class JinjaGenerator {
 
 		final String[] command = arguments.toArray(new String[arguments.size()]);
 
+		// Launch the code generator.
+		// NB: The process has implicitly exited (and been cleaned up by the JVM) when
+		//     standard out/error are closed, so there is no need to explicitly wait for it.
 		Process process = null;
 		try {
 			process = java.lang.Runtime.getRuntime().exec(command);
 		} catch (final IOException e) {
-			return null;
+			throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Exception running '" + JinjaGenerator.EXECUTABLE_NAME + "'", e));
 		}
 
 		final InputStreamReader instream = new InputStreamReader(process.getInputStream());
 		final BufferedReader reader = new BufferedReader(instream);
-		String fileName;
 		try {
+			String fileName;
 			while ((fileName = reader.readLine()) != null) {
 				// Adjust the path of the output to be relative to the output directory.
 				fileName = relativePath(implSettings.getOutputDir(), fileName);
@@ -173,12 +183,13 @@ public class JinjaGenerator {
 				fileList.put(fileName, !changed);
 			}
 		} catch (final IOException e) {
-			return null;
+			throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Exception reading standard out from '" + JinjaGenerator.EXECUTABLE_NAME + "'", e));
 		} finally {
 			try {
 				reader.close();
 			} catch (final IOException e) {
-				// Ignore failure
+				// This is highly unlikely to occur, but log it just in case.
+				JinjaGeneratorPlugin.logError("Exception closing standard out", e);
 			}
 		}
 		return fileList;
