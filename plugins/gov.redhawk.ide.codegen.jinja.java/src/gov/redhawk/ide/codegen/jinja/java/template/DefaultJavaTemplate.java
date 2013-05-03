@@ -12,7 +12,7 @@ public class DefaultJavaTemplate extends JinjaTemplate {
 	@Override
     public String getDefaultFilename(SoftPkg softPkg, ImplementationSettings implSettings, String srcDir) {
 		final String prefix = softPkg.getName();
-		final String outputDir = srcDir + File.separator + "src";
+		final String outputDir = srcDir + "src" + File.separator;
 		String packagePath = "";
 		for (final Property property : implSettings.getProperties()) {
 			if ("java_package".equals(property.getId())) {
@@ -20,7 +20,7 @@ public class DefaultJavaTemplate extends JinjaTemplate {
 				break;
 			}
 		}
-		return outputDir + File.separator + packagePath + prefix + ".java";
+		return outputDir + packagePath + prefix + ".java";
 	}
 
 }

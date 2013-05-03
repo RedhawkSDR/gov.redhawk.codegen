@@ -382,4 +382,10 @@ public class JavaGenerator extends AbstractJavaCodeGenerator {
 		return IdlJavaUtil.validate();
 	}
 
+	@Override
+	protected String getSourceDir(Implementation impl, ImplementationSettings implSettings) {
+		final String packagePath = getPackage(impl, implSettings).replace('.', File.separatorChar);
+		return super.getSourceDir(impl, implSettings) + "src" + File.separator + packagePath + File.separator;
+	}
+
 }
