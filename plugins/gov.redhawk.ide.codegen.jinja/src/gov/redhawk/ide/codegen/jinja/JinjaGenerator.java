@@ -136,8 +136,6 @@ public class JinjaGenerator {
 			// This is highly unlikely to occur, but log it just in case.
 			JinjaGeneratorPlugin.logError("Interrupted waiting for standard error", e);
 		}
-
-		return;
 	}
 
 	public HashMap<String, Boolean> list(final ImplementationSettings implSettings, final SoftPkg softpkg) throws CoreException {
