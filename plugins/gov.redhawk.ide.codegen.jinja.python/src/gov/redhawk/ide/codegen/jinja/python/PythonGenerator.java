@@ -5,9 +5,7 @@ import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.jinja.JinjaGenerator;
 import gov.redhawk.ide.codegen.python.AbstractPythonGenerator;
 import gov.redhawk.ide.codegen.python.PythonGeneratorPlugin;
-import gov.redhawk.model.sca.util.ModelUtil;
 
-import java.io.File;
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.List;
@@ -19,14 +17,12 @@ import mil.jpeojtrs.sca.spd.LocalFile;
 import mil.jpeojtrs.sca.spd.SoftPkg;
 import mil.jpeojtrs.sca.spd.SpdFactory;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.Path;
 
 public class PythonGenerator extends AbstractPythonGenerator {
 
@@ -57,17 +53,6 @@ public class PythonGenerator extends AbstractPythonGenerator {
 	@Override
 	public boolean shouldGenerate() {
 		return true;
-	}
-
-	@Override
-	public IFile getDefaultFile(final Implementation impl, final ImplementationSettings implSettings) {
-		final IResource resource = ModelUtil.getResource(implSettings);
-		final IProject project = resource.getProject();
-
-		final SoftPkg softpkg = impl.getSoftPkg();
-		final String prefix = softpkg.getName();
-		final String defaultFilename = implSettings.getOutputDir() + File.separator + prefix + ".py";
-		return project.getFile(new Path(defaultFilename));
 	}
 
 	@Override

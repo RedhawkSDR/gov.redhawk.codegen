@@ -11,4 +11,5 @@ Require-Bundle: org.eclipse.core.runtime,
  gov.redhawk.sca.model;bundle-version="18.0.0"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
-Export-Package: gov.redhawk.ide.codegen.jinja
+Export-Package: gov.redhawk.ide.codegen.jinja,
+ gov.redhawk.ide.codegen.jinja.template

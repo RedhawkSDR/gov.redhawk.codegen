@@ -4,7 +4,6 @@ import gov.redhawk.ide.codegen.FileToCRCMap;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.cplusplus.AbstractCplusplusCodeGenerator;
 import gov.redhawk.ide.codegen.jinja.JinjaGenerator;
-import gov.redhawk.model.sca.util.ModelUtil;
 
 import java.io.File;
 import java.io.PrintStream;
@@ -18,13 +17,11 @@ import mil.jpeojtrs.sca.spd.LocalFile;
 import mil.jpeojtrs.sca.spd.SoftPkg;
 import mil.jpeojtrs.sca.spd.SpdFactory;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 
 public class CplusplusGenerator extends AbstractCplusplusCodeGenerator {
 
@@ -60,17 +57,6 @@ public class CplusplusGenerator extends AbstractCplusplusCodeGenerator {
 	@Override
 	public boolean shouldGenerate() {
 		return true;
-	}
-
-	@Override
-	public IFile getDefaultFile(final Implementation impl, final ImplementationSettings implSettings) {
-		final IResource resource = ModelUtil.getResource(implSettings);
-		final IProject project = resource.getProject();
-
-		final SoftPkg softpkg = impl.getSoftPkg();
-		final String prefix = softpkg.getName();
-		final String defaultFilename = implSettings.getOutputDir() + File.separator + prefix + ".cpp";
-		return project.getFile(new Path(defaultFilename));
 	}
 
 	public IStatus validate() {

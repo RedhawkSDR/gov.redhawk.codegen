@@ -2,10 +2,8 @@ package gov.redhawk.ide.codegen.jinja.java;
 
 import gov.redhawk.ide.codegen.FileToCRCMap;
 import gov.redhawk.ide.codegen.ImplementationSettings;
-import gov.redhawk.ide.codegen.Property;
 import gov.redhawk.ide.codegen.java.AbstractJavaCodeGenerator;
 import gov.redhawk.ide.codegen.jinja.JinjaGenerator;
-import gov.redhawk.model.sca.util.ModelUtil;
 
 import java.io.File;
 import java.io.PrintStream;
@@ -19,13 +17,11 @@ import mil.jpeojtrs.sca.spd.LocalFile;
 import mil.jpeojtrs.sca.spd.SoftPkg;
 import mil.jpeojtrs.sca.spd.SpdFactory;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 
 public class JavaGenerator extends AbstractJavaCodeGenerator {
 
@@ -52,25 +48,6 @@ public class JavaGenerator extends AbstractJavaCodeGenerator {
 		code.setType(CodeFileType.EXECUTABLE);
 
 		return code;
-	}
-
-	@Override
-	public IFile getDefaultFile(final Implementation impl, final ImplementationSettings implSettings) {
-		final IResource resource = ModelUtil.getResource(implSettings);
-		final IProject project = resource.getProject();
-
-		final SoftPkg softpkg = impl.getSoftPkg();
-		final String prefix = softpkg.getName();
-		final String outputDir = implSettings.getOutputDir() + File.separator + "src";
-		String packagePath = "";
-		for (final Property property : implSettings.getProperties()) {
-			if ("java_package".equals(property.getId())) {
-				packagePath = property.getValue().replace('.', File.separatorChar) + File.separator;
-				break;
-			}
-		}
-		final String defaultFilename = outputDir + File.separator + packagePath + prefix + ".java";
-		return project.getFile(new Path(defaultFilename));
 	}
 
 	public IStatus validate() {

@@ -13,7 +13,6 @@ package gov.redhawk.ide.codegen.jet.python;
 import gov.redhawk.ide.RedhawkIdeActivator;
 import gov.redhawk.ide.codegen.CodegenUtil;
 import gov.redhawk.ide.codegen.FileToCRCMap;
-import gov.redhawk.ide.codegen.IScaComponentCodegenTemplate;
 import gov.redhawk.ide.codegen.ITemplateDesc;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.jet.TemplateParameter;
@@ -242,22 +241,6 @@ public class PythonGenerator extends AbstractPythonGenerator {
 	@Override
 	public boolean shouldGenerate() {
 		return true;
-	}
-
-	@Override
-	public IFile getDefaultFile(final Implementation impl, final ImplementationSettings implSettings) {
-		final ITemplateDesc template = CodegenUtil.getTemplate(implSettings.getTemplate(), implSettings.getGeneratorId());
-		IFile file = null;
-
-		try {
-			final IScaComponentCodegenTemplate temp = template.getTemplate();
-			final String srcDir = implSettings.getOutputDir() + "/";
-			file = super.getDefaultFile(impl, implSettings, temp.getDefaultFilename((SoftPkg) impl.eContainer(), implSettings, srcDir));
-		} catch (final CoreException c) {
-			// PASS
-		}
-
-		return file;
 	}
 
 	/**
