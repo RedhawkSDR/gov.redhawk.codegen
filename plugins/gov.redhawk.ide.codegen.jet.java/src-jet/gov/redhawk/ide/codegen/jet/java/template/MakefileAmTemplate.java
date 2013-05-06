@@ -50,7 +50,7 @@ public class MakefileAmTemplate
   protected final String TEXT_5 = "Interfaces.jar";
   protected final String TEXT_6 = " -d bin $(";
   protected final String TEXT_7 = "_jar_SOURCES)" + NL + "\t$(JAR) cf ./";
-  protected final String TEXT_8 = ".jar -C bin ." + NL + "" + NL + "clean-local:" + NL + "\trm -rf bin" + NL + "" + NL + "ossieName = ";
+  protected final String TEXT_8 = ".jar -C bin ." + NL + "" + NL + "clean-local:" + NL + "\trm -rf bin" + NL + "" + NL + "distclean-local:" + NL + "\trm -f config.*" + NL + "\trm -rf autom4te.cache" + NL + "\trm -f acinclude.m4" + NL + "\trm -f aclocal.m4" + NL + "\trm -f configure" + NL + "\trm -f depcomp" + NL + "\trm -f install-sh" + NL + "\trm -f ltmain.sh" + NL + "\trm -f Makefile.in" + NL + "\trm -f missing" + NL + "\trm -rf .deps" + NL + "" + NL + "ossieName = ";
   protected final String TEXT_9 = NL + "bindir = $(prefix)/";
   protected final String TEXT_10 = "/";
   protected final String TEXT_11 = "/";
