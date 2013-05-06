@@ -70,5 +70,14 @@
          </property>
       </template>
    </extension>
+   <extension
+         point="gov.redhawk.ide.debug.launchConfigurationFactories">
+      <launchConfigurationFactory
+            codegenref="gov.redhawk.ide.codegen.jinja.java.JavaGenerator"
+            factory="gov.redhawk.ide.codegen.jet.java.JavaLaunchConfigurationFactory"
+            id="gov.redhawk.ide.codegen.jinja.java.launchConfigurationFactory"
+            launchConfigType="gov.redhawk.ide.codegen.jet.java.launching.localJavaComponent">
+      </launchConfigurationFactory>
+   </extension>
 
 </plugin>

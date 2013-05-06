@@ -60,5 +60,14 @@
          </componenttype>
       </template>
    </extension>
+   <extension
+         point="gov.redhawk.ide.debug.launchConfigurationFactories">
+      <launchConfigurationFactory
+            codegenref="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusGenerator"
+            factory="gov.redhawk.ide.codegen.jet.cplusplus.CppLaunchConfigurationFactory"
+            id="gov.redhawk.ide.codegen.jinja.cplusplus.launchConfigurationFactory"
+            launchConfigType="gov.redhawk.ide.codegen.jet.cplusplus.launchComponentApplication">
+      </launchConfigurationFactory>
+   </extension>
 
 </plugin>
