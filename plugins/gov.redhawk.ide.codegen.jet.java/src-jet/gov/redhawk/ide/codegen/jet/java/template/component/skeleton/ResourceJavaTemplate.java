@@ -187,7 +187,7 @@ public class ResourceJavaTemplate
         Interface iface = intMap.get(p.getRepID());
         for (Operation op : IdlJavaUtil.getOperations(iface)) {
             if ("pushPacket".equals(IdlJavaUtil.getOpName(op))) {
-                String type = IdlJavaUtil.getParams(op)[0].paramTypeSpec.getJavaTypeName();
+                String type = IdlJavaUtil.getParams(op)[0].paramTypeSpec.typeName();
 
     stringBuffer.append(TEXT_10);
     stringBuffer.append(type);
@@ -208,7 +208,7 @@ public class ResourceJavaTemplate
         Interface iface = intMap.get(p.getRepID());
         for (Operation op : IdlJavaUtil.getOperations(iface)) {
             if ("pushPacket".equals(IdlJavaUtil.getOpName(op))) {
-                String type = IdlJavaUtil.getParams(op)[0].paramTypeSpec.getJavaTypeName();
+                String type = IdlJavaUtil.getParams(op)[0].paramTypeSpec.typeName();
                 String additional = type.contains("[]") ? "[0]" : "()";
 
     stringBuffer.append(TEXT_15);
@@ -230,7 +230,7 @@ public class ResourceJavaTemplate
             Interface iface = intMap.get(p.getRepID());
             for (Operation op : IdlJavaUtil.getOperations(iface)) {
                 if ("pushPacket".equals(IdlJavaUtil.getOpName(op))) {
-                    String type = IdlJavaUtil.getParams(op)[0].paramTypeSpec.getJavaTypeName();
+                    String type = IdlJavaUtil.getParams(op)[0].paramTypeSpec.typeName();
 
     stringBuffer.append(TEXT_19);
     stringBuffer.append(type);
