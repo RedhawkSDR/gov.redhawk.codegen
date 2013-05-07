@@ -2,7 +2,6 @@ package gov.redhawk.ide.codegen.jinja;
 
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.Property;
-import gov.redhawk.ide.codegen.jinja.ui.JinjaUiPlugin;
 import gov.redhawk.ide.codegen.jinja.utils.InputRedirector;
 import gov.redhawk.model.sca.util.ModelUtil;
 
@@ -205,6 +204,6 @@ public class JinjaGenerator {
 	}
 
 	private File getCodegenFile() {
-		return JinjaUiPlugin.getDefault().getCodegenPath().toFile();
+		return JinjaGeneratorPlugin.getDefault().getCodegenPath().toFile();
 	}
 }
