@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="gov.redhawk.ui.preferences"
+            class="gov.redhawk.ide.codegen.jinja.ui.preferences.JinjaPreferencePage"
+            id="gov.redhawk.ide.codegen.jinja.ui.preferences.CodegenPreferencePage"
+            name="Code Generation">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="gov.redhawk.ide.codegen.jinja.internal.ui.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
+
+</plugin>

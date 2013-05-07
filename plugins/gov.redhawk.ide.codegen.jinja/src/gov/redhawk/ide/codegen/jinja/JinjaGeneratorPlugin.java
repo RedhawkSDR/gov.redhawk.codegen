@@ -43,4 +43,5 @@ public class JinjaGeneratorPlugin extends Plugin {
 	public static final void logError(final String msg, final Throwable e) {
 		JinjaGeneratorPlugin.getDefault().getLog().log(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, msg, e));
 	}
+	
 }

@@ -1,8 +1,8 @@
 package gov.redhawk.ide.codegen.jinja;
 
-import gov.redhawk.ide.RedhawkIdeActivator;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.Property;
+import gov.redhawk.ide.codegen.jinja.ui.JinjaUiPlugin;
 import gov.redhawk.ide.codegen.jinja.utils.InputRedirector;
 import gov.redhawk.model.sca.util.ModelUtil;
 
@@ -27,8 +27,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
 public class JinjaGenerator {
-
-	private static final String EXECUTABLE_NAME = "redhawk-codegen";
 
 	private List<String> settingsToOptions(final ImplementationSettings implSettings) {
 		final List<String> arguments = new ArrayList<String>();
@@ -75,7 +73,8 @@ public class JinjaGenerator {
 		final IProject project = resource.getProject();
 
 		final ArrayList<String> arguments = new ArrayList<String>();
-		arguments.add(JinjaGenerator.EXECUTABLE_NAME);
+		final String redhawkCodegen = getCodegenFile().getPath();
+		arguments.add(redhawkCodegen);
 
 		// Force overwrite of existing files; we assume that the user has already signed off on this. 
 		arguments.add("-f");
@@ -115,7 +114,7 @@ public class JinjaGenerator {
 		try {
 			process = java.lang.Runtime.getRuntime().exec(command);
 		} catch (final IOException e) {
-			throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Exception running '" + JinjaGenerator.EXECUTABLE_NAME + "'", e));
+			throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Exception running '" + redhawkCodegen + "'", e));
 		}
 
 		// In order to poll both output (with the confusing name "getInputStream") and error,
@@ -142,7 +141,8 @@ public class JinjaGenerator {
 		final HashMap<String, Boolean> fileList = new HashMap<String, Boolean>();
 
 		final ArrayList<String> arguments = new ArrayList<String>();
-		arguments.add(JinjaGenerator.EXECUTABLE_NAME);
+		final String redhawkCodegen = getCodegenFile().getPath();
+		arguments.add(redhawkCodegen);
 
 		// List the files that would be generated.
 		arguments.add("-l");
@@ -162,7 +162,7 @@ public class JinjaGenerator {
 		try {
 			process = java.lang.Runtime.getRuntime().exec(command);
 		} catch (final IOException e) {
-			throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Exception running '" + JinjaGenerator.EXECUTABLE_NAME + "'", e));
+			throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Exception running '" + redhawkCodegen + "'", e));
 		}
 
 		final InputStreamReader instream = new InputStreamReader(process.getInputStream());
@@ -181,8 +181,8 @@ public class JinjaGenerator {
 				fileList.put(fileName, !changed);
 			}
 		} catch (final IOException e) {
-			throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Exception reading standard out from '"
-			        + JinjaGenerator.EXECUTABLE_NAME + "'", e));
+			throw new CoreException(
+			        new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Exception reading standard out from '" + redhawkCodegen + "'", e));
 		} finally {
 			try {
 				reader.close();
@@ -195,13 +195,16 @@ public class JinjaGenerator {
 	}
 
 	public IStatus validate() {
-		final IPath ossiehome = RedhawkIdeActivator.getDefault().getRuntimePath();
-		final File codegen = ossiehome.append("bin").append(JinjaGenerator.EXECUTABLE_NAME).toFile();
-		if (!codegen.exists()) {
-			return new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Code generator '" + JinjaGenerator.EXECUTABLE_NAME + "' not found");
-		} else if (!codegen.canExecute()) {
-			return new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Code generator '" + JinjaGenerator.EXECUTABLE_NAME + "' not executable");
+		final File redhawkCodegen = getCodegenFile();
+		if (!redhawkCodegen.exists()) {
+			return new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Code generator '" + redhawkCodegen.getPath() + "' not found");
+		} else if (!redhawkCodegen.canExecute()) {
+			return new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Code generator '" + redhawkCodegen.getPath() + "' not executable");
 		}
-		return new Status(IStatus.OK, JinjaGeneratorPlugin.PLUGIN_ID, "Code generator '" + JinjaGenerator.EXECUTABLE_NAME + "' is installed");
+		return new Status(IStatus.OK, JinjaGeneratorPlugin.PLUGIN_ID, "Code generator '" + redhawkCodegen.getPath() + "' is installed");
+	}
+
+	private File getCodegenFile() {
+		return JinjaUiPlugin.getDefault().getCodegenPath().toFile();
 	}
 }

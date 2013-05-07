@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Jinja Code Generator UI
+Bundle-SymbolicName: gov.redhawk.ide.codegen.jinja.ui;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: gov.redhawk.ide.codegen.jinja.ui.JinjaUiPlugin
+Bundle-Vendor: REDHAWK
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ gov.redhawk.ui;bundle-version="7.0.0",
+ org.eclipse.core.variables;bundle-version="3.2.600",
+ gov.redhawk.sca.util;bundle-version="3.2.0"
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ActivationPolicy: lazy
+Export-Package: gov.redhawk.ide.codegen.jinja.ui
