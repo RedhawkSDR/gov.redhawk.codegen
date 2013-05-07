@@ -24,9 +24,9 @@
             id="gov.redhawk.ide.codegen.jet.java.JavaGenerator"
             language="Java"
             languageVersion="1.5"
-            name="Java Code Generator"
+            name="Legacy JET Java Code Generator"
             notDefaultable="false"
-            priority="high"
+            priority="normal"
             runtime="/usr/bin/java"
             runtimeVersion="1.5">
          <description>

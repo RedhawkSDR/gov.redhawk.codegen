@@ -12,13 +12,13 @@
             id="gov.redhawk.ide.codegen.jinja.java.JavaGenerator"
             language="Java"
             languageVersion="1.5"
-            name="New Java Code Generator"
+            name="Java Code Generator"
             notDefaultable="false"
             priority="high"
             runtime="/usr/bin/java"
             runtimeVersion="1.5">
          <description>
-            Jinja-based Java code cenerator for components and devices.
+            Integrated &apos;redhawk-codegen&apos; Java code generator for components and devices.
          </description>
          <operatingSystem
                default="true"

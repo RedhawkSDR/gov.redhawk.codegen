@@ -24,9 +24,9 @@
             id="gov.redhawk.ide.codegen.jet.cplusplus.CplusplusGenerator"
             language="C++"
             languageVersion="0"
-            name="C++ Code Generator"
+            name="Legacy JET C++ Code Generator"
             notDefaultable="false"
-            priority="high">
+            priority="normal">
          <description>
             This is the Jet generator for C++ components and devices.
          </description>

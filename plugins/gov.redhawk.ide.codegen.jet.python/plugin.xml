@@ -21,9 +21,9 @@
             id="gov.redhawk.ide.codegen.jet.python.PythonGenerator"
             language="Python"
             languageVersion="2.4.4"
-            name="Python Code Generator"
+            name="Legacy JET Python Code Generator"
             notDefaultable="false"
-            priority="high"
+            priority="normal"
             runtime="python"
             runtimeVersion="2.4.4">
          <description>

@@ -12,11 +12,11 @@
             id="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusGenerator"
             language="C++"
             languageVersion="0"
-            name="New C++ Code Generator"
+            name="C++ Code Generator"
             notDefaultable="false"
             priority="high">
          <description>
-            Jinja-based C++ code generator for components and devices.
+            Integrated &apos;redhawk-codegen&apos; C++ code generator for components and devices.
          </description>
          <operatingSystem
                default="true"

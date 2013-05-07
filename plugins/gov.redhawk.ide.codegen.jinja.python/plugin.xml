@@ -10,13 +10,13 @@
             id="gov.redhawk.ide.codegen.jinja.python.PythonGenerator"
             language="Python"
             languageVersion="2.4"
-            name="New Python Code Generator"
+            name="Python Code Generator"
             notDefaultable="false"
             priority="high"
             runtime="python"
             runtimeVersion="2.4.4">
          <description>
-            New Python code generator using Jinja2
+            Integrated &apos;redhawk-codegen&apos; Python code generator for components and devices.
          </description>
          <operatingSystem
                default="true"
