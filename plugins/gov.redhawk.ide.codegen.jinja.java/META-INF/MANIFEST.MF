@@ -5,12 +5,9 @@ Bundle-SymbolicName: gov.redhawk.ide.codegen.jinja.java;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: gov.redhawk.ide.codegen.jinja.java.JavaGeneratorPlugin
 Bundle-Vendor: REDHAWK
-Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.jdt.core;bundle-version="3.8.3",
- gov.redhawk.ide.codegen;bundle-version="9.2.0",
+Require-Bundle: gov.redhawk.ide.codegen;bundle-version="9.2.0",
  gov.redhawk.ide.codegen.jinja;bundle-version="1.0.0",
  gov.redhawk.ide.codegen.java;bundle-version="6.0.0",
- gov.redhawk.sca.model;bundle-version="18.0.0",
  gov.redhawk.ide.debug;bundle-version="3.0.0",
  gov.redhawk.ide.codegen.jet.java;bundle-version="6.1.0"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
