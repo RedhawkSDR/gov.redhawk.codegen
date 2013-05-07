@@ -10,11 +10,5 @@
             name="Code Generation">
       </page>
    </extension>
-   <extension
-         point="org.eclipse.core.runtime.preferences">
-      <initializer
-            class="gov.redhawk.ide.codegen.jinja.internal.ui.preferences.PreferenceInitializer">
-      </initializer>
-   </extension>
 
 </plugin>
