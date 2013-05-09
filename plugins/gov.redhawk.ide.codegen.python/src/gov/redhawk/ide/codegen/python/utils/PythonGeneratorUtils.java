@@ -154,9 +154,11 @@ public class PythonGeneratorUtils {
 		String newCandidate = newCandidateSB.toString();
 
 		// Prefix if necessary
-		char first = newCandidate.charAt(0);
-		if ((first >= '0' && first <= '9') || (first == '_')) {
-			newCandidate = "prop" + newCandidate;
+		if (newCandidate.length() > 0) {
+			char first = newCandidate.charAt(0);
+			if ((first >= '0' && first <= '9') || (first == '_')) {
+				newCandidate = "prop" + newCandidate;
+			}
 		}
 
 		// Postfix if necessary
