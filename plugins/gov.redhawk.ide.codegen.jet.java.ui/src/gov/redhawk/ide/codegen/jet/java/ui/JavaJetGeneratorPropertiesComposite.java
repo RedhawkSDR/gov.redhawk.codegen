@@ -260,7 +260,7 @@ public class JavaJetGeneratorPropertiesComposite extends BaseGeneratorProperties
 			final Property p = CodegenFactory.eINSTANCE.createProperty();
 			p.setId("java_package");
 			p.setValue(implSettings.getName());
-			final Command command = AddCommand.create(getEditingDomain(), properties, CodegenPackage.Literals.IMPLEMENTATION_SETTINGS__PROPERTIES, p);
+			final Command command = AddCommand.create(getEditingDomain(), implSettings, CodegenPackage.Literals.IMPLEMENTATION_SETTINGS__PROPERTIES, p);
 			getEditingDomain().getCommandStack().execute(command);
 			this.packageName = p;
 		}
