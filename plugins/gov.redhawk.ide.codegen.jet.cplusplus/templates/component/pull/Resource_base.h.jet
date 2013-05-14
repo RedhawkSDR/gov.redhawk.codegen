@@ -323,6 +323,9 @@ class <%=PREFIX%>_base : public <%=baseClass%>
                     return false;
                 }
             }
+            if (SRI_1.blocking != SRI_2.blocking) {
+                return false;
+            }
             return true;
         }
         
