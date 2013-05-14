@@ -13,7 +13,6 @@ package gov.redhawk.ide.codegen.java.internal;
 import gov.redhawk.ide.codegen.java.JavaGeneratorPlugin;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import mil.jpeojtrs.sca.spd.Dependency;
@@ -21,6 +20,7 @@ import mil.jpeojtrs.sca.spd.Implementation;
 import mil.jpeojtrs.sca.spd.SoftPkg;
 import mil.jpeojtrs.sca.spd.SoftPkgRef;
 import mil.jpeojtrs.sca.spd.SpdPackage;
+import mil.jpeojtrs.sca.util.ScaResourceFactoryUtil;
 
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
@@ -57,10 +57,12 @@ public class SoftPkgRefClasspathContainer implements IClasspathContainer {
 		paths = new ArrayList<IClasspathEntry>();
 
 		ResourceSet set = new ResourceSetImpl();
-		Resource resource = set.getResource(URI.createPlatformResourceURI(softPkgFile.getFullPath().toPortableString(), true), true);
+		ScaResourceFactoryUtil.setDefaultLoadOptions(set.getLoadOptions());
+		Resource resource;
 		try {
+			resource = set.getResource(URI.createPlatformResourceURI(softPkgFile.getFullPath().toPortableString(), true), true);
 			resource.load(set.getLoadOptions());
-		} catch (IOException e) {
+		} catch (Exception e) {
 			throw new CoreException(new Status(Status.ERROR, JavaGeneratorPlugin.PLUGIN_ID, "Failed to load spd file: " + softPkgFile, e));
 		}
 		SoftPkg spd = (SoftPkg) resource.getEObject(SoftPkg.EOBJECT_PATH);
