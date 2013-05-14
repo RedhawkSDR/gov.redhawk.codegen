@@ -421,6 +421,9 @@ for (Uses use : uses) {%>
                 return false;
             }
         }
+        if (SRI_1.blocking != SRI_2.blocking) {
+            return false;
+        }
         return true;
     }
 
