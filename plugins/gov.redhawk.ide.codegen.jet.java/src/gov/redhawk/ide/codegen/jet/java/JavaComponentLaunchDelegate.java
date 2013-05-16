@@ -10,7 +10,6 @@
  *******************************************************************************/
 package gov.redhawk.ide.codegen.jet.java;
 
-import gov.redhawk.ide.debug.ScaLauncherUtil;
 import gov.redhawk.ide.debug.SpdLauncherUtil;
 import mil.jpeojtrs.sca.spd.SoftPkg;
 
@@ -48,7 +47,7 @@ public class JavaComponentLaunchDelegate extends JavaLaunchDelegate {
 		final SoftPkg spd = SpdLauncherUtil.getSpd(configuration);
 		final String args = SpdLauncherUtil.insertProgramArguments(spd, arguments, launch, configuration);
 		copy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, args);
-		copy.setAttribute(ScaLauncherUtil.LAUNCH_ATT_PROGRAM_ARGUMENT_MAP, ScaLauncherUtil.createMap(args));
+		copy.setAttribute(SpdLauncherUtil.LAUNCH_ATT_PROGRAM_ARGUMENT_MAP, SpdLauncherUtil.createMap(args));
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
 		try {
 			super.launch(copy, mode, launch, subMonitor.newChild(90));

@@ -10,7 +10,6 @@
  *******************************************************************************/
 package gov.redhawk.ide.codegen.jet.cplusplus;
 
-import gov.redhawk.ide.debug.ScaLauncherUtil;
 import gov.redhawk.ide.debug.SpdLauncherUtil;
 import mil.jpeojtrs.sca.spd.SoftPkg;
 
@@ -72,7 +71,7 @@ public class LocalCppCDILaunchDelegate extends LocalCDILaunchDelegate implements
 
 		final String newArgs = SpdLauncherUtil.insertProgramArguments(spd, args, launch, configuration);
 		configuration.setAttribute(ICDTLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, newArgs);
-		configuration.setAttribute(ScaLauncherUtil.LAUNCH_ATT_PROGRAM_ARGUMENT_MAP, ScaLauncherUtil.createMap(newArgs));
+		configuration.setAttribute(SpdLauncherUtil.LAUNCH_ATT_PROGRAM_ARGUMENT_MAP, SpdLauncherUtil.createMap(newArgs));
 	}
 
 	public String getDefaultDebugger(final ILaunchConfiguration config) throws CoreException {
