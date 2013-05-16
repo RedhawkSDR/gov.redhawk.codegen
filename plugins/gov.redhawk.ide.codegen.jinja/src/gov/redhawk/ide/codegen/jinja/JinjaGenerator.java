@@ -17,13 +17,15 @@ import java.util.List;
 import mil.jpeojtrs.sca.spd.Implementation;
 import mil.jpeojtrs.sca.spd.SoftPkg;
 
+import org.eclipse.core.filesystem.EFS;
+import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.URI;
 
 public class JinjaGenerator {
 
@@ -43,10 +45,22 @@ public class JinjaGenerator {
 	}
 
 	private String getSpdFile(final SoftPkg softpkg) {
-		final IResource resource = ModelUtil.getResource(softpkg);
-		final IProject project = resource.getProject();
-		final IPath workspaceRoot = project.getWorkspace().getRoot().getLocation();
-		return workspaceRoot.toOSString() + softpkg.eResource().getURI().toPlatformString(true);
+		URI uri = softpkg.eResource().getURI();
+		if (uri.isPlatform()) {
+			final IResource resource = ModelUtil.getResource(softpkg);
+			return resource.getLocation().toOSString();
+		} else if (uri.isFile()){
+			return uri.toFileString();
+		} else {
+			try {
+	            IFileStore store = EFS.getStore(java.net.URI.create(uri.toString()));
+	            File localFile = store.toLocalFile(0, null);
+	            return localFile.getAbsolutePath();
+            } catch (CoreException e) {
+	            throw new IllegalArgumentException("Unknown uri " + uri, e);
+            }
+			
+		}
 	}
 
 	private String relativePath(final String dir, final String path) {
