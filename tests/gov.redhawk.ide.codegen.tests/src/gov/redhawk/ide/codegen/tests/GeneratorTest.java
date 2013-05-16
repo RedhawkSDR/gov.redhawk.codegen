@@ -372,7 +372,7 @@ public class GeneratorTest  extends TestCase {
 		IInterpreterInfo info = null;
 		try {
 			if (pyman != null) {
-				info = pyman.getDefaultInterpreterInfo(true);
+				info = pyman.getDefaultInterpreterInfo(null);
 				command = info.getExecutableOrJar();
 			}
 		} catch (final MisconfigurationException e) {
