@@ -102,6 +102,13 @@
                 <artifactId>tycho-p2-plugin</artifactId>
                 <version>${tycho-version}</version>
                 <executions>
+		    <execution>
+		       <!-- Don't attach (default) metadata before the source-feature execution.-->
+		       <id>default-p2-metadata-default</id>
+		       <configuration>
+		         <attachP2Metadata>false</attachP2Metadata>
+		       </configuration>
+		    </execution>
                     <execution>
                         <id>attached-p2-metadata</id>
                         <phase>package</phase>
