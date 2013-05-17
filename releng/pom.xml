@@ -134,10 +134,11 @@
         <module>../plugins/gov.redhawk.ide.linuxtools.cdt.autotools.macros</module>
         <module>../plugins/gov.redhawk.ide.pydev</module>
         <module>../plugins/gov.redhawk.ide.sandbox.console.py</module>
-        <!--<module>../tests/gov.redhawk.ide.codegen.tests</module>-->
         <module>../tests/gov.redhawk.ide.idl.tests</module>
-        <module>../tests/gov.redhawk.ide.pydev.tests</module>
-        <!--<module>../tests/gov.redhawk.ide.sandbox.console.py.tests</module>-->
+        <!-- These tests require a UI envirornment to run and are therefore disabled for now -->
+        <!-- <module>../tests/gov.redhawk.ide.pydev.tests</module> -->
+        <!-- <module>../tests/gov.redhawk.ide.sandbox.console.py.tests</module>-->
+        <!-- <module>../tests/gov.redhawk.ide.codegen.tests</module>-->
         <module>p2</module>
     </modules>
 

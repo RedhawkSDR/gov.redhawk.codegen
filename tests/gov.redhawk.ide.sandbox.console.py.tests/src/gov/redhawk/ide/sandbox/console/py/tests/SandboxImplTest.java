@@ -10,6 +10,9 @@
  *******************************************************************************/
 package gov.redhawk.ide.sandbox.console.py.tests;
 
+import gov.redhawk.ExtendedCF.ResourceDesc;
+import gov.redhawk.ExtendedCF.Sandbox;
+import gov.redhawk.ExtendedCF.SandboxPackage.Depth;
 import gov.redhawk.ide.debug.ScaDebugPlugin;
 import gov.redhawk.ide.sdr.SdrRoot;
 
@@ -33,9 +36,6 @@ import CF.Resource;
 import CF.ResourceFactory;
 import CF.LifeCyclePackage.ReleaseError;
 import CF.ResourceFactoryPackage.CreateResourceFailure;
-import ExtendedCF.ResourceDesc;
-import ExtendedCF.Sandbox;
-import ExtendedCF.SandboxPackage.Depth;
 
 public class SandboxImplTest {
 	
