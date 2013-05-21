@@ -188,6 +188,8 @@ Port_Provides_base_impl(port_name)
         workQueue.pop_front();
         delete tmp;
     }
+    delete queueSem;
+    delete dataAvailable;
 }
 
 BULKIO::PortStatistics * <%=nameSpace%>_<%=interfaceName%>_In_i::statistics()
