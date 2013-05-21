@@ -65,7 +65,7 @@ public class PullPortImplCppProvidesTemplate
   protected final String TEXT_16 = "_";
   protected final String TEXT_17 = "_In_i::~";
   protected final String TEXT_18 = "_";
-  protected final String TEXT_19 = "_In_i()" + NL + "{" + NL + "    block();" + NL + "    while (workQueue.size() != 0) {" + NL + "        dataTransfer *tmp = workQueue.front();" + NL + "        workQueue.pop_front();" + NL + "        delete tmp;" + NL + "    }" + NL + "}" + NL + "" + NL + "BULKIO::PortStatistics * ";
+  protected final String TEXT_19 = "_In_i()" + NL + "{" + NL + "    block();" + NL + "    while (workQueue.size() != 0) {" + NL + "        dataTransfer *tmp = workQueue.front();" + NL + "        workQueue.pop_front();" + NL + "        delete tmp;" + NL + "    }" + NL + "    delete queueSem;" + NL + "    delete dataAvailable;" + NL + "}" + NL + "" + NL + "BULKIO::PortStatistics * ";
   protected final String TEXT_20 = "_";
   protected final String TEXT_21 = "_In_i::statistics()" + NL + "{" + NL + "    boost::mutex::scoped_lock lock(dataBufferLock);" + NL + "    BULKIO::PortStatistics_var recStat = new BULKIO::PortStatistics(stats.retrieve());" + NL + "    // NOTE: You must delete the object that this function returns!" + NL + "    return recStat._retn();" + NL + "}" + NL + "" + NL + "BULKIO::PortUsageType ";
   protected final String TEXT_22 = "_";
