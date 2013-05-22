@@ -57,7 +57,7 @@ public class SandboxImplTest {
 
 	@After
 	public void tearDown() throws Exception {
-		while(sandbox.registeredResources().length > 0) {
+		while (sandbox.registeredResources().length > 0) {
 			for (ResourceDesc resource : this.sandbox.registeredResources()) {
 				try {
 					resource.resource.releaseObject();
@@ -81,7 +81,7 @@ public class SandboxImplTest {
 
 	@Test
 	public void testAvailableProfiles() {
-		synchronized(root){
+		synchronized (root) {
 			Assert.assertNotNull(this.sandbox.availableProfiles());
 			final String[] profiles = this.sandbox.availableProfiles();
 			Assert.assertEquals(2, profiles.length);
@@ -95,7 +95,7 @@ public class SandboxImplTest {
 	}
 	
 	private ResourceFactory getResourceFactory() {
-		synchronized(root) {
+		synchronized (root) {
 			ResourceFactory retVal = this.sandbox.getResourceFactory("DCE:2bd01453-1df0-41af-a78e-ffb266abd667");
 			Assert.assertNotNull(retVal);
 			return retVal;
@@ -131,7 +131,7 @@ public class SandboxImplTest {
 
 	@Test
 	public void testGetResourceFactoryByProfile() {
-		synchronized(root){
+		synchronized (root) {
 			Assert.assertNotNull(this.sandbox.getResourceFactoryByProfile("/components/ExampleComponent/ExampleComponent.spd.xml"));
 		}
 	}

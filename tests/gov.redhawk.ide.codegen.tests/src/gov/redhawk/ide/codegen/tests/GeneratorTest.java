@@ -59,37 +59,33 @@ import org.python.pydev.core.IInterpreterManager;
 import org.python.pydev.core.MisconfigurationException;
 import org.python.pydev.plugin.PydevPlugin;
 
-public class GeneratorTest  extends TestCase {
+public class GeneratorTest extends TestCase {
 
-	private static final String[] TEST_COMPONENTS = { 
-			"basic",
-			"bulkio_ports",
-			"event_props",
-			"props",
-			"sri" };
+	private static final String[] TEST_COMPONENTS = { "basic", "bulkio_ports", "event_props", "props", "sri" };
+
 	@Before
 	public void setUp() throws Exception {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IWorkspaceDescription workspaceDescription = workspace.getDescription();
 		workspaceDescription.setAutoBuilding(false);
 		workspace.setDescription(workspaceDescription);
-		
+
 		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 			public void run() {
 				IIntroPart welcome = PlatformUI.getWorkbench().getIntroManager().getIntro();
 				PlatformUI.getWorkbench().getIntroManager().closeIntro(welcome);
-				
+
 				IPerspectiveDescriptor pd = PlatformUI.getWorkbench().getPerspectiveRegistry().findPerspectiveWithId("gov.redhawk.ide.ui.perspectives.sca");
 				if (pd != null) {
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().setPerspective(pd);
 				}
-				
+
 				try {
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("org.eclipse.ui.console.ConsoleView");
 				} catch (PartInitException e) {
 					// PASS
 				}
-			}			
+			}
 		});
 	}
 
@@ -101,18 +97,18 @@ public class GeneratorTest  extends TestCase {
 		createAndGenerate("test_cpp", "C++", "resource");
 		createAndGenerate("test_py", "Python", "resource");
 		createAndGenerate("test_java", "Java", "resource");
-		
+
 		createAndGenerate("dev_cpp", "C++", "device");
 		createAndGenerate("dev_py", "Python", "device");
 		createAndGenerate("ldev_cpp", "C++", "loadabledevice");
 		createAndGenerate("ldev_py", "Python", "loadabledevice");
 		createAndGenerate("edev_cpp", "C++", "executabledevice");
 		createAndGenerate("edev_py", "Python", "executabledevice");
-		
+
 		for (String component : TEST_COMPONENTS) {
 			generateCode(component, null);
 			runComponentUnitTest(component);
-			
+
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
@@ -122,8 +118,8 @@ public class GeneratorTest  extends TestCase {
 	}
 
 	private void createAndGenerate(String name, String lang, String type) throws CoreException {
-	    IProject proj = createProject(name, lang, type);
-	    try {
+		IProject proj = createProject(name, lang, type);
+		try {
 			generateCode(name, null);
 			runComponentUnitTest(name);
 			try {
@@ -131,25 +127,25 @@ public class GeneratorTest  extends TestCase {
 			} catch (InterruptedException e) {
 				// PASS
 			}
-	    } finally {
-		    proj.delete(true, true, new NullProgressMonitor());
-	    }
-    }
-	
-//	public void test_py_generators() {
-//		for (String component : TEST_COMPONENTS) {
-//			generateCode(component, "Python");
-//			runComponentUnitTest(component);
-//		}
-//	}
-//	
-//	public void test_java_generators() {
-//		for (String component : TEST_COMPONENTS) {
-//			generateCode(component, "Java");
-//			runComponentUnitTest(component);
-//		}
-//	}
-	
+		} finally {
+			proj.delete(true, true, new NullProgressMonitor());
+		}
+	}
+
+	//	public void test_py_generators() {
+	//		for (String component : TEST_COMPONENTS) {
+	//			generateCode(component, "Python");
+	//			runComponentUnitTest(component);
+	//		}
+	//	}
+	//	
+	//	public void test_java_generators() {
+	//		for (String component : TEST_COMPONENTS) {
+	//			generateCode(component, "Java");
+	//			runComponentUnitTest(component);
+	//		}
+	//	}
+
 	public IProject createProject(String componentName, String lang, String projectType) {
 		URL url = null;
 		try {
@@ -157,8 +153,11 @@ public class GeneratorTest  extends TestCase {
 		} catch (IOException e) {
 			Assert.fail("Failed to locate test bundle");
 		}
+		if (url == null) {
+			return null;
+		}
 		File filePath = new File(url.getPath());
-				
+
 		while (!SdrUiPlugin.getDefault().getTargetSdrRoot().getState().equals(LoadState.LOADED)) {
 			try {
 				Thread.sleep(1000);
@@ -166,7 +165,7 @@ public class GeneratorTest  extends TestCase {
 				Assert.fail("Interrupted waiting for SDRROOT to load");
 			}
 		}
-		
+
 		ArrayList<String> args = new ArrayList<String>();
 		args.add("-create");
 		args.add(filePath.getAbsolutePath() + "/sdr/dom/components/" + componentName);
@@ -176,7 +175,7 @@ public class GeneratorTest  extends TestCase {
 		if (projectType != null) {
 			args.add("-Dproject-type=" + projectType);
 		}
-		
+
 		CodegeneratorApplication generator = new CodegeneratorApplication();
 		try {
 			generator.start(args.toArray(new String[args.size()]));
@@ -186,22 +185,23 @@ public class GeneratorTest  extends TestCase {
 			// END DEBUG CODE
 			Assert.fail("Generator failed on " + componentName + " : " + e.getMessage());
 		}
-		
+
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IProject proj = workspace.getRoot().getProject(componentName);
 		Assert.assertTrue(proj.exists());
 		return proj;
 	}
-	
+
 	public void generateCode(String componentName, String lang) {
 		URL url = null;
 		try {
 			url = FileLocator.toFileURL(FileLocator.find(Platform.getBundle("gov.redhawk.ide.codegen.tests"), new Path(""), null));
 		} catch (IOException e) {
 			Assert.fail("Failed to locate test bundle");
+			return;
 		}
 		File filePath = new File(url.getPath());
-				
+
 		while (!SdrUiPlugin.getDefault().getTargetSdrRoot().getState().equals(LoadState.LOADED)) {
 			try {
 				Thread.sleep(1000);
@@ -209,14 +209,14 @@ public class GeneratorTest  extends TestCase {
 				Assert.fail("Interrupted waiting for SDRROOT to load");
 			}
 		}
-		
+
 		ArrayList<String> args = new ArrayList<String>();
 		args.add("-generate");
 		args.add(filePath.getAbsolutePath() + "/sdr/dom/components/" + componentName);
 		if (lang != null) {
 			args.add("-Dlang=" + lang);
 		}
-		
+
 		CodegeneratorApplication generator = new CodegeneratorApplication();
 		try {
 			generator.start(args.toArray(new String[args.size()]));
@@ -226,22 +226,22 @@ public class GeneratorTest  extends TestCase {
 			// END DEBUG CODE
 			Assert.fail("Generator failed on " + componentName + " : " + e.getMessage());
 		}
-		
+
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IProject proj = workspace.getRoot().getProject(componentName);
 		Assert.assertTrue(proj.exists());
-		
+
 		try {
 			proj.build(IncrementalProjectBuilder.FULL_BUILD, new NullProgressMonitor());
 		} catch (CoreException e) {
 			Assert.fail("Failed to build project " + componentName + " : " + e.getMessage());
 		}
-		
+
 		try {
 			int maxSeverity = proj.findMaxProblemSeverity(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
 			if (maxSeverity == IMarker.SEVERITY_ERROR) {
 				IMarker[] markers = proj.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
-				
+
 				StringBuffer msg = new StringBuffer("Generated code produced errors...");
 				for (IMarker marker : markers) {
 					if (marker.getAttribute(IMarker.SEVERITY, IMarker.SEVERITY_INFO) == IMarker.SEVERITY_ERROR) {
@@ -255,21 +255,21 @@ public class GeneratorTest  extends TestCase {
 		} catch (CoreException e) {
 			Assert.fail("Failed to validate project " + componentName + " : " + e.getMessage());
 		}
-		
+
 	}
-	
+
 	public void runComponentUnitTest(String componentName) {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IProject proj = workspace.getRoot().getProject(componentName);
 		Assert.assertTrue(proj.exists());
-		
+
 		ILaunchConfigurationWorkingCopy conf = null;
 		try {
 			conf = createUnitTestLaunchConfig(proj, componentName);
 		} catch (CoreException e1) {
 			Assert.fail("Error creating unittest launch configurationL: " + e1);
 		}
-		
+
 		if (conf != null) {
 			ILaunch launched = null;
 			try {
@@ -278,22 +278,23 @@ public class GeneratorTest  extends TestCase {
 				} catch (CoreException e1) {
 					Assert.fail("Error running unittest launch configurationL: " + e1);
 				}
-	
-				while (!launched.isTerminated()) {
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {
-						Assert.fail("Interrupted while waiting for unittest to finish");
-					}
-				}
-				
-				for (IProcess process : launched.getProcesses()) {
-					try {
-						if (process.isTerminated() && process.getExitValue() != 0) {
-							Assert.fail("Unittest failed with exit status " + process.getExitValue());
+				if (launched != null) {
+					while (!launched.isTerminated()) {
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							Assert.fail("Interrupted while waiting for unittest to finish");
 						}
-					} catch (DebugException e) {
-						Assert.fail("Error while checking unittest status");
+					}
+
+					for (IProcess process : launched.getProcesses()) {
+						try {
+							if (process.isTerminated() && process.getExitValue() != 0) {
+								Assert.fail("Unittest failed with exit status " + process.getExitValue());
+							}
+						} catch (DebugException e) {
+							Assert.fail("Error while checking unittest status");
+						}
 					}
 				}
 			} finally {
@@ -309,18 +310,18 @@ public class GeneratorTest  extends TestCase {
 			}
 		}
 	}
-	
+
 	public static ILaunchConfigurationWorkingCopy createUnitTestLaunchConfig(final IProject proj, final String componentName) throws CoreException {
 		IFolder testFolder = proj.getFolder("tests");
 		if (!testFolder.exists()) {
 			return null;
 		}
-		
+
 		IFile testScript = testFolder.getFile("test_" + componentName + ".py");
 		if (!testScript.exists()) {
 			return null;
 		}
-		
+
 		final ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
 		final ILaunchConfigurationType type = manager.getLaunchConfigurationType(IExternalToolConstants.ID_PROGRAM_LAUNCH_CONFIGURATION_TYPE);
 
@@ -340,7 +341,7 @@ public class GeneratorTest  extends TestCase {
 			ldPath = ossie32Lib;
 		}
 		environmentMap.put("LD_LIBRARY_PATH", ldPath);
-		
+
 		final String ossie64Lib = ossieHome.append("/lib64").toOSString();
 		if (ldPath != null) {
 			ldPath = ossie64Lib + ":" + ldPath;
@@ -378,7 +379,7 @@ public class GeneratorTest  extends TestCase {
 		} catch (final MisconfigurationException e) {
 			throw new CoreException(new Status(IStatus.ERROR, "", "Error getting PyDev configuration", e));
 		}
-		
+
 		workingCopy.setAttribute(IExternalToolConstants.ATTR_LOCATION, command);
 		workingCopy.setAttribute(IExternalToolConstants.ATTR_TOOL_ARGUMENTS, testScript.getLocation().toOSString());
 		workingCopy.setAttribute(IExternalToolConstants.ATTR_WORKING_DIRECTORY, testFolder.getLocation().toOSString());
@@ -390,7 +391,7 @@ public class GeneratorTest  extends TestCase {
 
 		return workingCopy;
 	}
-	
+
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

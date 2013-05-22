@@ -251,7 +251,7 @@
    </extension>
    <extension
          id="gov.redhawk.ide.codegen.jet.python.sourceinclude"
-         name="REDHAWK C++ auto-inclusion builder"
+         name="%extension.name"
          point="org.eclipse.core.resources.builders">
       <builder
             callOnEmptyDelta="true"
@@ -268,7 +268,7 @@
             delegate="gov.redhawk.ide.codegen.jet.python.LocalPythonComponentDelegate"
             id="gov.redhawk.ide.codegen.jet.python.launchComponent"
             modes="run, debug, interactive"
-            name="Local Python Component"
+            name="%launchConfigurationType.name"
             public="true">
       </launchConfigurationType>
    </extension>

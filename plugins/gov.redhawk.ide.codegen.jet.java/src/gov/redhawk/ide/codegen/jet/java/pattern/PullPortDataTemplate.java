@@ -91,7 +91,7 @@ public class PullPortDataTemplate implements IScaComponentCodegenTemplate {
 	                }
 	                break;
                 } catch (CoreException e) {
-	                file = null;
+    				// PASS
                 }
 	    	}
 	    }

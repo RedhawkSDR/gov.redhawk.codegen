@@ -25,14 +25,14 @@
             class="gov.redhawk.ide.codegen.jet.python.ui.PyDevLaunchShortcut"
             icon="icons/RedHawk_Logo16x.gif"
             id="gov.redhawk.ide.codegen.jet.python.ui.shortcut"
-            label="Local Python Component"
+            label="%shortcut.label"
             modes="run,debug">
          <description
-               description="Debug a Python component"
+               description="%description.description"
                mode="debug">
          </description>
          <description
-               description="Launch a Python component"
+               description="%description.description.0"
                mode="run">
          </description>
          <contextualLaunch>

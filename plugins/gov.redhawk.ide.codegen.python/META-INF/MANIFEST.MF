@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Python Code Generator Base Plugin
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: gov.redhawk.ide.codegen.python;singleton:=true
 Bundle-Version: 6.0.0.qualifier
 Bundle-Activator: gov.redhawk.ide.codegen.python.PythonGeneratorPlugin
@@ -20,4 +20,4 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: gov.redhawk.ide.codegen.python,
  gov.redhawk.ide.codegen.python.utils
 Bundle-ClassPath: .
-Bundle-Vendor: REDHAWK
+Bundle-Vendor: %Bundle-Vendor

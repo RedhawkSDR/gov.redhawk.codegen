@@ -182,7 +182,7 @@ public class PullPortImplCppUsesTemplate
         }
     }
 
-    if (templ.isGenClassImpl() && (!use.getRepID().equals("IDL:ExtendedEvent/MessageEvent:1.0"))) {
+    if (use != null && templ.isGenClassImpl() && (!use.getRepID().equals("IDL:ExtendedEvent/MessageEvent:1.0"))) {
         Interface iface = IdlUtil.getInstance().getInterface(search_paths, use.getRepID().split(":")[1], true);
         if (iface != null) {
             String nameSpace = iface.getNameSpace();

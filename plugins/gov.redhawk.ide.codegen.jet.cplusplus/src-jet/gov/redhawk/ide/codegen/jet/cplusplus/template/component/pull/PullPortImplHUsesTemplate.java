@@ -222,7 +222,7 @@ public class PullPortImplHUsesTemplate
 		} 
 	} 
 
-    if (templ.isGenClassDef()) {
+    if (use != null && templ.isGenClassDef()) {
         Interface intf = IdlUtil.getInstance().getInterface(search_paths, use.getRepID().split(":")[1], true);
         if (intf == null) {
             throw new CoreException(new Status(IStatus.ERROR, CplusplusJetGeneratorPlugin.PLUGIN_ID, "Unable to find interface for " + use.getRepID()));

@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: All IDL Tests
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: gov.redhawk.ide.idl.tests
 Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.6.0",
@@ -11,5 +11,5 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.6.0",
 Eclipse-BundleShape: dir
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Bundle-Vendor: REDHAWK
+Bundle-Vendor: %Bundle-Vendor
 Export-Package: gov.redhawk.ide.idl.tests

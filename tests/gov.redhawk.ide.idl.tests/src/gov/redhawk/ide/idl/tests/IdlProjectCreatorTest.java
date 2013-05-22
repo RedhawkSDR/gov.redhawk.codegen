@@ -12,7 +12,6 @@ package gov.redhawk.ide.idl.tests;
 
 import gov.redhawk.ide.idl.generator.newidl.IDLProjectCreator;
 
-import java.io.IOException;
 import java.util.Arrays;
 
 import junit.framework.Assert;
@@ -44,7 +43,7 @@ public class IdlProjectCreatorTest {
 		Assert.assertNotNull(project);
 		Assert.assertEquals("idlProjectTest", project.getName());
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
-		if (project.exists()){
+		if (project.exists()) {
 			project.delete(true, new NullProgressMonitor());
 		}
 	}
@@ -54,7 +53,7 @@ public class IdlProjectCreatorTest {
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject("idlProjectTest");
 		try {
 			project.refreshLocal(IResource.DEPTH_INFINITE, null);
-			if (project.exists()){
+			if (project.exists()) {
 				project.delete(true, new NullProgressMonitor());
 			}
 		} catch (CoreException e) {
@@ -98,7 +97,7 @@ public class IdlProjectCreatorTest {
 		Assert.assertTrue(file.exists());
 
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
-		if (project.exists()){
+		if (project.exists()) {
 			project.delete(true, new NullProgressMonitor());
 		}
 	}

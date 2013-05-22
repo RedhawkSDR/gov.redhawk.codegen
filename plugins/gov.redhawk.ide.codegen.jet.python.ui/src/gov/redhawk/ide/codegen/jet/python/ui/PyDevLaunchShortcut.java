@@ -47,7 +47,7 @@ public class PyDevLaunchShortcut extends AbstractLaunchCodegenShortcut {
 		retVal.setAttribute(IExternalToolConstants.ATTR_WORKING_DIRECTORY, getWorkingDirectory(impl, resource));
 		
 		Map map = retVal.getAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES, Collections.emptyMap());
-		Map<String,String> newEnv = new HashMap<String, String>(map);
+		Map<String, String> newEnv = new HashMap<String, String>(map);
 		newEnv.remove("PYTHONPATH");
 		retVal.setAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES, newEnv);
 		

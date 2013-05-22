@@ -45,7 +45,7 @@
             class="gov.redhawk.ide.codegen.jet.java.internal.ui.JavaComponentLaunchShortcut"
             icon="icons/RedHawk_Logo16x.gif"
             id="gov.redhawk.ide.codegen.jet.java.ui.shortcut"
-            label="Local Java Component"
+            label="%shortcut.label"
             modes="run,debug">
          <contextualLaunch>
             <enablement>
@@ -75,11 +75,11 @@
                </with>
             </enablement></contextualLaunch>
          <description
-               description="Launch a local java component"
+               description="%description.description"
                mode="run">
          </description>
          <description
-               description="Debug a local java component"
+               description="%description.description.0"
                mode="debug">
          </description>
       </shortcut>

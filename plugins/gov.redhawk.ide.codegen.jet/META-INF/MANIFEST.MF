@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Jet Code Generator Base Plug-in
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: gov.redhawk.ide.codegen.jet
 Bundle-Version: 3.1.0.qualifier
 Bundle-Activator: gov.redhawk.ide.codegen.jet.Activator
@@ -12,5 +12,5 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: gov.redhawk.ide.codegen.jet,
  gov.redhawk.ide.codegen.jet.template
-Bundle-Vendor: REDHAWK
+Bundle-Vendor: %Bundle-Vendor
 Import-Package: gov.redhawk.model.sca.util

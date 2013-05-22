@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: C++ Code Generator Base Plug-in
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: gov.redhawk.ide.codegen.cplusplus;singleton:=true
 Bundle-Version: 6.0.0.qualifier
 Bundle-Activator: gov.redhawk.ide.codegen.cplusplus.GccGeneratorPlugin
@@ -19,4 +19,4 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.6.0",
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: gov.redhawk.ide.codegen.cplusplus
-Bundle-Vendor: REDHAWK
+Bundle-Vendor: %Bundle-Vendor

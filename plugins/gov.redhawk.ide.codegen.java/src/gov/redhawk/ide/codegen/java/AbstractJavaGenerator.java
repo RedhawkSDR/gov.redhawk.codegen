@@ -104,19 +104,20 @@ public abstract class AbstractJavaGenerator extends AbstractCodeGenerator {
 		} catch (final CoreException e) {
 			retStatus.add(new Status(IStatus.WARNING, JavaGeneratorPlugin.PLUGIN_ID, "Unable to add Java project nature", e));
 		}
-
-		try {
-			final IPath srcPath = new Path(javaProject.getPath().toString() + "/" + destinationSrcDirectory);
-			final IPath binPath = new Path(javaProject.getPath().toString() + "/" + destinationBinDirectory);
-			JavaGeneratorUtils.addSourceClassPaths(javaProject, srcPath, binPath, progress.newChild(STANDARD_WORK));
-		} catch (final CoreException e) {
-			retStatus.add(new Status(IStatus.WARNING, JavaGeneratorPlugin.PLUGIN_ID, "Unable to add Java source path", e));
-		}
-
-		try {
-			JavaGeneratorUtils.addRedhawkJavaClassPaths(javaProject, progress.newChild(STANDARD_WORK));
-		} catch (final CoreException e) {
-			retStatus.add(new Status(IStatus.WARNING, JavaGeneratorPlugin.PLUGIN_ID, "Unable to add setup Java class paths", e));
+		if (javaProject != null) {
+			try {
+				final IPath srcPath = project.getFolder(destinationSrcDirectory).getFullPath();
+				final IPath binPath = project.getFolder(destinationBinDirectory).getFullPath();
+				JavaGeneratorUtils.addSourceClassPaths(javaProject, srcPath, binPath, progress.newChild(STANDARD_WORK));
+			} catch (final CoreException e) {
+				retStatus.add(new Status(IStatus.WARNING, JavaGeneratorPlugin.PLUGIN_ID, "Unable to add Java source path", e));
+			}
+	
+			try {
+				JavaGeneratorUtils.addRedhawkJavaClassPaths(javaProject, progress.newChild(STANDARD_WORK));
+			} catch (final CoreException e) {
+				retStatus.add(new Status(IStatus.WARNING, JavaGeneratorPlugin.PLUGIN_ID, "Unable to add setup Java class paths", e));
+			}
 		}
 
 		if (!srcExists) {

@@ -24,9 +24,9 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            description="Set as the primary build implementation"
+            description="%command.description"
             id="gov.redhawk.ide.codegen.cplusplus.ui.command.setprimary"
-            name="Set Primary">
+            name="%command.name">
       </command>
    </extension>
    <extension

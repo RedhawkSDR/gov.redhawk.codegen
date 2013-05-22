@@ -33,14 +33,14 @@
             class="gov.redhawk.ide.codegen.jet.cplusplus.ui.CppLaunchShortcut"
             icon="icons/RedHawk_Logo16x.gif"
             id="gov.redhawk.ide.codegen.jet.cplusplus.ui.shortcut"
-            label="Local C++ Component"
+            label="%shortcut.label"
             modes="run,debug">
          <description
-               description="Launch a C++ component"
+               description="%description.description"
                mode="run">
          </description>
          <description
-               description="Debug a C++ component"
+               description="%description.description.0"
                mode="debug">
          </description>
          <contextualLaunch>
