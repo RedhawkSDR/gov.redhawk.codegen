@@ -164,10 +164,12 @@ public abstract class AbstractPythonGenerator extends AbstractCodeGenerator {
 		}
 
 		if (newPath.length() > 0) {
-			try {
-				pythonNature.getPythonPathNature().setProjectSourcePath(newPath.toString());
-			} catch (final CoreException e) {
-				return new Status(IStatus.WARNING, PythonGeneratorPlugin.PLUGIN_ID, "Unable to adjust the list of source code folders for the project");
+			if (pythonNature != null) {
+				try {
+					pythonNature.getPythonPathNature().setProjectSourcePath(newPath.toString());
+				} catch (final CoreException e) {
+					return new Status(IStatus.WARNING, PythonGeneratorPlugin.PLUGIN_ID, "Unable to adjust the list of source code folders for the project");
+				}
 			}
 			progress.worked(1);
 		} else {

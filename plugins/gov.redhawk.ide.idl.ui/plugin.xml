@@ -31,7 +31,7 @@
             hasPages="true"
             icon="icons/etool16/newprj_wiz.gif"
             id="gov.redhawk.ide.ui.wizards.newidl"
-            name="SCA IDL Project"
+            name="%wizard.name"
             preferredPerspectives="gov.redhawk.ide.ui.wizards.category.sca, org.eclipse.cdt.ui.CPerspective, org.python.pydev.ui.PythonPerspective"
             project="true">
       </wizard>

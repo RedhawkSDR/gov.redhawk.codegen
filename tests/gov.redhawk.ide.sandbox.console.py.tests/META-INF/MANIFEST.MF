@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Sandbox Tests
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: gov.redhawk.ide.sandbox.console.py.tests
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: gov.redhawk.ide.sandbox.console.py.tests.SandboxTestsActivator
@@ -17,4 +17,4 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Eclipse-BundleShape: dir
 Export-Package: gov.redhawk.ide.sandbox.console.py.tests
-Bundle-Vendor: REDHAWK
+Bundle-Vendor: %Bundle-Vendor

@@ -215,12 +215,12 @@
          point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
             delegate="gov.redhawk.ide.codegen.jet.java.JavaComponentLaunchDelegate"
-            delegateDescription="The REDHAWK Java component launcher supports launching local components in run or debug modes"
-            delegateName="REDHAWK JDT Launcher"
+            delegateDescription="%launchConfigurationType.delegateDescription"
+            delegateName="%launchConfigurationType.delegateName"
             id="gov.redhawk.ide.codegen.jet.java.launching.localJavaComponent"
             migrationDelegate="org.eclipse.jdt.internal.launching.JavaMigrationDelegate"
             modes="run, debug"
-            name="Local Java Component"
+            name="%launchConfigurationType.name"
             sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
             sourcePathComputerId="org.eclipse.jdt.launching.sourceLookup.javaSourcePathComputer">
       </launchConfigurationType>
@@ -240,11 +240,11 @@
                   isEnabledByDefault="true"
                   lang="java"
                   mode="Live"
-                  name="Java Package"
+                  name="%constraint.name"
                   severity="WARNING"
                   statusCode="1">
                <message>
-                  {0}
+                  %constraint.message
                </message>
                <target
                      class="ImplementationSettings">

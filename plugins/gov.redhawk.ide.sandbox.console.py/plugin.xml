@@ -16,7 +16,7 @@
       <consoleFactory
             class="gov.redhawk.ide.sandbox.console.py.RHLocalConsoleFactory"
             icon="icons/RedHawk_Logo16x.gif"
-            label="Python SCA Sandbox">
+            label="%consoleFactory.label">
       </consoleFactory>
    </extension>
    <extension
@@ -26,7 +26,7 @@
             class="gov.redhawk.ide.sandbox.console.py.RHSandboxConsoleView"
             icon="icons/RedHawk_Logo16x.gif"
             id="gov.redhawk.ide.sandbox.console.py.view"
-            name="Sandbox Console"
+            name="%view.name"
             restorable="true">
       </view>
    </extension>

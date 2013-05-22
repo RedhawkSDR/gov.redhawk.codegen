@@ -12,6 +12,7 @@
 package gov.redhawk.ide.codegen.jet.cplusplus.template;
 
 import gov.redhawk.ide.codegen.jet.TemplateParameter;
+import java.util.Collections;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.model.sca.util.ModelUtil;
 import java.util.regex.Matcher;
@@ -20,9 +21,14 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 import mil.jpeojtrs.sca.scd.Interface;
+import mil.jpeojtrs.sca.scd.Interfaces;
+import mil.jpeojtrs.sca.scd.ScdPackage;
 import mil.jpeojtrs.sca.spd.Implementation;
 import mil.jpeojtrs.sca.spd.SoftPkg;
+import mil.jpeojtrs.sca.spd.SpdPackage;
+import mil.jpeojtrs.sca.util.ScaEcoreUtils;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.emf.ecore.EStructuralFeature;
 
 	/**
     * @generated
@@ -80,7 +86,18 @@ public class ConfigureAcTemplate
     
     // Determine what interfaces we require
     Map<String, String> ifaceNameAndVer = new HashMap<String, String>();
-    List<Interface> interfaces = softpkg.getDescriptor().getComponent().getInterfaces().getInterface();
+    List<Interface> interfaces = Collections.emptyList();
+    if (softpkg != null) {
+    	EStructuralFeature [] path = new EStructuralFeature [] {
+    			SpdPackage.Literals.SOFT_PKG__DESCRIPTOR,
+    			SpdPackage.Literals.DESCRIPTOR__COMPONENT,
+    			ScdPackage.Literals.SOFTWARE_COMPONENT__INTERFACES
+    	};
+    	Interfaces interfacesList = ScaEcoreUtils.getFeature(softpkg, path);
+    	if (interfacesList != null) {
+    		interfaces = interfacesList.getInterface();
+    	}
+    } 
     Pattern idlPattern = Pattern.compile("^IDL:(\\w+)/");
     for (Interface iface : interfaces) {
         Matcher match = idlPattern.matcher(iface.getRepid());

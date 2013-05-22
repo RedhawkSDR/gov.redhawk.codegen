@@ -83,7 +83,6 @@ import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.osgi.service.datalocation.Location;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
-import org.eclipse.ui.internal.ide.actions.OpenWorkspaceAction;
 import org.osgi.service.prefs.BackingStoreException;
 
 // CHECKSTYLE:OFF Ignore Special File

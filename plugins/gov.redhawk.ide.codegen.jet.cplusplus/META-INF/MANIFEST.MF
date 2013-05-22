@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Jet C++ Code Generator Plug-in
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: gov.redhawk.ide.codegen.jet.cplusplus; singleton:=true
 Bundle-Version: 10.0.0.qualifier
 Bundle-Activator: gov.redhawk.ide.codegen.jet.cplusplus.CplusplusJetGeneratorPlugin
@@ -22,4 +22,4 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: gov.redhawk.ide.codegen.jet.cplusplus,
  gov.redhawk.ide.codegen.jet.cplusplus.ports
-Bundle-Vendor: REDHAWK
+Bundle-Vendor: %Bundle-Vendor

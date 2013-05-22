@@ -27,5 +27,4 @@
             type="gov.redhawk.ide.codegen.jet.cplusplus.launchComponentApplication">
       </launchConfigurationTabGroup>
    </extension>
-
 </plugin>

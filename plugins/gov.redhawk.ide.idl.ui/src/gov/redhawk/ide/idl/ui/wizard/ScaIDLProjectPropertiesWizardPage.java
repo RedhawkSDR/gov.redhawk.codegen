@@ -369,7 +369,7 @@ public class ScaIDLProjectPropertiesWizardPage extends WizardNewProjectCreationP
 			// PASS
 		}
 
-		while (input.hasNext()) {
+		while (input != null && input.hasNext()) {
 			final String line = input.nextLine();
 
 			if (line.contains("module")) {
