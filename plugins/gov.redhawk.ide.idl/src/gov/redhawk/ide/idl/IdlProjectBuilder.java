@@ -130,7 +130,7 @@ public class IdlProjectBuilder extends IncrementalProjectBuilder {
 	private static final Pattern IDL_FILENAME = Pattern.compile(".*\\.idl$");
 	
 	@Override
-	protected IProject[] build(int kind, Map args, IProgressMonitor monitor)
+	protected IProject[] build(int kind, @SuppressWarnings("rawtypes") Map args, IProgressMonitor monitor)
 			throws CoreException {
 		try {
 			final IProject project = getProject();
@@ -176,7 +176,7 @@ public class IdlProjectBuilder extends IncrementalProjectBuilder {
 	/**
 	 *
 	 */
-	private void generateMakefileAmInclude(final IProgressMonitor monitor, Map args) throws CoreException {
+	private void generateMakefileAmInclude(final IProgressMonitor monitor, @SuppressWarnings("rawtypes") Map args) throws CoreException {
 		// Get the current configuration from CDT
 		final IProject project = getProject();
 

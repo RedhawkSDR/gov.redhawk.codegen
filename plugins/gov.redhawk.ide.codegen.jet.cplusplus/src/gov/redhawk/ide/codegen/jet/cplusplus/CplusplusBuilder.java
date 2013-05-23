@@ -90,7 +90,7 @@ public class CplusplusBuilder extends IncrementalProjectBuilder {
 	}
 
 	@Override
-	protected IProject[] build(final int kind, final Map args, final IProgressMonitor monitor) throws CoreException {
+	protected IProject[] build(final int kind, @SuppressWarnings("rawtypes") final Map args, final IProgressMonitor monitor) throws CoreException {
 		try {
 			final IProject project = getProject();
 

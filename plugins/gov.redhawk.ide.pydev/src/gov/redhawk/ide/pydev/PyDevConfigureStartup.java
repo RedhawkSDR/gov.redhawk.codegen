@@ -56,7 +56,9 @@ public class PyDevConfigureStartup implements IStartup {
 	public void earlyStartup() {
 		final String app = System.getProperty("eclipse.application");
 		final boolean runConfig = app == null || "org.eclipse.ui.ide.workbench".equals(app);
-		if (!runConfig) return;
+		if (!runConfig) {
+			return;
+		}
 		
 		// If PyDev isn't configured at all, then prompt the user
 		if (PydevPlugin.getPythonInterpreterManager().isConfigured()) {

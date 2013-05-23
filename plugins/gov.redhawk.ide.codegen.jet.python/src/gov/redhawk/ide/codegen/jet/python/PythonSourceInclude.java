@@ -54,7 +54,7 @@ public class PythonSourceInclude extends IncrementalProjectBuilder {
 	private static final Pattern PY_FILENAME = Pattern.compile(".*\\.py$");
 
 	@Override
-	protected IProject[] build(final int kind, final Map args, final IProgressMonitor monitor) throws CoreException {
+	protected IProject[] build(final int kind, @SuppressWarnings("rawtypes") final Map args, final IProgressMonitor monitor) throws CoreException {
 		try {
 			final IProject project = getProject();
 

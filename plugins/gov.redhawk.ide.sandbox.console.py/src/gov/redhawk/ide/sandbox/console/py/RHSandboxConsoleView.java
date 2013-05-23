@@ -165,11 +165,11 @@ public class RHSandboxConsoleView extends ViewPart implements IConsoleView, IPag
 		this.getSite().setSelectionProvider(provider);
 	}
 
-	public Object getService(final Class api) {
+	public Object getService(@SuppressWarnings("rawtypes") final Class api) {
 		return this.getSite().getService(api);
 	}
 
-	public boolean hasService(final Class api) {
+	public boolean hasService(@SuppressWarnings("rawtypes") final Class api) {
 		return this.getSite().hasService(api);
 	}
 
