@@ -55,6 +55,7 @@ public class RHLocalConsoleFactory implements IConsoleFactory {
 			if (interpreters.length == 0) {
 				StatusManager.getManager().handle(new Status(IStatus.ERROR, RHLocalConsolePlugin.PLUGIN_ID, Messages.RHLocalConsoleFactory_PY_ERROR, null),
 				        StatusManager.LOG | StatusManager.SHOW);
+				return;
 			}
 			final IInterpreterInfo interpreterInfo = interpreters[0];
 			final Collection<String> pythonPath = interpreterInfo.getPythonPath();
