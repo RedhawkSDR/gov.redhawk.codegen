@@ -114,7 +114,7 @@ public class AbstractJavaCodegenProperty implements JavaCodegenProperty {
 		for (Kind k : this.kind) {
 			retval.add(k.getType().getLiteral());
 		}
-		return (String[]) retval.toArray();
+		return retval.toArray(new String[retval.size()]);
 	}
 
 	/**
