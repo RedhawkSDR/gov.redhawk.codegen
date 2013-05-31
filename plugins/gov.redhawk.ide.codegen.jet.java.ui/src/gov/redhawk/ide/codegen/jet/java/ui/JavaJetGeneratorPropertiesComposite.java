@@ -222,13 +222,11 @@ public class JavaJetGeneratorPropertiesComposite extends BaseGeneratorProperties
 					final Property p = (Property) obj;
 					final Command command = SetCommand.create(domain, p, CodegenPackage.Literals.PROPERTY__VALUE, "FALSE");
 					domain.getCommandStack().execute(command);
-					break;
 				}
 				for (final Object obj : event.diff.getAdditions()) {
 					final Property p = (Property) obj;
 					final Command command = SetCommand.create(domain, p, CodegenPackage.Literals.PROPERTY__VALUE, "TRUE");
 					domain.getCommandStack().execute(command);
-					break;
 				}
 			}
 		});
