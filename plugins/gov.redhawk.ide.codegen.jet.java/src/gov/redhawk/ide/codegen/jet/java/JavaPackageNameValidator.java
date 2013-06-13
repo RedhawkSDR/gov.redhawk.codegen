@@ -54,6 +54,10 @@ public class JavaPackageNameValidator extends AbstractModelConstraint implements
 
 			if (implSettings.getGeneratorId().contains("java")) {
 				final ICodeGeneratorsRegistry registry = RedhawkCodegenActivator.getCodeGeneratorsRegistry();
+				ICodeGeneratorDescriptor generator = registry.findCodegen(implSettings.getGeneratorId());
+				if (generator == null) {
+					return ctx.createSuccessStatus();
+				}
 				final String version = registry.findCodegen(implSettings.getGeneratorId()).getLanguageVersion();
 				IStatus status = null;
 
