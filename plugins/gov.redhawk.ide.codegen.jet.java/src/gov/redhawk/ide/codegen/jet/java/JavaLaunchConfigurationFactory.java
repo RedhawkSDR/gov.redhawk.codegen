@@ -24,7 +24,7 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 
 /**
- * @since 6.1
+ * @since 7.0
  * 
  */
 public class JavaLaunchConfigurationFactory extends AbstractWorkspaceLaunchConfigurationFactory implements ILaunchConfigurationFactory {

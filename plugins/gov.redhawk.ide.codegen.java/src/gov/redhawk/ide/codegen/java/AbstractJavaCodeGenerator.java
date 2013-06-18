@@ -41,6 +41,9 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 
+/**
+ * @since 6.1
+ */
 public abstract class AbstractJavaCodeGenerator extends AbstractCodeGenerator {
 
 	public AbstractJavaCodeGenerator() {

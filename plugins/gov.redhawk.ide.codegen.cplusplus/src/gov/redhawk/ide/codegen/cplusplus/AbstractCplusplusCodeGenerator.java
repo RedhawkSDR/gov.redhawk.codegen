@@ -46,6 +46,7 @@ import gov.redhawk.model.sca.util.ModelUtil;
 /**
  * An abstract class for C/C++ implementation generation. It handles most aspects of configuring CDT, but leaves
  * generating code files up to the sub-class.
+ * @since 6.1
  */
 public abstract class AbstractCplusplusCodeGenerator extends AbstractCodeGenerator {
 
