@@ -44,6 +44,7 @@ import mil.jpeojtrs.sca.spd.ProgrammingLanguage;
 import mil.jpeojtrs.sca.spd.SoftPkg;
 import mil.jpeojtrs.sca.spd.SpdFactory;
 import mil.jpeojtrs.sca.util.DceUuidUtil;
+import mil.jpeojtrs.sca.util.ScaResourceFactoryUtil;
 
 import org.eclipse.cdt.core.CCorePlugin;
 import org.eclipse.cdt.core.dom.IPDOMManager;
@@ -78,7 +79,6 @@ import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.osgi.service.datalocation.Location;
@@ -454,7 +454,7 @@ public class CodegeneratorApplication implements IApplication {
 	        final NullProgressMonitor progressMonitor) throws CoreException {
 		final SubMonitor monitor = SubMonitor.convert(progressMonitor, 2);
 
-		final ResourceSet set = new ResourceSetImpl();
+		final ResourceSet set = ScaResourceFactoryUtil.createResourceSet();
 
 		final IPath projectPath = new Path(project_path);
 		final IProject project = openProject(projectPath);
@@ -654,7 +654,7 @@ public class CodegeneratorApplication implements IApplication {
 	}
 
 	private IProject openProject(final IPath projectPath) throws CoreException {
-		final ResourceSet set = new ResourceSetImpl();
+		final ResourceSet set = ScaResourceFactoryUtil.createResourceSet();
 		final IProgressMonitor progressMonitor = new NullProgressMonitor();
 		final IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		final IWorkspaceRoot root = workspace.getRoot();
@@ -737,7 +737,7 @@ public class CodegeneratorApplication implements IApplication {
 	}
 
 	private SoftPkg getSoftPkg(final IProject project) {
-		final ResourceSet set = new ResourceSetImpl();
+		final ResourceSet set = ScaResourceFactoryUtil.createResourceSet();
 		final IFile softPkgFile = project.getFile(project.getName() + ".spd.xml");
 		final Resource resource = set.getResource(URI.createFileURI(softPkgFile.getLocation().toString()), true);
 		return SoftPkg.Util.getSoftPkg(resource);

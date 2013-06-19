@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import mil.jpeojtrs.sca.util.ScaResourceFactoryUtil;
+
 import org.eclipse.cdt.core.CCProjectNature;
 import org.eclipse.cdt.core.CProjectNature;
 import org.eclipse.core.resources.IFile;
@@ -45,14 +47,13 @@ import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 
 /**
  * Resource visitor used for incremental SCA project builds.
  */
 class IDLBuildVisitor implements IResourceDeltaVisitor, IResourceVisitor {
 
-	private ResourceSet set = new ResourceSetImpl();
+	private ResourceSet set = ScaResourceFactoryUtil.createResourceSet();
 
 	private SCAMarkerUtil markerUtil = SCAMarkerUtil.INSTANCE;
 

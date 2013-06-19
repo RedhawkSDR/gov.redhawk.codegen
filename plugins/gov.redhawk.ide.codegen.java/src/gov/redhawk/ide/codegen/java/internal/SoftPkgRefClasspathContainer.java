@@ -34,7 +34,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
@@ -56,8 +55,7 @@ public class SoftPkgRefClasspathContainer implements IClasspathContainer {
 
 		paths = new ArrayList<IClasspathEntry>();
 
-		ResourceSet set = new ResourceSetImpl();
-		ScaResourceFactoryUtil.setDefaultLoadOptions(set.getLoadOptions());
+		ResourceSet set = ScaResourceFactoryUtil.createResourceSet();
 		Resource resource;
 		try {
 			resource = set.getResource(URI.createPlatformResourceURI(softPkgFile.getFullPath().toPortableString(), true), true);
