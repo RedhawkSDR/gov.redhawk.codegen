@@ -241,7 +241,7 @@
                   lang="java"
                   mode="Live"
                   name="%constraint.name"
-                  severity="WARNING"
+                  severity="ERROR"
                   statusCode="1">
                <message>
                   %constraint.message
