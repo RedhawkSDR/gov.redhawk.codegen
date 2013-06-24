@@ -465,6 +465,8 @@ public class JavaJetGeneratorPropertiesWizardPage extends WizardPage implements 
 			this.context.removeBinding(b);
 		}
 
+		this.support = WizardPageSupport.create(this, this.context);
+
 		initFields();
 
 		this.bindings.add(this.context.bindValue(ViewersObservables.observeSingleSelection(this.templateViewer),
@@ -498,8 +500,6 @@ public class JavaJetGeneratorPropertiesWizardPage extends WizardPage implements 
 		this.propertiesViewer.setInput(propList);
 		this.propBinding = createPropertyBinding();
 		this.bindings.add(this.propBinding);
-
-		this.support = WizardPageSupport.create(this, this.context);
 	}
 
 	/**
