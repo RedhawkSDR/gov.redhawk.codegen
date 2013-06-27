@@ -16,7 +16,7 @@
             runtime="python"
             runtimeVersion="2.4.4">
          <description>
-            Integrated&apos;redhawk-codegen&apos; Python code generator for components, devices and services.
+            Integrated &apos;redhawk-codegen&apos; Python code generator for components, devices and services.
          </description>
          <operatingSystem
                default="true"
