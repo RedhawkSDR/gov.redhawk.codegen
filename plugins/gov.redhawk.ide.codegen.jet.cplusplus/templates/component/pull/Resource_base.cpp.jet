@@ -255,6 +255,9 @@ void <%=PREFIX%>_base::construct()
             } else {
                 inst = new PullPortTemplate().generateClassInstantiator(entry, false, softPkg, implSettings, portTempl, CodegenUtil.CPP);
             }
+        if (inst == null) {
+            throw new IllegalArgumentException("Unable to determine port class instantiator: " + entry);
+        }
 %>
     <%=use.getUsesName()%> = new <%=inst.trim()%>;
     oid = ossie::corba::RootPOA()->activate_object(<%=use.getUsesName()%>);
