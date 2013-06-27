@@ -66,6 +66,9 @@ public class ConfigureAcTemplate
     IResource resource = ModelUtil.getResource(implSettings);
     Implementation impl = templ.getImpl();
     SoftPkg softpkg = (SoftPkg) impl.eContainer();
+    if (softpkg == null) {
+        throw new IllegalArgumentException("Unable to determine Spd for implementation: " + impl.getId());
+    }
     String xmlDest = "";
     if (softpkg.getDescriptor().getComponent().getComponentType().contains(RedhawkIdePreferenceConstants.DEVICE.toLowerCase())) {
     	xmlDest = "dev"; 
@@ -75,10 +78,7 @@ public class ConfigureAcTemplate
     
     // Determine softpkg version, set to 1.0.0 if none exists
     String version = "1.0.0";
-    String softpkgVersion = null;
-    if (softpkg != null) {
-        softpkgVersion = softpkg.getVersion();
-    }  
+    String softpkgVersion = softpkg.getVersion();
     if (softpkgVersion != null && !softpkgVersion.equals("")) {
         version = softpkgVersion;
     }
