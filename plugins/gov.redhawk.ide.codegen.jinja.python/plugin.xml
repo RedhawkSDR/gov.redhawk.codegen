@@ -28,6 +28,9 @@
          <componenttype
                type="device">
          </componenttype>
+         <componenttype
+               type="service">
+         </componenttype>
       </codegen>
    </extension>
    <extension
@@ -50,6 +53,22 @@
          <componenttype
                type="device">
          </componenttype>
+      </template>
+      <template
+            class="gov.redhawk.ide.codegen.jinja.python.template.DefaultPythonTemplate"
+            codegenId="gov.redhawk.ide.codegen.jinja.python.PythonGenerator"
+            hasSettings="false"
+            id="redhawk.codegen.jinja.python.service"
+            name="Default Service"
+            notDefaultable="false"
+            selectable="true"
+            usesPortTemplates="false">
+         <componenttype
+               type="service">
+         </componenttype>
+         <description>
+            Standard Python service.
+         </description>
       </template>
    </extension>
    <extension

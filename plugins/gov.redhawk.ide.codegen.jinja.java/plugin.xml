@@ -18,7 +18,7 @@
             runtime="/usr/bin/java"
             runtimeVersion="1.5">
          <description>
-            Integrated &apos;redhawk-codegen&apos; Java code generator for components and devices.
+            Integrated &apos;redhawk-codegen&apos; Java code generator for components, devices and services.
          </description>
          <operatingSystem
                default="true"
@@ -29,6 +29,9 @@
          </componenttype>
          <componenttype
                type="device">
+         </componenttype>
+         <componenttype
+               type="service">
          </componenttype>
       </codegen>
    </extension>
@@ -67,6 +70,31 @@
                key="use_jni"
                name="Use JNI interfaces for BULKIO"
                required="true">
+         </property>
+      </template>
+      <template
+            class="gov.redhawk.ide.codegen.jinja.java.template.DefaultJavaTemplate"
+            codegenId="gov.redhawk.ide.codegen.jinja.java.JavaGenerator"
+            hasSettings="false"
+            id="redhawk.codegen.jinja.java.service"
+            name="Default Service"
+            notDefaultable="false"
+            selectable="true"
+            usesPortTemplates="false">
+         <componenttype
+               type="service">
+         </componenttype>
+         <description>
+            Standard Java service.
+         </description>
+         <property
+               default_value=""
+               key="java_package"
+               name="Name of the Java package"
+               required="true">
+            <description>
+               The package that the generated component should be named.
+            </description>
          </property>
       </template>
    </extension>
