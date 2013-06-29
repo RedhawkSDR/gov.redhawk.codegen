@@ -216,8 +216,10 @@ BuildRequires: python-devel >= 2.3
     }
 %>
 
+
 %prep
 %setup
+
 
 %build
 <%
@@ -232,11 +234,12 @@ pushd <%=implSettings.getOutputDir()%>
 ./reconf
 %define _bindir %{_prefix}/<%=sdrrootFolder%>/<%=name%>/<%=implSettings.getOutputDir()%>
 %configure
-make
+make %{?_smp_mflags}
 popd
 <%
     }
 %>
+
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -256,11 +259,13 @@ popd
     }
 %>
 
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+
 %files
-%defattr(-,redhawk,redhawk)
+%defattr(-,redhawk,redhawk,-)
 %dir %{_prefix}/<%=sdrrootFolder%>/%{name}
 %{_prefix}/<%=sdrrootFolder%>/%{name}/<%=ModelUtil.getSpdFileName(param.getSoftPkg())%>
 <%
