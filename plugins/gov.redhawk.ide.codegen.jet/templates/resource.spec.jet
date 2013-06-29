@@ -187,8 +187,8 @@ BuildRequires: apache-log4cxx-devel >= 0.10
     if (hasJava) {
 %>
 # Java requirements
-Requires: java
-BuildRequires: jdk
+Requires: java >= 1.6
+BuildRequires: java-devel >= 1.6
 
 <%
     }

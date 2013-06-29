@@ -63,7 +63,7 @@ public class ResourceSpecTemplate
   protected final String TEXT_15 = NL;
   protected final String TEXT_16 = NL + "BuildArch: noarch" + NL;
   protected final String TEXT_17 = NL + "# C++ requirements" + NL + "Requires: libomniORB4.1" + NL + "Requires: boost >= 1.41" + NL + "Requires: apache-log4cxx >= 0.10" + NL + "BuildRequires: boost-devel >= 1.41" + NL + "BuildRequires: libomniORB4.1-devel" + NL + "BuildRequires: apache-log4cxx-devel >= 0.10" + NL;
-  protected final String TEXT_18 = NL + "# Java requirements" + NL + "Requires: java" + NL + "BuildRequires: jdk" + NL;
+  protected final String TEXT_18 = NL + "# Java requirements" + NL + "Requires: java >= 1.6" + NL + "BuildRequires: java-devel >= 1.6" + NL;
   protected final String TEXT_19 = NL + "# Python requirements" + NL + "Requires: python omniORBpy" + NL + "BuildRequires: libomniORBpy3-devel" + NL + "BuildRequires: python-devel >= 2.3" + NL;
   protected final String TEXT_20 = NL + NL + "%description";
   protected final String TEXT_21 = NL;
