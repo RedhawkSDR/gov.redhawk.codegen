@@ -29,9 +29,9 @@ import org.eclipse.emf.validation.model.ConstraintStatus;
 import org.eclipse.jdt.core.JavaConventions;
 
 /**
- * @since 1.2
+ * @since 7.0
  */
-public class JavaPackageNameValidator extends AbstractModelConstraint implements IValidator {
+public class JavaPackageNameConventionEnforcer extends AbstractModelConstraint implements IValidator {
 
 	public IStatus validate(final Object value) {
 		final String s = (String) value;
@@ -71,7 +71,8 @@ public class JavaPackageNameValidator extends AbstractModelConstraint implements
 				if (status == null) {
 					retVal = new EnhancedConstraintStatus((ConstraintStatus) ctx.createFailureStatus("Invalid Package"),
 					        CodegenPackage.Literals.IMPLEMENTATION_SETTINGS__PROPERTIES);
-				} else if (status.getSeverity() >= IStatus.ERROR) {
+				} else if (status.getSeverity() > IStatus.OK && 
+						status.getSeverity() < IStatus.ERROR) {
 					retVal = new EnhancedConstraintStatus((ConstraintStatus) ctx.createFailureStatus(status.getMessage()),
 					        CodegenPackage.Literals.IMPLEMENTATION_SETTINGS__PROPERTIES);
 				}

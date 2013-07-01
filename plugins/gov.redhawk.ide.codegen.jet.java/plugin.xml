@@ -236,7 +236,7 @@
                categories="gov.redhawk.validation.category">
             <constraint
                   class="gov.redhawk.ide.codegen.jet.java.JavaPackageNameValidator"
-                  id="java_package"
+                  id="java_package_error"
                   isEnabledByDefault="true"
                   lang="java"
                   mode="Live"
@@ -271,6 +271,34 @@
                      <feature
                            name="properties">
                      </feature>
+                  </event>
+               </target>
+            </constraint>
+            <constraint
+                  class="gov.redhawk.ide.codegen.jet.java.JavaPackageNameConventionEnforcer"
+                  id="java_package_warning"
+                  isEnabledByDefault="true"
+                  lang="java"
+                  mode="Batch"
+                  name="%constraint.name"
+                  severity="WARNING"
+                  statusCode="2">
+               <message>
+                  %constraint.message
+               </message>
+               <target
+                     class="ImplementationSettings">
+                  <event
+                        name="Add">
+                  </event>
+                  <event
+                        name="Remove">
+                  </event>
+                  <event
+                        name="Set">
+                  </event>
+                  <event
+                        name="Unset">
                   </event>
                </target>
             </constraint>
