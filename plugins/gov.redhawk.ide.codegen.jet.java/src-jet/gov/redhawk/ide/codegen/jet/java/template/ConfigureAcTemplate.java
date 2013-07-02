@@ -44,7 +44,7 @@ public class ConfigureAcTemplate
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
   protected final String TEXT_1 = "AC_INIT(";
   protected final String TEXT_2 = ", ";
-  protected final String TEXT_3 = ")" + NL + "AM_INIT_AUTOMAKE(nostdinc)" + NL + "" + NL + "AC_CORBA_ORB" + NL + "OSSIE_CHECK_OSSIE" + NL + "OSSIE_SDRROOT_AS_PREFIX" + NL + "" + NL + "export PKG_CONFIG_PATH=\"$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig\"" + NL + "PKG_CHECK_MODULES([OSSIE], [ossie >= 1.8])" + NL + "" + NL + "AC_CHECK_PROG([IDLJ], [idlj], [idlj], [AC_MSG_ERROR([cannot find idlj program])])" + NL + "AC_CHECK_PROG([JAVAC], [javac], [javac], [AC_MSG_ERROR([cannot find Java compiler])])" + NL + "AC_CHECK_PROG([JAR], [jar], [jar], [AC_MSG_ERROR([cannot find jar program])])" + NL;
+  protected final String TEXT_3 = ")" + NL + "AM_INIT_AUTOMAKE(nostdinc)" + NL + "" + NL + "AC_CORBA_ORB" + NL + "OSSIE_CHECK_OSSIE" + NL + "OSSIE_SDRROOT_AS_PREFIX" + NL + "" + NL + "export PKG_CONFIG_PATH=\"$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig\"" + NL + "PKG_CHECK_MODULES([OSSIE], [ossie >= 1.8])" + NL + "" + NL + "AC_CHECK_PROG([JAVAC], [javac], [javac], [AC_MSG_ERROR([cannot find Java compiler])])" + NL + "AC_CHECK_PROG([JAR], [jar], [jar], [AC_MSG_ERROR([cannot find jar program])])" + NL;
   protected final String TEXT_4 = NL + "PKG_CHECK_MODULES([INTERFACEDEPS], [";
   protected final String TEXT_5 = "Interfaces";
   protected final String TEXT_6 = " ";
