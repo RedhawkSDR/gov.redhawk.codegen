@@ -236,12 +236,12 @@ class Port<%=PortHelper.idlToCamelPortClass(tempUse.getRepID())%>Out_i(<%=PREFIX
         self.defaultStreamSRI = H
         self.defaultTime = T
         try:
-            try:
-                for connId, port in self.outPorts.items():
-                    if port != None:
+            for connId, port in self.outPorts.items():
+                if port != None:
+                    try:
                         port.pushSRI(H, T)
-            except Exception:
-                self.parent._log.exception("The call to pushSRI failed on port %s connection %s instance %s", self.name, connId, port)
+                    except Exception:
+                        self.parent._log.exception("The call to pushSRI failed on port %s connection %s instance %s", self.name, connId, port)
         finally:
             self.refreshSRI = False
             self.port_lock.release()

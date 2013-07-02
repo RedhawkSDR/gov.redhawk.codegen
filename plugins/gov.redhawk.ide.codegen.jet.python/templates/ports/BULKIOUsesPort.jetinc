@@ -157,13 +157,12 @@ class Port<%=PortHelper.idlToCamelPortClass(tempUse.getRepID())%>Out_i(<%=PREFIX
         self.port_lock.acquire()
         self.sriDict[H.streamID] = copy.deepcopy(H)
         try:
-            try:
-                for connId, port in self.outConnections.items():
-                    if port != None:
+            for connId, port in self.outConnections.items():
+                if port != None:
+                    try:
                         port.pushSRI(H)
-            except Exception:
-                self.parent._log.exception("The call to pushSRI failed on port %s connection %s instance %s", self.name, connId, port)
-                raise
+                    except Exception:
+                        self.parent._log.exception("The call to pushSRI failed on port %s connection %s instance %s", self.name, connId, port)
         finally:
             self.refreshSRI = False
             self.port_lock.release()
@@ -196,9 +195,9 @@ class Port<%=PortHelper.idlToCamelPortClass(tempUse.getRepID())%>Out_i(<%=PREFIX
         self.port_lock.acquire()
 
         try:    
-            try:
-                for connId, port in self.outConnections.items():
-                    if port != None:
+            for connId, port in self.outConnections.items():
+                if port != None:
+                    try:
                         port.<%=op.getName()%>(<%
             boolean first_param = true;
             for (Param p : op.getParams()) {
@@ -211,9 +210,8 @@ class Port<%=PortHelper.idlToCamelPortClass(tempUse.getRepID())%>Out_i(<%=PREFIX
             }
 %>)
                         self.stats.update(<%if ("dataFile".equals(interfaceName)) {%>1<%} else {%>len(<%=op.getParams().get(0).getName()%>)<%}%>, 0, streamID, connId)
-            except Exception:
-                self.parent._log.exception("The call to <%=op.getName()%> failed on port %s connection %s instance %s", self.name, connId, port)
-                raise
+                    except Exception:
+                        self.parent._log.exception("The call to <%=op.getName()%> failed on port %s connection %s instance %s", self.name, connId, port)
             if EOS==True:
                 if self.sriDict.has_key(streamID):
                     tmp = self.sriDict.pop(streamID)
