@@ -106,12 +106,12 @@ class Port<%=PortHelper.idlToCamelPortClass(tempUse.getRepID())%>Out_i(<%=PREFIX
         self.port_lock.acquire()
 
         try:    
-            try:
-                for connId, port in self.outConnections.items():
-                    if port != None:
+            for connId, port in self.outConnections.items():
+                if port != None:
+                    try:
                         retVal = port._get_<%=op.getName()%>()
-            except Exception:
-                self.parent._log.exception("The call to _get_<%=op.getName()%> failed on port %s connection %s instance %s", self.name, connId, port)
+                    except Exception:
+                        self.parent._log.exception("The call to _get_<%=op.getName()%> failed on port %s connection %s instance %s", self.name, connId, port)
         finally:
             self.port_lock.release()
 
@@ -124,12 +124,12 @@ class Port<%=PortHelper.idlToCamelPortClass(tempUse.getRepID())%>Out_i(<%=PREFIX
         self.port_lock.acquire()
 
         try:    
-            try:
-                for connId, port in self.outConnections.items():
-                    if port != None:
+            for connId, port in self.outConnections.items():
+                if port != None:
+                    try:
                         port._set_<%=op.getName()%>(data)
-            except Exception:
-                self.parent._log.exception("The call to _set_<%=op.getName()%> failed on port %s connection %s instance %s", self.name, connId, port)
+                    except Exception:
+                        self.parent._log.exception("The call to _set_<%=op.getName()%> failed on port %s connection %s instance %s", self.name, connId, port)
         finally:
             self.port_lock.release()
 

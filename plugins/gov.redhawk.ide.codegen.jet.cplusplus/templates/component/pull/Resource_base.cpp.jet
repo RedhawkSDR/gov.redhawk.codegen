@@ -214,6 +214,9 @@ void <%=PREFIX%>_base::construct()
         } else {
             inst = new PullPortTemplate().generateClassInstantiator(entry, true, softPkg, implSettings, portTempl, CodegenUtil.CPP);
         }
+        if (inst == null) {
+            throw new IllegalArgumentException("Failed to populate port name for " + entry);
+        }
 %>
     <%=pro.getProvidesName()%> = new <%=inst.trim()%>;
     oid = ossie::corba::RootPOA()->activate_object(<%=pro.getProvidesName()%>);
@@ -255,9 +258,9 @@ void <%=PREFIX%>_base::construct()
             } else {
                 inst = new PullPortTemplate().generateClassInstantiator(entry, false, softPkg, implSettings, portTempl, CodegenUtil.CPP);
             }
-        if (inst == null) {
-            throw new IllegalArgumentException("Unable to determine port class instantiator: " + entry);
-        }
+            if (inst == null) {
+                throw new IllegalArgumentException("Failed to populate port name for " + entry);
+            }
 %>
     <%=use.getUsesName()%> = new <%=inst.trim()%>;
     oid = ossie::corba::RootPOA()->activate_object(<%=use.getUsesName()%>);
