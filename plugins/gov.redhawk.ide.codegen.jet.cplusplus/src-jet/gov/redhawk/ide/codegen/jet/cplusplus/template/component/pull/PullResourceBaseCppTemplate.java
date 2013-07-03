@@ -435,15 +435,9 @@ public class PullResourceBaseCppTemplate
             } else {
                 inst = new PullPortTemplate().generateClassInstantiator(entry, false, softPkg, implSettings, portTempl, CodegenUtil.CPP);
             }
-<<<<<<< HEAD
-        if (inst == null) {
-            throw new IllegalArgumentException("Unable to determine port class instantiator: " + entry);
-        }
-=======
             if (inst == null) {
                 throw new IllegalArgumentException("Failed to populate port name for " + entry);
             }
->>>>>>> remotes/origin/develop-1_8
 
     stringBuffer.append(TEXT_46);
     stringBuffer.append(use.getUsesName());
