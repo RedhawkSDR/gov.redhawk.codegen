@@ -28,7 +28,7 @@ public class BuildShTemplate
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "#!/bin/sh" + NL + "configure='configure'" + NL + "makefile_in='Makefile.in'" + NL + "config_ac='configure.ac'" + NL + "make_am='Makefile.am'" + NL + "makefile='Makefile'" + NL + "" + NL + "if [ \"$1\" = 'clean' ]; then" + NL + "  make clean" + NL + "else" + NL + "  # Checks if build is newer than makefile (based on modification time)" + NL + "  if [ ! -e $configure ] || [ ! -e $makefile_in ] || [ $config_ac -nt $makefile ] || [ $make_am -nt $makefile ]; then" + NL + "    ./reconf" + NL + "    ./configure" + NL + "  fi" + NL + "  make" + NL + "  exit 0" + NL + "fi";
+  protected final String TEXT_1 = "#!/bin/sh" + NL + "" + NL + "if [ \"$1\" = 'clean' ]; then" + NL + "  make clean" + NL + "else" + NL + "  # Checks if build is newer than makefile (based on modification time)" + NL + "  if [ ! -e configure ] || [ ! -e Makefile.in ] || [ configure.ac -nt Makefile ] || [ Makefile.am -nt Makefile ]; then" + NL + "    ./reconf" + NL + "    ./configure" + NL + "  fi" + NL + "  make" + NL + "  exit 0" + NL + "fi";
   protected final String TEXT_2 = NL;
 
     /**
