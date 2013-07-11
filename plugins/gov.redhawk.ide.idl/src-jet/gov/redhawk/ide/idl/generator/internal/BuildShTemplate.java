@@ -37,7 +37,7 @@ public class BuildShTemplate
   protected final String TEXT_6 = "-";
   protected final String TEXT_7 = NL + "  rpmbuild -ta ${tmpdir}/";
   protected final String TEXT_8 = "-";
-  protected final String TEXT_9 = ".tar.gz" + NL + "  rm -rf $tmpdir" + NL + "else" + NL + "  # Checks if build is newer than makefile (based on modification time)" + NL + "  if [ ! -e configure ] || [ ! -e Makefile.in ] || [ configure.ac -nt Makefile ] || [ Makefile.am -nt Makefile ]; then" + NL + "    ./reconf" + NL + "    ./configure" + NL + "  fi" + NL + "  make" + NL + "fi";
+  protected final String TEXT_9 = ".tar.gz" + NL + "  rm -rf $tmpdir" + NL + "else" + NL + "  # Checks if build is newer than makefile (based on modification time)" + NL + "  if [ ! -e configure ] || [ ! -e Makefile ] || [ configure.ac -nt Makefile ] || [ Makefile.am -nt Makefile ]; then" + NL + "    ./reconf" + NL + "    ./configure" + NL + "  fi" + NL + "  make" + NL + "fi";
   protected final String TEXT_10 = NL;
 
     /**
