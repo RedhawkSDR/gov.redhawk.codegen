@@ -20,6 +20,9 @@ Prefix:         %{_prefix}
 %define _mandir        %{_prefix}/man
 %define _infodir       %{_prefix}/info
 
+# Java libraries built by default; use '--without java' to disable
+%bcond_without java
+
 Summary:        The <%=args.getInterfaceName()%> library for REDHAWK
 Name:           <%=idlModuleNameLower%>Interfaces
 Version:        <%=version%>
@@ -44,7 +47,11 @@ Libraries and interface definitions for <%=args.getInterfaceName()%>.
 
 %build
 ./reconf
-%configure
+%if %{with java}
+  %configure
+%else
+  %configure --disable-java
+%endif
 make
 
 
@@ -67,7 +74,7 @@ rm -rf --preserve-root $RPM_BUILD_ROOT
 %if 0%{?rhel} >= 6
 %{_prefix}/lib/python/<%=idlModuleNameLower%>Interfaces-%{version}-py%{python_version}.egg-info
 %endif
-%if %{?_with_java:1}%{!?_with_java:0}
+%if %{with java}
 %{_prefix}/lib/<%=idlModuleName%>Interfaces.jar
 %{_prefix}/lib/<%=idlModuleName%>Interfaces.src.jar
 %endif
