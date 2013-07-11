@@ -12,7 +12,7 @@ skeleton="../generator.skeleton"
 # By default, the RPM will install to the standard REDHAWK OSSIE root location (/usr/local/redhawk/core)
 %{!?_ossiehome: %define _ossiehome /usr/local/redhawk/core}
 %define _prefix %{_ossiehome}
-Prefix: %{_prefix}
+Prefix:         %{_prefix}
 
 # Point install paths to locations within our target OSSIE root
 %define _sysconfdir    %{_prefix}/etc
@@ -20,44 +20,45 @@ Prefix: %{_prefix}
 %define _mandir        %{_prefix}/man
 %define _infodir       %{_prefix}/info
 
-# Assume Java support by default. Use "rpmbuild --without java" to disable, or define RPM variable "_without_java"
-%{!?_with_java: %{!?_without_java: %define _with_java 1}}
+Summary:        The <%=args.getInterfaceName()%> library for REDHAWK
+Name:           <%=idlModuleNameLower%>Interfaces
+Version:        <%=version%>
+Release:        1
 
-Summary: The <%=args.getInterfaceName()%> library for REDHAWK
-Name: <%=idlModuleNameLower%>Interfaces
-Version: <%=version%>
-Release: 1
-License: None
-Group: REDHAWK/Interfaces
-Source: %{name}-%{version}.tar.gz 
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
-Requires: redhawk >= 1.7
-BuildRequires: redhawk >= 1.7
-BuildRequires: autoconf automake libtool
-BuildRequires: omniORB
-BuildRequires: python omniORBpy omniORBpy-devel
-%{?_with_java:BuildRequires: java-devel}
+Group:          REDHAWK/Interfaces
+License:        None
+Source:         %{name}-%{version}.tar.gz 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
+
+BuildRequires:  redhawk-devel >= 1.9
+Requires:       redhawk >= 1.9
+
 
 %description
 Libraries and interface definitions for <%=args.getInterfaceName()%>.
 
+
 %prep
 %setup
 
+
 %build
 ./reconf
-%configure %{?_without_java: --disable-java}
+%configure
 make
+
 
 %install
 rm -rf --preserve-root $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
+
 %clean
 rm -rf --preserve-root $RPM_BUILD_ROOT
 
+
 %files
-%defattr(-,redhawk,redhawk)
+%defattr(-,redhawk,redhawk,-)
 %{_datadir}/idl/redhawk/<%=idlModuleName%>
 %{_includedir}/redhawk/<%=idlModuleName%>
 %{_libdir}/lib<%=idlModuleNameLower%>Interfaces.*
@@ -71,8 +72,10 @@ rm -rf --preserve-root $RPM_BUILD_ROOT
 %{_prefix}/lib/<%=idlModuleName%>Interfaces.src.jar
 %endif
 
+
 %post
 /sbin/ldconfig
+
 
 %postun
 /sbin/ldconfig
