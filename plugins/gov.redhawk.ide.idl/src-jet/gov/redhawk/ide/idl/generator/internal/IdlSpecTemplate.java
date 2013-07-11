@@ -32,16 +32,17 @@ public class IdlSpecTemplate
   protected final String TEXT_1 = "# By default, the RPM will install to the standard REDHAWK OSSIE root location (/usr/local/redhawk/core)" + NL + "%{!?_ossiehome: %define _ossiehome /usr/local/redhawk/core}" + NL + "%define _prefix %{_ossiehome}" + NL + "Prefix: %{_prefix}" + NL + "" + NL + "# Point install paths to locations within our target OSSIE root" + NL + "%define _sysconfdir    %{_prefix}/etc" + NL + "%define _localstatedir %{_prefix}/var" + NL + "%define _mandir        %{_prefix}/man" + NL + "%define _infodir       %{_prefix}/info" + NL + "" + NL + "# Assume Java support by default. Use \"rpmbuild --without java\" to disable, or define RPM variable \"_without_java\"" + NL + "%{!?_with_java: %{!?_without_java: %define _with_java 1}}" + NL + "" + NL + "Summary: The ";
   protected final String TEXT_2 = " library for REDHAWK" + NL + "Name: ";
   protected final String TEXT_3 = "Interfaces" + NL + "Version: ";
-  protected final String TEXT_4 = NL + "Release: 1" + NL + "License: None" + NL + "Group: REDHAWK/Interfaces" + NL + "Source: %{name}-%{version}.tar.gz " + NL + "BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot" + NL + "Requires: redhawk >= 1.7" + NL + "BuildRequires: redhawk >= 1.7" + NL + "BuildRequires: autoconf automake libtool" + NL + "BuildRequires: omniORB" + NL + "BuildRequires: python omniORBpy omniORBpy-devel" + NL + "%{?_with_java:BuildRequires: jdk}" + NL + "" + NL + "%description" + NL + "Libraries and interface definitions for ";
+  protected final String TEXT_4 = NL + "Release: 1" + NL + "License: None" + NL + "Group: REDHAWK/Interfaces" + NL + "Source: %{name}-%{version}.tar.gz " + NL + "BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot" + NL + "Requires: redhawk >= 1.7" + NL + "BuildRequires: redhawk >= 1.7" + NL + "BuildRequires: autoconf automake libtool" + NL + "BuildRequires: omniORB" + NL + "BuildRequires: python omniORBpy omniORBpy-devel" + NL + "%{?_with_java:BuildRequires: java-devel}" + NL + "" + NL + "%description" + NL + "Libraries and interface definitions for ";
   protected final String TEXT_5 = "." + NL + "" + NL + "%prep" + NL + "%setup" + NL + "" + NL + "%build" + NL + "./reconf" + NL + "%configure %{?_without_java: --disable-java}" + NL + "make" + NL + "" + NL + "%install" + NL + "rm -rf --preserve-root $RPM_BUILD_ROOT" + NL + "make install DESTDIR=$RPM_BUILD_ROOT" + NL + "" + NL + "%clean" + NL + "rm -rf --preserve-root $RPM_BUILD_ROOT" + NL + "" + NL + "%files" + NL + "%defattr(-,redhawk,redhawk)" + NL + "%{_datadir}/idl/redhawk/";
   protected final String TEXT_6 = NL + "%{_includedir}/redhawk/";
   protected final String TEXT_7 = NL + "%{_libdir}/lib";
   protected final String TEXT_8 = "Interfaces.*" + NL + "%{_libdir}/pkgconfig/";
   protected final String TEXT_9 = "Interfaces.pc" + NL + "%{_prefix}/lib/python/redhawk/";
-  protected final String TEXT_10 = "Interfaces" + NL + "%if %{?_with_java:1}%{!?_with_java:0}" + NL + "%{_prefix}/lib/";
-  protected final String TEXT_11 = "Interfaces.jar" + NL + "%{_prefix}/lib/";
-  protected final String TEXT_12 = "Interfaces.src.jar" + NL + "%endif" + NL + "" + NL + "%post" + NL + "/sbin/ldconfig" + NL + "" + NL + "%postun" + NL + "/sbin/ldconfig";
-  protected final String TEXT_13 = NL;
+  protected final String TEXT_10 = "Interfaces" + NL + "%if 0%{?rhel} >= 6" + NL + "%{_prefix}/lib/python/";
+  protected final String TEXT_11 = "Interfaces-%{version}-py%{python_version}.egg-info" + NL + "%endif" + NL + "%if %{?_with_java:1}%{!?_with_java:0}" + NL + "%{_prefix}/lib/";
+  protected final String TEXT_12 = "Interfaces.jar" + NL + "%{_prefix}/lib/";
+  protected final String TEXT_13 = "Interfaces.src.jar" + NL + "%endif" + NL + "" + NL + "%post" + NL + "/sbin/ldconfig" + NL + "" + NL + "%postun" + NL + "/sbin/ldconfig";
+  protected final String TEXT_14 = NL;
 
     /**
     * {@inheritDoc}
@@ -75,11 +76,13 @@ public class IdlSpecTemplate
     stringBuffer.append(TEXT_9);
     stringBuffer.append(idlModuleNameLower);
     stringBuffer.append(TEXT_10);
-    stringBuffer.append(idlModuleName);
+    stringBuffer.append(idlModuleNameLower);
     stringBuffer.append(TEXT_11);
     stringBuffer.append(idlModuleName);
     stringBuffer.append(TEXT_12);
+    stringBuffer.append(idlModuleName);
     stringBuffer.append(TEXT_13);
+    stringBuffer.append(TEXT_14);
     return stringBuffer.toString();
   }
 } 
