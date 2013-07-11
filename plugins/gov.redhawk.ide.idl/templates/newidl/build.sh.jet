@@ -21,7 +21,7 @@ elif [ "$1" = "rpm" ]; then
   rm -rf $tmpdir
 else
   # Checks if build is newer than makefile (based on modification time)
-  if [ ! -e configure ] || [ ! -e Makefile.in ] || [ configure.ac -nt Makefile ] || [ Makefile.am -nt Makefile ]; then
+  if [ ! -e configure ] || [ ! -e Makefile ] || [ configure.ac -nt Makefile ] || [ Makefile.am -nt Makefile ]; then
     ./reconf
     ./configure
   fi
