@@ -36,7 +36,7 @@ BuildRequires: redhawk >= 1.7
 BuildRequires: autoconf automake libtool
 BuildRequires: omniORB
 BuildRequires: python omniORBpy omniORBpy-devel
-%{?_with_java:BuildRequires: jdk}
+%{?_with_java:BuildRequires: java-devel}
 
 %description
 Libraries and interface definitions for <%=args.getInterfaceName()%>.
@@ -63,6 +63,9 @@ rm -rf --preserve-root $RPM_BUILD_ROOT
 %{_libdir}/lib<%=idlModuleNameLower%>Interfaces.*
 %{_libdir}/pkgconfig/<%=args.getInterfaceName()%>Interfaces.pc
 %{_prefix}/lib/python/redhawk/<%=idlModuleNameLower%>Interfaces
+%if 0%{?rhel} >= 6
+%{_prefix}/lib/python/<%=idlModuleNameLower%>Interfaces-%{version}-py%{python_version}.egg-info
+%endif
 %if %{?_with_java:1}%{!?_with_java:0}
 %{_prefix}/lib/<%=idlModuleName%>Interfaces.jar
 %{_prefix}/lib/<%=idlModuleName%>Interfaces.src.jar

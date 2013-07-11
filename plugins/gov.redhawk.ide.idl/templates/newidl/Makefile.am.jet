@@ -170,12 +170,13 @@ setup.py: Makefile.am
 	@echo "" >> $@
 	@echo "setup(" >> $@
 	@echo "      name='$(PYTHON_MODULE_NAME)'," >> $@
+	@echo "      version='$(PACKAGE_VERSION)'," >> $@
 	@echo "      package_dir = {'': 'src/python'}," >> $@
 	@echo "      packages=_packages" >> $@
 	@echo ")" >> $@
 
 $(PY_BUILD_OUT_DIR): $(PY_SRCS) setup.py
-	python setup.py build
+	python setup.py build --build-lib build/lib
 	touch $(PY_BUILD_OUT_DIR)
 
 all-python: $(PY_BUILD_OUT_DIR)

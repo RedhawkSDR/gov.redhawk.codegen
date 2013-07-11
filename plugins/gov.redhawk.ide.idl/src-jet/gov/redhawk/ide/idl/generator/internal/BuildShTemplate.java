@@ -29,7 +29,7 @@ public class BuildShTemplate
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "#!/bin/sh" + NL + "config_ac='configure.ac'" + NL + "make_am='Makefile.am'" + NL + "makefile='Makefile'" + NL + "" + NL + "if [ \"$1\" == 'clean' ]; then" + NL + "  make clean" + NL + "elif [ \"$1\" == 'rpm' ]; then" + NL + "  # A very simplistic RPM build scenario" + NL + "  mydir=`dirname $0`" + NL + "  tmpdir=`mktemp -d`" + NL + "  cp -r ${mydir} ${tmpdir}/";
+  protected final String TEXT_1 = "#!/bin/sh" + NL + "" + NL + "if [ \"$1\" = \"clean\" ]; then" + NL + "  make clean" + NL + "elif [ \"$1\" = \"rpm\" ]; then" + NL + "  # A very simplistic RPM build scenario" + NL + "  mydir=`dirname $0`" + NL + "  tmpdir=`mktemp -d`" + NL + "  cp -r ${mydir} ${tmpdir}/";
   protected final String TEXT_2 = "-";
   protected final String TEXT_3 = NL + "  tar czf ${tmpdir}/";
   protected final String TEXT_4 = "-";
@@ -37,7 +37,7 @@ public class BuildShTemplate
   protected final String TEXT_6 = "-";
   protected final String TEXT_7 = NL + "  rpmbuild -ta ${tmpdir}/";
   protected final String TEXT_8 = "-";
-  protected final String TEXT_9 = ".tar.gz" + NL + "  rm -rf $tmpdir" + NL + "else" + NL + "  # Checks if build is newer than makefile (based on modification time)" + NL + "  if [[ $config_ac -nt $makefile || $make_am -nt $makefile ]]; then" + NL + "    ./reconf" + NL + "    ./configure" + NL + "  fi" + NL + "  make" + NL + "  exit 0" + NL + "fi";
+  protected final String TEXT_9 = ".tar.gz" + NL + "  rm -rf $tmpdir" + NL + "else" + NL + "  # Checks if build is newer than makefile (based on modification time)" + NL + "  if [ ! -e configure ] || [ ! -e Makefile.in ] || [ configure.ac -nt Makefile ] || [ Makefile.am -nt Makefile ]; then" + NL + "    ./reconf" + NL + "    ./configure" + NL + "  fi" + NL + "  make" + NL + "fi";
   protected final String TEXT_10 = NL;
 
     /**
