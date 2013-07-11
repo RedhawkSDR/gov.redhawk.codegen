@@ -29,7 +29,7 @@ public class BuildShTemplate
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "#!/bin/sh" + NL + "" + NL + "if [ \"$1\" = \"clean\" ]; then" + NL + "  make clean" + NL + "elif [ \"$1\" = \"rpm\" ]; then" + NL + "  # A very simplistic RPM build scenario" + NL + "  mydir=`dirname $0`" + NL + "  tmpdir=`mktemp -d`" + NL + "  cp -r ${mydir} ${tmpdir}/";
+  protected final String TEXT_1 = "#!/bin/sh" + NL + "" + NL + "if [ \"$1\" = \"clean\" ]; then" + NL + "  if [ -e Makefile ]; then" + NL + "    make clean" + NL + "  fi" + NL + "elif [ \"$1\" = \"rpm\" ]; then" + NL + "  # A very simplistic RPM build scenario" + NL + "  mydir=`dirname $0`" + NL + "  tmpdir=`mktemp -d`" + NL + "  cp -r ${mydir} ${tmpdir}/";
   protected final String TEXT_2 = "-";
   protected final String TEXT_3 = NL + "  tar czf ${tmpdir}/";
   protected final String TEXT_4 = "-";

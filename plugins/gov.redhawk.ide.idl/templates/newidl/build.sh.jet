@@ -10,7 +10,9 @@ skeleton="../generator.skeleton"
 #!/bin/sh
 
 if [ "$1" = "clean" ]; then
-  make clean
+  if [ -e Makefile ]; then
+    make clean
+  fi
 elif [ "$1" = "rpm" ]; then
   # A very simplistic RPM build scenario
   mydir=`dirname $0`
