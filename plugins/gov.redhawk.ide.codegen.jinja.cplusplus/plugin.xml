@@ -36,6 +36,9 @@
          <componenttype
                type="device">
          </componenttype>
+         <componenttype
+               type="service">
+         </componenttype>
       </codegen>
    </extension>
    <extension
@@ -58,6 +61,22 @@
          <componenttype
                type="device">
          </componenttype>
+      </template>
+      <template
+            class="gov.redhawk.ide.codegen.cplusplus.template.DefaultCppTemplate"
+            codegenId="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusGenerator"
+            hasSettings="false"
+            id="redhawk.codegen.jinja.cpp.service"
+            name="Service"
+            notDefaultable="false"
+            selectable="true"
+            usesPortTemplates="false">
+         <componenttype
+               type="service">
+         </componenttype>
+         <description>
+            Service code generator
+         </description>
       </template>
    </extension>
    <extension
