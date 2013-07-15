@@ -10,7 +10,7 @@ skeleton="../generator.skeleton"
 	final String version = args.getInterfaceVersion();	
 %>
 # By default, the RPM will install to the standard REDHAWK OSSIE root location (/usr/local/redhawk/core)
-%{!?_ossiehome: %define _ossiehome /usr/local/redhawk/core}
+%{!?_ossiehome: %global _ossiehome /usr/local/redhawk/core}
 %define _prefix %{_ossiehome}
 Prefix:         %{_prefix}
 
@@ -20,13 +20,13 @@ Prefix:         %{_prefix}
 %define _mandir        %{_prefix}/man
 %define _infodir       %{_prefix}/info
 
-# Java libraries built by default; use '--without java' to disable
+# Assume Java support by default. Use "rpmbuild --without java" to disable
 %bcond_without java
 
 Summary:        The <%=args.getInterfaceName()%> library for REDHAWK
 Name:           <%=idlModuleNameLower%>Interfaces
 Version:        <%=version%>
-Release:        1
+Release:        1%{?dist}
 
 Group:          REDHAWK/Interfaces
 License:        None
@@ -47,11 +47,7 @@ Libraries and interface definitions for <%=args.getInterfaceName()%>.
 
 %build
 ./reconf
-%if %{with java}
-  %configure
-%else
-  %configure --disable-java
-%endif
+%configure %{?_without_java: --disable-java}
 make
 
 
