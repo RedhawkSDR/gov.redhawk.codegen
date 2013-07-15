@@ -10,7 +10,7 @@ skeleton="../generator.skeleton"
 	final String version = args.getInterfaceVersion();	
 %>
 # By default, the RPM will install to the standard REDHAWK OSSIE root location (/usr/local/redhawk/core)
-%{!?_ossiehome: %define _ossiehome /usr/local/redhawk/core}
+%{!?_ossiehome: %global _ossiehome /usr/local/redhawk/core}
 %define _prefix %{_ossiehome}
 Prefix: %{_prefix}
 
@@ -20,13 +20,13 @@ Prefix: %{_prefix}
 %define _mandir        %{_prefix}/man
 %define _infodir       %{_prefix}/info
 
-# Assume Java support by default. Use "rpmbuild --without java" to disable, or define RPM variable "_without_java"
-%{!?_with_java: %{!?_without_java: %define _with_java 1}}
+# Assume Java support by default. Use "rpmbuild --without java" to disable
+%bcond_without java
 
 Summary: The <%=args.getInterfaceName()%> library for REDHAWK
 Name: <%=idlModuleNameLower%>Interfaces
 Version: <%=version%>
-Release: 1
+Release: 1%{?dist}
 License: None
 Group: REDHAWK/Interfaces
 Source: %{name}-%{version}.tar.gz 
@@ -36,7 +36,9 @@ BuildRequires: redhawk >= 1.7
 BuildRequires: autoconf automake libtool
 BuildRequires: omniORB
 BuildRequires: python omniORBpy omniORBpy-devel
-%{?_with_java:BuildRequires: java-devel}
+%if %{with java}
+BuildRequires: java-devel
+%endif
 
 %description
 Libraries and interface definitions for <%=args.getInterfaceName()%>.
@@ -66,7 +68,7 @@ rm -rf --preserve-root $RPM_BUILD_ROOT
 %if 0%{?rhel} >= 6
 %{_prefix}/lib/python/<%=idlModuleNameLower%>Interfaces-%{version}-py%{python_version}.egg-info
 %endif
-%if %{?_with_java:1}%{!?_with_java:0}
+%if %{with java}
 %{_prefix}/lib/<%=idlModuleName%>Interfaces.jar
 %{_prefix}/lib/<%=idlModuleName%>Interfaces.src.jar
 %endif
