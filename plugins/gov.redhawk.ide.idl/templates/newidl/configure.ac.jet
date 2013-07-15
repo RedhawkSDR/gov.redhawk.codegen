@@ -8,8 +8,6 @@ skeleton="../generator.skeleton"
 %>
 AC_INIT(<%=args.getInterfaceName().toLowerCase()%>Interfaces, <%=args.getInterfaceVersion()%>)
 
-AC_PREFIX_DEFAULT(${OSSIEHOME})
-
 AM_INIT_AUTOMAKE(nostdinc)
 AC_PROG_CC
 AC_PROG_CXX
@@ -23,7 +21,10 @@ OSSIE_OSSIEHOME_AS_PREFIX
 OSSIE_PYTHON_INSTALL_SCHEME
 
 AC_CORBA_ORB
-AC_CHECK_PROG([IDL], [omniidl], [omniidl], [AC_MSG_ERROR([cannot find omniidl program])])
+AC_CHECK_PROG([IDL], [omniidl], [omniidl], [no])
+if test "$IDL" = no; then
+  AC_MSG_ERROR([cannot find omniidl program])
+fi
 AC_LANG_PUSH([C++])
 PKG_CHECK_MODULES([OMNIORB], [omniORB4 >= 4.1.0])
 PKG_CHECK_MODULES(OSSIE, ossie >= 1.7.0,,exit)
@@ -45,18 +46,18 @@ if test "x$enable_java" != "xno"; then
   AC_MSG_CHECKING([for a valid JAVA_HOME])
   if test -n "$JAVA_HOME" -a -d "$JAVA_HOME"; then
     AC_MSG_RESULT([$JAVA_HOME])
+    java_test_paths=$JAVA_HOME/jre/sh$PATH_SEPARATOR$JAVA_HOME/bin$PATH_SEPARATOR$PATH
   else
-    AC_MSG_RESULT([no])
-    AC_MSG_ERROR([try setting the JAVA_HOME variable to the base of a valid Java install])
+    AC_MSG_RESULT([no - this may impact Java tool detection])
+    java_test_paths=$PATH
   fi
 
-  # Locate tools we need based on JAVA_HOME
-  java_test_paths=$JAVA_HOME/jre/sh$PATH_SEPARATOR$JAVA_HOME/bin
+  # Locate tools we need
   AC_PATH_PROG([JAVAC], [javac], [no], [$java_test_paths])
   AC_PATH_PROG([JAR], [jar], [no], [$java_test_paths])
   AC_PATH_PROG([IDLJ], [idlj], [no], [$java_test_paths])
   AS_IF([test "$JAVAC" = no -o "$JAR" = no -o "$IDLJ" = no],
-        [AC_MSG_ERROR([Cannot find a required Java tool relative to $JAVA_HOME])])
+        [AC_MSG_ERROR([Cannot find a required Java tool])])
 
   HAVE_JAVASUPPORT=yes
 fi
