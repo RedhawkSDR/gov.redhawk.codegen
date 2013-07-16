@@ -16,6 +16,7 @@ import gov.redhawk.ide.idl.generator.newidl.GeneratorArgs;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.regex.Pattern;
 
 import junit.framework.Assert;
 
@@ -45,11 +46,11 @@ public class IdlSpecTemplateTest {
 		Assert.assertNotNull(idlSpecContent);
 
 		// Test the content of the idl spec
-		Assert.assertTrue(idlSpecContent.contains("Name: testinterfaceInterfaces"));
-		Assert.assertTrue(idlSpecContent.contains("Version: 1.0.0"));
-		Assert.assertTrue(idlSpecContent.contains("BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot"));
+		Assert.assertTrue(Pattern.compile("Name:\\s+testinterfaceInterfaces").matcher(idlSpecContent).find());
+		Assert.assertTrue(Pattern.compile("Version:\\s+1.0.0").matcher(idlSpecContent).find());
+		Assert.assertTrue(Pattern.compile("BuildRoot:\\s+%\\{_tmppath\\}/%\\{name\\}-%\\{version\\}-%\\{release\\}-buildroot").matcher(idlSpecContent).find());
 		Assert.assertTrue(idlSpecContent.contains("Libraries and interface definitions for testInterface."));
-		Assert.assertTrue(idlSpecContent.contains("%defattr(-,redhawk,redhawk)"));
+		Assert.assertTrue(idlSpecContent.contains("%defattr(-,redhawk,redhawk,-)"));
 		Assert.assertTrue(idlSpecContent.contains("%{_datadir}/idl/redhawk/TESTINTERFACE"));
 		Assert.assertTrue(idlSpecContent.contains("%{_includedir}/redhawk/TESTINTERFACE"));
 		Assert.assertTrue(idlSpecContent.contains("%{_libdir}/libtestinterfaceInterfaces.*"));
