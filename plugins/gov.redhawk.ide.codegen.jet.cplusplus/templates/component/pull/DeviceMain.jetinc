@@ -18,4 +18,5 @@ int main(int argc, char *argv[])
     devicePtr = 0;
 
     Device_impl::start_device(&devicePtr, sa, argc, argv);
+    return 0;
 }
