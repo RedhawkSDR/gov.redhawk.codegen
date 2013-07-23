@@ -42,12 +42,14 @@
             codegenId="gov.redhawk.ide.codegen.jinja.java.JavaGenerator"
             hasSettings="true"
             id="redhawk.codegen.jinja.java.component.pull"
-            name="Pull Port Data"
+            name="Pull Port Data (Base/Derived)"
             notDefaultable="false"
             selectable="true"
             usesPortTemplates="false">
          <description>
-            This template will queue all data inside each input port. It is the developers responsibility to pull the data from the port's queue for processing.
+            This template will queue all data inside each input port. It is the developers responsibility to pull the data from the port&apos;s queue for processing.
+
+Generates a user-editable derived class and regeneratable base class.
          </description>
          <componenttype
                type="resource">
@@ -63,13 +65,6 @@
             <description>
                The package that the generated component should be named.
             </description>
-         </property>
-         <property
-               default_value="TRUE"
-               deprecated="false"
-               key="use_jni"
-               name="Use JNI interfaces for BULKIO"
-               required="true">
          </property>
       </template>
       <template
@@ -95,6 +90,43 @@
             <description>
                The package that the generated component should be named.
             </description>
+         </property>
+      </template>
+      <template
+            class="gov.redhawk.ide.codegen.jinja.java.template.DefaultJavaTemplate"
+            codegenId="gov.redhawk.ide.codegen.jinja.java.JavaGenerator"
+            hasSettings="true"
+            id="redhawk.codegen.jinja.java.component.jmerge"
+            name="Pull Port Data (JMerge)"
+            notDefaultable="false"
+            selectable="false"
+            usesPortTemplates="false">
+         <description>
+            This is a deprecated template that generates a single classfile that integrates generator changes using JMerge.
+
+This template will queue all data inside each input port. It is the developers responsibility to pull the data from the port&apos;s queue for processing.
+         </description>
+         <componenttype
+               type="resource">
+         </componenttype>
+         <componenttype
+               type="device">
+         </componenttype>
+         <property
+               default_value=""
+               key="java_package"
+               name="Name of the Java package"
+               required="true">
+            <description>
+               The package that the generated component should be named.
+            </description>
+         </property>
+         <property
+               default_value="TRUE"
+               deprecated="false"
+               key="use_jni"
+               name="Use JNI interfaces for BULKIO"
+               required="true">
          </property>
       </template>
    </extension>
