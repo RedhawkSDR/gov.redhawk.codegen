@@ -284,6 +284,7 @@ public class <%=className%> extends UsesPortStatisticsProviderPOA {
 				sri.subsize = 0;
 				sri.xunits = 1; // TIME_S
 				sri.streamID = streamID;
+                sri.blocking = false;
 <%
 			} else {
 %>
@@ -294,6 +295,7 @@ public class <%=className%> extends UsesPortStatisticsProviderPOA {
 				sri.subsize = 0;
 				sri.xunits = 1; // TIME_S
 				sri.streamID = streamID;
+                sri.blocking = false;
 <%
 			}
 %>

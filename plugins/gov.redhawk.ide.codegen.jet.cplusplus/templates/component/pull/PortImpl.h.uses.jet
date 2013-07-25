@@ -476,6 +476,7 @@ class <%=nameSpace%>_<%=interfaceName%>_Out_i : public Port_Uses_base_impl, publ
                     sri.ydelta = 0.0;
                     sri.yunits = BULKIO::UNITS_NONE;
                     sri.mode = 0;
+                    sri.blocking = false;
                     sri.streamID = streamID.c_str();
                     currentSRIs[streamID] = sri;
                 }
@@ -520,6 +521,7 @@ class <%=nameSpace%>_<%=interfaceName%>_Out_i : public Port_Uses_base_impl, publ
                     sri.ydelta = 0.0;
                     sri.yunits = BULKIO::UNITS_NONE;
                     sri.mode = 0;
+                    sri.blocking = false;
                     sri.streamID = streamID.c_str();
                     struct timeval tmp_time;
                     struct timezone tmp_tz;
@@ -592,6 +594,7 @@ class <%=nameSpace%>_<%=interfaceName%>_Out_i : public Port_Uses_base_impl, publ
                     sri.ydelta = 0.0;
                     sri.yunits = BULKIO::UNITS_NONE;
                     sri.mode = 0;
+                    sri.blocking = false;
                     sri.streamID = streamID.c_str();
                     currentSRIs[streamID] = sri;
                 }
