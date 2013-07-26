@@ -92,7 +92,7 @@ public class PullPortImplHUsesTemplate
   protected final String TEXT_42 = ", const BULKIO::PrecisionUTCTime& T, bool EOS, const std::string& streamID) {" + NL + "            if (refreshSRI) {" + NL + "                if (currentSRIs.find(streamID) == currentSRIs.end()) {" + NL + "                    BULKIO::StreamSRI sri;" + NL + "                    sri.hversion = 1;" + NL + "                    sri.xstart = 0.0;" + NL + "                    sri.xdelta = 1.0;" + NL + "                    sri.xunits = BULKIO::UNITS_TIME;" + NL + "                    sri.subsize = 0;" + NL + "                    sri.ystart = 0.0;" + NL + "                    sri.ydelta = 0.0;" + NL + "                    sri.yunits = BULKIO::UNITS_NONE;" + NL + "                    sri.mode = 0;" + NL + "                    sri.blocking = false;" + NL + "                    sri.streamID = streamID.c_str();" + NL + "                    currentSRIs[streamID] = sri;" + NL + "                }" + NL + "                pushSRI(currentSRIs[streamID]);" + NL + "            }" + NL + "            boost::mutex::scoped_lock lock(updatingPortsLock);   // don't want to process while command information is coming in" + NL + "            if (active) {" + NL + "                std::vector < std::pair < ";
   protected final String TEXT_43 = "::";
   protected final String TEXT_44 = "_var, std::string > >::iterator port;" + NL + "                for (port = outConnections.begin(); port != outConnections.end(); port++) {" + NL + "                    try {" + NL + "                        ((*port).first)->pushPacket(";
-  protected final String TEXT_45 = ", T, EOS, streamID.c_str());" + NL + "                        stats[(*port).second].update(1, 0, 0, streamID);" + NL + "                    } catch(...) {" + NL + "                        LOG_ERROR(";
+  protected final String TEXT_45 = ", T, EOS, streamID.c_str());" + NL + "                        stats[(*port).second].update(1, 0, EOS, streamID);" + NL + "                    } catch(...) {" + NL + "                        LOG_ERROR(";
   protected final String TEXT_46 = "_";
   protected final String TEXT_47 = "_Out_i, \"Call to pushPacket by ";
   protected final String TEXT_48 = "_";
@@ -104,7 +104,7 @@ public class PullPortImplHUsesTemplate
   protected final String TEXT_54 = "::";
   protected final String TEXT_55 = "_var, std::string > >::iterator port;" + NL + "                for (port = outConnections.begin(); port != outConnections.end(); port++) {" + NL + "                    try {" + NL + "                        ((*port).first)->pushPacket(";
   protected final String TEXT_56 = ", EOS, streamID.c_str());" + NL + "                        stats[(*port).second].update(strlen(";
-  protected final String TEXT_57 = "), 0, 0, streamID);" + NL + "                    } catch(...) {" + NL + "                        LOG_ERROR(";
+  protected final String TEXT_57 = "), 0, EOS, streamID);" + NL + "                    } catch(...) {" + NL + "                        LOG_ERROR(";
   protected final String TEXT_58 = "_";
   protected final String TEXT_59 = "_Out_i, \"Call to pushPacket by ";
   protected final String TEXT_60 = "_";
@@ -122,7 +122,7 @@ public class PullPortImplHUsesTemplate
   protected final String TEXT_72 = "(CORBA::Char*)";
   protected final String TEXT_73 = "&(data[0]), false);" + NL + "            if (active) {" + NL + "                std::vector < std::pair < ";
   protected final String TEXT_74 = "::";
-  protected final String TEXT_75 = "_var, std::string > >::iterator port;" + NL + "                for (port = outConnections.begin(); port != outConnections.end(); port++) {" + NL + "                    try {" + NL + "                        ((*port).first)->pushPacket(seq, T, EOS, streamID.c_str());" + NL + "                        stats[(*port).second].update(data.size(), 0, 0, streamID);" + NL + "                    } catch(...) {" + NL + "                        LOG_ERROR(";
+  protected final String TEXT_75 = "_var, std::string > >::iterator port;" + NL + "                for (port = outConnections.begin(); port != outConnections.end(); port++) {" + NL + "                    try {" + NL + "                        ((*port).first)->pushPacket(seq, T, EOS, streamID.c_str());" + NL + "                        stats[(*port).second].update(data.size(), 0, EOS, streamID);" + NL + "                    } catch(...) {" + NL + "                        LOG_ERROR(";
   protected final String TEXT_76 = "_";
   protected final String TEXT_77 = "_Out_i, \"Call to pushPacket by ";
   protected final String TEXT_78 = "_";

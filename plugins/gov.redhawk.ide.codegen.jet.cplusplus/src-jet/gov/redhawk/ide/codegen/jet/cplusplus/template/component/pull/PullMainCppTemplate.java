@@ -40,10 +40,10 @@ public class PullMainCppTemplate
   protected final String TEXT_5 = NL + "    ";
   protected final String TEXT_6 = "_i* ";
   protected final String TEXT_7 = "_servant;" + NL + "    Resource_impl::start_component(";
-  protected final String TEXT_8 = "_servant, argc, argv);" + NL + "}";
+  protected final String TEXT_8 = "_servant, argc, argv);" + NL + "    return 0;" + NL + "}";
   protected final String TEXT_9 = NL + " ";
   protected final String TEXT_10 = NL;
-  protected final String TEXT_11 = "_i *devicePtr;" + NL + "" + NL + "void signal_catcher(int sig)" + NL + "{" + NL + "    // IMPORTANT Don't call exit(...) in this function" + NL + "    // issue all CORBA calls that you need for cleanup here before calling ORB shutdown" + NL + "    if (devicePtr) {" + NL + "        devicePtr->halt();" + NL + "    }" + NL + "}" + NL + "" + NL + "int main(int argc, char *argv[])" + NL + "{" + NL + "    struct sigaction sa;" + NL + "    sa.sa_handler = signal_catcher;" + NL + "    sa.sa_flags = 0;" + NL + "    devicePtr = 0;" + NL + "" + NL + "    Device_impl::start_device(&devicePtr, sa, argc, argv);" + NL + "}";
+  protected final String TEXT_11 = "_i *devicePtr;" + NL + "" + NL + "void signal_catcher(int sig)" + NL + "{" + NL + "    // IMPORTANT Don't call exit(...) in this function" + NL + "    // issue all CORBA calls that you need for cleanup here before calling ORB shutdown" + NL + "    if (devicePtr) {" + NL + "        devicePtr->halt();" + NL + "    }" + NL + "}" + NL + "" + NL + "int main(int argc, char *argv[])" + NL + "{" + NL + "    struct sigaction sa;" + NL + "    sa.sa_handler = signal_catcher;" + NL + "    sa.sa_flags = 0;" + NL + "    devicePtr = 0;" + NL + "" + NL + "    Device_impl::start_device(&devicePtr, sa, argc, argv);" + NL + "    return 0;" + NL + "}";
   protected final String TEXT_12 = NL;
 
     /**

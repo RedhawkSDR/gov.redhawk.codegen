@@ -491,7 +491,7 @@ class <%=nameSpace%>_<%=interfaceName%>_Out_i : public Port_Uses_base_impl, publ
                 for (port = outConnections.begin(); port != outConnections.end(); port++) {
                     try {
                         ((*port).first)->pushPacket(<%=op.getParams().get(0).getName()%>, T, EOS, streamID.c_str());
-                        stats[(*port).second].update(1, 0, 0, streamID);
+                        stats[(*port).second].update(1, 0, EOS, streamID);
                     } catch(...) {
                         LOG_ERROR(<%=nameSpace%>_<%=interfaceName%>_Out_i, "Call to pushPacket by <%=nameSpace%>_<%=interfaceName%>_Out_i failed");
                     }
@@ -547,7 +547,7 @@ class <%=nameSpace%>_<%=interfaceName%>_Out_i : public Port_Uses_base_impl, publ
                 for (port = outConnections.begin(); port != outConnections.end(); port++) {
                     try {
                         ((*port).first)->pushPacket(<%=op.getParams().get(0).getName()%>, EOS, streamID.c_str());
-                        stats[(*port).second].update(strlen(<%=op.getParams().get(0).getName()%>), 0, 0, streamID);
+                        stats[(*port).second].update(strlen(<%=op.getParams().get(0).getName()%>), 0, EOS, streamID);
                     } catch(...) {
                         LOG_ERROR(<%=nameSpace%>_<%=interfaceName%>_Out_i, "Call to pushPacket by <%=nameSpace%>_<%=interfaceName%>_Out_i failed");
                     }
@@ -619,7 +619,7 @@ class <%=nameSpace%>_<%=interfaceName%>_Out_i : public Port_Uses_base_impl, publ
                 for (port = outConnections.begin(); port != outConnections.end(); port++) {
                     try {
                         ((*port).first)->pushPacket(seq, T, EOS, streamID.c_str());
-                        stats[(*port).second].update(data.size(), 0, 0, streamID);
+                        stats[(*port).second].update(data.size(), 0, EOS, streamID);
                     } catch(...) {
                         LOG_ERROR(<%=nameSpace%>_<%=interfaceName%>_Out_i, "Call to pushPacket by <%=nameSpace%>_<%=interfaceName%>_Out_i failed");
                     }
