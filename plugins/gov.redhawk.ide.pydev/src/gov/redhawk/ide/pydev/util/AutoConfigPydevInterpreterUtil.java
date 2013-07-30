@@ -27,9 +27,8 @@ import org.python.pydev.core.MisconfigurationException;
 import org.python.pydev.core.docutils.StringUtils;
 import org.python.pydev.plugin.PydevPlugin;
 import org.python.pydev.runners.SimplePythonRunner;
+import org.python.pydev.shared_core.structure.Tuple;
 import org.python.pydev.ui.pythonpathconf.InterpreterInfo;
-
-import com.aptana.shared_core.structure.Tuple;
 
 public final class AutoConfigPydevInterpreterUtil {
 
