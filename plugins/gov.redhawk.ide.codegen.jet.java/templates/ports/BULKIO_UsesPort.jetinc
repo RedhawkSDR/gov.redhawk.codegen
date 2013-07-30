@@ -333,6 +333,12 @@ public class <%=className%> extends UsesPortStatisticsProviderPOA {
                 //begin-user-code
                 //end-user-code
             }
+	    if ( endOfStream ) {
+	       if ( this.currentSRIs.containsKey(streamID) ) {
+                    this.currentSRIs.remove(streamID);
+		}
+	    }
+
         }    // don't want to process while command information is coming in
         
         return;
