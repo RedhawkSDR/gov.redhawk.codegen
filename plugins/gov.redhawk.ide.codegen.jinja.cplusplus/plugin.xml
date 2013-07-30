@@ -67,7 +67,7 @@
             codegenId="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusGenerator"
             hasSettings="false"
             id="redhawk.codegen.jinja.cpp.service"
-            name="Service"
+            name="Default Service"
             notDefaultable="false"
             selectable="true"
             usesPortTemplates="false">
