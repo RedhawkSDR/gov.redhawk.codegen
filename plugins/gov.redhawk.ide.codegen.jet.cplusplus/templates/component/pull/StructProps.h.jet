@@ -38,6 +38,7 @@ skeleton="../../generator.skeleton"
 *******************************************************************************************/
 
 #include <ossie/CorbaUtils.h>
+#include <ossie/PropertyInterface.h>
 
 <%for (StructProperty struct : structs ) {
 	List<SimpleProperty> fields = struct.getFields();%>
