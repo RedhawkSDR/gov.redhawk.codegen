@@ -497,6 +497,12 @@ class <%=nameSpace%>_<%=interfaceName%>_Out_i : public Port_Uses_base_impl, publ
                     }
                 }
             }
+            // for end of stream,  remove old sri
+            try {
+                if ( EOS ) currentSRIs.erase(streamID);
+            }
+            catch(...){
+            }
         };
 <%
                         continue;
@@ -553,6 +559,13 @@ class <%=nameSpace%>_<%=interfaceName%>_Out_i : public Port_Uses_base_impl, publ
                     }
                 }
             }
+            // for end of stream,  remove old sri
+            try {
+                if ( EOS ) currentSRIs.erase(streamID);
+            }
+            catch(...){
+            }
+
         };
 <%
                         continue;
@@ -625,6 +638,13 @@ class <%=nameSpace%>_<%=interfaceName%>_Out_i : public Port_Uses_base_impl, publ
                     }
                 }
             }
+            // for end of stream,  remove old sri
+            try {
+                if ( EOS ) currentSRIs.erase(streamID);
+            }
+            catch(...){
+            }
+
         };
 <%
                         continue;

@@ -96,7 +96,7 @@ public class PullPortImplHUsesTemplate
   protected final String TEXT_46 = "_";
   protected final String TEXT_47 = "_Out_i, \"Call to pushPacket by ";
   protected final String TEXT_48 = "_";
-  protected final String TEXT_49 = "_Out_i failed\");" + NL + "                    }" + NL + "                }" + NL + "            }" + NL + "        };";
+  protected final String TEXT_49 = "_Out_i failed\");" + NL + "                    }" + NL + "                }" + NL + "            }" + NL + "            // for end of stream,  remove old sri" + NL + "            try {" + NL + "                if ( EOS ) currentSRIs.erase(streamID);" + NL + "            }" + NL + "            catch(...){" + NL + "            }" + NL + "        };";
   protected final String TEXT_50 = NL + "        " + NL + "        /*" + NL + "         * pushPacket" + NL + "         *     description: push data out of the port" + NL + "         *" + NL + "         *  ";
   protected final String TEXT_51 = ": structure containing the payload to send out" + NL + "         *  EOS: end-of-stream flag" + NL + "         *  streamID: stream identifier" + NL + "         */" + NL + "        void pushPacket(";
   protected final String TEXT_52 = " ";
@@ -108,7 +108,7 @@ public class PullPortImplHUsesTemplate
   protected final String TEXT_58 = "_";
   protected final String TEXT_59 = "_Out_i, \"Call to pushPacket by ";
   protected final String TEXT_60 = "_";
-  protected final String TEXT_61 = "_Out_i failed\");" + NL + "                    }" + NL + "                }" + NL + "            }" + NL + "        };";
+  protected final String TEXT_61 = "_Out_i failed\");" + NL + "                    }" + NL + "                }" + NL + "            }" + NL + "            // for end of stream,  remove old sri" + NL + "            try {" + NL + "                if ( EOS ) currentSRIs.erase(streamID);" + NL + "            }" + NL + "            catch(...){" + NL + "            }" + NL + "" + NL + "        };";
   protected final String TEXT_62 = NL + "        " + NL + "        /*" + NL + "         * pushPacket" + NL + "         *     description: push data out of the port" + NL + "         *" + NL + "         *  data: structure containing the payload to send out" + NL + "         *  T: constant of type BULKIO::PrecisionUTCTime containing the timestamp for the outgoing data." + NL + "         *    tcmode: timecode mode" + NL + "         *    tcstatus: timecode status " + NL + "         *    toff: fractional sample offset" + NL + "         *    twsec: J1970 GMT " + NL + "         *    tfsec: fractional seconds: 0.0 to 1.0" + NL + "         *  EOS: end-of-stream flag" + NL + "         *  streamID: stream identifier" + NL + "         */" + NL + "        template <typename ALLOCATOR>";
   protected final String TEXT_63 = NL + "        void pushPacket(";
   protected final String TEXT_64 = " data, BULKIO::PrecisionUTCTime& T, bool EOS, const std::string& streamID) {";
@@ -126,7 +126,7 @@ public class PullPortImplHUsesTemplate
   protected final String TEXT_76 = "_";
   protected final String TEXT_77 = "_Out_i, \"Call to pushPacket by ";
   protected final String TEXT_78 = "_";
-  protected final String TEXT_79 = "_Out_i failed\");" + NL + "                    }" + NL + "                }" + NL + "            }" + NL + "        };";
+  protected final String TEXT_79 = "_Out_i failed\");" + NL + "                    }" + NL + "                }" + NL + "            }" + NL + "            // for end of stream,  remove old sri" + NL + "            try {" + NL + "                if ( EOS ) currentSRIs.erase(streamID);" + NL + "            }" + NL + "            catch(...){" + NL + "            }" + NL + "" + NL + "        };";
   protected final String TEXT_80 = NL;
   protected final String TEXT_81 = NL + "        ";
   protected final String TEXT_82 = " ";

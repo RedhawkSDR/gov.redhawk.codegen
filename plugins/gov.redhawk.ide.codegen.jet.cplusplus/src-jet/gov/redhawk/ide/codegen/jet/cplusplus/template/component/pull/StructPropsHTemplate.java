@@ -40,7 +40,7 @@ public class StructPropsHTemplate
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "#ifndef STRUCTPROPS_H" + NL + "#define STRUCTPROPS_H" + NL + "" + NL + "/*******************************************************************************************" + NL + "" + NL + "    AUTO-GENERATED CODE. DO NOT MODIFY" + NL + "" + NL + "*******************************************************************************************/" + NL + "" + NL + "#include <ossie/CorbaUtils.h>" + NL;
+  protected final String TEXT_1 = "#ifndef STRUCTPROPS_H" + NL + "#define STRUCTPROPS_H" + NL + "" + NL + "/*******************************************************************************************" + NL + "" + NL + "    AUTO-GENERATED CODE. DO NOT MODIFY" + NL + "" + NL + "*******************************************************************************************/" + NL + "" + NL + "#include <ossie/CorbaUtils.h>" + NL + "#include <ossie/PropertyInterface.h>" + NL;
   protected final String TEXT_2 = NL + "struct ";
   protected final String TEXT_3 = " {" + NL + "\t";
   protected final String TEXT_4 = " ()" + NL + "\t{";
