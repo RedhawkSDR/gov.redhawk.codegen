@@ -55,9 +55,11 @@
       <template
             class="gov.redhawk.ide.codegen.jet.cplusplus.pattern.LegacyTemplate"
             codegenId="gov.redhawk.ide.codegen.jet.cplusplus.CplusplusGenerator"
+            deprecated="true"
             hasSettings="true"
             id="gov.redhawk.ide.codegen.jet.cplusplus.CplusplusGenerator"
             name="Legacy Project"
+            newTemplateID="redhawk.codegen.jinja.cpp.component.pull"
             notDefaultable="true"
             selectable="false"
             usesPortTemplates="false">
@@ -114,9 +116,11 @@ If false, the data will be taken from the sequence and it is the component's res
       <template
             class="gov.redhawk.ide.codegen.jet.cplusplus.pattern.ManualTemplate"
             codegenId="gov.redhawk.ide.codegen.jet.cplusplus.CplusplusGenerator"
+            deprecated="true"
             hasSettings="true"
             id="gov.redhawk.ide.codegen.jet.cplusplus.ManualTemplate"
             name="Manual Generator"
+            newTemplateID="redhawk.codegen.jinja.cpp.component.pull"
             notDefaultable="true"
             selectable="true"
             usesPortTemplates="false">
@@ -145,9 +149,11 @@ If false, the data will be taken from the sequence and it is the component's res
       <template
             class="gov.redhawk.ide.codegen.jet.cplusplus.pattern.PullPortDataTemplate"
             codegenId="gov.redhawk.ide.codegen.jet.cplusplus.CplusplusGenerator"
+            deprecated="true"
             hasSettings="true"
             id="gov.redhawk.ide.codegen.jet.cplusplus.PullPortDataTemplate"
             name="Pull Port Data"
+            newTemplateID="redhawk.codegen.jinja.cpp.component.pull"
             notDefaultable="false"
             portCodegenId="gov.redhawk.ide.codegen.jet.cplusplus.portHandler"
             selectable="true"
@@ -176,9 +182,11 @@ If false, the data will be taken from the sequence and it is the component's res
       <template
             class="gov.redhawk.ide.codegen.jet.cplusplus.pattern.PushPortDataTemplate"
             codegenId="gov.redhawk.ide.codegen.jet.cplusplus.CplusplusGenerator"
+            deprecated="true"
             hasSettings="true"
             id="gov.redhawk.ide.codegen.jet.cplusplus.PushPortDataTemplate"
             name="Push Port Data"
+            newTemplateID="redhawk.codegen.jinja.cpp.component.pull"
             notDefaultable="true"
             selectable="false"
             usesPortTemplates="false">

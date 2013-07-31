@@ -49,9 +49,11 @@
       <template
             class="gov.redhawk.ide.codegen.jet.python.pattern.LegacyTemplate"
             codegenId="gov.redhawk.ide.codegen.jet.python.PythonGenerator"
+            deprecated="true"
             hasSettings="true"
             id="gov.redhawk.ide.codegen.jet.python.PythonGenerator"
             name="Legacy Project"
+            newTemplateID="redhawk.codegen.jinja.python.component.pull"
             notDefaultable="true"
             selectable="false"
             usesPortTemplates="false">
@@ -96,9 +98,11 @@
       <template
             class="gov.redhawk.ide.codegen.jet.python.pattern.ManualTemplate"
             codegenId="gov.redhawk.ide.codegen.jet.python.PythonGenerator"
+            deprecated="true"
             hasSettings="true"
             id="gov.redhawk.ide.codegen.jet.python.pattern.ManualTemplate"
             name="Manual Generation"
+            newTemplateID="redhawk.codegen.jinja.python.component.pull"
             notDefaultable="true"
             selectable="true"
             usesPortTemplates="false">
@@ -127,9 +131,11 @@
       <template
             class="gov.redhawk.ide.codegen.jet.python.pattern.MinimalTemplate"
             codegenId="gov.redhawk.ide.codegen.jet.python.PythonGenerator"
+            deprecated="true"
             hasSettings="false"
             id="gov.redhawk.ide.codegen.jet.python.pattern.MinimalTemplate"
             name="Minimal Implementation"
+            newTemplateID="redhawk.codegen.jinja.python.component.pull"
             notDefaultable="true"
             selectable="true"
             usesPortTemplates="false">
@@ -146,9 +152,11 @@
       <template
             class="gov.redhawk.ide.codegen.jet.python.pattern.PullPortDataTemplate"
             codegenId="gov.redhawk.ide.codegen.jet.python.PythonGenerator"
+            deprecated="true"
             hasSettings="true"
             id="gov.redhawk.ide.codegen.jet.python.pattern.PullPortDataTemplate"
             name="Pull Port Data"
+            newTemplateID="redhawk.codegen.jinja.python.component.pull"
             notDefaultable="false"
             portCodegenId="gov.redhawk.ide.codegen.jet.python.portHandler"
             selectable="true"
@@ -176,9 +184,11 @@
       <template
             class="gov.redhawk.ide.codegen.jet.python.pattern.WorkModuleTemplate"
             codegenId="gov.redhawk.ide.codegen.jet.python.PythonGenerator"
+            deprecated="true"
             hasSettings="true"
             id="gov.redhawk.ide.codegen.jet.python.pattern.WorkModuleTemplate"
             name="Work Module Processor"
+            newTemplateID="redhawk.codegen.jinja.python.component.pull"
             notDefaultable="false"
             selectable="false"
             usesPortTemplates="false">
@@ -195,9 +205,11 @@
       <template
             class="gov.redhawk.ide.codegen.jet.python.pattern.MinimalServiceTemplate"
             codegenId="gov.redhawk.ide.codegen.jet.python.PythonGenerator"
+            deprecated="true"
             hasSettings="false"
             id="gov.redhawk.ide.codegen.jet.python.pattern.MinimalServiceTemplate"
             name="Minimal Generator"
+            newTemplateID="redhawk.codegen.jinja.python.component.pull"
             notDefaultable="false"
             selectable="true"
             usesPortTemplates="false">
