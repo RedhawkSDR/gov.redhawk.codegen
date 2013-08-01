@@ -1,28 +1,6 @@
-#
-# This file is protected by Copyright. Please refer to the COPYRIGHT file 
-# distributed with this source distribution.
-# 
-# This file is part of REDHAWK core.
-# 
-# REDHAWK core is free software: you can redistribute it and/or modify it under 
-# the terms of the GNU Lesser General Public License as published by the Free 
-# Software Foundation, either version 3 of the License, or (at your option) any 
-# later version.
-# 
-# REDHAWK core is distributed in the hope that it will be useful, but WITHOUT 
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
-# FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
-# details.
-# 
-# You should have received a copy of the GNU Lesser General Public License 
-# along with this program.  If not, see http://www.gnu.org/licenses/.
-#
-
-from ossie.utils.idl import omniidl
 from omniidl import idlast, idlvisitor, idlutil, main, idltype
-from ossie.utils.idl import omniidl_be
 from omniidl_be.cxx import types
-from ossie.utils.idl import _omniidl
+import _omniidl
 import os
 try:
     from omniORB import URI, any, CORBA
@@ -44,7 +22,7 @@ baseTypes[100] = 'ot_structforward'
 baseTypes[101] = 'ot_unionforward'
 
 class Interface:
-    def __init__(self,name,nameSpace="",operations=[],filename="",fullpath="",repoId=""):
+    def __init__(self,name,nameSpace="",operations=[],filename="",fullpath=""):
         self.name = name
         self.nameSpace = nameSpace
         self.attributes = []
@@ -53,7 +31,6 @@ class Interface:
         self.fullpath = fullpath
         self.inherited_names = []
         self.inherited = []
-        self.repoId = repoId
 
     def __eq__(self,other):
         if isinstance(other, Interface):
@@ -89,7 +66,7 @@ class Operation:
     def __init__(self,name,returnType,params=[]):
         self.name = name
         self.returnType = returnType
-        self.cxxReturnType = ''
+        self.cxxReturnType = ('', 0)
         self.params = []
         self.raises = []
 
@@ -97,7 +74,7 @@ class Operation:
         retstr = '{'
         retstr += "'name':'" + self.name + "',"
         retstr += "'returnType':'" + self.returnType + "',"
-        retstr += "'cxxReturnType':'" + self.cxxReturnType + "',"
+        retstr += "'cxxReturnType':" + str(self.cxxReturnType) + ","
         retstr += "'params':["
         for p in self.params:
             retstr += str(p) + ','
@@ -125,7 +102,7 @@ class Attribute:
         retstr += "'readonly':'" + str(self.readonly) + "',"
         retstr += "'dataType':'" + self.dataType + "',"
         retstr += "'returnType':'" + self.returnType + "',"
-        retstr += "'cxxReturnType':'" + self.cxxReturnType + "',"
+        retstr += "'cxxReturnType':" + repr(self.cxxReturnType) + ","
         retstr += "'cxxType':'" + self.cxxType + "'"
         retstr += '}'
 
@@ -183,7 +160,7 @@ class ExampleVisitor (idlvisitor.AstVisitor):
 
         #new_int = base.Interface(node.identifier(),node.scopedName()[0])
         #print "Node Identifier: " + node.identifier() + " , Scoped Node Name: " + node.scopedName()[0]
-        new_int = Interface(node.identifier(),node.scopedName()[0],repoId=node.fullDecl().repoId())
+        new_int = Interface(node.identifier(),node.scopedName()[0])
 
         ops_list = []
         attrs_list = []
@@ -217,7 +194,8 @@ class ExampleVisitor (idlvisitor.AstVisitor):
 
                 # Get the c++ mapping of the return type
                 cxxRT = types.Type(d.returnType())
-                new_op.cxxReturnType = cxxRT.base()
+                #if not new_op.cxxReturnType == 'void':
+                new_op.cxxReturnType = (cxxRT.base(), cxxRT.variable())
 
                 #print new_op.name + "::" + d.identifier() + "()"
                 #tmpstr = node.identifier() + "::" + d.identifier() + "("
@@ -268,7 +246,7 @@ class ExampleVisitor (idlvisitor.AstVisitor):
 
                 # Get the c++ mapping of the return type
                 cxxRT = types.Type(d.attrType())
-                new_attr.cxxReturnType = cxxRT.base()
+                new_attr.cxxReturnType = (cxxRT.base(), cxxRT.variable())
                 new_attr.cxxType = cxxRT.op(0)
 
                 attrs.append(new_attr)
@@ -292,7 +270,9 @@ def getInterfacesFromFile(filename, includepath=None):
 
     try:
         ints = run(tree,'')
-    except:
+    except Exception, e:
+        print e
+        ints = []
         #print popen_cmd
         #print filename
         pass
@@ -320,8 +300,9 @@ def getInterfacesFromFileAsString(filename, includepath=None):
 
     return ifaces
 
-def importStandardIdl(std_idl_path='/usr/local/share/idl/ossie', std_idl_include_path = '/usr/local/share/idl'):
+def importStandardIdl(std_idl_path='/usr/local/share/idl/ossie'):
 
+    std_idl_include_path = '/usr/local/share/idl'
     # find where ossie is installed
     if 'OSSIEHOME' in os.environ and os.path.exists(os.environ['OSSIEHOME']):
         std_idl_path = os.path.join(os.environ['OSSIEHOME'], 'share/idl')
@@ -340,12 +321,6 @@ def importStandardIdl(std_idl_path='/usr/local/share/idl/ossie', std_idl_include
 
     # list to hold any include paths the parser may need
     includePaths = [std_idl_include_path]
-    includePaths.append('/usr/local/share/idl/omniORB')
-    includePaths.append('/usr/share/idl/omniORB')
-    includePaths.append('/usr/local/share/idl/omniORB/COS')
-    includePaths.append('/usr/share/idl/omniORB/COS')
-    for (directory,sub,files) in os.walk(std_idl_include_path):
-        includePaths.append(directory)
 
     # Add the CF interfaces first - in case another file includes them, we
     # don't want them asscociated with anything other than cf.idl
@@ -417,6 +392,12 @@ if __name__ == '__main__':
     if not options.filepath:
         parser.error("Must have a file")
 
+    # The lack of a forward declaration defintion
+    # isn't a big deal for importIDL; this allows us to
+    # parse poa.idl and poa_include.idl without any 
+    # errors or warnings.
+    _omniidl.noForwardWarning()
+    
     if options.string:
         includepaths = None
         if options.include:
