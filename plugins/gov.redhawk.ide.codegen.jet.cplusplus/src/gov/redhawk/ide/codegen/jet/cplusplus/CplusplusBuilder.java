@@ -17,7 +17,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -164,13 +164,13 @@ public class CplusplusBuilder extends IncrementalProjectBuilder {
 
 		// Find include information
 		final List<String> includeDirsList = new ArrayList<String>();
-		final Set<String> symbols = new HashSet<String>();
+		final Set<String> symbols = new LinkedHashSet<String>();
 		findIncludeInfo(tools, progress.newChild(tools.length), includeDirsList, symbols);
 
 		totalWork -= tools.length;
 
 		final IBuildMacroProvider provider = ManagedBuildManager.getBuildMacroProvider();
-		final Set<String> includeDirs = new HashSet<String>();
+		final Set<String> includeDirs = new LinkedHashSet<String>();
 		final MultiStatus includeStatus = new MultiStatus(CplusplusJetGeneratorPlugin.PLUGIN_ID, IStatus.OK,
 		        "Unable to expand variable(s) in includepaths. Please check your include path settings for the project.", null);
 		for (String includeDir : includeDirsList) {
@@ -214,9 +214,9 @@ public class CplusplusBuilder extends IncrementalProjectBuilder {
 		// Expand variables in libraries / paths
 		final MultiStatus libraryStatus = new MultiStatus(CplusplusJetGeneratorPlugin.PLUGIN_ID, IStatus.OK,
 		        "Unable to expand variable(s) in library names / paths. Please check your libraries and library path settings for the project.", null);
-		final Set<String> libraryDirs = new HashSet<String>();
-		final Set<String> librariesExplicit = new HashSet<String>();
-		final Set<String> librariesLinkerResolve = new HashSet<String>();
+		final Set<String> libraryDirs = new LinkedHashSet<String>();
+		final Set<String> librariesExplicit = new LinkedHashSet<String>();
+		final Set<String> librariesLinkerResolve = new LinkedHashSet<String>();
 		for (String libraryDir : libraryDirsList) {
 			// Expand library path and add to a unique list
 			if (libraryDir.length() > 2 && libraryDir.charAt(0) == '"' && libraryDir.charAt(libraryDir.length() - 1) == '"') {
