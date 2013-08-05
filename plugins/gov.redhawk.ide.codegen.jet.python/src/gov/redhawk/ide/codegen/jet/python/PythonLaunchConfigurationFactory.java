@@ -36,7 +36,8 @@ import org.python.pydev.debug.core.Constants;
 @SuppressWarnings("restriction")
 public class PythonLaunchConfigurationFactory extends AbstractWorkspaceLaunchConfigurationFactory implements ILaunchConfigurationFactory {
 
-    @Override
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
 	public ILaunchConfigurationWorkingCopy createLaunchConfiguration(final String usageName, final String implId, final SoftPkg spd) throws CoreException {
 		final ILaunchConfigurationWorkingCopy retVal = super.createLaunchConfiguration(usageName, implId, spd);
 		final Implementation impl = spd.getImplementation(implId);
@@ -47,13 +48,12 @@ public class PythonLaunchConfigurationFactory extends AbstractWorkspaceLaunchCon
 		retVal.setAttribute(IExternalToolConstants.ATTR_BUILDER_SCOPE, "${none}");
 		retVal.setAttribute(IExternalToolConstants.ATTR_LOCATION, getLocation(impl, resource));
 		retVal.setAttribute(IExternalToolConstants.ATTR_WORKING_DIRECTORY, getWorkingDirectory(impl, resource));
-		
-		@SuppressWarnings("rawtypes")
-        Map map = retVal.getAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES, Collections.emptyMap());
+
+		Map map = retVal.getAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES, Collections.emptyMap());
 		Map<String, String> newEnv = new HashMap<String, String>(map);
 		newEnv.remove("PYTHONPATH");
 		retVal.setAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES, newEnv);
-		
+
 		return retVal;
 	}
 
