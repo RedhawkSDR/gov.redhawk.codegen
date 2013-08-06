@@ -70,19 +70,21 @@ public class SoftPkgRefClasspathContainer implements IClasspathContainer {
 		EList<Dependency> deps = impl.getDependency();
 		for (Dependency dep : deps) {
 			SoftPkgRef ref = dep.getSoftPkgRef();
-			SoftPkg depSpd = ref.getSoftPkg();
-			if (depSpd != null && spd.eResource() != null && depSpd.eResource().getURI() != null) {
-				if (depSpd.eResource().getURI().isPlatformResource()) {
-					IFile jarFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(depSpd.eResource().getURI().toPlatformString(true)));
-					paths.add(JavaCore.newProjectEntry(jarFile.getProject().getFullPath()));
-				} else {
-					// TODO How do we determine which impl to use here?
-					String jarFile = depSpd.getImplementation().get(0).getCode().getLocalFile().getName();
-					URI uri = depSpd.eResource().getURI().trimSegments(1).appendSegments(jarFile.split("/"));
-					IFileStore store = EFS.getStore(java.net.URI.create(uri.toString()));
-					if (store.fetchInfo().exists()) {
-						File local = store.toLocalFile(EFS.NONE, null);
-						paths.add(JavaCore.newLibraryEntry(new Path(local.getAbsolutePath()), null, null));
+			if (ref != null) {
+				SoftPkg depSpd = ref.getSoftPkg();
+				if (depSpd != null && spd.eResource() != null && depSpd.eResource().getURI() != null) {
+					if (depSpd.eResource().getURI().isPlatformResource()) {
+						IFile jarFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(depSpd.eResource().getURI().toPlatformString(true)));
+						paths.add(JavaCore.newProjectEntry(jarFile.getProject().getFullPath()));
+					} else {
+						// TODO How do we determine which impl to use here?
+						String jarFile = depSpd.getImplementation().get(0).getCode().getLocalFile().getName();
+						URI uri = depSpd.eResource().getURI().trimSegments(1).appendSegments(jarFile.split("/"));
+						IFileStore store = EFS.getStore(java.net.URI.create(uri.toString()));
+						if (store.fetchInfo().exists()) {
+							File local = store.toLocalFile(EFS.NONE, null);
+							paths.add(JavaCore.newLibraryEntry(new Path(local.getAbsolutePath()), null, null));
+						}
 					}
 				}
 			}
