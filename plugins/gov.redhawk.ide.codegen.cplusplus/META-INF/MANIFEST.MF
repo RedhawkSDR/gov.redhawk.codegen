@@ -17,6 +17,6 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.6.0",
  gov.redhawk.ide.cplusplus.utils;bundle-version="1.0.0";visibility:=reexport,
  gov.redhawk.ide.idl;bundle-version="4.1.0"
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: gov.redhawk.ide.codegen.cplusplus
 Bundle-Vendor: %Bundle-Vendor

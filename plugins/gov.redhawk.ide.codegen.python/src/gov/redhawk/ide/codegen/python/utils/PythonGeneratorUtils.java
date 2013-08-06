@@ -203,7 +203,6 @@ public class PythonGeneratorUtils {
 			// BULKIO special case
 			module = "bulkio.bulkioInterfaces";
 		} else if (parts.get(0).equals("omg.org")) { // from the #pragma in the omniORB idl's
-			module = null;
 			parts.remove(0);
 		} else {
 			// normal case

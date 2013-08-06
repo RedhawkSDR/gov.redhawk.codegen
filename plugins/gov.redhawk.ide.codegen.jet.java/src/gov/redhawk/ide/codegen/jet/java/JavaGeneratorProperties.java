@@ -46,14 +46,6 @@ public final class JavaGeneratorProperties {
 		return pkg;
 	}
 
-	private static String lastSegment(String name) {
-		final int index = name.lastIndexOf('.');
-		if (index > 0) {
-			name = name.substring(index);
-		}
-		return name;
-	}
-
 	private static String getBasePackageName(final SoftPkg spd) {
 		String result = spd.getName();
 		result = result.replaceAll(" ", "_");

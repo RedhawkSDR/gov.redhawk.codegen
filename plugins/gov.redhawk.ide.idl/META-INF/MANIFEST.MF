@@ -19,7 +19,7 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.6.0",
  gov.redhawk.ide.codegen;bundle-version="9.0.0";visibility:=reexport,
  org.jacorb;bundle-version="3.1.0"
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: gov.redhawk.ide.idl,
  gov.redhawk.ide.idl.generator.internal;x-friends:="gov.redhawk.ide.idl.tests",
  gov.redhawk.ide.idl.generator.newidl

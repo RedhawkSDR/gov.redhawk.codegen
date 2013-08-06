@@ -49,11 +49,6 @@ import mil.jpeojtrs.sca.util.ScaResourceFactoryUtil;
 import org.eclipse.cdt.core.CCorePlugin;
 import org.eclipse.cdt.core.dom.IPDOMManager;
 import org.eclipse.cdt.core.index.IIndexManager;
-import org.eclipse.cdt.core.settings.model.ICConfigurationDescription;
-import org.eclipse.cdt.core.settings.model.ICProjectDescription;
-import org.eclipse.cdt.core.settings.model.ICProjectDescriptionManager;
-import org.eclipse.cdt.core.settings.model.ICProjectDescriptionPreferences;
-import org.eclipse.cdt.internal.core.LocalProjectScope;
 import org.eclipse.cdt.internal.core.pdom.indexer.IndexerPreferences;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -772,50 +767,6 @@ public class CodegeneratorApplication implements IApplication {
 			Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
 		} catch (final Exception e1) {
 			// PASS
-		}
-	}
-
-	private void disableCDTProjectIndexer(final IProject project) throws CoreException {
-		// Disable the C++ indexer for this project
-		//     - This was pieced together mostly from IndexerBlock.java
-		final Properties props = new Properties();
-		props.setProperty(IndexerPreferences.KEY_INDEXER_ID, IPDOMManager.ID_NO_INDEXER);
-		IndexerPreferences.setProperties(project, IndexerPreferences.SCOPE_PROJECT_PRIVATE, props);
-		IndexerPreferences.setScope(project, IndexerPreferences.SCOPE_PROJECT_PRIVATE);
-		final ICProjectDescriptionManager prjDescMgr = CCorePlugin.getDefault().getProjectDescriptionManager();
-		final ICProjectDescription prefs = prjDescMgr.getProjectDescription(project, true);
-		if (prefs != null) {
-			prefs.setConfigurationRelations(ICProjectDescriptionPreferences.CONFIGS_INDEPENDENT);
-			final ICConfigurationDescription config = prefs.getConfigurationByName("Debug");
-			if (config != null) {
-				prefs.setDefaultSettingConfiguration(config);
-			}
-			prjDescMgr.setProjectDescription(project, prefs);
-		}
-
-		// The Job code is borrowed from CCoreInternals ...
-		final Job job = new Job("Disable Project Indexer Job") {
-			@Override
-			protected IStatus run(final IProgressMonitor monitor) {
-				try {
-					new LocalProjectScope(project).getNode(CCorePlugin.PLUGIN_ID).flush();
-					InstanceScope.INSTANCE.getNode(CCorePlugin.PLUGIN_ID).flush();
-				} catch (final BackingStoreException e) {
-					CCorePlugin.log(e);
-				}
-				return Status.OK_STATUS;
-			}
-		};
-		job.setSystem(true);
-		// using workspace rule, see bug 240888
-		job.setRule(ResourcesPlugin.getWorkspace().getRoot());
-		job.schedule();
-
-		// Wait for the job to finish
-		try {
-			job.join();
-		} catch (final InterruptedException e) {
-			System.out.println("Exception waiting for indexer disable: " + e.getMessage());
 		}
 	}
 

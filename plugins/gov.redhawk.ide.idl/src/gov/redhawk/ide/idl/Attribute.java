@@ -26,7 +26,8 @@ public class Attribute {
 	/**
 	 * @since 4.1
 	 */
-	public Attribute(final String name, final boolean readonly, final String dataType, final String returnType, final String cxxReturnType, final String cxxType, final boolean cxxReturnTypeVariableLength) {
+	public Attribute(final String name, final boolean readonly, final String dataType, final String returnType, final String cxxReturnType,
+		final String cxxType, final boolean cxxReturnTypeVariableLength) {
 		this.name = name;
 		this.readonly = readonly;
 		this.dataType = dataType;

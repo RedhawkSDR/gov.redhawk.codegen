@@ -25,8 +25,7 @@ import org.jacorb.idl.Interface;
 public class IdlTreeContentProvider implements ITreeContentProvider {
 	private Map<String, List<Interface>> moduleHash;
 
-	@SuppressWarnings("unchecked")
-    public Object[] getElements(final Object inputElement) {
+	public Object[] getElements(final Object inputElement) {
 		//iterate through list and organize based on module name (namespace)
 		this.moduleHash = new HashMap<String, List<Interface>>();
 

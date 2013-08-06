@@ -21,7 +21,7 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.6.1",
  org.eclipse.emf.transaction.ui;bundle-version="1.4.0",
  org.jacorb;bundle-version="3.1.0"
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: gov.redhawk.ide.idl.ui,
  gov.redhawk.ide.idl.ui.views,
  gov.redhawk.ide.idl.ui.wizard
