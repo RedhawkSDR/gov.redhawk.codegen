@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+     <extension
+         id="reconfParser"
+         name="Reconf Error Parser"
+         point="org.eclipse.cdt.core.ErrorParser">
+      <errorparser
+            id="gov.redhawk.ide.codegen.cpp.reconfParser"
+            name="Reconf Error Parser">
+         <pattern
+               description-expr="$3"
+               eat-processed-line="true"
+               file-expr="$1"
+               line-expr="$2"
+               regex="(.*?):(\d+): installing `(.*)&apos;"
+               severity="Ignore">
+         </pattern>
+         <context
+               type="build">
+         </context>
+      </errorparser>
+   </extension>
+
+</plugin>

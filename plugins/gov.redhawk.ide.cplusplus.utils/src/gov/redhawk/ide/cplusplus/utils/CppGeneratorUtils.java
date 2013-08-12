@@ -193,6 +193,14 @@ public final class CppGeneratorUtils {
 
 				// Add build environment variables
 				CppGeneratorUtils.addBuildEnvironVars(configDesc);
+				
+				String[] parserIDs = configDesc.getBuildSetting().getErrorParserIDs();
+				List<String> newParserIDs = new ArrayList<String>();
+				newParserIDs.add("gov.redhawk.ide.codegen.cpp.reconfParser");
+				newParserIDs.add("org.eclipse.cdt.autotools.core.ErrorParser");
+				newParserIDs.addAll(Arrays.asList(parserIDs));
+				configDesc.getBuildSetting().setErrorParserIDs(newParserIDs.toArray(new String[newParserIDs.size()]));
+				
 			}
 
 			// Set project description - this makes it go into effect
