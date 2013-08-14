@@ -23,9 +23,16 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import mil.jpeojtrs.sca.spd.Implementation;
 import mil.jpeojtrs.sca.spd.SoftPkg;
+import mil.jpeojtrs.sca.util.NamedThreadFactory;
 
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
@@ -38,6 +45,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
 
 public class JinjaGenerator {
+	
+	private static final ExecutorService EXECUTOR_POOL = Executors.newSingleThreadExecutor(new NamedThreadFactory(JinjaGenerator.class.getName()));
 
 	private List<String> settingsToOptions(final ImplementationSettings implSettings) {
 		final List<String> arguments = new ArrayList<String>();
@@ -146,18 +155,37 @@ public class JinjaGenerator {
 		final Thread errThread = new Thread(new InputRedirector(process.getErrorStream(), err));
 		outThread.start();
 		errThread.start();
+		
+		Future< ? > future = EXECUTOR_POOL.submit(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					outThread.join();
+				} catch (final InterruptedException e) {
+					// This is highly unlikely to occur, but log it just in case.
+					JinjaGeneratorPlugin.logError("Interrupted waiting for standard out", e);
+				}
+				try {
+					errThread.join();
+				} catch (final InterruptedException e) {
+					// This is highly unlikely to occur, but log it just in case.
+					JinjaGeneratorPlugin.logError("Interrupted waiting for standard error", e);
+				}
+			}
+			
+		});
 		try {
-			outThread.join();
-		} catch (final InterruptedException e) {
-			// This is highly unlikely to occur, but log it just in case.
-			JinjaGeneratorPlugin.logError("Interrupted waiting for standard out", e);
+			future.get(60, TimeUnit.SECONDS);
+		} catch (InterruptedException e) {
+			throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Exception running '" + redhawkCodegen + "'", e));
+		} catch (ExecutionException e) {
+			throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Exception running '" + redhawkCodegen + "'", e));
+		} catch (TimeoutException e) {
+			process.destroy();
+			throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Timed out running '" + redhawkCodegen + "'", e));
 		}
-		try {
-			errThread.join();
-		} catch (final InterruptedException e) {
-			// This is highly unlikely to occur, but log it just in case.
-			JinjaGeneratorPlugin.logError("Interrupted waiting for standard error", e);
-		}
+		
 	}
 
 	public HashMap<String, Boolean> list(final ImplementationSettings implSettings, final SoftPkg softpkg) throws CoreException {
