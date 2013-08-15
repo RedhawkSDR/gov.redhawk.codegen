@@ -56,12 +56,13 @@ public class JinjaCodegenMigrator implements ICodegenTemplateMigrator {
 						try {
 							process.exitValue();
 							break;
-						} catch (IllegalStateException e) {
-							try {
-								Thread.sleep(500);
-							} catch (InterruptedException e1) {
-								// PASS
-							}
+						} catch (IllegalThreadStateException e) {
+							// PASS							
+						}
+						try {
+							Thread.sleep(500);
+						} catch (InterruptedException e1) {
+							// PASS
 						}
 					}
 				}
