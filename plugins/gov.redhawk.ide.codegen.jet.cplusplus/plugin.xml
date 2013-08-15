@@ -236,19 +236,6 @@ If false, the data will be taken from the sequence and it is the component's res
       </template>
    </extension>
    <extension
-         id="gov.redhawk.ide.codegen.jet.cplusplus.builder"
-         name="%extension.name"
-         point="org.eclipse.core.resources.builders">
-      <builder
-            callOnEmptyDelta="true"
-            hasNature="false"
-            isConfigurable="false">
-         <run
-               class="gov.redhawk.ide.codegen.jet.cplusplus.CplusplusBuilder">
-         </run>
-      </builder>
-   </extension>
-   <extension
          point="gov.redhawk.ide.codegen.portGenerator">
       <portHandler
             class="gov.redhawk.ide.codegen.jet.cplusplus.ports.PullPortTemplate"

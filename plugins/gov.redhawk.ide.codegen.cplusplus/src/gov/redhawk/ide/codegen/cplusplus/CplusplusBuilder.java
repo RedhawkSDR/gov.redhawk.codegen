@@ -1,14 +1,14 @@
 /*******************************************************************************
- * This file is protected by Copyright. 
+ * This file is protected by Copyright.
  * Please refer to the COPYRIGHT file distributed with this source distribution.
  *
  * This file is part of REDHAWK IDE.
  *
- * All rights reserved.  This program and the accompanying materials are made available under 
- * the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at 
+ * All rights reserved.  This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package gov.redhawk.ide.codegen.jet.cplusplus;
+package gov.redhawk.ide.codegen.cplusplus;
 
 import gov.redhawk.ide.cplusplus.utils.CppGeneratorUtils;
 import gov.redhawk.ide.natures.ScaProjectNature;
@@ -65,8 +65,8 @@ import org.eclipse.core.runtime.SubMonitor;
 /**
  * A builder designed to automatically include C/C++ code files into
  * an implementation's build.
- * 
- * @since 7.0
+ *
+ * @since 6.1
  */
 public class CplusplusBuilder extends IncrementalProjectBuilder {
 
@@ -114,7 +114,7 @@ public class CplusplusBuilder extends IncrementalProjectBuilder {
 			// need to regenerate. Instead, we just generate the contents of the output file, and write it to disk if
 			// it has changed or didn't exist
 			fullBuild(monitor);
-			
+
 			if (kind == IncrementalProjectBuilder.FULL_BUILD) {
 				try {
 					ICProject cProject = CoreModel.getDefault().getCModel().getCProject(project.getName());
@@ -122,7 +122,7 @@ public class CplusplusBuilder extends IncrementalProjectBuilder {
 						CCorePlugin.getIndexManager().update(new ICElement[] { cProject }, IIndexManager.UPDATE_ALL | IIndexManager.UPDATE_EXTERNAL_FILES_FOR_PROJECT);
 					}
 				} catch (CoreException e) {
-					CplusplusJetGeneratorPlugin.getDefault().getLog().log(e.getStatus());
+					GccGeneratorPlugin.getDefault().getLog().log(e.getStatus());
 				}
 			}
 		} finally {
@@ -138,7 +138,7 @@ public class CplusplusBuilder extends IncrementalProjectBuilder {
 	 * Performs a complete re-build of the auto-inclusion Makefile (Makefile.am.ide). The file will contain all C/C++
 	 * source files in any sub-directories of a source code folder, provided the files have not been excluded. The file
 	 * will also contain any libraries the user added to the path via properties of the project.
-	 * 
+	 *
 	 * @param monitor the progress monitor to use for reporting progress to the user. It is the caller's responsibility
 	 *  to call done() on the given monitor. Accepts null, indicating that no progress should be
 	 *  reported and that the operation cannot be canceled.
@@ -149,7 +149,7 @@ public class CplusplusBuilder extends IncrementalProjectBuilder {
 		final IProject project = getProject();
 		final IManagedBuildInfo buildInfo = ManagedBuildManager.getBuildInfo(project, true);
 		if (buildInfo == null) {
-			throw new CoreException(new Status(IStatus.ERROR, CplusplusJetGeneratorPlugin.PLUGIN_ID, IResourceStatus.BUILD_FAILED,
+			throw new CoreException(new Status(IStatus.ERROR, GccGeneratorPlugin.PLUGIN_ID, IResourceStatus.BUILD_FAILED,
 			        "C/C++ managed build information was not available. This is usually a temporary error that "
 			                + "indicates the Eclipse CDT has not finished background loading your project's information.", null));
 		}
@@ -171,7 +171,7 @@ public class CplusplusBuilder extends IncrementalProjectBuilder {
 
 		final IBuildMacroProvider provider = ManagedBuildManager.getBuildMacroProvider();
 		final Set<String> includeDirs = new LinkedHashSet<String>();
-		final MultiStatus includeStatus = new MultiStatus(CplusplusJetGeneratorPlugin.PLUGIN_ID, IStatus.OK,
+		final MultiStatus includeStatus = new MultiStatus(GccGeneratorPlugin.PLUGIN_ID, IStatus.OK,
 		        "Unable to expand variable(s) in includepaths. Please check your include path settings for the project.", null);
 		for (String includeDir : includeDirsList) {
 			// Expand library path and add to a unique list
@@ -183,7 +183,7 @@ public class CplusplusBuilder extends IncrementalProjectBuilder {
 					includeStatus.add(new Status(IStatus.ERROR, badCdtStatus.getPlugin(), "Unable to resolve variable '"
 					        + badCdtStatus.getReferencedMacroName() + "' in include path '" + badCdtStatus.getExpression() + "'"));
 				} else {
-					includeStatus.add(new Status(e.getStatus().getSeverity(), CplusplusJetGeneratorPlugin.PLUGIN_ID,
+					includeStatus.add(new Status(e.getStatus().getSeverity(), GccGeneratorPlugin.PLUGIN_ID,
 					        "Unable to resolve variables in include path '" + includeDir + "'", e));
 				}
 				continue;
@@ -212,7 +212,7 @@ public class CplusplusBuilder extends IncrementalProjectBuilder {
 		totalWork -= tools.length;
 
 		// Expand variables in libraries / paths
-		final MultiStatus libraryStatus = new MultiStatus(CplusplusJetGeneratorPlugin.PLUGIN_ID, IStatus.OK,
+		final MultiStatus libraryStatus = new MultiStatus(GccGeneratorPlugin.PLUGIN_ID, IStatus.OK,
 		        "Unable to expand variable(s) in library names / paths. Please check your libraries and library path settings for the project.", null);
 		final Set<String> libraryDirs = new LinkedHashSet<String>();
 		final Set<String> librariesExplicit = new LinkedHashSet<String>();
@@ -231,7 +231,7 @@ public class CplusplusBuilder extends IncrementalProjectBuilder {
 					libraryStatus.add(new Status(IStatus.ERROR, badCdtStatus.getPlugin(), "Unable to resolve variable '"
 					        + badCdtStatus.getReferencedMacroName() + "' in library path '" + badCdtStatus.getExpression() + "'"));
 				} else {
-					libraryStatus.add(new Status(e.getStatus().getSeverity(), CplusplusJetGeneratorPlugin.PLUGIN_ID,
+					libraryStatus.add(new Status(e.getStatus().getSeverity(), GccGeneratorPlugin.PLUGIN_ID,
 					        "Unable to resolve variables in library path '" + libraryDir + "'", e));
 				}
 				continue;
@@ -256,7 +256,7 @@ public class CplusplusBuilder extends IncrementalProjectBuilder {
 					libraryStatus.add(new Status(IStatus.ERROR, badCdtStatus.getPlugin(), "Unable to resolve variable '"
 					        + badCdtStatus.getReferencedMacroName() + "' in library '" + badCdtStatus.getExpression() + "'"));
 				} else {
-					libraryStatus.add(new Status(e.getStatus().getSeverity(), CplusplusJetGeneratorPlugin.PLUGIN_ID, "Unable to resolve variables in library '"
+					libraryStatus.add(new Status(e.getStatus().getSeverity(), GccGeneratorPlugin.PLUGIN_ID, "Unable to resolve variables in library '"
 					        + library + "'", e));
 				}
 				continue;
@@ -312,7 +312,7 @@ public class CplusplusBuilder extends IncrementalProjectBuilder {
 
 	/**
 	 * Pulls all library include directories and libraries to link against from a list of CDT tools.
-	 *  
+	 *
 	 * @param tools The tools to query for library information
 	 * @param monitor the progress monitor to use for reporting progress to the user. It is the caller's responsibility
 	 *  to call done() on the given monitor. Accepts null, indicating that no progress should be
@@ -335,7 +335,7 @@ public class CplusplusBuilder extends IncrementalProjectBuilder {
 						}
 					} catch (final BuildException e) {
 						// This should only occur if we've written our code incorrectly
-						CplusplusJetGeneratorPlugin.logError("Unable to retrieve library information from tool option", e);
+						GccGeneratorPlugin.logError("Unable to retrieve library information from tool option", e);
 					}
 				}
 
@@ -347,7 +347,7 @@ public class CplusplusBuilder extends IncrementalProjectBuilder {
 						libraryDirsList.addAll(value);
 					} catch (final ClassCastException e) {
 						// This should only occur if we've written our code incorrectly
-						CplusplusJetGeneratorPlugin.logError("CDT returned an unexpected value type from a tool option", e);
+						GccGeneratorPlugin.logError("CDT returned an unexpected value type from a tool option", e);
 					}
 				}
 
@@ -362,7 +362,7 @@ public class CplusplusBuilder extends IncrementalProjectBuilder {
 						}
 					} catch (final BuildException e) {
 						// This should only occur if we've written our code incorrectly
-						CplusplusJetGeneratorPlugin.logError("Unable to retrieve library information from tool option", e);
+						GccGeneratorPlugin.logError("Unable to retrieve library information from tool option", e);
 					}
 				}
 
@@ -374,7 +374,7 @@ public class CplusplusBuilder extends IncrementalProjectBuilder {
 						libraryDirsList.addAll(value);
 					} catch (final ClassCastException e) {
 						// This should only occur if we've written our code incorrectly
-						CplusplusJetGeneratorPlugin.logError("CDT returned an unexpected value type from a tool option", e);
+						GccGeneratorPlugin.logError("CDT returned an unexpected value type from a tool option", e);
 					}
 				}
 
@@ -386,7 +386,7 @@ public class CplusplusBuilder extends IncrementalProjectBuilder {
 
 	/**
 	 * Pulls all include directories to compile against from a list of CDT tools.
-	 *  
+	 *
 	 * @param tools The tools to query for library information
 	 * @param monitor the progress monitor to use for reporting progress to the user. It is the caller's responsibility
 	 *  to call done() on the given monitor. Accepts null, indicating that no progress should be
@@ -410,7 +410,7 @@ public class CplusplusBuilder extends IncrementalProjectBuilder {
 								incPath = incPath.substring(1, incPath.length() - 1);
 							}
 							incPath = incPath.trim();
-							
+
 							// Only keep the path if it's not a CDT-only path
 							if (!CppGeneratorUtils.isPathForCDTOnly(incPath)) {
 								includeDirsList.add(incPath);
@@ -418,7 +418,7 @@ public class CplusplusBuilder extends IncrementalProjectBuilder {
 						}
 					} catch (final BuildException e) {
 						// This should only occur if we've written our code incorrectly
-						CplusplusJetGeneratorPlugin.logError("Unable to retrieve library information from tool option", e);
+						GccGeneratorPlugin.logError("Unable to retrieve library information from tool option", e);
 					}
 				}
 				option = tool.getOptionBySuperClassId("gnu.cpp.compiler.option.preprocessor.def");
@@ -430,7 +430,7 @@ public class CplusplusBuilder extends IncrementalProjectBuilder {
 						}
 					} catch (final BuildException e) {
 						// This should only occur if we've written our code incorrectly
-						CplusplusJetGeneratorPlugin.logError("Unable to retrieve library information from tool option", e);
+						GccGeneratorPlugin.logError("Unable to retrieve library information from tool option", e);
 					}
 				}
 				progress.worked(1);
@@ -451,7 +451,7 @@ public class CplusplusBuilder extends IncrementalProjectBuilder {
 		/**
 		 * Gets a {@link List} of the source files belonging to an {@link ICSourceEntry}. The list contains paths to
 		 * each file relative to the {@link ICSourceEntry}.
-		 * 
+		 *
 		 * @param sourceEntry The source entry to create a list of files for
 		 * @return The list of paths to files, relative to the source entry, or null if the source entry is invalid.
 		 * @throws CoreException
@@ -471,7 +471,7 @@ public class CplusplusBuilder extends IncrementalProjectBuilder {
 			// Get the associated ICElement (CDT model) and collect a list of included code files
 			final ICElement sourceRoot = CoreModel.getDefault().create(this.sourceFolder);
 			if (sourceRoot == null) {
-				throw new CoreException(new Status(IStatus.ERROR, CplusplusJetGeneratorPlugin.PLUGIN_ID, IResourceStatus.BUILD_FAILED,
+				throw new CoreException(new Status(IStatus.ERROR, GccGeneratorPlugin.PLUGIN_ID, IResourceStatus.BUILD_FAILED,
 				        "C/C++ element model not available. This is usually a temporary error that "
 				                + "indicates the Eclipse CDT has not finished background loading your project's information.", null));
 			}
@@ -504,7 +504,7 @@ public class CplusplusBuilder extends IncrementalProjectBuilder {
 
 	/**
 	 * Checks the contents of a file against a byte array.
-	 * 
+	 *
 	 * @param file The existing file
 	 * @param content The content to verify against the file
 	 * @return True if the contents match exactly, false otherwise (or under any error condition)
@@ -552,7 +552,7 @@ public class CplusplusBuilder extends IncrementalProjectBuilder {
 
 	/**
 	 * Creates the contents of the IDE's auto-inclusion makefile
-	 *  
+	 *
 	 * @param sourceFiles The sources files to needed to compile the component (e.g. .h, .cpp, etc.)
 	 * @param librariesExplicit Libraries (by file name) that are needed to link the component (e.g. ld -l flag, but
 	 * specified as 'libmylib.so')

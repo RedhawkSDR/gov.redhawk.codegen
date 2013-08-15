@@ -21,5 +21,18 @@
          </context>
       </errorparser>
    </extension>
+   <extension
+         id="gov.redhawk.ide.codegen.jet.cplusplus.builder"
+         name="%extension.name"
+         point="org.eclipse.core.resources.builders">
+      <builder
+            callOnEmptyDelta="true"
+            hasNature="false"
+            isConfigurable="false">
+         <run
+               class="gov.redhawk.ide.codegen.cplusplus.CplusplusBuilder">
+         </run>
+      </builder>
+   </extension>
 
 </plugin>

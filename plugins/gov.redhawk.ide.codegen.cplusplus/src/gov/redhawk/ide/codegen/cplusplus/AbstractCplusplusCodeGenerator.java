@@ -10,6 +10,12 @@
  *******************************************************************************/
 package gov.redhawk.ide.codegen.cplusplus;
 
+import gov.redhawk.ide.codegen.AbstractCodeGenerator;
+import gov.redhawk.ide.codegen.FileToCRCMap;
+import gov.redhawk.ide.codegen.ImplementationSettings;
+import gov.redhawk.ide.cplusplus.utils.CppGeneratorUtils;
+import gov.redhawk.model.sca.util.ModelUtil;
+
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +33,9 @@ import org.eclipse.cdt.core.settings.model.ICSourceEntry;
 import org.eclipse.cdt.core.settings.model.util.CDataUtil;
 import org.eclipse.cdt.managedbuilder.core.ManagedBuildManager;
 import org.eclipse.cdt.managedbuilder.core.ManagedCProjectNature;
+import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -36,12 +44,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
-
-import gov.redhawk.ide.codegen.AbstractCodeGenerator;
-import gov.redhawk.ide.codegen.FileToCRCMap;
-import gov.redhawk.ide.codegen.ImplementationSettings;
-import gov.redhawk.ide.cplusplus.utils.CppGeneratorUtils;
-import gov.redhawk.model.sca.util.ModelUtil;
 
 /**
  * An abstract class for C/C++ implementation generation. It handles most aspects of configuring CDT, but leaves
@@ -60,11 +62,11 @@ public abstract class AbstractCplusplusCodeGenerator extends AbstractCodeGenerat
 	@Override
 	public IStatus generate(final ImplementationSettings implSettings, final Implementation impl, final PrintStream out, final PrintStream err,
 		final IProgressMonitor monitor, final String[] generateFiles, final boolean shouldGenerate, final List<FileToCRCMap> crcMap) {
-		final int CLEANUP_WORK = 1, ADD_NATURE_WORK = 1;
+		final int CLEANUP_WORK = 1, ADD_NATURE_WORK = 1, ADD_BUILDER_WORK = 1;
 		final int ADJUST_CONFIG_WORK = 90;
 		final int GENERATE_CODE_WORK = 7;
-		final SubMonitor progress = SubMonitor.convert(monitor, "Configuring project", CLEANUP_WORK + ADD_NATURE_WORK + ADD_NATURE_WORK + ADJUST_CONFIG_WORK
-			+ GENERATE_CODE_WORK);
+		final SubMonitor progress = SubMonitor.convert(monitor, "Configuring project", CLEANUP_WORK + ADD_NATURE_WORK + ADD_NATURE_WORK + ADD_BUILDER_WORK
+				+ ADJUST_CONFIG_WORK + GENERATE_CODE_WORK);
 
 		final IProject project = ModelUtil.getProject(implSettings);
 		if (project == null) {
@@ -84,9 +86,16 @@ public abstract class AbstractCplusplusCodeGenerator extends AbstractCodeGenerat
 			}
 		}
 
-		CppGeneratorUtils.addCandCPPNatures(project, progress, retStatus);
+		CppGeneratorUtils.addCandCPPNatures(project, progress.newChild(ADD_NATURE_WORK), retStatus);
+		CppGeneratorUtils.addManagedNature(project, progress.newChild(ADD_NATURE_WORK), retStatus, destinationDirectory, out, shouldGenerate, impl);
 
-		CppGeneratorUtils.addManagedNature(project, progress, retStatus, destinationDirectory, out, shouldGenerate, impl);
+		// Add our auto-inclusion builder
+		try {
+			addAutoInclusionBuilder(project, progress.newChild(ADD_BUILDER_WORK));
+		} catch (final CoreException e) {
+			retStatus.add(new Status(IStatus.ERROR, GccGeneratorPlugin.PLUGIN_ID, "Unable to add auto inclusion builder", e));
+			return retStatus;
+		}
 
 		if (shouldGenerate) {
 			out.println("Targeting location " + project.getLocation() + "/" + destinationDirectory + " for code generation...");
@@ -100,6 +109,34 @@ public abstract class AbstractCplusplusCodeGenerator extends AbstractCodeGenerat
 		}
 
 		return retStatus;
+	}
+
+	/**
+	 * Ensures the the auto-inclusion builder is added to a project.
+	 *
+	 * @param project The project to add the auto-inclusion builder to
+	 * @param progress The progress monitor to use for reporting progress to the
+	 *            user. It is the caller's responsibility to call done() on the
+	 *            given monitor. Accepts <code>null</code>, indicating that no
+	 *            progress should be reported and that the operation cannot be
+	 *            canceled.
+	 * @throws CoreException There is a problem adding the builder to the project
+	 */
+	private void addAutoInclusionBuilder(final IProject project, final IProgressMonitor progress) throws CoreException {
+		final ICommand[] oldBuildCommands = project.getDescription().getBuildSpec();
+		for (final ICommand buildCommand : oldBuildCommands) {
+			if (buildCommand.getBuilderName().equals(CplusplusBuilder.BUILDER_NAME)) {
+				return;
+			}
+		}
+		final IProjectDescription description = project.getDescription();
+		final ICommand newBuildCommand = description.newCommand();
+		newBuildCommand.setBuilderName(CplusplusBuilder.BUILDER_NAME);
+		final ICommand[] newBuildCommands = new ICommand[oldBuildCommands.length + 1];
+		System.arraycopy(oldBuildCommands, 0, newBuildCommands, 1, oldBuildCommands.length);
+		newBuildCommands[0] = newBuildCommand;
+		description.setBuildSpec(newBuildCommands);
+		project.setDescription(description, progress);
 	}
 
 	/**
