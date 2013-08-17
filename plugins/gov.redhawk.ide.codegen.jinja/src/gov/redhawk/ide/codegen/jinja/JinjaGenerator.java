@@ -23,6 +23,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -42,10 +43,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.URI;
 
 public class JinjaGenerator {
-	
+
 	private static final ExecutorService EXECUTOR_POOL = Executors.newSingleThreadExecutor(new NamedThreadFactory(JinjaGenerator.class.getName()));
 
 	private List<String> settingsToOptions(final ImplementationSettings implSettings) {
@@ -72,13 +74,13 @@ public class JinjaGenerator {
 			return uri.toFileString();
 		} else {
 			try {
-	            IFileStore store = EFS.getStore(java.net.URI.create(uri.toString()));
-	            File localFile = store.toLocalFile(0, null);
-	            return localFile.getAbsolutePath();
-            } catch (CoreException e) {
-	            throw new IllegalArgumentException("Unknown uri " + uri, e);
-            }
-			
+				IFileStore store = EFS.getStore(java.net.URI.create(uri.toString()));
+				File localFile = store.toLocalFile(0, null);
+				return localFile.getAbsolutePath();
+			} catch (CoreException e) {
+				throw new IllegalArgumentException("Unknown uri " + uri, e);
+			}
+
 		}
 	}
 
@@ -100,7 +102,8 @@ public class JinjaGenerator {
 	}
 
 	public void generate(final ImplementationSettings implSettings, final Implementation impl, final PrintStream out, final PrintStream err,
-	        final IProgressMonitor monitor, final String[] generateFiles) throws CoreException {
+		final IProgressMonitor monitor, final String[] generateFiles) throws CoreException {
+		SubMonitor subMonitor = SubMonitor.convert(monitor, "Generating...", IProgressMonitor.UNKNOWN);
 		final IResource resource = ModelUtil.getResource(implSettings);
 		final IProject project = resource.getProject();
 
@@ -155,7 +158,7 @@ public class JinjaGenerator {
 		final Thread errThread = new Thread(new InputRedirector(process.getErrorStream(), err));
 		outThread.start();
 		errThread.start();
-		
+
 		Future< ? > future = EXECUTOR_POOL.submit(new Runnable() {
 
 			@Override
@@ -173,19 +176,27 @@ public class JinjaGenerator {
 					JinjaGeneratorPlugin.logError("Interrupted waiting for standard error", e);
 				}
 			}
-			
+
 		});
 		try {
-			future.get(60, TimeUnit.SECONDS);
-		} catch (InterruptedException e) {
-			throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Exception running '" + redhawkCodegen + "'", e));
-		} catch (ExecutionException e) {
-			throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Exception running '" + redhawkCodegen + "'", e));
-		} catch (TimeoutException e) {
-			process.destroy();
-			throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Timed out running '" + redhawkCodegen + "'", e));
+			while (true) {
+				try {
+					future.get(2, TimeUnit.SECONDS);
+					break;
+				} catch (InterruptedException e) {
+					throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Exception running '" + redhawkCodegen + "'", e));
+				} catch (ExecutionException e) {
+					throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Exception running '" + redhawkCodegen + "'", e));
+				} catch (TimeoutException e) {
+					if (subMonitor.isCanceled()) {
+						process.destroy();
+						throw new CancellationException();
+					}
+				}
+			}
+		} finally {
+			subMonitor.done();
 		}
-		
 	}
 
 	public HashMap<String, Boolean> list(final ImplementationSettings implSettings, final SoftPkg softpkg) throws CoreException {
@@ -233,7 +244,7 @@ public class JinjaGenerator {
 			}
 		} catch (final IOException e) {
 			throw new CoreException(
-			        new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Exception reading standard out from '" + redhawkCodegen + "'", e));
+				new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Exception reading standard out from '" + redhawkCodegen + "'", e));
 		} finally {
 			try {
 				reader.close();
