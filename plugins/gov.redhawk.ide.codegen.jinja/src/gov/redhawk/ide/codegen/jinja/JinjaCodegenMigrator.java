@@ -16,6 +16,7 @@ import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.model.sca.util.ModelUtil;
 
 import java.io.IOException;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -31,7 +32,9 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 
 /**
  * 
@@ -42,20 +45,25 @@ public class JinjaCodegenMigrator implements ICodegenTemplateMigrator {
 
 	@Override
 	public void migrate(IProgressMonitor monitor, ITemplateDesc template, Implementation impl, ImplementationSettings implSettings) throws CoreException {
+		SubMonitor subMonitor = SubMonitor.convert(monitor, "Jinja update_project...", 2);
 		IFile resource = ModelUtil.getResource(implSettings);
 		String fullPath = resource.getLocation().toOSString();
 		String ossieHome = System.getenv("OSSIEHOME");
 		ProcessBuilder builder = new ProcessBuilder(ossieHome + "/bin/update_project", fullPath);
 		try {
 			final Process process = builder.start();
-			Future< ? > future = EXECUTOR_POOL.submit(new Runnable() {
+			if (subMonitor.isCanceled()) {
+				process.destroy();
+				throw new OperationCanceledException();
+			}
+			subMonitor.newChild(1).beginTask("Calling " + builder.command(), IProgressMonitor.UNKNOWN);
+			Future< Integer > future = EXECUTOR_POOL.submit(new Callable<Integer>() {
 
 				@Override
-				public void run() {
+				public Integer call() throws Exception {
 					while (true) {
 						try {
-							process.exitValue();
-							break;
+							return process.exitValue();
 						} catch (IllegalThreadStateException e) {
 							// PASS							
 						}
@@ -68,25 +76,36 @@ public class JinjaCodegenMigrator implements ICodegenTemplateMigrator {
 				}
 				
 			});
-			try {
-				future.get(30, TimeUnit.SECONDS);
-			} catch (InterruptedException e) {
-				throw new CoreException(new Status(Status.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Interupted Exception:" + builder.command(), e));
-			} catch (ExecutionException e) {
-				throw new CoreException(new Status(Status.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Execution Exception:" + builder.command(), e));
-			} catch (TimeoutException e) {
+			while (!subMonitor.isCanceled()) {
+				try {
+					Integer result = future.get(2, TimeUnit.SECONDS);
+					if (result != null && result != 0) {
+						throw new CoreException(new Status(Status.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "update_project returned with error code " + result, null));
+					}
+					break;
+				} catch (InterruptedException e) {
+					throw new CoreException(new Status(Status.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Interupted Exception:" + builder.command(), e));
+				} catch (ExecutionException e) {
+					throw new CoreException(new Status(Status.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Execution Exception:" + builder.command(), e));
+				} catch (TimeoutException e) {
+					// PASS
+				}
+			}
+			if (subMonitor.isCanceled()) {
 				process.destroy();
-				throw new CoreException(new Status(Status.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Timeout waiting on:" + builder.command(), e));
+				throw new OperationCanceledException();
 			}
 			
 			IProject project = resource.getProject();
-			project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
+			project.refreshLocal(IResource.DEPTH_INFINITE, subMonitor.newChild(1));
 			
 			// Refresh Contents of models
 			implSettings.eResource().load(null);
 			impl.eResource().load(null);
 		} catch (IOException e) {
 			throw new CoreException(new Status(Status.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Failed to invoke Jinja Generator Migration Script.", e));
+		} finally {
+			subMonitor.done();
 		}
 	}
 
