@@ -98,10 +98,6 @@ public class JinjaCodegenMigrator implements ICodegenTemplateMigrator {
 			
 			IProject project = resource.getProject();
 			project.refreshLocal(IResource.DEPTH_INFINITE, subMonitor.newChild(1));
-			
-			// Refresh Contents of models
-			implSettings.eResource().load(null);
-			impl.eResource().load(null);
 		} catch (IOException e) {
 			throw new CoreException(new Status(Status.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Failed to invoke Jinja Generator Migration Script.", e));
 		} finally {
