@@ -16,16 +16,8 @@ import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.model.sca.util.ModelUtil;
 
 import java.io.IOException;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import mil.jpeojtrs.sca.spd.Implementation;
-import mil.jpeojtrs.sca.util.NamedThreadFactory;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -40,8 +32,6 @@ import org.eclipse.core.runtime.SubMonitor;
  * 
  */
 public class JinjaCodegenMigrator implements ICodegenTemplateMigrator {
-	
-	private static final ExecutorService EXECUTOR_POOL = Executors.newSingleThreadExecutor(new NamedThreadFactory(JinjaCodegenMigrator.class.getName()));
 
 	@Override
 	public void migrate(IProgressMonitor monitor, ITemplateDesc template, Implementation impl, ImplementationSettings implSettings) throws CoreException {
@@ -57,45 +47,29 @@ public class JinjaCodegenMigrator implements ICodegenTemplateMigrator {
 				throw new OperationCanceledException();
 			}
 			subMonitor.newChild(1).beginTask("Calling " + builder.command(), IProgressMonitor.UNKNOWN);
-			Future< Integer > future = EXECUTOR_POOL.submit(new Callable<Integer>() {
-
-				@Override
-				public Integer call() throws Exception {
-					while (true) {
-						try {
-							return process.exitValue();
-						} catch (IllegalThreadStateException e) {
-							// PASS							
-						}
-						try {
-							Thread.sleep(500);
-						} catch (InterruptedException e1) {
-							// PASS
-						}
-					}
-				}
-				
-			});
+			Integer exitValue = null;
 			while (!subMonitor.isCanceled()) {
 				try {
-					Integer result = future.get(2, TimeUnit.SECONDS);
-					if (result != null && result != 0) {
-						throw new CoreException(new Status(Status.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "update_project returned with error code " + result, null));
-					}
+					exitValue = process.exitValue();
 					break;
-				} catch (InterruptedException e) {
-					throw new CoreException(new Status(Status.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Interupted Exception:" + builder.command(), e));
-				} catch (ExecutionException e) {
-					throw new CoreException(new Status(Status.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Execution Exception:" + builder.command(), e));
-				} catch (TimeoutException e) {
+				} catch (IllegalThreadStateException e) {
+					// PASS							
+				}
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e1) {
 					// PASS
 				}
 			}
+			if (exitValue != null && exitValue != 0) {
+				throw new CoreException(new Status(Status.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "update_project returned with error code " + exitValue, null));
+			}
+
 			if (subMonitor.isCanceled()) {
 				process.destroy();
 				throw new OperationCanceledException();
 			}
-			
+
 			IProject project = resource.getProject();
 			project.refreshLocal(IResource.DEPTH_INFINITE, subMonitor.newChild(1));
 		} catch (IOException e) {

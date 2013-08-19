@@ -145,7 +145,7 @@ public class JinjaGenerator {
 		// Launch the code generator.
 		// NB: The process has implicitly exited (and been cleaned up by the JVM) when
 		//     standard out/error are closed, so there is no need to explicitly wait for it.
-		Process process = null;
+		final Process process;
 		try {
 			process = java.lang.Runtime.getRuntime().exec(command);
 		} catch (final IOException e) {
@@ -176,7 +176,6 @@ public class JinjaGenerator {
 					JinjaGeneratorPlugin.logError("Interrupted waiting for standard error", e);
 				}
 			}
-
 		});
 		try {
 			while (true) {
@@ -184,14 +183,27 @@ public class JinjaGenerator {
 					future.get(2, TimeUnit.SECONDS);
 					break;
 				} catch (InterruptedException e) {
-					throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Exception running '" + redhawkCodegen + "'", e));
+					// PASS
 				} catch (ExecutionException e) {
-					throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Exception running '" + redhawkCodegen + "'", e));
+					throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Exception running '" + redhawkCodegen + "'",
+						e.getCause()));
 				} catch (TimeoutException e) {
 					if (subMonitor.isCanceled()) {
 						process.destroy();
 						throw new OperationCanceledException();
 					}
+				}
+			}
+			while (true) {
+				try {
+					int retValue = process.exitValue();
+					if (retValue != 0) {
+						throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, command[0] + " returned with error code " + retValue,
+							null));
+					}
+					break;
+				} catch (IllegalThreadStateException e) {
+					// PASS
 				}
 			}
 		} finally {
@@ -216,6 +228,11 @@ public class JinjaGenerator {
 		arguments.add(getSpdFile(softpkg));
 
 		final String[] command = arguments.toArray(new String[arguments.size()]);
+		StringBuilder fullCommandList = new StringBuilder();
+		// Print the command to the console.
+		for (final String arg : command) {
+			fullCommandList.append(arg + " ");
+		}
 
 		// Launch the code generator.
 		// NB: The process has implicitly exited (and been cleaned up by the JVM) when
@@ -242,6 +259,25 @@ public class JinjaGenerator {
 				}
 				fileList.put(fileName, !changed);
 			}
+			Integer exitValue = null;
+			while (true) {
+				try {
+					exitValue = process.exitValue();
+					break;
+				} catch (IllegalThreadStateException e) {
+					// PASS							
+				}
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e1) {
+					process.destroy();
+					throw new OperationCanceledException();
+				}
+			}
+			if (exitValue != null && exitValue != 0) {
+				throw new CoreException(new Status(Status.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, command[0] + " returned with error code " + exitValue, null));
+			}
+
 		} catch (final IOException e) {
 			throw new CoreException(
 				new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Exception reading standard out from '" + redhawkCodegen + "'", e));
