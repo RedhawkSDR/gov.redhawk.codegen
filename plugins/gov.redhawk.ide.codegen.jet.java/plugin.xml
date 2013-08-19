@@ -20,6 +20,7 @@
             class="gov.redhawk.ide.codegen.jet.java.JavaGenerator"
             compiler="/usr/bin/javac"
             compilerVersion="1.5"
+            deprecated="true"
             humanLanguage="EN"
             id="gov.redhawk.ide.codegen.jet.java.JavaGenerator"
             language="Java"
@@ -49,12 +50,9 @@
       <template
             class="gov.redhawk.ide.codegen.jet.java.pattern.LegacyTemplate"
             codegenId="gov.redhawk.ide.codegen.jet.java.JavaGenerator"
-            deprecated="true"
             hasSettings="true"
             id="gov.redhawk.ide.codegen.jet.java.pattern.LegacyTemplate"
-            migrator="gov.redhawk.ide.codegen.jinja.JinjaCodegenMigrator"
             name="Legacy Project"
-            newTemplateID="redhawk.codegen.jinja.java.component.jmerge"
             notDefaultable="true"
             selectable="false"
             usesPortTemplates="false">
@@ -100,12 +98,9 @@
       <template
             class="gov.redhawk.ide.codegen.jet.java.pattern.ManualTemplate"
             codegenId="gov.redhawk.ide.codegen.jet.java.JavaGenerator"
-            deprecated="true"
             hasSettings="true"
             id="gov.redhawk.ide.codegen.jet.java.pattern.ManualTemplate"
-            migrator="gov.redhawk.ide.codegen.jinja.JinjaCodegenMigrator"
             name="Manual Generator"
-            newTemplateID="redhawk.codegen.jinja.java.component.jmerge"
             notDefaultable="true"
             selectable="true"
             usesPortTemplates="false">
@@ -143,12 +138,9 @@
       <template
             class="gov.redhawk.ide.codegen.jet.java.pattern.PullPortDataTemplate"
             codegenId="gov.redhawk.ide.codegen.jet.java.JavaGenerator"
-            deprecated="true"
             hasSettings="true"
             id="gov.redhawk.ide.codegen.jet.java.JavaGenerator"
-            migrator="gov.redhawk.ide.codegen.jinja.JinjaCodegenMigrator"
             name="Pull Port Data"
-            newTemplateID="redhawk.codegen.jinja.java.component.pull"
             notDefaultable="false"
             portCodegenId="gov.redhawk.ide.codegen.jet.java.portHandler"
             selectable="true"

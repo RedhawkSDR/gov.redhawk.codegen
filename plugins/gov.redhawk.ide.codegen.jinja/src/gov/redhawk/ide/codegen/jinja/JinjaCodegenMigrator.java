@@ -10,14 +10,15 @@
  *******************************************************************************/
 package gov.redhawk.ide.codegen.jinja;
 
-import gov.redhawk.ide.codegen.ICodegenTemplateMigrator;
-import gov.redhawk.ide.codegen.ITemplateDesc;
-import gov.redhawk.ide.codegen.ImplementationSettings;
+import gov.redhawk.ide.codegen.IComponentProjectUpgrader;
+import gov.redhawk.ide.codegen.WaveDevSettings;
 import gov.redhawk.model.sca.util.ModelUtil;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
-import mil.jpeojtrs.sca.spd.Implementation;
+import mil.jpeojtrs.sca.spd.SoftPkg;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -31,12 +32,12 @@ import org.eclipse.core.runtime.SubMonitor;
 /**
  * 
  */
-public class JinjaCodegenMigrator implements ICodegenTemplateMigrator {
+public class JinjaCodegenMigrator implements IComponentProjectUpgrader {
 
 	@Override
-	public void migrate(IProgressMonitor monitor, ITemplateDesc template, Implementation impl, ImplementationSettings implSettings) throws CoreException {
+	public void upgrade(IProgressMonitor monitor, SoftPkg spd, WaveDevSettings settings) throws CoreException {
 		SubMonitor subMonitor = SubMonitor.convert(monitor, "Jinja update_project...", 2);
-		IFile resource = ModelUtil.getResource(implSettings);
+		IFile resource = ModelUtil.getResource(settings);
 		String fullPath = resource.getLocation().toOSString();
 		String ossieHome = System.getenv("OSSIEHOME");
 		ProcessBuilder builder = new ProcessBuilder(ossieHome + "/bin/update_project", fullPath);
@@ -46,7 +47,8 @@ public class JinjaCodegenMigrator implements ICodegenTemplateMigrator {
 				process.destroy();
 				throw new OperationCanceledException();
 			}
-			subMonitor.newChild(1).beginTask("Calling " + builder.command(), IProgressMonitor.UNKNOWN);
+			SubMonitor child = subMonitor.newChild(1);
+			child.beginTask("Calling " + builder.command(), IProgressMonitor.UNKNOWN);
 			Integer exitValue = null;
 			while (!subMonitor.isCanceled()) {
 				try {
@@ -62,8 +64,20 @@ public class JinjaCodegenMigrator implements ICodegenTemplateMigrator {
 				}
 			}
 			if (exitValue != null && exitValue != 0) {
-				throw new CoreException(new Status(Status.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "update_project returned with error code " + exitValue, null));
+				StringBuilder log = new StringBuilder();
+				final InputStreamReader errStream = new InputStreamReader(process.getErrorStream());
+				final BufferedReader errBuffer = new BufferedReader(errStream);
+				try {
+					for (String errLine = errBuffer.readLine(); errLine != null; errLine = errBuffer.readLine()) {
+						log.append(errLine);
+						log.append("\n");
+					}
+				} finally {
+					errBuffer.close();
+				}
+				throw new CoreException(new Status(Status.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, builder.command().get(0) + " returned with error code " + exitValue + "\n\n" + log, null));
 			}
+			child.done();
 
 			if (subMonitor.isCanceled()) {
 				process.destroy();

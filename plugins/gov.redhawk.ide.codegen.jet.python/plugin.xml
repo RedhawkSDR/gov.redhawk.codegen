@@ -17,6 +17,7 @@
             associatedPerspectiveId="org.python.pydev.ui.PythonPerspective"
             autoGenerate="false"
             class="gov.redhawk.ide.codegen.jet.python.PythonGenerator"
+            deprecated="true"
             humanLanguage="en"
             id="gov.redhawk.ide.codegen.jet.python.PythonGenerator"
             language="Python"
@@ -49,12 +50,9 @@
       <template
             class="gov.redhawk.ide.codegen.jet.python.pattern.LegacyTemplate"
             codegenId="gov.redhawk.ide.codegen.jet.python.PythonGenerator"
-            deprecated="true"
             hasSettings="true"
             id="gov.redhawk.ide.codegen.jet.python.PythonGenerator"
-            migrator="gov.redhawk.ide.codegen.jinja.JinjaCodegenMigrator"
             name="Legacy Project"
-            newTemplateID="redhawk.codegen.jinja.python.component.pull"
             notDefaultable="true"
             selectable="false"
             usesPortTemplates="false">
@@ -99,12 +97,9 @@
       <template
             class="gov.redhawk.ide.codegen.jet.python.pattern.ManualTemplate"
             codegenId="gov.redhawk.ide.codegen.jet.python.PythonGenerator"
-            deprecated="true"
             hasSettings="true"
             id="gov.redhawk.ide.codegen.jet.python.pattern.ManualTemplate"
-            migrator="gov.redhawk.ide.codegen.jinja.JinjaCodegenMigrator"
             name="Manual Generation"
-            newTemplateID="redhawk.codegen.jinja.python.component.pull"
             notDefaultable="true"
             selectable="true"
             usesPortTemplates="false">
@@ -133,12 +128,9 @@
       <template
             class="gov.redhawk.ide.codegen.jet.python.pattern.MinimalTemplate"
             codegenId="gov.redhawk.ide.codegen.jet.python.PythonGenerator"
-            deprecated="true"
             hasSettings="false"
             id="gov.redhawk.ide.codegen.jet.python.pattern.MinimalTemplate"
-            migrator="gov.redhawk.ide.codegen.jinja.JinjaCodegenMigrator"
             name="Minimal Implementation"
-            newTemplateID="redhawk.codegen.jinja.python.component.pull"
             notDefaultable="true"
             selectable="true"
             usesPortTemplates="false">
@@ -155,12 +147,9 @@
       <template
             class="gov.redhawk.ide.codegen.jet.python.pattern.PullPortDataTemplate"
             codegenId="gov.redhawk.ide.codegen.jet.python.PythonGenerator"
-            deprecated="true"
             hasSettings="true"
             id="gov.redhawk.ide.codegen.jet.python.pattern.PullPortDataTemplate"
-            migrator="gov.redhawk.ide.codegen.jinja.JinjaCodegenMigrator"
             name="Pull Port Data"
-            newTemplateID="redhawk.codegen.jinja.python.component.pull"
             notDefaultable="false"
             portCodegenId="gov.redhawk.ide.codegen.jet.python.portHandler"
             selectable="true"
@@ -188,12 +177,9 @@
       <template
             class="gov.redhawk.ide.codegen.jet.python.pattern.WorkModuleTemplate"
             codegenId="gov.redhawk.ide.codegen.jet.python.PythonGenerator"
-            deprecated="true"
             hasSettings="true"
             id="gov.redhawk.ide.codegen.jet.python.pattern.WorkModuleTemplate"
-            migrator="gov.redhawk.ide.codegen.jinja.JinjaCodegenMigrator"
             name="Work Module Processor"
-            newTemplateID="redhawk.codegen.jinja.python.component.pull"
             notDefaultable="false"
             selectable="false"
             usesPortTemplates="false">
@@ -210,12 +196,9 @@
       <template
             class="gov.redhawk.ide.codegen.jet.python.pattern.MinimalServiceTemplate"
             codegenId="gov.redhawk.ide.codegen.jet.python.PythonGenerator"
-            deprecated="true"
             hasSettings="false"
             id="gov.redhawk.ide.codegen.jet.python.pattern.MinimalServiceTemplate"
-            migrator="gov.redhawk.ide.codegen.jinja.JinjaCodegenMigrator"
             name="Minimal Generator"
-            newTemplateID="redhawk.codegen.jinja.python.component.pull"
             notDefaultable="false"
             selectable="true"
             usesPortTemplates="false">

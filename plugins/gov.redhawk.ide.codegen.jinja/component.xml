@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" immediate="true" name="gov.redhawk.ide.codegen.jinja">
+   <implementation class="gov.redhawk.ide.codegen.jinja.JinjaCodegenMigrator"/>
+   <service>
+      <provide interface="gov.redhawk.ide.codegen.IComponentProjectUpgrader"/>
+   </service>
+</scr:component>

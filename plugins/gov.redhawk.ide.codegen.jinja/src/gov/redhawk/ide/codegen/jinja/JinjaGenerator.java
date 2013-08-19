@@ -198,8 +198,8 @@ public class JinjaGenerator {
 				try {
 					int retValue = process.exitValue();
 					if (retValue != 0) {
-						throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, command[0] + " returned with error code " + retValue,
-							null));
+						throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, command[0] + " returned with error code " + retValue
+							+ "\n\nSee console output for details.", null));
 					}
 					break;
 				} catch (IllegalThreadStateException e) {
@@ -275,13 +275,26 @@ public class JinjaGenerator {
 				}
 			}
 			if (exitValue != null && exitValue != 0) {
-				throw new CoreException(new Status(Status.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, command[0] + " returned with error code " + exitValue, null));
+				StringBuilder log = new StringBuilder();
+				final InputStreamReader errStream = new InputStreamReader(process.getErrorStream());
+				final BufferedReader errBuffer = new BufferedReader(errStream);
+				try {
+					for (String errLine = errBuffer.readLine(); errLine != null; errLine = errBuffer.readLine()) {
+						log.append(errLine);
+						log.append("\n");
+					}
+				} finally {
+					errBuffer.close();
+				}
+				throw new CoreException(new Status(Status.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, command[0] + " returned with error code " + exitValue + "\n\n"
+					+ log, null));
 			}
 
 		} catch (final IOException e) {
 			throw new CoreException(
 				new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Exception reading standard out from '" + redhawkCodegen + "'", e));
 		} finally {
+
 			try {
 				reader.close();
 			} catch (final IOException e) {

@@ -23,8 +23,7 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.6.0",
  org.eclipse.jdt.launching;bundle-version="3.5.100",
  org.eclipse.core.databinding;bundle-version="1.3.100",
  mil.jpeojtrs.sca.validator;bundle-version="3.0.0",
- org.jacorb;bundle-version="3.1.0",
- gov.redhawk.ide.codegen.jinja;bundle-version="1.0.0"
+ org.jacorb;bundle-version="3.1.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: gov.redhawk.ide.codegen.jet.java
