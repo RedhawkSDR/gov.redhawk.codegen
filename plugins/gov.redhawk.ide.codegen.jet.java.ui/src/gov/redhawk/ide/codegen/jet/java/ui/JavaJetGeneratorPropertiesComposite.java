@@ -325,7 +325,7 @@ public class JavaJetGeneratorPropertiesComposite extends BaseGeneratorProperties
 		// Update the properties display and rebind
 		this.propertiesViewer.setInput(propList);
 		this.propertiesViewer.refresh(true);
-		if (this.getImplSettings().getProperties().size() > 0) {
+		if (propList.size() > 0) {
 			this.propertiesViewer.reveal(propList.get(propList.size() - 1));
 		}
 		createPropertyBinding();
