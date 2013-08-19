@@ -268,7 +268,7 @@ public class JinjaGenerator {
 					// PASS							
 				}
 				try {
-					Thread.sleep(2000);
+					Thread.sleep(500);
 				} catch (InterruptedException e1) {
 					process.destroy();
 					throw new OperationCanceledException();
