@@ -64,7 +64,7 @@ import org.eclipse.core.runtime.SubMonitor;
 
 /**
  * A builder designed to automatically include C/C++ code files into
- * an implementation's build.
+ * an implementation's build. Generates the 'Makefile.am.ide'.
  *
  * @since 6.1
  */
@@ -74,6 +74,11 @@ public class CplusplusBuilder extends IncrementalProjectBuilder {
 	 * The name of the builder registered with the extension point
 	 */
 	public static final String BUILDER_NAME = "gov.redhawk.ide.codegen.jet.cplusplus.builder";
+	
+	/**
+	 * The name of the file containing the auto-inclusion Makefile code.
+	 */
+	private static final String AUTO_INCLUDE_FILENAME = "Makefile.am.ide";
 
 	/**
 	 * Matches files ending with .so and optionally having major/minor/revision extension(s)
@@ -135,7 +140,7 @@ public class CplusplusBuilder extends IncrementalProjectBuilder {
 	}
 
 	/**
-	 * Performs a complete re-build of the auto-inclusion Makefile (Makefile.am.ide). The file will contain all C/C++
+	 * Performs a complete re-build of the auto-inclusion Makefile (AUTO_INCLUDE_FILENAME). The file will contain all C/C++
 	 * source files in any sub-directories of a source code folder, provided the files have not been excluded. The file
 	 * will also contain any libraries the user added to the path via properties of the project.
 	 *
@@ -291,14 +296,14 @@ public class CplusplusBuilder extends IncrementalProjectBuilder {
 				continue;
 			}
 
-			// Generate the Makefile.am.ide content from our list of included C/C++ source files
+			// Generate the 'AUTO_INCLUDE_FILENAME' content from our list of included C/C++ source files
 			// libraries, and library directories
 			final byte[] makefileContent = generateMakefileContent(sourceFiles, librariesExplicit, libraryDirs, librariesLinkerResolve, includeDirs, symbols);
 
 			// Write the file to disk
 			final IPath sourcePath = sourceEntry.getFullPath();
 			final IContainer sourceFolder = (IContainer) project.findMember(sourcePath);
-			final IFile makefile = sourceFolder.getFile(new Path("Makefile.am.ide"));
+			final IFile makefile = sourceFolder.getFile(new Path(CplusplusBuilder.AUTO_INCLUDE_FILENAME));
 			if (makefile.exists()) {
 				// Avoid writing the file out if it would be identical - avoids a change notification
 				if (!contentsMatch(makefile, makefileContent)) {
