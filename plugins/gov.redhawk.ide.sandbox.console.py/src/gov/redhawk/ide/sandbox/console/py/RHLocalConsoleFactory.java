@@ -16,8 +16,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.console.IConsoleFactory;
 import org.eclipse.ui.statushandlers.StatusManager;
@@ -63,7 +65,24 @@ public class RHLocalConsoleFactory implements IConsoleFactory {
 
 			final PydevConsoleInterpreter interpreter = PydevConsoleFactory.createPydevInterpreter(info, processFactory.getNaturesUsed());
 			final String additionalInitialComands = NLS.bind(Messages.RHLocalConsoleFactory_PY_INIT, ScaDebugPlugin.getInstance().getSandbox());
-			factory.createConsole(interpreter, additionalInitialComands);
+
+			// Do to a race condition in pyDev, we are starting this in a delayed job.
+			// PyDev starts up an XML-RPC server from a python script during interpreter creation.  
+			// The initial commands were getting sent before the server was up and we were receiving connection errors.
+			// Providing a 100 ms delay before sending the commands appears to fix the issue.
+			Job createConsoleJob = new Job("Opening Python Console") {
+				
+				@Override
+				public IStatus run(IProgressMonitor monitor) {
+					factory.createConsole(interpreter, additionalInitialComands);
+					return Status.OK_STATUS;
+				}
+
+			};
+			
+			createConsoleJob.setSystem(true);
+			createConsoleJob.schedule(200);
+			
 			// TODO Clear the console after initial commands executed
 			//			console.addListener(new IScriptConsoleListener() {
 			//				private boolean clear = false;
