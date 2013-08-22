@@ -249,14 +249,16 @@ public class JinjaGenerator {
 		try {
 			String fileName;
 			while ((fileName = reader.readLine()) != null) {
+				// Strip attributes from file name.
+				final String attrs = fileName.substring(0, 4);
+				fileName = fileName.substring(5);
+
 				// Adjust the path of the output to be relative to the output directory.
 				fileName = relativePath(implSettings.getOutputDir(), fileName);
 
-				// Check for a trailing asterisk denoting changes.
-				final boolean changed = fileName.endsWith("*");
-				if (changed) {
-					fileName = fileName.substring(0, fileName.length() - 1);
-				}
+				// Parse attributes.
+				// TODO: Handle user, added, and removed.
+				final boolean changed = attrs.contains("M");
 				fileList.put(fileName, !changed);
 			}
 			Integer exitValue = null;
