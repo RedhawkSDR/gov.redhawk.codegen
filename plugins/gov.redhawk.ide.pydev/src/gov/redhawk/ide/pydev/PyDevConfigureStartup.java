@@ -23,7 +23,6 @@ import org.eclipse.ui.IStartup;
 import org.eclipse.ui.PlatformUI;
 import org.python.pydev.plugin.PydevPlugin;
 
-@Deprecated
 public class PyDevConfigureStartup implements IStartup {
 
 	private int result = 0;
@@ -95,22 +94,7 @@ public class PyDevConfigureStartup implements IStartup {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 
 				public void run() {
-					final String[] buttons = {
-					        "Auto", "Manual", "Cancel"
-					};
-					final MessageDialog dialog = new MessageDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
-					        "Configure PyDev",
-					        null,
-					        "PyDev has not been configured, would you like it to be auto-configured?",
-					        MessageDialog.QUESTION,
-					        buttons,
-					        0);
-					dialog.open();
-					PyDevConfigureStartup.this.result = dialog.getReturnCode();
-
-					if (PyDevConfigureStartup.this.result < 2) {
-						new ConfigurePythonJob(PyDevConfigureStartup.this.result == 1).schedule();
-					}
+					new ConfigurePythonJob(false).schedule();
 				}
 
 			});

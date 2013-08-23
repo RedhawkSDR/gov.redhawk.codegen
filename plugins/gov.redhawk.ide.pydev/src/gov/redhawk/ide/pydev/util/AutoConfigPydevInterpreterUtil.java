@@ -70,8 +70,8 @@ public final class AutoConfigPydevInterpreterUtil {
 
 		boolean configured = false;
 		try {
-			monitor.beginTask("Checking Python Envirornment", 300); // SUPPRESS CHECKSTYLE MagicNumber
-			final SubMonitor submonitor = SubMonitor.convert(monitor);
+			monitor.beginTask("Checking Python Environment", 300); // SUPPRESS CHECKSTYLE MagicNumber
+//			final SubMonitor submonitor = SubMonitor.convert(monitor);
 
 			InterpreterInfo info;
 			try {
@@ -100,7 +100,7 @@ public final class AutoConfigPydevInterpreterUtil {
 				configured &= info.libs.contains(ossiePath + "/lib");
 				if (configured == false) {
 					RedhawkIdePyDevPlugin.getDefault().getLog().log(
-					        new Status(IStatus.WARNING, RedhawkIdePyDevPlugin.PLUGIN_ID, "PyDev configuration has incorrect $OSSIHOME Python paths"));
+					        new Status(IStatus.WARNING, RedhawkIdePyDevPlugin.PLUGIN_ID, "PyDev configuration has incorrect $OSSIEHOME Python paths"));
 				}
 
 				if (attemptFixes) {
@@ -134,10 +134,11 @@ public final class AutoConfigPydevInterpreterUtil {
 	 */
 	public static void configurePydev(final IProgressMonitor monitor, final boolean manualConfigure, final String runtimePathLocation) throws CoreException {
 		try {
-			monitor.beginTask("Configuring Python Envirornment", 300); // SUPPRESS CHECKSTYLE MagicNumber
+			monitor.beginTask("Configuring Python Environment", 300); // SUPPRESS CHECKSTYLE MagicNumber
 			final SubMonitor submonitor = SubMonitor.convert(monitor);
 			final IInterpreterManager man = PydevPlugin.getPythonInterpreterManager(true);
 			man.clearCaches();
+			
 			File script = PydevPlugin.getScriptWithinPySrc("interpreterInfo.py");
 			final Tuple<String, String> outTup = new SimplePythonRunner().runAndGetOutputWithInterpreter("python", script.getAbsolutePath(), null, null,
 			        null, submonitor.newChild(50), null);
@@ -172,6 +173,16 @@ public final class AutoConfigPydevInterpreterUtil {
 					info.libs.add(ossiePath + "/lib/python");
 				}
 				info.libs.add(ossiePath + "/lib");
+				info.addForcedLib("bulkio.bulkioInterfaces.BULKIO");
+				info.addForcedLib("bulkio.bulkioInterfaces.BULKIO__POA");
+				info.addForcedLib("ossie.cf.CF");
+				info.addForcedLib("ossie.cf.CF__POA");
+				info.addForcedLib("ossie.cf.ExtendedCF");
+				info.addForcedLib("ossie.cf.ExtendedCF__POA");
+				info.addForcedLib("ossie.cf.PortTypes");
+				info.addForcedLib("ossie.cf.PortTypes__POA");
+				info.addForcedLib("ossie.cf.StandardEvent");
+				info.addForcedLib("ossie.cf.StandardEvent__POA");
 				info.restoreCompiledLibs(submonitor.newChild(50)); // SUPPRESS CHECKSTYLE MagicNumber
 				info.setName("Python");
 				if (info.getEnvVariables() == null) {
@@ -179,8 +190,7 @@ public final class AutoConfigPydevInterpreterUtil {
 				} else {
 					info.updateEnv(new String[] { "IDE_REF=${IDE_REF}" });
 				}
-				
-				man.setInfos(new IInterpreterInfo[0], null, null);
+				man.setInfos(new IInterpreterInfo[]{info}, null, null);
 				PydevPlugin.setPythonInterpreterManager(man);
 			}
 		} finally {
