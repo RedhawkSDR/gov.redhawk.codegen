@@ -10,6 +10,7 @@
  *******************************************************************************/
 package gov.redhawk.ide.codegen.jinja.cplusplus;
 
+import gov.redhawk.ide.codegen.FileStatus;
 import gov.redhawk.ide.codegen.FileToCRCMap;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.cplusplus.AbstractCplusplusCodeGenerator;
@@ -17,8 +18,8 @@ import gov.redhawk.ide.codegen.jinja.JinjaGenerator;
 
 import java.io.File;
 import java.io.PrintStream;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import mil.jpeojtrs.sca.spd.Code;
 import mil.jpeojtrs.sca.spd.CodeFileType;
@@ -80,9 +81,9 @@ public class CplusplusGenerator extends AbstractCplusplusCodeGenerator {
 		this.generator.generate(implSettings, impl, out, err, monitor, generateFiles);
 		project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 	}
-
+	
 	@Override
-	public HashMap<String, Boolean> getGeneratedFiles(final ImplementationSettings implSettings, final SoftPkg softpkg) throws CoreException {
+	public Set<FileStatus> getGeneratedFilesStatus(ImplementationSettings implSettings, SoftPkg softpkg) throws CoreException {
 		return this.generator.list(implSettings, softpkg);
 	}
 }

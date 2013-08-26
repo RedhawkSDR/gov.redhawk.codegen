@@ -12,6 +12,7 @@ package gov.redhawk.ide.codegen.jet.python;
 
 import gov.redhawk.ide.RedhawkIdeActivator;
 import gov.redhawk.ide.codegen.CodegenUtil;
+import gov.redhawk.ide.codegen.FileStatus;
 import gov.redhawk.ide.codegen.FileToCRCMap;
 import gov.redhawk.ide.codegen.ITemplateDesc;
 import gov.redhawk.ide.codegen.ImplementationSettings;
@@ -30,7 +31,10 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import mil.jpeojtrs.sca.spd.Code;
 import mil.jpeojtrs.sca.spd.CodeFileType;
@@ -191,8 +195,31 @@ public class PythonGenerator extends AbstractPythonGenerator {
 
 		return retVal;
 	}
-
+	
+	/**
+	 * @since 9.0
+	 */
 	@Override
+	public Set<FileStatus> getGeneratedFilesStatus(ImplementationSettings implSettings, SoftPkg softpkg) throws CoreException {
+		Map<String, Boolean> result = getGeneratedFiles(implSettings, softpkg);
+		Set<FileStatus> retVal = new HashSet<FileStatus>();
+		for (Map.Entry<String, Boolean> entry : result.entrySet()) {
+			String filename = entry.getKey();
+			Boolean modified = entry.getValue();
+			if (modified != null) {
+				if (modified) {
+					retVal.add(new FileStatus(filename, FileStatus.Action.REGEN, FileStatus.State.MODIFIED, FileStatus.Type.SYSTEM));
+				} else {
+					retVal.add(new FileStatus(filename, FileStatus.Action.REGEN, FileStatus.State.MATCHES, FileStatus.Type.SYSTEM));
+				}
+			} else {
+				retVal.add(new FileStatus(filename, FileStatus.Action.REGEN, FileStatus.State.MATCHES, FileStatus.Type.SYSTEM));
+			}
+		}
+		return retVal;
+	}
+
+	@Deprecated
 	public HashMap<String, Boolean> getGeneratedFiles(final ImplementationSettings implSettings, final SoftPkg softPkg) throws CoreException {
 		final IProject project = ModelUtil.getProject(softPkg);
 		final HashMap<String, Boolean> fileMap = new HashMap<String, Boolean>();

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: gov.redhawk.ide.codegen.manual;singleton:=true
-Bundle-Version: 5.1.0.qualifier
+Bundle-Version: 6.0.0.qualifier
 Bundle-Activator: gov.redhawk.ide.codegen.manual.ManualGeneratorPlugin
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.6.0",
  gov.redhawk.ide.codegen;bundle-version="1.0.0",

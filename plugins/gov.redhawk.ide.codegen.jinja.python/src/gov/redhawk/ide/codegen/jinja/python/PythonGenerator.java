@@ -10,6 +10,7 @@
  *******************************************************************************/
 package gov.redhawk.ide.codegen.jinja.python;
 
+import gov.redhawk.ide.codegen.FileStatus;
 import gov.redhawk.ide.codegen.FileToCRCMap;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.jinja.JinjaGenerator;
@@ -17,8 +18,8 @@ import gov.redhawk.ide.codegen.python.AbstractPythonGenerator;
 import gov.redhawk.ide.codegen.python.PythonGeneratorPlugin;
 
 import java.io.PrintStream;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import mil.jpeojtrs.sca.spd.Code;
 import mil.jpeojtrs.sca.spd.CodeFileType;
@@ -83,7 +84,7 @@ public class PythonGenerator extends AbstractPythonGenerator {
 	}
 
 	@Override
-	public HashMap<String, Boolean> getGeneratedFiles(final ImplementationSettings implSettings, final SoftPkg softpkg) throws CoreException {
+	public Set<FileStatus> getGeneratedFilesStatus(ImplementationSettings implSettings, SoftPkg softpkg) throws CoreException {
 		return this.generator.list(implSettings, softpkg);
 	}
 

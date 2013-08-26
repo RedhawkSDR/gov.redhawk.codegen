@@ -25,6 +25,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
@@ -35,7 +36,7 @@ import org.eclipse.core.runtime.SubMonitor;
 public class JinjaCodegenMigrator implements IComponentProjectUpgrader {
 
 	@Override
-	public void upgrade(IProgressMonitor monitor, SoftPkg spd, WaveDevSettings settings) throws CoreException {
+	public IStatus upgrade(IProgressMonitor monitor, SoftPkg spd, WaveDevSettings settings) throws CoreException {
 		SubMonitor subMonitor = SubMonitor.convert(monitor, "Jinja update_project...", 2);
 		IFile resource = ModelUtil.getResource(settings);
 		String fullPath = resource.getLocation().toOSString();
@@ -91,6 +92,7 @@ public class JinjaCodegenMigrator implements IComponentProjectUpgrader {
 		} finally {
 			subMonitor.done();
 		}
+		return Status.OK_STATUS;
 	}
 
 }

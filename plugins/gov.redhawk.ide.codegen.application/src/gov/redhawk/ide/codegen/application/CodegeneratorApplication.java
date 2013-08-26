@@ -12,6 +12,7 @@ package gov.redhawk.ide.codegen.application;
 
 import gov.redhawk.ide.codegen.CodegenFactory;
 import gov.redhawk.ide.codegen.CodegenUtil;
+import gov.redhawk.ide.codegen.FileStatus;
 import gov.redhawk.ide.codegen.FileToCRCMap;
 import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
 import gov.redhawk.ide.codegen.IPropertyDescriptor;
@@ -33,6 +34,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -496,7 +498,11 @@ public class CodegeneratorApplication implements IApplication {
 				// Get the actual code generator
 				final IScaComponentCodegen generator = codeGenDesc.getGenerator();
 				// Get files to generate
-				final Set<String> fileList = generator.getGeneratedFiles(settings, softPkg).keySet();
+				final Set<FileStatus> fileStatusSet = generator.getGeneratedFilesStatus(settings, softPkg);
+				final Set<String> fileList = new HashSet<String>();
+				for (FileStatus s : fileStatusSet) {
+					fileList.add(s.getFilename());
+				}
 				// Remove files we don't want to delete
 				if (preserveFiles.length != 0) {
 					if ("*".equals(preserveFiles[0])) {

@@ -10,6 +10,10 @@
  *******************************************************************************/
 package gov.redhawk.ide.codegen.jinja;
 
+import gov.redhawk.ide.codegen.FileStatus;
+import gov.redhawk.ide.codegen.FileStatus.Action;
+import gov.redhawk.ide.codegen.FileStatus.State;
+import gov.redhawk.ide.codegen.FileStatus.Type;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.Property;
 import gov.redhawk.ide.codegen.jinja.utils.InputRedirector;
@@ -21,8 +25,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -211,8 +216,8 @@ public class JinjaGenerator {
 		}
 	}
 
-	public HashMap<String, Boolean> list(final ImplementationSettings implSettings, final SoftPkg softpkg) throws CoreException {
-		final HashMap<String, Boolean> fileList = new HashMap<String, Boolean>();
+	public Set<FileStatus> list(final ImplementationSettings implSettings, final SoftPkg softpkg) throws CoreException {
+		final Set<FileStatus> fileList = new HashSet<FileStatus>();
 
 		final ArrayList<String> arguments = new ArrayList<String>();
 		final String redhawkCodegen = getCodegenFile().getPath();
@@ -257,9 +262,35 @@ public class JinjaGenerator {
 				fileName = relativePath(implSettings.getOutputDir(), fileName);
 
 				// Parse attributes.
-				// TODO: Handle user, added, and removed.
 				final boolean changed = attrs.contains("M");
-				fileList.put(fileName, !changed);
+				final boolean user = attrs.contains("U");
+				final boolean added = attrs.contains("A");
+				final boolean deleted = attrs.contains("D");
+				State state;
+				if (changed) {
+					state = State.MODIFIED;
+				} else {
+					state = State.MATCHES;
+				}
+				
+				Action desiredAction;
+				if (added) {
+					desiredAction = FileStatus.Action.ADDING;
+				} else if (deleted) {
+					desiredAction = FileStatus.Action.REMOVING;
+				} else {
+					desiredAction = FileStatus.Action.REGEN;
+				}
+				
+				Type type;
+				if (user) {
+					type = FileStatus.Type.USER;
+				} else {
+					type = FileStatus.Type.SYSTEM;
+				}
+				
+				FileStatus status = new FileStatus(fileName, desiredAction, state, type);
+				fileList.add(status);
 			}
 			Integer exitValue = null;
 			while (true) {

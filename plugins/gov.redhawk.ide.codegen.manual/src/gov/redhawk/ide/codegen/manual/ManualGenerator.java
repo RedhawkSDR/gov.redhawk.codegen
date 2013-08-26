@@ -11,6 +11,7 @@
 package gov.redhawk.ide.codegen.manual;
 
 import gov.redhawk.ide.codegen.AbstractCodeGenerator;
+import gov.redhawk.ide.codegen.FileStatus;
 import gov.redhawk.ide.codegen.FileToCRCMap;
 import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
 import gov.redhawk.ide.codegen.ImplementationSettings;
@@ -21,8 +22,10 @@ import gov.redhawk.ide.cplusplus.utils.CppGeneratorUtils;
 import gov.redhawk.model.sca.util.ModelUtil;
 
 import java.io.PrintStream;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import mil.jpeojtrs.sca.spd.Code;
 import mil.jpeojtrs.sca.spd.Implementation;
@@ -96,9 +99,20 @@ public class ManualGenerator extends AbstractCodeGenerator {
 		}
 		return new Status(IStatus.OK, ManualGeneratorPlugin.PLUGIN_ID, "No problems generating code");
 	}
+	
+	/**
+	 * @since 5.2
+	 */
+	@Override
+	public Set<FileStatus> getGeneratedFilesStatus(ImplementationSettings implSettings, SoftPkg softpkg) throws CoreException {
+		return Collections.emptySet();
+	}
 
-	public HashMap<String, Boolean> getGeneratedFiles(final ImplementationSettings implSettings, final SoftPkg softPkg) {
-		return new HashMap<String, Boolean>();
+	/**
+	 * @since 6.0
+	 */
+	public Map<String, Boolean> getGeneratedFiles(final ImplementationSettings implSettings, final SoftPkg softPkg) {
+		return Collections.emptyMap();
 	}
 
 	public Code getInitialCodeSettings(final SoftPkg softPkg, final ImplementationSettings settings, final Implementation impl) {
