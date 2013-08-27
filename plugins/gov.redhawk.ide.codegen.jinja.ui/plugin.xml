@@ -4,10 +4,10 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            category="gov.redhawk.ui.preferences"
+            category="gov.redhawk.ide.codegen.ui.preferences.CodegenPreferencePage"
             class="gov.redhawk.ide.codegen.jinja.ui.preferences.JinjaPreferencePage"
             id="gov.redhawk.ide.codegen.jinja.ui.preferences.CodegenPreferencePage"
-            name="Code Generation">
+            name="Jinja Generation">
       </page>
    </extension>
 
