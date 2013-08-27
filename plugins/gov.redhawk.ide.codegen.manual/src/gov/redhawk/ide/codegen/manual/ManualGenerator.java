@@ -101,7 +101,7 @@ public class ManualGenerator extends AbstractCodeGenerator {
 	}
 	
 	/**
-	 * @since 5.2
+	 * @since 6.0
 	 */
 	@Override
 	public Set<FileStatus> getGeneratedFilesStatus(ImplementationSettings implSettings, SoftPkg softpkg) throws CoreException {
