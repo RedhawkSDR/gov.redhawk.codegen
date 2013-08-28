@@ -5,7 +5,7 @@ Bundle-SymbolicName: gov.redhawk.ide.codegen.jinja.python;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: gov.redhawk.ide.codegen.jinja.python.PythonGeneratorPlugin
 Bundle-Vendor: REDHAWK
-Require-Bundle: gov.redhawk.ide.codegen;bundle-version="9.2.0",
+Require-Bundle: gov.redhawk.ide.codegen;bundle-version="10.0.0",
  gov.redhawk.ide.codegen.jinja;bundle-version="1.0.0",
  gov.redhawk.ide.codegen.python;bundle-version="7.0.0",
  gov.redhawk.ide.debug;bundle-version="3.0.0",

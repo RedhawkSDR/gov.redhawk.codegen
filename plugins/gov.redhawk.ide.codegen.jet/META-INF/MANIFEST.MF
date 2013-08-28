@@ -6,11 +6,12 @@ Bundle-Version: 3.1.0.qualifier
 Bundle-Activator: gov.redhawk.ide.codegen.jet.Activator
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.6.0",
  mil.jpeojtrs.sca.spd;bundle-version="2.2.2",
- gov.redhawk.ide.codegen;bundle-version="1.0.0",
- gov.redhawk.ide;bundle-version="5.0.0"
+ gov.redhawk.ide.codegen;bundle-version="10.0.0",
+ gov.redhawk.ide;bundle-version="5.0.0",
+ gov.redhawk.sca.util;bundle-version="3.3.0",
+ gov.redhawk.sca.model;bundle-version="18.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: gov.redhawk.ide.codegen.jet,
  gov.redhawk.ide.codegen.jet.template
 Bundle-Vendor: %Bundle-Vendor
-Import-Package: gov.redhawk.model.sca.util
