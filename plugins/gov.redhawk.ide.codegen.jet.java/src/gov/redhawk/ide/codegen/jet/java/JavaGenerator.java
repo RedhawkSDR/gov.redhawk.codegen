@@ -11,7 +11,6 @@
 package gov.redhawk.ide.codegen.jet.java;
 
 import gov.redhawk.ide.codegen.CodegenUtil;
-import gov.redhawk.ide.codegen.FileStatus;
 import gov.redhawk.ide.codegen.FileToCRCMap;
 import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
 import gov.redhawk.ide.codegen.ITemplateDesc;
@@ -22,7 +21,6 @@ import gov.redhawk.ide.codegen.java.JavaGeneratorUtils;
 import gov.redhawk.ide.idl.IdlJavaUtil;
 import gov.redhawk.ide.preferences.RedhawkIdePreferenceConstants;
 import gov.redhawk.ide.util.ResourceUtils;
-import gov.redhawk.model.sca.util.ModelUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -33,11 +31,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import mil.jpeojtrs.sca.scd.Ports;
 import mil.jpeojtrs.sca.scd.Provides;
@@ -107,18 +102,18 @@ public class JavaGenerator extends AbstractJavaCodeGenerator {
 	 * @since 4.0
 	 */
 	@Override
-	protected void generateCode(final Implementation impl, final ImplementationSettings implSettings, final IProject project, final String componentName, PrintStream out, PrintStream err,
-	        final IProgressMonitor monitor, String[] generateFiles, final List<FileToCRCMap> crcMap) throws CoreException {
+	protected void generateCode(final Implementation impl, final ImplementationSettings implSettings, final IProject project, final String componentName,
+		PrintStream out, PrintStream err, final IProgressMonitor monitor, String[] generateFiles, final List<FileToCRCMap> crcMap) throws CoreException {
 		final ITemplateDesc template = CodegenUtil.getTemplate(implSettings.getTemplate(), implSettings.getGeneratorId());
 		final JavaTemplateParameter templ = new JavaTemplateParameter(impl, implSettings, getPackage(impl, implSettings));
 		final SoftPkg softPkg = (SoftPkg) impl.eContainer();
-		final List<String> unchangedList = this.getUnchangedFiles(implSettings, softPkg);
+		final List<String> unchangedList = getUnchangedFiles(implSettings, softPkg);
 		final String srcDir = implSettings.getOutputDir() + "/src/" + templ.getPackage().replace('.', '/') + "/";
 
 		// If the generateFiles list is null, find some files. If it's an empty list
 		// then we just need to regenerate the java files.
 		if (generateFiles == null) {
-			generateFiles = this.getGeneratedFiles(implSettings, softPkg).keySet().toArray(new String[0]);
+			generateFiles = getGeneratedFiles(implSettings, softPkg).keySet().toArray(new String[0]);
 		}
 
 		final List<String> filesList = new ArrayList<String>(Arrays.asList(generateFiles));
@@ -250,7 +245,7 @@ public class JavaGenerator extends AbstractJavaCodeGenerator {
 				}
 
 				// Generate a new CRC
-				updateCRC(fileName, stripNewlines(fileBytes), crcMap);
+				updateCRC(fileName, fileBytes, crcMap);
 				progress.worked(1);
 			} else {
 				JavaJetGeneratorPlugin.logWarning("Unable to create source for " + fileName, null);
@@ -290,7 +285,7 @@ public class JavaGenerator extends AbstractJavaCodeGenerator {
 				desiredOutput.create(new ByteArrayInputStream(resource.getBytes()), true, progress.newChild(1));
 			}
 			throw new CoreException(new Status(IStatus.ERROR, JavaJetGeneratorPlugin.PLUGIN_ID, "Failed to merge generated output. See "
-			        + desiredOutput.getName() + " for generated output.", e));
+				+ desiredOutput.getName() + " for generated output.", e));
 		}
 		progress.setWorkRemaining(1);
 
@@ -325,75 +320,6 @@ public class JavaGenerator extends AbstractJavaCodeGenerator {
 		retVal.setType(CodeFileType.EXECUTABLE);
 
 		return retVal;
-	}
-
-	/**
-	 * @since 7.0
-	 */
-	@Override
-	public Set<FileStatus> getGeneratedFilesStatus(ImplementationSettings implSettings, SoftPkg softpkg) throws CoreException {
-		Map<String, Boolean> result = getGeneratedFiles(implSettings, softpkg);
-		Set<FileStatus> retVal = new HashSet<FileStatus>();
-		for (Map.Entry<String, Boolean> entry : result.entrySet()) {
-			String filename = entry.getKey();
-			Boolean modified = entry.getValue();
-			if (modified != null) {
-				if (modified) {
-					retVal.add(new FileStatus(filename, FileStatus.Action.REGEN, FileStatus.State.MODIFIED, FileStatus.Type.SYSTEM));
-				} else {
-					retVal.add(new FileStatus(filename, FileStatus.Action.REGEN, FileStatus.State.MATCHES, FileStatus.Type.SYSTEM));
-				}
-			} else {
-				retVal.add(new FileStatus(filename, FileStatus.Action.REGEN, FileStatus.State.MATCHES, FileStatus.Type.SYSTEM));
-			}
-		}
-		return retVal;
-	}
-	
-	@Deprecated
-	public HashMap<String, Boolean> getGeneratedFiles(final ImplementationSettings implSettings, final SoftPkg softPkg) throws CoreException {
-		final IProject project = ModelUtil.getProject(softPkg);
-		final HashMap<String, Boolean> fileMap = new HashMap<String, Boolean>();
-		final ITemplateDesc template = CodegenUtil.getTemplate(implSettings.getTemplate(), implSettings.getGeneratorId());
-		if (template == null) {
-			throw new CoreException(new Status(IStatus.ERROR,
-			        JavaJetGeneratorPlugin.PLUGIN_ID,
-			        "Unable to find a code generation template. Please check your template selection under the 'Code"
-			                + " Generation Details' section of the Implementation tab of your component."));
-		}
-
-		final List<String> templateFileList = template.getTemplate().getAllGeneratedFileNames(implSettings, softPkg);
-		if (templateFileList != null) {
-			for (final String fileName : templateFileList) {
-				checkFile(implSettings, project, fileMap, null, fileName);
-			}
-		}
-
-		return fileMap;
-	}
-
-	/**
-	 * @since 3.0
-	 */
-	public List<String> getUnchangedFiles(final ImplementationSettings implSettings, final SoftPkg softPkg) throws CoreException {
-		final IProject project = ModelUtil.getProject(softPkg);
-		final List<String> fileList = new ArrayList<String>();
-		final ITemplateDesc template = CodegenUtil.getTemplate(implSettings.getTemplate(), implSettings.getGeneratorId());
-		if (template == null) {
-			throw new CoreException(new Status(IStatus.ERROR,
-			        JavaJetGeneratorPlugin.PLUGIN_ID,
-			        "Unable to find code generation template. Please check your template selection under the 'Code"
-			                + " Generation Details' section of the Implementation tab of your component."));
-		}
-
-		final List<String> templateFileList = template.getTemplate().getAllGeneratedFileNames(implSettings, softPkg);
-		if (templateFileList != null) {
-			for (final String fileName : templateFileList) {
-				checkFile(implSettings, project, null, fileList, fileName);
-			}
-		}
-
-		return fileList;
 	}
 
 	@Override

@@ -11,7 +11,6 @@
 package gov.redhawk.ide.codegen.jet.cplusplus;
 
 import gov.redhawk.ide.codegen.CodegenUtil;
-import gov.redhawk.ide.codegen.FileStatus;
 import gov.redhawk.ide.codegen.FileToCRCMap;
 import gov.redhawk.ide.codegen.ITemplateDesc;
 import gov.redhawk.ide.codegen.ImplementationSettings;
@@ -21,18 +20,13 @@ import gov.redhawk.ide.codegen.util.CodegenFileHelper;
 import gov.redhawk.ide.idl.IdlUtil;
 import gov.redhawk.ide.preferences.RedhawkIdePreferenceConstants;
 import gov.redhawk.ide.util.ResourceUtils;
-import gov.redhawk.model.sca.util.ModelUtil;
 
 import java.io.File;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import mil.jpeojtrs.sca.spd.Code;
 import mil.jpeojtrs.sca.spd.CodeFileType;
@@ -131,7 +125,7 @@ public class CplusplusGenerator extends AbstractCplusplusCodeGenerator {
 			}
 
 			// Generate a new CRC
-			updateCRC(fileName, stripNewlines(fileBytes), crcMap);
+			updateCRC(fileName, fileBytes, crcMap);
 			loopProgress.worked(1);
 
 			loopWorkRemaining -= LOOP_WORK_ITEMS;
@@ -166,85 +160,6 @@ public class CplusplusGenerator extends AbstractCplusplusCodeGenerator {
 		retVal.setType(CodeFileType.EXECUTABLE);
 
 		return retVal;
-	}
-
-	@Deprecated
-	public HashMap<String, Boolean> getGeneratedFiles(final ImplementationSettings implSettings, final SoftPkg softPkg) throws CoreException {
-		final IProject project = ModelUtil.getProject(softPkg);
-		final HashMap<String, Boolean> fileMap = new HashMap<String, Boolean>();
-		final ITemplateDesc template = CodegenUtil.getTemplate(implSettings.getTemplate(), implSettings.getGeneratorId());
-		if (template == null) {
-			throw new CoreException(new Status(IStatus.ERROR, CplusplusJetGeneratorPlugin.PLUGIN_ID,
-				"Unable to find code generation template. Please check your template selection under the 'Code"
-					+ " Generation Details' section of the Implementation tab of your component."));
-		}
-
-		final List<String> templateFileList = template.getTemplate().getAllGeneratedFileNames(implSettings, softPkg);
-		if (templateFileList != null) {
-			for (final String fileName : templateFileList) {
-				if (project != null) {
-					checkFile(implSettings, project, fileMap, null, fileName);
-				} else {
-					fileMap.put(fileName, true);
-				}
-			}
-		}
-
-		return fileMap;
-	}
-
-	/**
-	 * @since 10.0
-	 */
-	@Override
-	public Set<FileStatus> getGeneratedFilesStatus(ImplementationSettings implSettings, SoftPkg softpkg) throws CoreException {
-		Map<String, Boolean> result = getGeneratedFiles(implSettings, softpkg);
-		Set<FileStatus> retVal = new HashSet<FileStatus>();
-		for (Map.Entry<String, Boolean> entry : result.entrySet()) {
-			String filename = entry.getKey();
-			Boolean modified = entry.getValue();
-			if (modified != null) {
-				if (modified) {
-					retVal.add(new FileStatus(filename, FileStatus.Action.REGEN, FileStatus.State.MODIFIED, FileStatus.Type.SYSTEM));
-				} else {
-					retVal.add(new FileStatus(filename, FileStatus.Action.REGEN, FileStatus.State.MATCHES, FileStatus.Type.SYSTEM));
-				}
-			} else {
-				retVal.add(new FileStatus(filename, FileStatus.Action.REGEN, FileStatus.State.MATCHES, FileStatus.Type.SYSTEM));
-			}
-		}
-		return retVal;
-	}
-
-	/**
-	 * Gets the list of files generated for the {@link Implementation} which are
-	 * unmodified.
-	 * 
-	 * @param implSettings The {@link ImplementationSettings} for the
-	 *            {@link Implementation}
-	 * @param softPkg The {@link SoftPkg} for the {@link Implementation}
-	 * @throws CoreException A problem occurs while getting the generated file
-	 *             list
-	 * @since 5.0
-	 */
-	public List<String> getUnchangedFiles(final ImplementationSettings implSettings, final SoftPkg softPkg) throws CoreException {
-		final IProject project = ModelUtil.getProject(softPkg);
-		final List<String> fileList = new ArrayList<String>();
-		final ITemplateDesc template = CodegenUtil.getTemplate(implSettings.getTemplate(), implSettings.getGeneratorId());
-		if (template == null) {
-			throw new CoreException(new Status(IStatus.ERROR, CplusplusJetGeneratorPlugin.PLUGIN_ID,
-				"Unable to find code generation template. Please check your template selection under the 'Code"
-					+ " Generation Details' section of the Implementation tab of your component."));
-		}
-
-		final List<String> templateFileList = template.getTemplate().getAllGeneratedFileNames(implSettings, softPkg);
-		if (templateFileList != null) {
-			for (final String fileName : templateFileList) {
-				checkFile(implSettings, project, null, fileList, fileName);
-			}
-		}
-
-		return fileList;
 	}
 
 	@Override

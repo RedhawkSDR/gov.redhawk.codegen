@@ -12,7 +12,6 @@ package gov.redhawk.ide.codegen.jet.python;
 
 import gov.redhawk.ide.RedhawkIdeActivator;
 import gov.redhawk.ide.codegen.CodegenUtil;
-import gov.redhawk.ide.codegen.FileStatus;
 import gov.redhawk.ide.codegen.FileToCRCMap;
 import gov.redhawk.ide.codegen.ITemplateDesc;
 import gov.redhawk.ide.codegen.ImplementationSettings;
@@ -23,18 +22,13 @@ import gov.redhawk.ide.codegen.util.CodegenFileHelper;
 import gov.redhawk.ide.idl.IdlUtil;
 import gov.redhawk.ide.preferences.RedhawkIdePreferenceConstants;
 import gov.redhawk.ide.util.ResourceUtils;
-import gov.redhawk.model.sca.util.ModelUtil;
 
 import java.io.File;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import mil.jpeojtrs.sca.spd.Code;
 import mil.jpeojtrs.sca.spd.CodeFileType;
@@ -69,8 +63,8 @@ public class PythonGenerator extends AbstractPythonGenerator {
 	 */
 	@Override
 	protected void generateCode(final Implementation impl, final ImplementationSettings implSettings, final IProject project, final String componentName, // SUPPRESS CHECKSTYLE Parameters
-	        final PrintStream out, final PrintStream err, final IProgressMonitor monitor, String[] generateFiles, final List<FileToCRCMap> crcMap)
-	        throws CoreException {
+		final PrintStream out, final PrintStream err, final IProgressMonitor monitor, String[] generateFiles, final List<FileToCRCMap> crcMap)
+		throws CoreException {
 		final int CREATE_FOLDER_WORK = 1;
 		final int CODEGEN_WORK = 98;
 		final int ADD_BUILDER_WORK = 1;
@@ -130,7 +124,7 @@ public class PythonGenerator extends AbstractPythonGenerator {
 			}
 
 			// Generate a new CRC
-			updateCRC(fileName, stripNewlines(fileBytes), crcMap);
+			updateCRC(fileName, fileBytes, crcMap);
 			loopProgress.worked(1);
 
 			workRemaining -= WORK_PER_LOOP;
@@ -194,75 +188,6 @@ public class PythonGenerator extends AbstractPythonGenerator {
 		retVal.setType(CodeFileType.EXECUTABLE);
 
 		return retVal;
-	}
-	
-	/**
-	 * @since 9.0
-	 */
-	@Override
-	public Set<FileStatus> getGeneratedFilesStatus(ImplementationSettings implSettings, SoftPkg softpkg) throws CoreException {
-		Map<String, Boolean> result = getGeneratedFiles(implSettings, softpkg);
-		Set<FileStatus> retVal = new HashSet<FileStatus>();
-		for (Map.Entry<String, Boolean> entry : result.entrySet()) {
-			String filename = entry.getKey();
-			Boolean modified = entry.getValue();
-			if (modified != null) {
-				if (modified) {
-					retVal.add(new FileStatus(filename, FileStatus.Action.REGEN, FileStatus.State.MODIFIED, FileStatus.Type.SYSTEM));
-				} else {
-					retVal.add(new FileStatus(filename, FileStatus.Action.REGEN, FileStatus.State.MATCHES, FileStatus.Type.SYSTEM));
-				}
-			} else {
-				retVal.add(new FileStatus(filename, FileStatus.Action.REGEN, FileStatus.State.MATCHES, FileStatus.Type.SYSTEM));
-			}
-		}
-		return retVal;
-	}
-
-	@Deprecated
-	public HashMap<String, Boolean> getGeneratedFiles(final ImplementationSettings implSettings, final SoftPkg softPkg) throws CoreException {
-		final IProject project = ModelUtil.getProject(softPkg);
-		final HashMap<String, Boolean> fileMap = new HashMap<String, Boolean>();
-		final ITemplateDesc template = CodegenUtil.getTemplate(implSettings.getTemplate(), implSettings.getGeneratorId());
-		if (template == null) {
-			throw new CoreException(new Status(IStatus.ERROR,
-			        PythonJetGeneratorPlugin.PLUGIN_ID,
-			        "Unable to find code generation template. Please check your template selection under the 'Code"
-			                + " Generation Details' section of the Implementation tab of your component."));
-		}
-
-		final List<String> templateFileList = template.getTemplate().getAllGeneratedFileNames(implSettings, softPkg);
-		if (templateFileList != null) {
-			for (final String fileName : templateFileList) {
-				checkFile(implSettings, project, fileMap, null, fileName);
-			}
-		}
-
-		return fileMap;
-	}
-
-	/**
-	 * @since 5.0
-	 */
-	public List<String> getUnchangedFiles(final ImplementationSettings implSettings, final SoftPkg softPkg) throws CoreException {
-		final IProject project = ModelUtil.getProject(softPkg);
-		final List<String> fileList = new ArrayList<String>();
-		final ITemplateDesc template = CodegenUtil.getTemplate(implSettings.getTemplate(), implSettings.getGeneratorId());
-		if (template == null) {
-			throw new CoreException(new Status(IStatus.ERROR,
-			        PythonJetGeneratorPlugin.PLUGIN_ID,
-			        "Unable to find code generation template. Please check your template selection under the 'Code"
-			                + " Generation Details' section of the Implementation tab of your component."));
-		}
-
-		final List<String> templateFileList = template.getTemplate().getAllGeneratedFileNames(implSettings, softPkg);
-		if (templateFileList != null) {
-			for (final String fileName : templateFileList) {
-				checkFile(implSettings, project, null, fileList, fileName);
-			}
-		}
-
-		return fileList;
 	}
 
 	@Override
