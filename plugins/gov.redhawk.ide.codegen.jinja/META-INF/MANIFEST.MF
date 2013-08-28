@@ -13,4 +13,3 @@ Bundle-ActivationPolicy: lazy
 Export-Package: gov.redhawk.ide.codegen.jinja,
  gov.redhawk.ide.codegen.jinja.preferences,
  gov.redhawk.ide.codegen.jinja.template
-Service-Component: OSGI-INF/component.xml

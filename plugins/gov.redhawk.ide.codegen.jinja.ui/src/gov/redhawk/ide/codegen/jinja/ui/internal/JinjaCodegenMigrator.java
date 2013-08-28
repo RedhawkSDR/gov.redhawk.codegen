@@ -8,10 +8,11 @@
  * the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at 
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package gov.redhawk.ide.codegen.jinja;
+package gov.redhawk.ide.codegen.jinja.ui.internal;
 
 import gov.redhawk.ide.codegen.IComponentProjectUpgrader;
 import gov.redhawk.ide.codegen.WaveDevSettings;
+import gov.redhawk.ide.codegen.jinja.JinjaGeneratorPlugin;
 import gov.redhawk.model.sca.util.ModelUtil;
 
 import java.io.BufferedReader;
