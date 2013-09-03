@@ -10,9 +10,9 @@
  *******************************************************************************/
 package gov.redhawk.ide.codegen.jinja.ui.internal;
 
-import gov.redhawk.ide.codegen.IComponentProjectUpgrader;
 import gov.redhawk.ide.codegen.WaveDevSettings;
 import gov.redhawk.ide.codegen.jinja.JinjaGeneratorPlugin;
+import gov.redhawk.ide.codegen.ui.IComponentProjectUpgrader;
 import gov.redhawk.model.sca.util.ModelUtil;
 
 import java.io.BufferedReader;
