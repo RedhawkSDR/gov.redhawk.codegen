@@ -11,7 +11,7 @@
     </parent>
     <groupId>gov.redhawk.codegen</groupId>
     <artifactId>gov.redhawk.ide.codegen</artifactId>
-    <version>1.8.4-SNAPSHOT</version>
+    <version>1.8.5-SNAPSHOT</version>
     <packaging>eclipse-feature</packaging>
 
     <build>
