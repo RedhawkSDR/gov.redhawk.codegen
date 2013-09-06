@@ -37,10 +37,8 @@ import mil.jpeojtrs.sca.spd.LocalFile;
 import mil.jpeojtrs.sca.spd.SoftPkg;
 import mil.jpeojtrs.sca.spd.SpdFactory;
 
-import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -130,37 +128,6 @@ public class PythonGenerator extends AbstractPythonGenerator {
 			workRemaining -= WORK_PER_LOOP;
 			loopProgress.setWorkRemaining(workRemaining);
 		}
-
-		// Add our auto-inclusion builder
-		addAutoInclusionBuilder(project, progress.newChild(ADD_BUILDER_WORK));
-	}
-
-	/**
-	 * Ensures the the auto-inclusion builder is added to a project.
-	 * 
-	 * @param project The project to add the auto-inclusion builder to
-	 * @param progress The progress monitor to use for reporting progress to the
-	 *            user. It is the caller's responsibility to call done() on the
-	 *            given monitor. Accepts <code>null</code>, indicating that no
-	 *            progress should be reported and that the operation cannot be
-	 *            canceled.
-	 * @throws CoreException There is a problem adding the builder to the project
-	 */
-	private void addAutoInclusionBuilder(final IProject project, final IProgressMonitor progress) throws CoreException {
-		final ICommand[] oldBuildCommands = project.getDescription().getBuildSpec();
-		for (final ICommand buildCommand : oldBuildCommands) {
-			if (buildCommand.getBuilderName().equals(PythonSourceInclude.BUILDER_NAME)) {
-				return;
-			}
-		}
-		final IProjectDescription description = project.getDescription();
-		final ICommand newBuildCommand = description.newCommand();
-		newBuildCommand.setBuilderName(PythonSourceInclude.BUILDER_NAME);
-		final ICommand[] newBuildCommands = new ICommand[oldBuildCommands.length + 1];
-		System.arraycopy(oldBuildCommands, 0, newBuildCommands, 1, oldBuildCommands.length);
-		newBuildCommands[0] = newBuildCommand;
-		description.setBuildSpec(newBuildCommands);
-		project.setDescription(description, progress);
 	}
 
 	/**

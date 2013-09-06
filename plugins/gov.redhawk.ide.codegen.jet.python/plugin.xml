@@ -251,19 +251,6 @@
       </portHandler>
    </extension>
    <extension
-         id="gov.redhawk.ide.codegen.jet.python.sourceinclude"
-         name="%extension.name"
-         point="org.eclipse.core.resources.builders">
-      <builder
-            callOnEmptyDelta="true"
-            hasNature="false"
-            isConfigurable="false">
-         <run
-               class="gov.redhawk.ide.codegen.jet.python.PythonSourceInclude">
-         </run>
-      </builder>
-   </extension>
-   <extension
          point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
             delegate="gov.redhawk.ide.codegen.jet.python.LocalPythonComponentDelegate"

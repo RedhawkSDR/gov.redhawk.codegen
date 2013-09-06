@@ -25,7 +25,9 @@ import java.util.Set;
 import mil.jpeojtrs.sca.spd.Implementation;
 import mil.jpeojtrs.sca.spd.SoftPkg;
 
+import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -60,24 +62,24 @@ public abstract class AbstractPythonGenerator extends AbstractCodeGenerator {
 		Assert.isNotNull(out);
 		Assert.isNotNull(err);
 
-		final int STANDARD_WORK = 15;
-		final int GENERATE_CODE_WORK = 40;
-		final int CLEANUP_PROJECT_WORK = 3;
-		final SubMonitor progress = SubMonitor.convert(monitor, "Configuring Project", STANDARD_WORK + GENERATE_CODE_WORK + CLEANUP_PROJECT_WORK);
+		final int PYTHON_NATURE_WORK = 10;
+		final int ADD_SOURCE_PATH_WORK = 10;
+		final int ADD_BUILDER_WORK = 10;
+		final int GENERATE_CODE_WORK = 70;
+		final int CLEANUP_PROJECT_WORK = 10;
+		final SubMonitor progress;
+		if (shouldGenerate) {
+			progress = SubMonitor.convert(monitor, "Configuring Project", PYTHON_NATURE_WORK + ADD_SOURCE_PATH_WORK + ADD_BUILDER_WORK + GENERATE_CODE_WORK + CLEANUP_PROJECT_WORK);
+		} else {
+			progress = SubMonitor.convert(monitor, "Configuring Project", PYTHON_NATURE_WORK + ADD_SOURCE_PATH_WORK + ADD_BUILDER_WORK);
+		}
 		final IResource resource = ModelUtil.getResource(implSettings);
 		final MultiStatus retStatus = new MultiStatus(PythonGeneratorPlugin.PLUGIN_ID, IStatus.OK, "Python code generation problems", null);
 		final SoftPkg softPkg = impl.getSoftPkg();
 		final String componentName = CodegenFileHelper.getPreferredFilePrefix(softPkg, implSettings);
 		final IProject project = resource.getProject();
 		final String destinationDirectory = project.getFolder(implSettings.getOutputDir()).getFullPath().toString();
-		IPythonNature pythonNature = null;
-
-		try {
-			pythonNature = (IPythonNature) project.getNature(PythonNature.PYTHON_NATURE_ID);
-		} catch (final CoreException e) {
-			// PASS
-		}
-
+		
 		// Check to see if interpeterManager is configured
 		final IInterpreterManager interpreterManager = PydevPlugin.getPythonInterpreterManager();
 		if (interpreterManager.isConfigured()) {
@@ -87,25 +89,33 @@ public abstract class AbstractPythonGenerator extends AbstractCodeGenerator {
 			retStatus.add(new Status(IStatus.ERROR, PythonGeneratorPlugin.PLUGIN_ID, "You must configure a python interpreter to generate code."));
 		}
 
-		if (pythonNature == null) {
-			out.println("Trying to configure python nature");
-			try {
-				pythonNature = PythonGeneratorUtils.addPythonProjectNature(project, progress.newChild(1));
-			} catch (final CoreException e) {
-				retStatus.add(new Status(IStatus.ERROR, PythonGeneratorPlugin.PLUGIN_ID,
-				        "Unable to determine if the project has been configured with the python nature; cannot proceed with code generation", e));
-				return retStatus;
-			}
-		}
-		progress.setWorkRemaining(GENERATE_CODE_WORK + CLEANUP_PROJECT_WORK);
-
+		// Add the Python nature
+		final IPythonNature pythonNature;
 		try {
-			PythonGeneratorUtils.addPythonSourcePath(project, destinationDirectory, progress);
+			pythonNature = PythonGeneratorUtils.addPythonProjectNature(project, progress.newChild(PYTHON_NATURE_WORK));
+		} catch (final CoreException e) {
+			retStatus.add(new Status(IStatus.ERROR, PythonGeneratorPlugin.PLUGIN_ID,
+			        "Unable to determine if the project has been configured with the python nature; cannot proceed with code generation", e));
+			return retStatus;
+		}
+
+		// Add our source path
+		try {
+			PythonGeneratorUtils.addPythonSourcePath(project, destinationDirectory, progress.newChild(ADD_SOURCE_PATH_WORK));
 		} catch (final CoreException e) {
 			retStatus.add(new Status(IStatus.ERROR, PythonGeneratorPlugin.PLUGIN_ID,
 			        "Unable to set the python source path; cannot proceed with code generation", e));
 			return retStatus;
 		}
+		
+		// Add our auto-inclusion builder
+		try {
+	        addAutoInclusionBuilder(project, progress.newChild(ADD_BUILDER_WORK));
+        } catch (final CoreException e) {
+        	retStatus.add(new Status(IStatus.ERROR, PythonGeneratorPlugin.PLUGIN_ID,
+			        "Unable to add the auto inclusion builder", e));
+			return retStatus;
+        }
 
 		if (shouldGenerate) {
 			out.println("Targeting location " + destinationDirectory + " for code generation...");
@@ -128,6 +138,36 @@ public abstract class AbstractPythonGenerator extends AbstractCodeGenerator {
 		pythonNature.rebuildPath();
 
 		return retStatus;
+	}
+	
+
+
+	/**
+	 * Ensures the the auto-inclusion builder is added to a project.
+	 * 
+	 * @param project The project to add the auto-inclusion builder to
+	 * @param progress The progress monitor to use for reporting progress to the
+	 *            user. It is the caller's responsibility to call done() on the
+	 *            given monitor. Accepts <code>null</code>, indicating that no
+	 *            progress should be reported and that the operation cannot be
+	 *            canceled.
+	 * @throws CoreException There is a problem adding the builder to the project
+	 */
+	private void addAutoInclusionBuilder(final IProject project, final IProgressMonitor progress) throws CoreException {
+		final ICommand[] oldBuildCommands = project.getDescription().getBuildSpec();
+		for (final ICommand buildCommand : oldBuildCommands) {
+			if (buildCommand.getBuilderName().equals(PythonSourceInclude.BUILDER_NAME)) {
+				return;
+			}
+		}
+		final IProjectDescription description = project.getDescription();
+		final ICommand newBuildCommand = description.newCommand();
+		newBuildCommand.setBuilderName(PythonSourceInclude.BUILDER_NAME);
+		final ICommand[] newBuildCommands = new ICommand[oldBuildCommands.length + 1];
+		System.arraycopy(oldBuildCommands, 0, newBuildCommands, 1, oldBuildCommands.length);
+		newBuildCommands[0] = newBuildCommand;
+		description.setBuildSpec(newBuildCommands);
+		project.setDescription(description, progress);
 	}
 
 	@Override

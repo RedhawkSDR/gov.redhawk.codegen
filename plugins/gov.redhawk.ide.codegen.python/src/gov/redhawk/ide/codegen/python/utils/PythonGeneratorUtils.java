@@ -252,13 +252,14 @@ public class PythonGeneratorUtils {
 		final SubMonitor progress = SubMonitor.convert(monitor, 1);
 
 		IPythonNature pythonNature = null;
-		boolean hasPythonNature;
-		hasPythonNature = project.hasNature(PythonNature.PYTHON_NATURE_ID);
-
-		if (!hasPythonNature) {
+		if (!project.hasNature(PythonNature.PYTHON_NATURE_ID)) {
 			progress.subTask("Configuring new Python project nature");
 			pythonNature = PythonNature.addNature(project, progress.newChild(1), null, null, null, null, null);
+		} else {
+			pythonNature = (IPythonNature) project.getNature(PythonNature.PYTHON_NATURE_ID);
 		}
+		
+		progress.done();
 		return pythonNature;
 	}
 
@@ -274,20 +275,13 @@ public class PythonGeneratorUtils {
 	public static boolean addPythonSourcePath(final IProject project, final String path, final IProgressMonitor monitor) throws CoreException {
 		final SubMonitor progress = SubMonitor.convert(monitor, 1);
 
-		IPythonNature pythonNature = null;
-		boolean hasPythonNature;
-		hasPythonNature = project.hasNature(PythonNature.PYTHON_NATURE_ID);
-
-		if (!hasPythonNature) {
-			PythonGeneratorUtils.addPythonProjectNature(project, progress);
-		}
-
-		pythonNature = (IPythonNature) project.getNature(PythonNature.PYTHON_NATURE_ID);
+		final IPythonNature pythonNature = (IPythonNature) project.getNature(PythonNature.PYTHON_NATURE_ID);
 		final IPythonPathNature pathNature = pythonNature.getPythonPathNature();
 		String sourcePath = pathNature.getProjectSourcePath(true);
 		final String[] paths = sourcePath.split("|");
 		for (final String p : paths) {
 			if (p.equals(path)) {
+				progress.done();
 				return false;
 			}
 		}
@@ -299,6 +293,7 @@ public class PythonGeneratorUtils {
 		}
 		pathNature.setProjectSourcePath(sourcePath);
 
+		progress.done();
 		return true;
 	}
 }
