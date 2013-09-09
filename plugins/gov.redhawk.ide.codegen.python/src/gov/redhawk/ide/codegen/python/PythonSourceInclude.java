@@ -39,7 +39,7 @@ import org.python.pydev.plugin.nature.PythonNature;
 /**
  * A builder designed to automatically include Python code files into an implementation's build.
  * 
- * @since 8.0
+ * @since 7.0
  */
 public class PythonSourceInclude extends IncrementalProjectBuilder {
 
