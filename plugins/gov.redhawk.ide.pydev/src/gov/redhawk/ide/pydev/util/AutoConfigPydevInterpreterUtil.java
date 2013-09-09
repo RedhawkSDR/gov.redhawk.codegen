@@ -183,6 +183,8 @@ public final class AutoConfigPydevInterpreterUtil {
 				info.addForcedLib("ossie.cf.PortTypes__POA");
 				info.addForcedLib("ossie.cf.StandardEvent");
 				info.addForcedLib("ossie.cf.StandardEvent__POA");
+				info.addForcedLib("redhawk.frontendInterfaces.FRONTEND");
+				info.addForcedLib("redhawk.frontendInterfaces.FRONTEND__POA");
 				info.restoreCompiledLibs(submonitor.newChild(50)); // SUPPRESS CHECKSTYLE MagicNumber
 				info.setName("Python");
 				if (info.getEnvVariables() == null) {
