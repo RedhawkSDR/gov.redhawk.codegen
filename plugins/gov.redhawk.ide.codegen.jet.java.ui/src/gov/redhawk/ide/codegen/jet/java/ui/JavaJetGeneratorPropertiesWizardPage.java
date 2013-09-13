@@ -314,9 +314,6 @@ public class JavaJetGeneratorPropertiesWizardPage extends WizardPage implements 
 								properties.add(p);
 	
 								if (!JavaGeneratorProperties.PROP_PACKAGE.equals(value.getKey())) {
-									p.setValue(JavaGeneratorProperties.getPackage(JavaJetGeneratorPropertiesWizardPage.this.softPkg,
-									        JavaJetGeneratorPropertiesWizardPage.this.impl,
-									        JavaJetGeneratorPropertiesWizardPage.this.implSettings));
 									propList.add(value);
 								} else {
 									p.setValue(JavaGeneratorProperties.getPackage(JavaJetGeneratorPropertiesWizardPage.this.softPkg,
