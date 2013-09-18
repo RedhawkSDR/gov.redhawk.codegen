@@ -4,5 +4,5 @@ Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: gov.redhawk.ide.linuxtools.cdt.autotools.macros
 Bundle-Version: 1.0.0.qualifier
 Fragment-Host: org.eclipse.linuxtools.cdt.autotools.core;bundle-version="1.0.1"
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: %Bundle-Vendor
