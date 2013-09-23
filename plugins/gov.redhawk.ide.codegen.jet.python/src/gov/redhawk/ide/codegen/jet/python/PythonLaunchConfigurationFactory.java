@@ -65,6 +65,7 @@ public class PythonLaunchConfigurationFactory extends AbstractWorkspaceLaunchCon
 		return "${workspace_loc:" + spd.getParent().getFullPath().append(new Path(impl.getCode().getEntryPoint())).toPortableString() + "}";
 	}
 
+	@Override
 	public void setProgramArguments(final String progArgs, final ILaunchConfigurationWorkingCopy config) throws CoreException {
 		config.setAttribute(IExternalToolConstants.ATTR_TOOL_ARGUMENTS, progArgs);
 	}

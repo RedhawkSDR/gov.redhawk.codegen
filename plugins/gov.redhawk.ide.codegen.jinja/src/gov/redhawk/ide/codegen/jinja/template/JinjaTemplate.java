@@ -21,27 +21,32 @@ import org.eclipse.core.runtime.CoreException;
 
 public class JinjaTemplate implements IScaComponentCodegenTemplate {
 
+	@Override
 	public List<String> getExecutableFileNames(final ImplementationSettings implSettings, final SoftPkg softPkg) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public List<String> getAllGeneratedFileNames(final ImplementationSettings implSettings, final SoftPkg softPkg) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public String generateFile(final String fileName, final SoftPkg softPkg, final ImplementationSettings implSettings, final Object helperObject)
 	        throws CoreException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public boolean shouldGenerate() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	@Override
 	public String getDefaultFilename(final SoftPkg softPkg, final ImplementationSettings implSettings, final String srcDir) {
 		// TODO Auto-generated method stub
 		return null;

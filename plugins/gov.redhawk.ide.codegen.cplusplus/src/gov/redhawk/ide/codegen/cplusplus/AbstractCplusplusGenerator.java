@@ -33,6 +33,7 @@ public abstract class AbstractCplusplusGenerator extends AbstractCplusplusCodeGe
 	public AbstractCplusplusGenerator() {
 	}
 
+	@Override
 	protected void generateCode(Implementation impl, ImplementationSettings implSettings, IProject project, String componentName,
 	        PrintStream out, PrintStream err, IProgressMonitor monitor, String[] generateFiles, List<FileToCRCMap> crcMap) throws CoreException {
 		generateCode(impl, implSettings, project, componentName, monitor, generateFiles, crcMap);

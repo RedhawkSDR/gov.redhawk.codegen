@@ -51,6 +51,7 @@ public class CppLaunchConfigurationFactory extends AbstractWorkspaceLaunchConfig
 		return retVal;
 	}
 
+	@Override
 	public void setProgramArguments(final String progArgs, final ILaunchConfigurationWorkingCopy config) throws CoreException {
 		config.setAttribute(ICDTLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, progArgs);
 	}

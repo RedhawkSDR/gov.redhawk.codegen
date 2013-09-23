@@ -36,6 +36,7 @@ public class LocalScaJavaComponentTabGroup extends AbstractLaunchConfigurationTa
 		// TODO Auto-generated constructor stub
 	}
 
+	@Override
 	public void createTabs(final ILaunchConfigurationDialog dialog, final String mode) {
 		final ILaunchConfigurationTab[] tabs = new ILaunchConfigurationTab[] {
 		        new LocalComponentMainTab(),

@@ -38,6 +38,7 @@ public class PullPortTemplate implements IScaPortCodegenTemplate {
 	public PullPortTemplate() {
 	}
 
+	@Override
 	public String generateFile(final String fileName, final boolean providesPort, final SoftPkg softPkg, final ImplementationSettings implSettings,
 	        final Object helperObject, final String language) throws CoreException {
 		final TemplateParameter templ = (TemplateParameter) helperObject;
@@ -58,6 +59,7 @@ public class PullPortTemplate implements IScaPortCodegenTemplate {
 		return file;
 	}
 
+	@Override
 	public String generateClassDefinition(final String repId, final boolean providesPort, final SoftPkg softPkg, final ImplementationSettings implSettings,
 	        final Object helperObject, final String language) throws CoreException {
 		final TemplateParameter templ = (TemplateParameter) helperObject;
@@ -78,6 +80,7 @@ public class PullPortTemplate implements IScaPortCodegenTemplate {
 		return file;
 	}
 
+	@Override
 	public String generateClassImplementation(final String repId, final boolean providesPort, final SoftPkg softPkg, final ImplementationSettings implSettings,
 	        final Object helperObject, final String language) throws CoreException {
 		final TemplateParameter templ = (TemplateParameter) helperObject;
@@ -98,6 +101,7 @@ public class PullPortTemplate implements IScaPortCodegenTemplate {
 		return file;
 	}
 
+	@Override
 	public String generateClassSupport(final String repId, final boolean providesPort, final SoftPkg softPkg, final ImplementationSettings implSettings,
 	        final Object helperObject, final String language) throws CoreException {
 		final TemplateParameter templ = (TemplateParameter) helperObject;
@@ -118,6 +122,7 @@ public class PullPortTemplate implements IScaPortCodegenTemplate {
 		return file;
 	}
 
+	@Override
 	public String generateClassInstantiator(final String repId, final boolean providesPort, final SoftPkg softPkg, final ImplementationSettings implSettings,
 	        final Object helperObject, final String language) throws CoreException {
 		final TemplateParameter templ = (TemplateParameter) helperObject;
@@ -134,20 +139,24 @@ public class PullPortTemplate implements IScaPortCodegenTemplate {
 		return file;
 	}
 
+	@Override
 	public List<String> getExecutableFileNames(final ImplementationSettings implSettings, final SoftPkg softPkg, final String language) {
 		return new ArrayList<String>();
 	}
 
+	@Override
 	public List<String> getAllGeneratedFileNames(final ImplementationSettings implSettings, final SoftPkg softPkg, final String language) {
 		final List<String> fileNames = new ArrayList<String>();
 
 		return fileNames;
 	}
 
+	@Override
 	public boolean shouldGenerate(final String language) {
 		return true;
 	}
 
+	@Override
 	public void setInterfaces(final String[] interfaces) {
 		this.interfaces = Arrays.asList(interfaces);
 	}

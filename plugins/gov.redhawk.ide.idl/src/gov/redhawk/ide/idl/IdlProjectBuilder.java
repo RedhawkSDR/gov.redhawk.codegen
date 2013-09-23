@@ -59,6 +59,7 @@ class IDLBuildVisitor implements IResourceDeltaVisitor, IResourceVisitor {
 
 	public static final String IDL_MARKER_TYPE = "gov.redhawk.ide.idl.problem"; //$NON-NLS-1$
 	
+	@Override
 	public boolean visit(IResource resource) throws CoreException {
 		if (resource instanceof IProject) {
 			return true;
@@ -107,6 +108,7 @@ class IDLBuildVisitor implements IResourceDeltaVisitor, IResourceVisitor {
 		return false;
 	}
 	
+	@Override
 	public boolean visit(IResourceDelta delta) throws CoreException {
 		IResource resource = delta.getResource();
 		return visit(resource);

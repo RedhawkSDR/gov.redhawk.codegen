@@ -34,6 +34,7 @@ public class MinimalTemplate implements IScaComponentCodegenTemplate {
 	public MinimalTemplate() {
 	}
 
+	@Override
 	public String generateFile(final String fileName, final SoftPkg softPkg, final ImplementationSettings implSettings,
 	        final Object helperObject) throws CoreException {
 		final TemplateParameter templ = (TemplateParameter) helperObject;
@@ -66,6 +67,7 @@ public class MinimalTemplate implements IScaComponentCodegenTemplate {
 		return file;
 	}
 
+	@Override
 	public List<String> getExecutableFileNames(final ImplementationSettings implSettings, final SoftPkg softPkg) {
 		final List<String> fileNames = new ArrayList<String>();
 		final String prefix = CodegenFileHelper.getPreferredFilePrefix(softPkg, implSettings);
@@ -75,6 +77,7 @@ public class MinimalTemplate implements IScaComponentCodegenTemplate {
 		return fileNames;
 	}
 
+	@Override
 	public List<String> getAllGeneratedFileNames(final ImplementationSettings implSettings, final SoftPkg softPkg) {
 		final List<String> fileNames = new ArrayList<String>();
 		final String prefix = CodegenFileHelper.getPreferredFilePrefix(softPkg, implSettings);
@@ -88,10 +91,12 @@ public class MinimalTemplate implements IScaComponentCodegenTemplate {
 		return fileNames;
 	}
 
+	@Override
 	public boolean shouldGenerate() {
 		return true;
 	}
 	
+	@Override
 	public String getDefaultFilename(SoftPkg softPkg, ImplementationSettings implSettings, String srcDir) {
 		final String prefix = CodegenFileHelper.getPreferredFilePrefix(softPkg, implSettings);
 	    return srcDir + prefix + ".py";

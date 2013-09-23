@@ -42,6 +42,7 @@ public class ManualTemplate implements IScaComponentCodegenTemplate {
 	public ManualTemplate() {
 	}
 
+	@Override
 	public String generateFile(final String fileName, final SoftPkg softPkg, final ImplementationSettings implSettings,
 	        final Object helperObject) throws CoreException {
 		final TemplateParameter templ = (TemplateParameter) helperObject;
@@ -102,6 +103,7 @@ public class ManualTemplate implements IScaComponentCodegenTemplate {
 		return file;
 	}
 
+	@Override
 	public List<String> getExecutableFileNames(final ImplementationSettings implSettings, final SoftPkg softPkg) {
 		final List<String> fileNames = new ArrayList<String>();
 
@@ -111,6 +113,7 @@ public class ManualTemplate implements IScaComponentCodegenTemplate {
 		return fileNames;
 	}
 
+	@Override
 	public List<String> getAllGeneratedFileNames(final ImplementationSettings implSettings, final SoftPkg softPkg) {
 		final List<String> fileNames = new ArrayList<String>();
 		final IProject project = ModelUtil.getProject(softPkg);
@@ -145,10 +148,12 @@ public class ManualTemplate implements IScaComponentCodegenTemplate {
 		return fileNames;
 	}
 
+	@Override
 	public boolean shouldGenerate() {
 		return true;
 	}
 
+	@Override
 	public String getDefaultFilename(final SoftPkg softPkg, final ImplementationSettings implSettings, final String srcDir) {
 		final String prefix = CodegenFileHelper.getPreferredFilePrefix(softPkg, implSettings);
 		return srcDir + prefix + ".cpp";

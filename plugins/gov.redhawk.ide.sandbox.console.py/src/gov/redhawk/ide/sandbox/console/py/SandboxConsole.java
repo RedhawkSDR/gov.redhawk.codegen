@@ -79,15 +79,18 @@ public class SandboxConsole extends PydevConsole {
 		terminateListeners.remove(listener);
 	}
 
+	@Override
 	public void terminate() {
 		for (Object l : terminateListeners.getListeners()) {
 			final ITerminateListener tl = (ITerminateListener) l;
 			SafeRunner.run(new ISafeRunnable() {
 
+				@Override
 				public void run() throws Exception {
 					tl.consoleTerminated(SandboxConsole.this);
 				}
 
+				@Override
 				public void handleException(Throwable e) {
 					IStatus status = new Status(IStatus.ERROR, RHLocalConsolePlugin.PLUGIN_ID, "Error with console terminate listener", e);
 					RHLocalConsolePlugin.getDefault().getLog().log(status);

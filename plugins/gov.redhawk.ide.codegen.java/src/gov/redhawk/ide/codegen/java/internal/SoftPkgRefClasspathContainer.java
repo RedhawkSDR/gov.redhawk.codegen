@@ -94,6 +94,7 @@ public class SoftPkgRefClasspathContainer implements IClasspathContainer {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IClasspathEntry[] getClasspathEntries() {
 		return paths.toArray(new IClasspathEntry[paths.size()]);
 	}
@@ -101,6 +102,7 @@ public class SoftPkgRefClasspathContainer implements IClasspathContainer {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getDescription() {
 		return "SoftPkg Refs";
 	}
@@ -108,6 +110,7 @@ public class SoftPkgRefClasspathContainer implements IClasspathContainer {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int getKind() {
 		return IClasspathContainer.K_APPLICATION;
 	}
@@ -115,6 +118,7 @@ public class SoftPkgRefClasspathContainer implements IClasspathContainer {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IPath getPath() {
 		return containerPath;
 	}

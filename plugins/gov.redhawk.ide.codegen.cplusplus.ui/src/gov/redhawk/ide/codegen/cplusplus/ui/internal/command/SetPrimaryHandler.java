@@ -54,6 +54,7 @@ import org.eclipse.ui.progress.WorkbenchJob;
 
 public class SetPrimaryHandler extends AbstractHandler implements IHandler {
 
+	@Override
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		// If the user used a context menu, generate code on the selection(s)
 		final ISelection selection = HandlerUtil.getActiveMenuSelection(event);

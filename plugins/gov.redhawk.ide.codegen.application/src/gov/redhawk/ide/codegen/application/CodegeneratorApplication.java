@@ -102,11 +102,13 @@ public class CodegeneratorApplication implements IApplication {
 
 	private static final String NEW_LINE = "\n"; //$NON-NLS-1$
 
+	@Override
 	public Object start(final IApplicationContext context) throws Exception {
 		final String[] args = (String[]) context.getArguments().get(IApplicationContext.APPLICATION_ARGS);
 		return start(args);
 	}
 
+	@Override
 	public void stop() {
 		// TODO Auto-generated method stub
 	}

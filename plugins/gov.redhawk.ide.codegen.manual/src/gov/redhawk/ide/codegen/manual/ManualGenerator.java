@@ -46,6 +46,7 @@ import org.eclipse.jdt.core.IJavaProject;
 
 public class ManualGenerator extends AbstractCodeGenerator {
 
+	@Override
 	public IStatus cleanupSourceFolders(final IProject project, final IProgressMonitor monitor) {
 		return new Status(IStatus.OK, ManualGeneratorPlugin.PLUGIN_ID, "No problems perform source folder cleanup");
 	}
@@ -57,6 +58,7 @@ public class ManualGenerator extends AbstractCodeGenerator {
 	 * It's there for those who like pain or when there is no other alternative yet avialable.
 	 * @since 5.0
 	 */
+	@Override
 	public IStatus generate(final ImplementationSettings implSettings, final Implementation impl, final PrintStream out, final PrintStream err, // SUPPRESS CHECKSTYLE NumParameters
 	        final IProgressMonitor monitor, final String[] generateFiles, final boolean shouldGenerate, final List<FileToCRCMap> crcMap) {
 		SubMonitor progress = SubMonitor.convert(monitor);
@@ -111,10 +113,12 @@ public class ManualGenerator extends AbstractCodeGenerator {
 	/**
 	 * @since 6.0
 	 */
+	@Override
 	public Map<String, Boolean> getGeneratedFiles(final ImplementationSettings implSettings, final SoftPkg softPkg) {
 		return Collections.emptyMap();
 	}
 
+	@Override
 	public Code getInitialCodeSettings(final SoftPkg softPkg, final ImplementationSettings settings, final Implementation impl) {
 		final ICodeGeneratorDescriptor codeGenDesc = RedhawkCodegenActivator.getCodeGeneratorsRegistry().findCodegen(settings.getGeneratorId());
 		final Code retVal = SpdFactory.eINSTANCE.createCode();
@@ -129,6 +133,7 @@ public class ManualGenerator extends AbstractCodeGenerator {
 		return retVal;
 	}
 
+	@Override
 	public boolean shouldGenerate() {
 		return false;
 	}
@@ -136,6 +141,7 @@ public class ManualGenerator extends AbstractCodeGenerator {
 	/**
 	 * @since 5.0
 	 */
+	@Override
 	public IFile getDefaultFile(Implementation impl, ImplementationSettings implSettings) {		
 		return null;
 	}
@@ -143,6 +149,7 @@ public class ManualGenerator extends AbstractCodeGenerator {
 	/**
 	 * @since 5.0
 	 */
+	@Override
 	public IStatus validate() {
 		return new Status(IStatus.OK, ManualGeneratorPlugin.PLUGIN_ID, "Validation ok");
 	}

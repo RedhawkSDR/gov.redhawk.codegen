@@ -224,6 +224,7 @@ public class ScaIDLProjectPropertiesWizardPage extends WizardNewProjectCreationP
 		this.idlTableViewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, ScaIDLProjectPropertiesWizardPage.NUM_ROWS));
 		this.idlTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
+			@Override
 			public void selectionChanged(final SelectionChangedEvent event) {
 				updateButtons();
 			}
@@ -296,6 +297,7 @@ public class ScaIDLProjectPropertiesWizardPage extends WizardNewProjectCreationP
 		this.moduleNameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 		this.moduleNameText.addModifyListener(new ModifyListener() {
 
+			@Override
 			public void modifyText(final ModifyEvent e) {
 				validate();
 			}
@@ -309,6 +311,7 @@ public class ScaIDLProjectPropertiesWizardPage extends WizardNewProjectCreationP
 		this.versionText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 		this.versionText.addModifyListener(new ModifyListener() {
 
+			@Override
 			public void modifyText(final ModifyEvent e) {
 				validate();
 			}

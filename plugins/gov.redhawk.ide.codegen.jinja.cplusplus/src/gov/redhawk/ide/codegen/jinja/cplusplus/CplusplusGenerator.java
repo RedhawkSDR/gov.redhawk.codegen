@@ -70,6 +70,7 @@ public class CplusplusGenerator extends AbstractCplusplusCodeGenerator {
 		return true;
 	}
 
+	@Override
 	public IStatus validate() {
 		return this.generator.validate();
 	}

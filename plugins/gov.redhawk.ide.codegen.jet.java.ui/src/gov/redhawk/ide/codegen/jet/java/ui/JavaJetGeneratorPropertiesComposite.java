@@ -216,6 +216,7 @@ public class JavaJetGeneratorPropertiesComposite extends BaseGeneratorProperties
 		}
 
 		mySet.addSetChangeListener(new ISetChangeListener() {
+			@Override
 			public void handleSetChange(final SetChangeEvent event) {
 				final EditingDomain domain = JavaJetGeneratorPropertiesComposite.this.getEditingDomain();
 				for (final Object obj : event.diff.getRemovals()) {

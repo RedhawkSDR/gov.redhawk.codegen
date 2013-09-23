@@ -52,6 +52,7 @@ public class PyDevConfigureStartup implements IStartup {
 		}
 	}
 
+	@Override
 	public void earlyStartup() {
 		final String app = System.getProperty("eclipse.application");
 		final boolean runConfig = app == null || "org.eclipse.ui.ide.workbench".equals(app);
@@ -66,7 +67,8 @@ public class PyDevConfigureStartup implements IStartup {
 	            if (!configuredCorrectly) {
 	            	PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 
-	    				public void run() {
+	    				@Override
+						public void run() {
 	    					final String[] buttons = {
 	    					        "Ok", "Cancel"
 	    					};
@@ -93,6 +95,7 @@ public class PyDevConfigureStartup implements IStartup {
 		} else {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 
+				@Override
 				public void run() {
 					new ConfigurePythonJob(false).schedule();
 				}

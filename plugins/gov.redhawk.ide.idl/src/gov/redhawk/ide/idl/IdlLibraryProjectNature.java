@@ -33,18 +33,22 @@ public class IdlLibraryProjectNature implements IProjectNature {
 	/** The project associated with this nature. */
 	private IProject project;
 
+	@Override
 	public void configure() throws CoreException {
 	}
 
+	@Override
 	public void deconfigure() throws CoreException {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public IProject getProject() {
 		return this.project;
 	}
 
+	@Override
 	public void setProject(final IProject project) {
 		this.project = project;
 	}

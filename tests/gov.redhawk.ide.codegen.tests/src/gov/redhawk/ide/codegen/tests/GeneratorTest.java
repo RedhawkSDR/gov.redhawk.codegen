@@ -67,6 +67,7 @@ public class GeneratorTest extends TestCase {
 
 	private static final String[] TEST_COMPONENTS = { "basic", "bulkio_ports", "event_props", "props", "sri" };
 
+	@Override
 	@Before
 	public void setUp() throws Exception {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
@@ -75,6 +76,7 @@ public class GeneratorTest extends TestCase {
 		workspace.setDescription(workspaceDescription);
 
 		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+			@Override
 			public void run() {
 				IIntroPart welcome = PlatformUI.getWorkbench().getIntroManager().getIntro();
 				PlatformUI.getWorkbench().getIntroManager().closeIntro(welcome);
@@ -93,6 +95,7 @@ public class GeneratorTest extends TestCase {
 		});
 	}
 
+	@Override
 	@After
 	public void tearDown() throws Exception {
 	}
