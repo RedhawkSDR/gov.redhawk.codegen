@@ -41,6 +41,7 @@ public class JavaLaunchConfigurationFactory extends AbstractWorkspaceLaunchConfi
 		return retVal;
 	}
 
+	@Override
 	public void setProgramArguments(final String progArgs, final ILaunchConfigurationWorkingCopy config) throws CoreException {
 		config.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, progArgs);
 	}

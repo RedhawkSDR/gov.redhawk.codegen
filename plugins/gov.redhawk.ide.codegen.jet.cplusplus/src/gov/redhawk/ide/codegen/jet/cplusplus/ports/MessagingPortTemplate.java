@@ -30,40 +30,47 @@ import org.eclipse.core.runtime.IPath;
 public class MessagingPortTemplate implements IScaPortCodegenTemplate {
 	public static final String MESSAGECHANNEL_REPID = "IDL:ExtendedEvent/MessageEvent:1.0";
 
+	@Override
 	public List<String> getExecutableFileNames(final ImplementationSettings implSettings, final SoftPkg softPkg, final String language) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public List<String> getAllGeneratedFileNames(final ImplementationSettings implSettings, final SoftPkg softPkg, final String language) throws CoreException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public String generateFile(final String fileName, final boolean providesPort, final SoftPkg softPkg, final ImplementationSettings implSettings,
 	        final Object helperObject, final String language) throws CoreException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public String generateClassDefinition(final String repId, final boolean providesPort, final SoftPkg softPkg, final ImplementationSettings implSettings,
 	        final Object helperObject, final String language) throws CoreException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public String generateClassImplementation(final String repId, final boolean providesPort, final SoftPkg softPkg, final ImplementationSettings implSettings,
 	        final Object helperObject, final String language) throws CoreException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public String generateClassSupport(final String repId, final boolean providesPort, final SoftPkg softPkg, final ImplementationSettings implSettings,
 	        final Object helperObject, final String language) throws CoreException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public String generateClassInstantiator(final String repId, final boolean providesPort, final SoftPkg softPkg, final ImplementationSettings implSettings,
 	        final Object helperObject, final String language) throws CoreException {
 		// TODO Auto-generated method stub
@@ -77,11 +84,13 @@ public class MessagingPortTemplate implements IScaPortCodegenTemplate {
 		return nameSpace + "_" + interfaceName + "_Out_i";
 	}
 
+	@Override
 	public boolean shouldGenerate(final String language) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	@Override
 	public void setInterfaces(final String[] interfaces) {
 		// TODO Auto-generated method stub
 

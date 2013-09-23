@@ -38,6 +38,7 @@ public class WorkModuleTemplate implements IScaComponentCodegenTemplate {
 	public WorkModuleTemplate() {
 	}
 
+	@Override
 	public String generateFile(final String fileName, final SoftPkg softPkg, final ImplementationSettings implSettings,
 	        final Object helperObject) throws CoreException {
 		final TemplateParameter templ = (TemplateParameter) helperObject;
@@ -77,6 +78,7 @@ public class WorkModuleTemplate implements IScaComponentCodegenTemplate {
 		return file;
 	}
 
+	@Override
 	public List<String> getExecutableFileNames(final ImplementationSettings implSettings, final SoftPkg softPkg) {
 		final List<String> fileNames = new ArrayList<String>();
 		final String prefix = CodegenFileHelper.getPreferredFilePrefix(softPkg, implSettings);
@@ -86,6 +88,7 @@ public class WorkModuleTemplate implements IScaComponentCodegenTemplate {
 		return fileNames;
 	}
 
+	@Override
 	public List<String> getAllGeneratedFileNames(final ImplementationSettings implSettings, final SoftPkg softPkg) {
 		final List<String> fileNames = new ArrayList<String>();
 		final IProject project = ModelUtil.getProject(softPkg);
@@ -104,10 +107,12 @@ public class WorkModuleTemplate implements IScaComponentCodegenTemplate {
 		return fileNames;
 	}
 
+	@Override
 	public boolean shouldGenerate() {
 		return true;
 	}
 	
+	@Override
 	public String getDefaultFilename(SoftPkg softPkg, ImplementationSettings implSettings, String srcDir) {
 	    return srcDir + "WorkModule.py";
     }

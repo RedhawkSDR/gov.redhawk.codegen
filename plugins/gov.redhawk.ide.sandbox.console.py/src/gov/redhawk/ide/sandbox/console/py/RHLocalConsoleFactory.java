@@ -45,6 +45,7 @@ public class RHLocalConsoleFactory implements IConsoleFactory {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void openConsole() {
 		final PydevConsoleFactory factory = new PydevConsoleFactory();
 		try {

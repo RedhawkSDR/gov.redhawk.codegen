@@ -235,6 +235,7 @@ public abstract class AbstractPythonGenerator extends AbstractCodeGenerator {
 	/**
 	 * @since 5.0
 	 */
+	@Override
 	public IStatus validate() {
 		final IInterpreterManager interpreterManager = PydevPlugin.getPythonInterpreterManager();
 		if (!interpreterManager.isConfigured()) {

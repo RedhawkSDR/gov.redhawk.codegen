@@ -36,6 +36,7 @@ public class ProgrammingLanguageTester extends PropertyTester {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean test(final Object element, final String property, final Object[] args, final Object expectedValue) {
 		if (!(element instanceof EObject || element instanceof FeatureMap.Entry || element instanceof IWrapperItemProvider)) {
 			return false;

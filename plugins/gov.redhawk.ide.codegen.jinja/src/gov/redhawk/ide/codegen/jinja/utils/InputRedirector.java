@@ -25,6 +25,7 @@ public class InputRedirector implements Runnable {
 		this.output = outstream;
 	}
 
+	@Override
 	public void run() {
 		String line;
 		try {

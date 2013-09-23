@@ -25,6 +25,7 @@ public class CppCodegenUI implements BundleActivator {
 	 * (non-Javadoc)
 	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void start(final BundleContext bundleContext) throws Exception {
 		CppCodegenUI.context = bundleContext;
 	}
@@ -33,6 +34,7 @@ public class CppCodegenUI implements BundleActivator {
 	 * (non-Javadoc)
 	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void stop(final BundleContext bundleContext) throws Exception {
 		CppCodegenUI.context = null;
 	}

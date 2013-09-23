@@ -65,6 +65,7 @@ public class JinjaPreferencePage extends FieldEditorPreferencePage implements IW
 		setPreferenceStore(JinjaUiPlugin.getDefault().getPreferenceStore());
 	}
 
+	@Override
 	public void init(final IWorkbench workbench) {
 		// Modify settings in the base plug-in rather than the UI plug-in, which just provides this editor.
 		this.setPreferenceStore(new ScopedPreferenceStore(InstanceScope.INSTANCE, JinjaGeneratorPlugin.PLUGIN_ID));

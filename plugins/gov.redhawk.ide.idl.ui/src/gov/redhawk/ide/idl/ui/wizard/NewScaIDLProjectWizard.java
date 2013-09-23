@@ -67,6 +67,7 @@ public class NewScaIDLProjectWizard extends Wizard implements INewWizard, IExecu
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void init(final IWorkbench workbench, final IStructuredSelection selection) {
 
 	}
@@ -191,6 +192,7 @@ public class NewScaIDLProjectWizard extends Wizard implements INewWizard, IExecu
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setInitializationData(final IConfigurationElement config, final String propertyName, final Object data) throws CoreException {
 		this.fConfig = config;
 	}

@@ -330,6 +330,7 @@ public class JavaGenerator extends AbstractJavaCodeGenerator {
 	/**
 	 * @since 4.0
 	 */
+	@Override
 	public IStatus validate() {
 		return IdlJavaUtil.validate();
 	}

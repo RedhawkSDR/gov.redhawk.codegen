@@ -42,6 +42,7 @@ public class SandboxTestsActivator implements BundleActivator {
 	 * org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext
 	 * )
 	 */
+	@Override
 	public void start(final BundleContext bundleContext) throws Exception {
 		SandboxTestsActivator.context = bundleContext;
 	}
@@ -52,6 +53,7 @@ public class SandboxTestsActivator implements BundleActivator {
 	 * @see
 	 * org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void stop(final BundleContext bundleContext) throws Exception {
 		SandboxTestsActivator.context = null;
 	}

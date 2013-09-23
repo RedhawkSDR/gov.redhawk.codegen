@@ -36,6 +36,7 @@ public class PullPortTemplate implements IScaPortCodegenTemplate {
 	public PullPortTemplate() {
 	}
 
+	@Override
 	public String generateFile(final String fileName, final boolean providesPort, final SoftPkg softPkg, final ImplementationSettings implSettings,
 	        final Object helperObject, final String language) throws CoreException {
 		final JavaTemplateParameter templ = (JavaTemplateParameter) helperObject;
@@ -53,6 +54,7 @@ public class PullPortTemplate implements IScaPortCodegenTemplate {
 		return file;
 	}
 
+	@Override
 	public String generateClassDefinition(final String repId, final boolean providesPort, final SoftPkg softPkg, final ImplementationSettings implSettings,
 	        final Object helperObject, final String language) throws CoreException {
 		final JavaTemplateParameter templ = (JavaTemplateParameter) helperObject;
@@ -70,6 +72,7 @@ public class PullPortTemplate implements IScaPortCodegenTemplate {
 		return definition;
 	}
 
+	@Override
 	public String generateClassSupport(final String repId, final boolean providesPort, final SoftPkg softPkg, final ImplementationSettings implSettings,
 	        final Object helperObject, final String language) throws CoreException {
 		final JavaTemplateParameter templ = (JavaTemplateParameter) helperObject;
@@ -87,16 +90,19 @@ public class PullPortTemplate implements IScaPortCodegenTemplate {
 		return support;
 	}
 
+	@Override
 	public String generateClassImplementation(String repId, boolean providesPort, SoftPkg softPkg, ImplementationSettings implSettings, Object helperObject,
 	        String language) throws CoreException {
 		return null;
 	}
 
+	@Override
 	public String generateClassInstantiator(final String repId, final boolean providesPort, final SoftPkg softPkg, final ImplementationSettings implSettings,
 	        final Object helperObject, final String language) throws CoreException {
 		return null;
 	}
 
+	@Override
 	public List<String> getAllGeneratedFileNames(final ImplementationSettings implSettings, final SoftPkg softPkg, final String language) throws CoreException {
 		final List<String> fileNames = new ArrayList<String>();
 		final Ports ports = softPkg.getDescriptor().getComponent().getComponentFeatures().getPorts();
@@ -123,16 +129,19 @@ public class PullPortTemplate implements IScaPortCodegenTemplate {
 		return fileNames;
 	}
 
+	@Override
 	public List<String> getExecutableFileNames(final ImplementationSettings implSettings, final SoftPkg softPkg, final String language) {
 		final List<String> fileNames = new ArrayList<String>();
 
 		return fileNames;
 	}
 
+	@Override
 	public boolean shouldGenerate(final String language) {
 		return true;
 	}
 
+	@Override
 	public void setInterfaces(String[] interfaces) {
 		this.interfaces = Arrays.asList(interfaces);
 	}

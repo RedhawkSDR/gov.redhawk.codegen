@@ -101,6 +101,7 @@ public class Interface implements Comparable<Interface> {
 		return super.hashCode();
 	}
 
+	@Override
 	public int compareTo(final Interface o) {
 		if (o == null) {
 			return -1;

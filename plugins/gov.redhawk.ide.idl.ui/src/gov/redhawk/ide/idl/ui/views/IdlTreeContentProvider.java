@@ -25,6 +25,7 @@ import org.jacorb.idl.Interface;
 public class IdlTreeContentProvider implements ITreeContentProvider {
 	private Map<String, List<Interface>> moduleHash;
 
+	@Override
 	public Object[] getElements(final Object inputElement) {
 		//iterate through list and organize based on module name (namespace)
 		this.moduleHash = new HashMap<String, List<Interface>>();
@@ -45,16 +46,19 @@ public class IdlTreeContentProvider implements ITreeContentProvider {
 		return this.moduleHash.keySet().toArray();
 	}
 
+	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public Object[] getChildren(final Object parentElement) {
 		if (parentElement instanceof String) {
 			final String nameSpace = (String) parentElement;
@@ -67,6 +71,7 @@ public class IdlTreeContentProvider implements ITreeContentProvider {
 		return Collections.EMPTY_LIST.toArray();
 	}
 
+	@Override
 	public Object getParent(final Object element) {
 		if (element instanceof Interface) {
 			final Interface el_int = (Interface) element;
@@ -78,6 +83,7 @@ public class IdlTreeContentProvider implements ITreeContentProvider {
 		return null;
 	}
 
+	@Override
 	public boolean hasChildren(final Object element) {
 		if (element instanceof String) {
 			final String nameSpace = (String) element;

@@ -110,6 +110,7 @@ public class SandboxImplTest {
 		final ResourceFactory factory = getResourceFactory();
 		Future<Resource> future = POOL.submit(new Callable<Resource>() {
 
+			@Override
 			public Resource call() throws Exception {
 				return factory.createResource("helloWorld", new DataType[0]);
 			}
@@ -144,6 +145,7 @@ public class SandboxImplTest {
 		final ResourceFactory factory = getResourceFactory();
 		Future<Resource> future = POOL.submit(new Callable<Resource>() {
 
+			@Override
 			public Resource call() throws Exception {
 				return factory.createResource("helloWorld2", new DataType[0]);
 			}

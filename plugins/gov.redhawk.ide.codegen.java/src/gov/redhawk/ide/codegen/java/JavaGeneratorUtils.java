@@ -506,6 +506,7 @@ public class JavaGeneratorUtils {
 	 * @param monitor
 	 * @throws CoreException
 	 */
+	@Deprecated
 	public static void addRedhawkPortClassPaths(final IJavaProject jproject, final Ports ports, final IProgressMonitor monitor) throws CoreException {
 		final Set<String> packages = new LinkedHashSet<String>();
 		for (final Provides p : ports.getProvides()) {

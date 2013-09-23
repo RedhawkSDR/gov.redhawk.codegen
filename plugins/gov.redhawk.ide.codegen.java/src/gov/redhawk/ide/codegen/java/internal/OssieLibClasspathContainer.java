@@ -30,6 +30,7 @@ public class OssieLibClasspathContainer implements IClasspathContainer {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IClasspathEntry[] getClasspathEntries() {
 		final IPath runtimePath = RedhawkIdeActivator.getDefault().getRuntimePath();
 		if (runtimePath != null) {
@@ -50,6 +51,7 @@ public class OssieLibClasspathContainer implements IClasspathContainer {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getDescription() {
 		return "REDHAWK System Library";
 	}
@@ -57,6 +59,7 @@ public class OssieLibClasspathContainer implements IClasspathContainer {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int getKind() {
 		return IClasspathContainer.K_APPLICATION;
 	}
@@ -64,6 +67,7 @@ public class OssieLibClasspathContainer implements IClasspathContainer {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public IPath getPath() {
 		return ScaCore.OSSIE_LIB_CONTAINER_PATH;
 	}

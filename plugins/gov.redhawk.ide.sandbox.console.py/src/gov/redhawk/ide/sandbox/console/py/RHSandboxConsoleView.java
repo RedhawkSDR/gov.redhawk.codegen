@@ -78,6 +78,7 @@ public class RHSandboxConsoleView extends ViewPart implements IConsoleView, IPag
         }
 	}
 	
+	@Override
 	public void consoleTerminated(SandboxConsole console) {
 	    if (this.console != console) {
 	    	throw new IllegalArgumentException("Unexpected console received");
@@ -86,6 +87,7 @@ public class RHSandboxConsoleView extends ViewPart implements IConsoleView, IPag
 	    
 	    getShell().getDisplay().asyncExec(new Runnable() {
 
+			@Override
 			public void run() {
 				if ((RHSandboxConsoleView.this.page != null) && (RHSandboxConsoleView.this.page.getControl() != null) && (!RHSandboxConsoleView.this.page.getControl().isDisposed())) {
 					RHSandboxConsoleView.this.page.getControl().dispose();
@@ -105,78 +107,95 @@ public class RHSandboxConsoleView extends ViewPart implements IConsoleView, IPag
 
 	}
 
+	@Override
 	public void display(final IConsole console) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void setPinned(final boolean pin) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void pin(final IConsole console) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public boolean isPinned() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	@Override
 	public IConsole getConsole() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public void warnOfContentChange(final IConsole console) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void setScrollLock(final boolean scrollLock) {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public boolean getScrollLock() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	@Override
 	public IWorkbenchPage getPage() {
 		return this.getSite().getPage();
 	}
 
+	@Override
 	public ISelectionProvider getSelectionProvider() {
 		return this.getSite().getSelectionProvider();
 	}
 
+	@Override
 	public Shell getShell() {
 		return this.getSite().getShell();
 	}
 
+	@Override
 	public IWorkbenchWindow getWorkbenchWindow() {
 		return this.getSite().getWorkbenchWindow();
 	}
 
+	@Override
 	public void setSelectionProvider(final ISelectionProvider provider) {
 		this.getSite().setSelectionProvider(provider);
 	}
 
+	@Override
 	public Object getService(@SuppressWarnings("rawtypes") final Class api) {
 		return this.getSite().getService(api);
 	}
 
+	@Override
 	public boolean hasService(@SuppressWarnings("rawtypes") final Class api) {
 		return this.getSite().hasService(api);
 	}
 
+	@Override
 	public void registerContextMenu(final String menuId, final MenuManager menuManager, final ISelectionProvider selectionProvider) {
 		this.getSite().registerContextMenu(menuId, menuManager, selectionProvider);
 	}
 
+	@Override
 	public IActionBars getActionBars() {
 		return getViewSite().getActionBars();
     }

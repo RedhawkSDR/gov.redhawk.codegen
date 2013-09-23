@@ -492,6 +492,7 @@ public class CplusplusBuilder extends IncrementalProjectBuilder {
 		 * <p />
 		 * {@inheritDoc}
 		 */
+		@Override
 		public boolean visit(final ICElement element) throws CoreException {
 			final IPath relativePath = element.getResource().getProjectRelativePath();
 			if (element instanceof ITranslationUnit && !CDataUtil.isExcluded(relativePath, this.sourceEntry)) {

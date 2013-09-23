@@ -40,6 +40,7 @@ public class JavaGeneratorPlugin extends Plugin {
 
 	private final IPreferenceChangeListener ossiehomePreferenceChangeListener = new IPreferenceChangeListener() {
 
+		@Override
 		public void preferenceChange(final PreferenceChangeEvent event) {
 			if (event.getKey().equals(RedhawkIdePreferenceConstants.RH_IDE_RUNTIME_PATH_PREFERENCE)) {
 				final ClasspathVariableInitializer init = JavaCore.getClasspathVariableInitializer("OSSIEHOME");

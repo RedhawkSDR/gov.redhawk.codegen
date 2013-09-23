@@ -114,6 +114,7 @@ public class PythonSourceInclude extends IncrementalProjectBuilder {
 			
 			// Visit the source folder's children
 			sourceFolder.accept(new IResourceVisitor() {
+				@Override
 				public boolean visit(IResource resource) throws CoreException {
 					if (resource instanceof IFile) {
 						final IFile file = (IFile) resource;

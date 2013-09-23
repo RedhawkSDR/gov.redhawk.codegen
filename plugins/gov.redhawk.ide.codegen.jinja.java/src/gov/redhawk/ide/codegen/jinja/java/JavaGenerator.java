@@ -61,6 +61,7 @@ public class JavaGenerator extends AbstractJavaCodeGenerator {
 		return code;
 	}
 
+	@Override
 	public IStatus validate() {
 		return this.generator.validate();
 	}

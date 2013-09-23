@@ -35,6 +35,7 @@ public class AbstractJavaCodegenProperty implements JavaCodegenProperty {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getId() {
 		return "\"" + JavaGeneratorUtils.escapeString(this.id) + "\"";
 	}
@@ -42,6 +43,7 @@ public class AbstractJavaCodegenProperty implements JavaCodegenProperty {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getName() {
 		return (this.name != null) ? "\"" + JavaGeneratorUtils.escapeString(this.name) + "\"" : null;
 	}
@@ -49,6 +51,7 @@ public class AbstractJavaCodegenProperty implements JavaCodegenProperty {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getType() {
 		return "\"" + this.type + "\"";
 	}
@@ -56,6 +59,7 @@ public class AbstractJavaCodegenProperty implements JavaCodegenProperty {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getJavadoc(final int indent) {
 		final StringBuilder builder = new StringBuilder(JavaGeneratorUtils.getJavadocStart(indent));
 		builder.append(JavaGeneratorUtils.getJavadocNewline(indent));
@@ -82,6 +86,7 @@ public class AbstractJavaCodegenProperty implements JavaCodegenProperty {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getDescription() {
 		return this.description;
 	}
@@ -89,6 +94,7 @@ public class AbstractJavaCodegenProperty implements JavaCodegenProperty {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getMode() {
 		return "\"" + this.mode + "\"";
 	}
@@ -96,6 +102,7 @@ public class AbstractJavaCodegenProperty implements JavaCodegenProperty {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getAction() {
 		return "\"" + this.action + "\"";
 	}
@@ -103,12 +110,14 @@ public class AbstractJavaCodegenProperty implements JavaCodegenProperty {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getKind() {
 		final StringBuilder builder = new StringBuilder("new String[] ");
 		builder.append(JavaGeneratorUtils.propertyKindToArrayInitializer(this.kind));
 		return builder.toString();
 	}
 	
+	@Override
 	public String [] getKindValues() {
 		List<String> retval = new ArrayList<String>();
 		for (Kind k : this.kind) {
@@ -120,6 +129,7 @@ public class AbstractJavaCodegenProperty implements JavaCodegenProperty {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getValue() {
 		return "";
 	}

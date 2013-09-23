@@ -22,10 +22,12 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  */
 public class JavaJetGeneratorDisplayFactory implements ICodegenDisplayFactory {
 
+	@Override
 	public ICodegenComposite createComposite(final Composite parent, final int style, final FormToolkit toolkit) {
 		return new JavaJetGeneratorPropertiesComposite(parent, style, toolkit);
 	}
 
+	@Override
 	public ICodegenWizardPage createPage() {
 		return new JavaJetGeneratorPropertiesWizardPage();
 	}

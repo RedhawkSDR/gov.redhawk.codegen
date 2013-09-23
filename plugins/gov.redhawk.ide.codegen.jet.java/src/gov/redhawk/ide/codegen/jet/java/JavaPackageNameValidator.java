@@ -33,6 +33,7 @@ import org.eclipse.jdt.core.JavaConventions;
  */
 public class JavaPackageNameValidator extends AbstractModelConstraint implements IValidator {
 
+	@Override
 	public IStatus validate(final Object value) {
 		final String s = (String) value;
 		final ICodeGeneratorsRegistry registry = RedhawkCodegenActivator.getCodeGeneratorsRegistry();

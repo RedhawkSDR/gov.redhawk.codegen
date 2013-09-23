@@ -72,6 +72,7 @@ public class IDLBrowser extends ViewPart {
 
 	private class InterfaceComparator implements Comparator<Interface> {
 
+		@Override
 		public int compare(final Interface o1, final Interface o2) {
 			if (o1 == null) {
 				return -1;

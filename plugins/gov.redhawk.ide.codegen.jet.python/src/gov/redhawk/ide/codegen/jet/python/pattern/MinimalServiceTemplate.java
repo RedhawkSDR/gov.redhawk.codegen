@@ -35,6 +35,7 @@ public class MinimalServiceTemplate implements IScaComponentCodegenTemplate {
 	public MinimalServiceTemplate() {
 	}
 	
+	@Override
 	public String generateFile(String fileName, SoftPkg softPkg,
 			ImplementationSettings implSettings, Object helperObject)
 			throws CoreException {
@@ -61,6 +62,7 @@ public class MinimalServiceTemplate implements IScaComponentCodegenTemplate {
 		return file;
 	}
 
+	@Override
 	public List<String> getExecutableFileNames(
 			ImplementationSettings implSettings, SoftPkg softPkg) {
 		final List<String> fileNames = new ArrayList<String>();
@@ -71,6 +73,7 @@ public class MinimalServiceTemplate implements IScaComponentCodegenTemplate {
 		return fileNames;
 	}
 
+	@Override
 	public List<String> getAllGeneratedFileNames(
 			ImplementationSettings implSettings, SoftPkg softPkg) {
 		final List<String> fileNames = new ArrayList<String>();
@@ -89,10 +92,12 @@ public class MinimalServiceTemplate implements IScaComponentCodegenTemplate {
 		return fileNames;
 	}
 
+	@Override
 	public boolean shouldGenerate() {
 		return true;
 	}
 
+	@Override
 	public String getDefaultFilename(SoftPkg softPkg,
 			ImplementationSettings implSettings, String srcDir) {
 		final String prefix = CodegenFileHelper.getPreferredFilePrefix(softPkg, implSettings);

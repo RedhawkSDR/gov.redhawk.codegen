@@ -107,6 +107,7 @@ public class RedhawkIdePyDevPlugin extends AbstractUIPlugin {
 					// Use the UI thread to get access to a Composite to fully instantiate the PythonInterpreterPreference page
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 
+						@Override
 						public void run() {
 							// Have the Python Preference node dispose its contents so we can update them later
 							if (node.getPage() != null) {
@@ -142,6 +143,7 @@ public class RedhawkIdePyDevPlugin extends AbstractUIPlugin {
 
 	private final IPreferenceChangeListener ossiehomePreferenceChangeListener = new IPreferenceChangeListener() {
 
+		@Override
 		public void preferenceChange(final PreferenceChangeEvent event) {
 
 			if (event.getKey().equals(RedhawkIdePreferenceConstants.RH_IDE_RUNTIME_PATH_PREFERENCE)) {

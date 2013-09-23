@@ -170,6 +170,7 @@ public class CplusplusGenerator extends AbstractCplusplusCodeGenerator {
 	/**
 	 * @since 7.0
 	 */
+	@Override
 	public IStatus validate() {
 		return IdlUtil.validate();
 	}
