@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<component id="gov.redhawk.ide.sandbox.console.py" version="2">
+    <resource path="src/gov/redhawk/ide/sandbox/console/py/RHSandboxConsoleView.java" type="gov.redhawk.ide.sandbox.console.py.RHSandboxConsoleView">
+        <filter id="574619656">
+            <message_arguments>
+                <message_argument value="IConsoleView"/>
+                <message_argument value="RHSandboxConsoleView"/>
+            </message_arguments>
+        </filter>
+        <filter id="574619656">
+            <message_arguments>
+                <message_argument value="IPageSite"/>
+                <message_argument value="RHSandboxConsoleView"/>
+            </message_arguments>
+        </filter>
+    </resource>
+</component>

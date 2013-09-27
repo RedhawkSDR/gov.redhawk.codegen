@@ -34,6 +34,7 @@ import org.eclipse.debug.core.model.ILaunchConfigurationDelegate;
  * @since 9.0
  * 
  */
+@SuppressWarnings("restriction")
 public class LocalCppCDILaunchDelegate extends LocalCDILaunchDelegate implements ILaunchConfigurationDelegate {
 
 	public static final String ID = "gov.redhawk.ide.codegen.jet.cplusplus.launchComponentApplication";
