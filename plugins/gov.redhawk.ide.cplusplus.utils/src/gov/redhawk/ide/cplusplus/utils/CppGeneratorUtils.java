@@ -361,12 +361,13 @@ public final class CppGeneratorUtils {
 	 * @param progress
 	 * @param retStatus
 	 * @return
+	 * @since 1.1
 	 */
-	public static MultiStatus generateCodanPrefs(final IProject project, final SubMonitor progress, final MultiStatus retStatus){
+	public static MultiStatus generateCodanPrefs(final IProject project, final SubMonitor progress, final MultiStatus retStatus) {
 		
-		try{
+		try {
 			IFolder folder = project.getFolder(".settings");
-			if (!folder.exists()){
+			if (!folder.exists()) {
 			    folder.create(true, true, progress);
 			}
 			IFile codanPrefs = folder.getFile("org.eclipse.cdt.codan.core.prefs");
