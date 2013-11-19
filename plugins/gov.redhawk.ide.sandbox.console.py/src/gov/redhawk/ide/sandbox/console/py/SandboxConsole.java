@@ -66,7 +66,7 @@ public class SandboxConsole extends PydevConsole {
 			throw new CoreException(new Status(IStatus.ERROR, RHLocalConsolePlugin.PLUGIN_ID, "Error creating sandbox console"));
 		} catch (WrongPolicy e) {
 			throw new CoreException(new Status(IStatus.ERROR, RHLocalConsolePlugin.PLUGIN_ID, "Error creating sandbox console"));
-		} catch (Exception e) {
+		} catch (Exception e) { // SUPPRESS CHECKSTYLE Logged Catch all exception
 			throw new CoreException(new Status(IStatus.ERROR, RHLocalConsolePlugin.PLUGIN_ID, "Error creating sandbox console"));
 		}
 	}

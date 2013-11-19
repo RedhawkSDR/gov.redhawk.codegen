@@ -108,7 +108,7 @@ public class RHLocalConsoleFactory implements IConsoleFactory {
 			//				}
 			//			});
 
-		} catch (final Exception e) {
+		} catch (final Exception e) { // SUPPRESS CHECKSTYLE Logged Catch all exception
 			StatusManager.getManager().handle(new Status(IStatus.ERROR, RHLocalConsolePlugin.PLUGIN_ID, Messages.RHLocalConsoleFactory_PY_ERROR, e),
 			        StatusManager.LOG | StatusManager.SHOW);
 		}

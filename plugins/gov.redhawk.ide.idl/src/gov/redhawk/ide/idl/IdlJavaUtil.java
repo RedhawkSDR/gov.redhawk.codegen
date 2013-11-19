@@ -291,7 +291,7 @@ public class IdlJavaUtil extends AbstractIdlUtil {
 
 		try {
 			parser.compile(new String[] { "-syntax", "-d", "/tmp/idl", paths, idlFile.toOSString() }, writer);
-		} catch (Exception e) {
+		} catch (Exception e) {  // SUPPRESS CHECKSTYLE Logged Catch all exception
 			throw new CoreException(new Status(IStatus.ERROR, RedhawkIdeIdlPlugin.PLUGIN_ID, "Unable to parse " + idlFile, e));
 		}
 

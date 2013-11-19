@@ -60,7 +60,7 @@ public class SoftPkgRefClasspathContainer implements IClasspathContainer {
 		try {
 			resource = set.getResource(URI.createPlatformResourceURI(softPkgFile.getFullPath().toPortableString(), true), true);
 			resource.load(set.getLoadOptions());
-		} catch (Exception e) {
+		} catch (Exception e) { // SUPPRESS CHECKSTYLE Logged Catch all exception
 			throw new CoreException(new Status(Status.ERROR, JavaGeneratorPlugin.PLUGIN_ID, "Failed to load spd file: " + softPkgFile, e));
 		}
 		SoftPkg spd = (SoftPkg) resource.getEObject(SoftPkg.EOBJECT_PATH);

@@ -311,7 +311,7 @@ public final class IdlUtil extends AbstractIdlUtil {
 			}
 
 			return ret_interfaces;
-		} catch (final Exception e) {
+		} catch (final Exception e) {  // SUPPRESS CHECKSTYLE Logged Catch all exception
 			throw new CoreException(new Status(IStatus.ERROR, RedhawkIdeIdlPlugin.PLUGIN_ID, "Unable to parse " + idlfile, e));
 		}
 	}
@@ -389,7 +389,7 @@ public final class IdlUtil extends AbstractIdlUtil {
 			} else if (buffer.length() > 0) {
 				return new Status(IStatus.ERROR, RedhawkIdeIdlPlugin.PLUGIN_ID, "An error occurred while testing the omniidl parser: " + buffer.toString());
 			}
-		} catch (Exception e) {
+		} catch (Exception e) {  // SUPPRESS CHECKSTYLE Logged Catch all exception
 			return new Status(IStatus.ERROR, RedhawkIdeIdlPlugin.PLUGIN_ID, "An exception occurred while testing the omniidl parser", e);
 		}
 
