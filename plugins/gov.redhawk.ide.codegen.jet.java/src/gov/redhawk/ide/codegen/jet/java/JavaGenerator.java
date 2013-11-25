@@ -278,7 +278,7 @@ public class JavaGenerator extends AbstractJavaCodeGenerator {
 			if (desiredOutput.exists()) {
 				desiredOutput.delete(true, progress.newChild(1));
 			}
-		} catch (final Exception e) {
+		} catch (final Exception e) { // SUPPRESS CHECKSTYLE Logged Error
 			if (desiredOutput.exists()) {
 				desiredOutput.setContents(new ByteArrayInputStream(resource.getBytes()), true, false, progress.newChild(1));
 			} else {

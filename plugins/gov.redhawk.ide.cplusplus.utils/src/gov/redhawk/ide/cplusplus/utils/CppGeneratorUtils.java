@@ -372,7 +372,7 @@ public final class CppGeneratorUtils {
 			}
 			IFile codanPrefs = folder.getFile("org.eclipse.cdt.codan.core.prefs");
 			if (!codanPrefs.exists()) {
-
+				// CHECKSTYLE:OFF
 				StringBuilder sb = new StringBuilder();
 				sb.append("eclipse.preferences.version=1\n");
 				sb.append("org.eclipse.cdt.codan.checkers.errnoreturn=Warning\n");
@@ -442,6 +442,7 @@ public final class CppGeneratorUtils {
 				sb.append("org.eclipse.cdt.codan.internal.checkers.VariableResolutionProblem=Error\n");
 				sb.append("org.eclipse.cdt.codan.internal.checkers.VariableResolutionProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
 				sb.append("useParentScope=false\n");
+				// CHECKSTYLE:ON
 
 				InputStream source = new ByteArrayInputStream(sb.toString().getBytes());
 

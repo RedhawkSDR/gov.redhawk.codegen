@@ -67,7 +67,7 @@ public class AbstractJavaCodegenProperty implements JavaCodegenProperty {
 		builder.append(this.id);
 		final String newline = JavaGeneratorUtils.getJavadocNewline(indent);
 		builder.append(newline);
-		if (this.getDescription() == null || this.getDescription().equals("")) {
+		if (this.getDescription() == null || this.getDescription().isEmpty()) {
 			builder.append("If the meaning of this property isn't clear, a description should be added.");
 		} else {
 			builder.append(this.getDescription());

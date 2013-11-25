@@ -44,7 +44,7 @@ public class AutoConfigPydevInterpreterUtilTest {
 		final NullProgressMonitor nullMon = new NullProgressMonitor();
 		final String path = System.getenv("OSSIEHOME");
 		//If the environment is not configured this should throw an exception; otherwise will succeed
-		if (path == null || path.equals("")) {
+		if (path == null || path.isEmpty()) {
 			this.exception.expect(CoreException.class);
 			this.exception.expectMessage("OSSIEHOME environment variable not defined, auto config failed.");
 		}

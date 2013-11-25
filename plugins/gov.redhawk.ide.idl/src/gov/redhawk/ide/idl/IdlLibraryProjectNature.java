@@ -103,7 +103,7 @@ public class IdlLibraryProjectNature implements IProjectNature {
 			return "";
 		}
 
-		if (key == null || key == "") {
+		if (key == null || key.isEmpty()) {
 			return "";
 		}
 

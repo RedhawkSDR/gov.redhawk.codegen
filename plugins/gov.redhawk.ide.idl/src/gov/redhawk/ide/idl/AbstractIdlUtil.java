@@ -102,7 +102,7 @@ public abstract class AbstractIdlUtil {
 				}
 			} else {
 				final Path fpath = new Path(fileOrDir.getPath());
-				if (fpath.getFileExtension().equals("idl")) {
+				if ("idl".equals(fpath.getFileExtension())) {
 					idlFiles.add(fpath);
 				}
 			}

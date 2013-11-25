@@ -10,7 +10,6 @@
  *******************************************************************************/
 package gov.redhawk.ide.sandbox.console.py;
 
-
 import gov.redhawk.ide.sandbox.console.py.SandboxConsole.ITerminateListener;
 
 import org.eclipse.core.runtime.CoreException;
@@ -33,13 +32,12 @@ import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.statushandlers.StatusManager;
 
-
 public class RHSandboxConsoleView extends ViewPart implements IConsoleView, IPageSite, ITerminateListener {
 
 	private SandboxConsole console;
 	private Composite consoleArea;
 	private IPageBookViewPage page;
-	 
+
 	public RHSandboxConsoleView() {
 	}
 
@@ -47,59 +45,60 @@ public class RHSandboxConsoleView extends ViewPart implements IConsoleView, IPag
 	public void createPartControl(Composite parent) {
 		consoleArea = new Composite(parent, SWT.NONE);
 		consoleArea.setLayout(new FillLayout());
-		try {		
+		try {
 			createConsoleControl();
-		} catch (final Exception e) {
+		} catch (final Exception e) { // SUPPRESS CHECKSTYLE Logged Error
 			StatusManager.getManager().handle(new Status(IStatus.ERROR, RHLocalConsolePlugin.PLUGIN_ID, Messages.RHLocalConsoleFactory_PY_ERROR, e),
-			        StatusManager.LOG | StatusManager.SHOW);
+				StatusManager.LOG | StatusManager.SHOW);
 		}
 	}
-	
+
 	public void createConsoleControl() {
 		if ((this.console != null) || (this.page != null)) {
 			throw new IllegalStateException();
 		}
-		
+
 		getViewSite().getActionBars().getToolBarManager().removeAll();
 		getViewSite().getActionBars().getToolBarManager().add(new GroupMarker("launchGroup"));
 		getViewSite().getActionBars().getToolBarManager().add(new GroupMarker("outputGroup"));
 
 		try {
-	        console = SandboxConsole.create();
-	        page = console.createPage(this);
+			console = SandboxConsole.create();
+			page = console.createPage(this);
 			page.init(this);
 			page.createControl(consoleArea);
 			consoleArea.update();
 			consoleArea.redraw();
 			this.console.addTerminateListener(this);
-        } catch (CoreException e) {
-	        RHLocalConsolePlugin.getDefault().getLog().log(e.getStatus());
-	        this.console = null;
-        }
+		} catch (CoreException e) {
+			RHLocalConsolePlugin.getDefault().getLog().log(e.getStatus());
+			this.console = null;
+		}
 	}
-	
+
 	@Override
 	public void consoleTerminated(SandboxConsole console) {
-	    if (this.console != console) {
-	    	throw new IllegalArgumentException("Unexpected console received");
-	    }
-	    this.console = null;
-	    
-	    getShell().getDisplay().asyncExec(new Runnable() {
+		if (this.console != console) {
+			throw new IllegalArgumentException("Unexpected console received");
+		}
+		this.console = null;
+
+		getShell().getDisplay().asyncExec(new Runnable() {
 
 			@Override
 			public void run() {
-				if ((RHSandboxConsoleView.this.page != null) && (RHSandboxConsoleView.this.page.getControl() != null) && (!RHSandboxConsoleView.this.page.getControl().isDisposed())) {
+				if ((RHSandboxConsoleView.this.page != null) && (RHSandboxConsoleView.this.page.getControl() != null)
+					&& (!RHSandboxConsoleView.this.page.getControl().isDisposed())) {
 					RHSandboxConsoleView.this.page.getControl().dispose();
 					RHSandboxConsoleView.this.page.dispose();
 				}
 				RHSandboxConsoleView.this.page = null;
-				
+
 				RHSandboxConsoleView.this.createConsoleControl();
 				RHSandboxConsoleView.this.consoleArea.layout();
-            }
-	    });
-    }
+			}
+		});
+	}
 
 	@Override
 	public void setFocus() {
@@ -198,6 +197,6 @@ public class RHSandboxConsoleView extends ViewPart implements IConsoleView, IPag
 	@Override
 	public IActionBars getActionBars() {
 		return getViewSite().getActionBars();
-    }
+	}
 
 }
