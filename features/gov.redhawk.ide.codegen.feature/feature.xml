@@ -25,7 +25,7 @@
    </copyright>
 
    <license url="%licenseURL">
-   %license
+      %license
    </license>
 
    <plugin
@@ -212,6 +212,20 @@
 
    <plugin
          id="gov.redhawk.ide.codegen.jinja.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="gov.redhawk.ide.octave.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="gov.redhawk.mfile.parser"
          download-size="0"
          install-size="0"
          version="0.0.0"

@@ -3,13 +3,12 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>gov.redhawk.codegen</groupId>
+    <groupId>gov.redhawk.ide</groupId>
     <artifactId>releng</artifactId>
     <version>1.10.0-SNAPSHOT</version>
     <relativePath>../../releng/</relativePath>
   </parent>
-  <groupId>gov.redhawk.codegen</groupId>
-  <artifactId>gov.redhawk.ide.codegen.jinja.cplusplus</artifactId>
-  <version>1.1.0-SNAPSHOT</version>
-  <packaging>eclipse-plugin</packaging>
+  <groupId>gov.redhawk.ide</groupId>
+  <artifactId>gov.redhawk.ide.octave.ui</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
 </project>

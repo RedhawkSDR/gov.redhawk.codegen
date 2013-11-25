@@ -37,8 +37,14 @@ import org.eclipse.core.runtime.IStatus;
 /**
  * @since 1.1
  */
-public class CplusplusGenerator extends AbstractCplusplusCodeGenerator {
+public class CplusplusOctaveGenerator extends AbstractCplusplusCodeGenerator {
+	
+	public static final String ID = "gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusOctaveGenerator";
 
+	public CplusplusOctaveGenerator() {
+		// TODO Auto-generated constructor stub
+	}
+	
 	private final JinjaGenerator generator = new JinjaGenerator();
 
 	@Override

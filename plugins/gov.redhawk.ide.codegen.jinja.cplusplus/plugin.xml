@@ -40,6 +40,37 @@
                type="service">
          </componenttype>
       </codegen>
+      <codegen
+            autoGenerate="false"
+            class="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusOctaveGenerator"
+            compiler="/usr/bin/gcc"
+            compilerVersion="4.1.2"
+            humanLanguage="EN"
+            id="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusOctaveGenerator"
+            language="C++"
+            languageVersion="0"
+            name="C++ Octave Code Generator"
+            notDefaultable="false"
+            priority="normal">
+         <description>
+            Integrated&apos;redhawk-codegen&apos; Octave C++ code generator for components.
+         </description>
+         <operatingSystem
+               default="true"
+               os="Linux">
+         </operatingSystem>
+         <processor
+               default="true"
+               proc_type="x86">
+         </processor>
+         <processor
+               default="true"
+               proc_type="x86_64">
+         </processor>
+         <componenttype
+               type="resource">
+         </componenttype>
+      </codegen>
    </extension>
    <extension
          point="gov.redhawk.ide.codegen.codegenTemplate">
@@ -77,6 +108,22 @@
          <description>
             Service code generator
          </description>
+      </template>
+      <template
+            class="gov.redhawk.ide.codegen.jinja.cplusplus.template.DefaultCppTemplate"
+            codegenId="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusOctaveGenerator"
+            hasSettings="false"
+            id="redhawk.codegen.jinja.cpp.component.octave"
+            name="Octave Pull Port Data"
+            notDefaultable="false"
+            selectable="true"
+            usesPortTemplates="false">
+         <description>
+            This template will queue all data inside each input port. It is the developers responsibility to pull the data from the port's queue for processing.
+         </description>
+         <componenttype
+               type="resource">
+         </componenttype>
       </template>
    </extension>
    <extension

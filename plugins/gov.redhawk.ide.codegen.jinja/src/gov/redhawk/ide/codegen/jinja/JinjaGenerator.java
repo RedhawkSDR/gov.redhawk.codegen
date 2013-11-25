@@ -18,6 +18,7 @@ import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.Property;
 import gov.redhawk.ide.codegen.jinja.utils.InputRedirector;
 import gov.redhawk.model.sca.util.ModelUtil;
+import gov.redhawk.sca.util.Debug;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -52,6 +53,8 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.URI;
 
 public class JinjaGenerator {
+	
+	private static final Debug DEBUG = new Debug(JinjaGeneratorPlugin.PLUGIN_ID, "command");
 
 	private static final ExecutorService EXECUTOR_POOL = Executors.newSingleThreadExecutor(new NamedThreadFactory(JinjaGenerator.class.getName()));
 
@@ -105,6 +108,14 @@ public class JinjaGenerator {
 			return path + File.separator + filename;
 		}
 	}
+	
+	private String commandToString(String [] command) {
+		StringBuilder builder = new StringBuilder();
+		for (String s : command) {
+			builder.append(s + " ");
+		}
+		return builder.toString();
+	}
 
 	public void generate(final ImplementationSettings implSettings, final Implementation impl, final PrintStream out, final PrintStream err,
 		final IProgressMonitor monitor, final String[] generateFiles) throws CoreException {
@@ -152,6 +163,9 @@ public class JinjaGenerator {
 		//     standard out/error are closed, so there is no need to explicitly wait for it.
 		final Process process;
 		try {
+			if (DEBUG.enabled) {
+				DEBUG.trace("Jinja Command:\n{0}", commandToString(command));
+			}
 			process = java.lang.Runtime.getRuntime().exec(command);
 		} catch (final IOException e) {
 			throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Exception running '" + redhawkCodegen + "'", e));
@@ -244,6 +258,9 @@ public class JinjaGenerator {
 		//     standard out/error are closed, so there is no need to explicitly wait for it.
 		Process process = null;
 		try {
+			if (DEBUG.enabled) {
+				DEBUG.trace("Jinja List Command:\n{0}", commandToString(command));
+			}
 			process = java.lang.Runtime.getRuntime().exec(command);
 		} catch (final IOException e) {
 			throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Exception running '" + redhawkCodegen + "'", e));
