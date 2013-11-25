@@ -83,7 +83,7 @@ public final class CppGeneratorUtils {
 	}
 
 	public static MultiStatus addManagedNature(final IProject project, final SubMonitor progress, final MultiStatus retStatus,
-	        final String destinationDirectory, final PrintStream out, final boolean shouldGenerate, final Implementation impl) {
+		final String destinationDirectory, final PrintStream out, final boolean shouldGenerate, final Implementation impl) {
 		progress.setWorkRemaining(CppGeneratorUtils.ADJUST_CONFIG_WORK + CppGeneratorUtils.GENERATE_CODE_WORK);
 
 		// Based on whether or not the managed C project nature has been added, we know whether or not the project has
@@ -93,7 +93,7 @@ public final class CppGeneratorUtils {
 			hasManagedNature = project.hasNature(ManagedCProjectNature.MNG_NATURE_ID);
 		} catch (final CoreException e) {
 			retStatus.add(new Status(IStatus.ERROR, CplusplusUtilsPlugin.PLUGIN_ID,
-			        "Unable to deterine if the project has been configured with the managed C nature; cannot proceed with code generation", e));
+				"Unable to deterine if the project has been configured with the managed C nature; cannot proceed with code generation", e));
 			return retStatus;
 		}
 		if (hasManagedNature) {
@@ -108,7 +108,7 @@ public final class CppGeneratorUtils {
 				final IManagedBuildInfo info = ManagedBuildManager.getBuildInfo(project);
 				if (info == null) {
 					retStatus.add(new Status(IStatus.ERROR, CplusplusUtilsPlugin.PLUGIN_ID, IResourceStatus.BUILD_FAILED,
-					        "C/C++ manged build information was not available", null));
+						"C/C++ manged build information was not available", null));
 					return retStatus;
 				}
 
@@ -163,7 +163,7 @@ public final class CppGeneratorUtils {
 			final IConfiguration[] defaultConfigs = projectType.getConfigurations();
 			for (final IConfiguration defaultConfig : defaultConfigs) {
 				final IConfiguration config = managedProject.createConfiguration(defaultConfig,
-				        ManagedBuildManager.calculateChildId(defaultConfig.getId(), null));
+					ManagedBuildManager.calculateChildId(defaultConfig.getId(), null));
 
 				if (impl != null) {
 					config.setArtifactName((new Path(impl.getCode().getLocalFile().getName())).lastSegment());
@@ -197,14 +197,14 @@ public final class CppGeneratorUtils {
 
 				// Add build environment variables
 				CppGeneratorUtils.addBuildEnvironVars(configDesc);
-				
+
 				String[] parserIDs = configDesc.getBuildSetting().getErrorParserIDs();
 				List<String> newParserIDs = new ArrayList<String>();
 				newParserIDs.add("gov.redhawk.ide.codegen.cpp.reconfParser");
 				newParserIDs.add("org.eclipse.cdt.autotools.core.ErrorParser");
 				newParserIDs.addAll(Arrays.asList(parserIDs));
 				configDesc.getBuildSetting().setErrorParserIDs(newParserIDs.toArray(new String[newParserIDs.size()]));
-				
+
 			}
 
 			// Set project description - this makes it go into effect
@@ -253,11 +253,11 @@ public final class CppGeneratorUtils {
 		}
 		return new Status(IStatus.OK, CplusplusUtilsPlugin.PLUGIN_ID, "Builder configuration ok");
 	}
-	
+
 	public static final String OSSIE_INCLUDE = "${OssieHome}/include";
 	public static final String OMNI_ORB_INCLUDE = "/usr/include/omniORB4";
 	public static final String OMNI_ORB_THREAD_INCLUDE = "/usr/include/omnithread";
-	
+
 	/**
 	 * Some of the include paths that we add to a CDT project are intended only so CDT can resolve symbols when
 	 * parsing. These paths aren't needed when compiling since autoconf / automake are already handling them. Call
@@ -295,7 +295,8 @@ public final class CppGeneratorUtils {
 
 		includePathSettings.add((ICLanguageSettingEntry) CDataUtil.createEntry(ICSettingEntry.INCLUDE_PATH, OSSIE_INCLUDE, OSSIE_INCLUDE, null, 0));
 		includePathSettings.add((ICLanguageSettingEntry) CDataUtil.createEntry(ICSettingEntry.INCLUDE_PATH, OMNI_ORB_INCLUDE, OMNI_ORB_INCLUDE, null, 0));
-		includePathSettings.add((ICLanguageSettingEntry) CDataUtil.createEntry(ICSettingEntry.INCLUDE_PATH, OMNI_ORB_THREAD_INCLUDE, OMNI_ORB_THREAD_INCLUDE, null, 0));
+		includePathSettings.add((ICLanguageSettingEntry) CDataUtil.createEntry(ICSettingEntry.INCLUDE_PATH, OMNI_ORB_THREAD_INCLUDE, OMNI_ORB_THREAD_INCLUDE,
+			null, 0));
 		lang.setSettingEntries(ICSettingEntry.INCLUDE_PATH, includePathSettings);
 	}
 
@@ -337,22 +338,21 @@ public final class CppGeneratorUtils {
 
 		// Add our implementation directory as a source path if it's not already there
 		final ICSourceEntry entry = (ICSourceEntry) CDataUtil.createEntry(ICSettingEntry.SOURCE_PATH, outputDir, null, null,
-		        ICSettingEntry.VALUE_WORKSPACE_PATH | ICSettingEntry.RESOLVED);
+			ICSettingEntry.VALUE_WORKSPACE_PATH | ICSettingEntry.RESOLVED);
 		if (!entries.contains(entry)) {
 			entries.add(entry);
 		}
 
 		// The root of the project gets added as a source path when the project is initially created - this removes it
 		final ICSourceEntry rootSourceEntry = (ICSourceEntry) CDataUtil.createEntry(ICSettingEntry.SOURCE_PATH, "", null, null,
-		        ICSettingEntry.VALUE_WORKSPACE_PATH | ICSettingEntry.RESOLVED);
+			ICSettingEntry.VALUE_WORKSPACE_PATH | ICSettingEntry.RESOLVED);
 		entries.remove(rootSourceEntry);
 
 		final ICSourceEntry[] e = new ICSourceEntry[entries.size()];
 		entries.toArray(e);
 		config.setSourceEntries(e);
 	}
-	
-	
+
 	/**
 	 * Generates codan prefs for new project.  Purpose of this is to specifically disable the abstract parser to prevent 
 	 * displaying an incorrect error regarding failure to implement a pure virtual function.  This problem is fixed
@@ -364,87 +364,89 @@ public final class CppGeneratorUtils {
 	 * @since 1.1
 	 */
 	public static MultiStatus generateCodanPrefs(final IProject project, final SubMonitor progress, final MultiStatus retStatus) {
-		
+
 		try {
 			IFolder folder = project.getFolder(".settings");
 			if (!folder.exists()) {
-			    folder.create(true, true, progress);
+				folder.create(true, true, progress);
 			}
 			IFile codanPrefs = folder.getFile("org.eclipse.cdt.codan.core.prefs");
-			
-			StringBuilder sb = new StringBuilder();
-			sb.append("eclipse.preferences.version=1\n");
-			sb.append("org.eclipse.cdt.codan.checkers.errnoreturn=Warning\n");
-			sb.append("org.eclipse.cdt.codan.checkers.errnoreturn.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true},implicit\\=>false}\n");
-			sb.append("org.eclipse.cdt.codan.checkers.errreturnvalue=Error\n");
-			sb.append("org.eclipse.cdt.codan.checkers.errreturnvalue.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
-			sb.append("org.eclipse.cdt.codan.checkers.noreturn=Error\n");
-			sb.append("org.eclipse.cdt.codan.checkers.noreturn.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true},implicit\\=>false}\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.AbstractClassCreation=-Error\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.AbstractClassCreation.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.AmbiguousProblem=Error\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.AmbiguousProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.AssignmentInConditionProblem=Warning\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.AssignmentInConditionProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.AssignmentToItselfProblem=Error\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.AssignmentToItselfProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.CaseBreakProblem=Warning\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.CaseBreakProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true},no_break_comment\\=>\"no break\",last_case_param\\=>false,empty_case_param\\=>false}\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.CatchByReference=Warning\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.CatchByReference.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true},unknown\\=>false,exceptions\\=>()}\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.CircularReferenceProblem=Error\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.CircularReferenceProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.ClassMembersInitialization=Warning\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.ClassMembersInitialization.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true},skip\\=>true}\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.FieldResolutionProblem=Error\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.FieldResolutionProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.FunctionResolutionProblem=Error\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.FunctionResolutionProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.InvalidArguments=Error\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.InvalidArguments.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.InvalidTemplateArgumentsProblem=Error\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.InvalidTemplateArgumentsProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.LabelStatementNotFoundProblem=Error\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.LabelStatementNotFoundProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.MemberDeclarationNotFoundProblem=Error\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.MemberDeclarationNotFoundProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.MethodResolutionProblem=Error\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.MethodResolutionProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.NamingConventionFunctionChecker=Info\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.NamingConventionFunctionChecker.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true},pattern\\=>\"^[a-z]\",macro\\=>true,exceptions\\=>()}\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.NonVirtualDestructorProblem=Warning\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.NonVirtualDestructorProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.OverloadProblem=Error\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.OverloadProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.RedeclarationProblem=Error\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.RedeclarationProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.RedefinitionProblem=Error\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.RedefinitionProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.ReturnStyleProblem=Warning\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.ReturnStyleProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.ScanfFormatStringSecurityProblem=Warning\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.ScanfFormatStringSecurityProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.StatementHasNoEffectProblem=Warning\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.StatementHasNoEffectProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true},macro\\=>true,exceptions\\=>()}\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.SuggestedParenthesisProblem=Warning\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.SuggestedParenthesisProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true},paramNot\\=>false}\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.SuspiciousSemicolonProblem=Warning\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.SuspiciousSemicolonProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true},else\\=>false,afterelse\\=>false}\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.TypeResolutionProblem=Error\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.TypeResolutionProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.UnusedFunctionDeclarationProblem=Warning\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.UnusedFunctionDeclarationProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true},macro\\=>true}\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.UnusedStaticFunctionProblem=Warning\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.UnusedStaticFunctionProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true},macro\\=>true}\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.UnusedVariableDeclarationProblem=Warning\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.UnusedVariableDeclarationProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true},macro\\=>true,exceptions\\=>(\"@(\\#)\",\"$Id\")}\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.VariableResolutionProblem=Error\n");
-			sb.append("org.eclipse.cdt.codan.internal.checkers.VariableResolutionProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
-			sb.append("useParentScope=false\n");
-			
-		    InputStream source = new ByteArrayInputStream(sb.toString().getBytes());
-		
-			codanPrefs.create(source, true, progress);
+			if (!codanPrefs.exists()) {
+
+				StringBuilder sb = new StringBuilder();
+				sb.append("eclipse.preferences.version=1\n");
+				sb.append("org.eclipse.cdt.codan.checkers.errnoreturn=Warning\n");
+				sb.append("org.eclipse.cdt.codan.checkers.errnoreturn.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true},implicit\\=>false}\n");
+				sb.append("org.eclipse.cdt.codan.checkers.errreturnvalue=Error\n");
+				sb.append("org.eclipse.cdt.codan.checkers.errreturnvalue.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
+				sb.append("org.eclipse.cdt.codan.checkers.noreturn=Error\n");
+				sb.append("org.eclipse.cdt.codan.checkers.noreturn.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true},implicit\\=>false}\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.AbstractClassCreation=-Error\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.AbstractClassCreation.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.AmbiguousProblem=Error\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.AmbiguousProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.AssignmentInConditionProblem=Warning\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.AssignmentInConditionProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.AssignmentToItselfProblem=Error\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.AssignmentToItselfProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.CaseBreakProblem=Warning\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.CaseBreakProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true},no_break_comment\\=>\"no break\",last_case_param\\=>false,empty_case_param\\=>false}\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.CatchByReference=Warning\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.CatchByReference.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true},unknown\\=>false,exceptions\\=>()}\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.CircularReferenceProblem=Error\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.CircularReferenceProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.ClassMembersInitialization=Warning\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.ClassMembersInitialization.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true},skip\\=>true}\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.FieldResolutionProblem=Error\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.FieldResolutionProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.FunctionResolutionProblem=Error\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.FunctionResolutionProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.InvalidArguments=Error\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.InvalidArguments.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.InvalidTemplateArgumentsProblem=Error\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.InvalidTemplateArgumentsProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.LabelStatementNotFoundProblem=Error\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.LabelStatementNotFoundProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.MemberDeclarationNotFoundProblem=Error\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.MemberDeclarationNotFoundProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.MethodResolutionProblem=Error\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.MethodResolutionProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.NamingConventionFunctionChecker=Info\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.NamingConventionFunctionChecker.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true},pattern\\=>\"^[a-z]\",macro\\=>true,exceptions\\=>()}\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.NonVirtualDestructorProblem=Warning\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.NonVirtualDestructorProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.OverloadProblem=Error\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.OverloadProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.RedeclarationProblem=Error\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.RedeclarationProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.RedefinitionProblem=Error\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.RedefinitionProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.ReturnStyleProblem=Warning\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.ReturnStyleProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.ScanfFormatStringSecurityProblem=Warning\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.ScanfFormatStringSecurityProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.StatementHasNoEffectProblem=Warning\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.StatementHasNoEffectProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true},macro\\=>true,exceptions\\=>()}\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.SuggestedParenthesisProblem=Warning\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.SuggestedParenthesisProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true},paramNot\\=>false}\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.SuspiciousSemicolonProblem=Warning\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.SuspiciousSemicolonProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true},else\\=>false,afterelse\\=>false}\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.TypeResolutionProblem=Error\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.TypeResolutionProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.UnusedFunctionDeclarationProblem=Warning\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.UnusedFunctionDeclarationProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true},macro\\=>true}\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.UnusedStaticFunctionProblem=Warning\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.UnusedStaticFunctionProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true},macro\\=>true}\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.UnusedVariableDeclarationProblem=Warning\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.UnusedVariableDeclarationProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true},macro\\=>true,exceptions\\=>(\"@(\\#)\",\"$Id\")}\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.VariableResolutionProblem=Error\n");
+				sb.append("org.eclipse.cdt.codan.internal.checkers.VariableResolutionProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
+				sb.append("useParentScope=false\n");
+
+				InputStream source = new ByteArrayInputStream(sb.toString().getBytes());
+
+				codanPrefs.create(source, true, progress);
+			}
 		} catch (CoreException e) {
 			retStatus.add(new Status(e.getStatus().getSeverity(), CplusplusUtilsPlugin.PLUGIN_ID, "Problems adding codan preference file for project", e));
 			return retStatus;
