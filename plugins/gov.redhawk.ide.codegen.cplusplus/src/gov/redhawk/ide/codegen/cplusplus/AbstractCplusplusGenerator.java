@@ -25,7 +25,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 /**
  * An abstract class for C/C++ implementation generation. It handles most aspects of configuring CDT, but leaves
  * generating code files up to the sub-class.
- * @deprecated
+ * @deprecated Use Jinja
  */
 @Deprecated
 public abstract class AbstractCplusplusGenerator extends AbstractCplusplusCodeGenerator {
@@ -34,7 +34,7 @@ public abstract class AbstractCplusplusGenerator extends AbstractCplusplusCodeGe
 	}
 
 	@Override
-	protected void generateCode(Implementation impl, ImplementationSettings implSettings, IProject project, String componentName,
+	protected void generateCode(Implementation impl, ImplementationSettings implSettings, IProject project, String componentName, // SUPPRESS CHECKSTYLE Arguments
 	        PrintStream out, PrintStream err, IProgressMonitor monitor, String[] generateFiles, List<FileToCRCMap> crcMap) throws CoreException {
 		generateCode(impl, implSettings, project, componentName, monitor, generateFiles, crcMap);
 	}

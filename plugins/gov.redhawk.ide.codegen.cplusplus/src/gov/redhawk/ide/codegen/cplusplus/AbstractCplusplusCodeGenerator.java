@@ -60,8 +60,9 @@ public abstract class AbstractCplusplusCodeGenerator extends AbstractCodeGenerat
 	 * @since 5.0
 	 */
 	@Override
-	public IStatus generate(final ImplementationSettings implSettings, final Implementation impl, final PrintStream out, final PrintStream err,
-		final IProgressMonitor monitor, final String[] generateFiles, final boolean shouldGenerate, final List<FileToCRCMap> crcMap) {
+	@SuppressWarnings("deprecation")
+	public IStatus generate(final ImplementationSettings implSettings, final Implementation impl, final PrintStream out, final PrintStream err, // SUPPRESS CHECKSTYLE Arguments
+		final IProgressMonitor monitor, final String[] generateFiles, final boolean shouldGenerate, final List<FileToCRCMap> crcMap) { // SUPPRESS CHECKSTYLE Arguments
 		final int CLEANUP_WORK = 1, ADD_NATURE_WORK = 1, ADD_BUILDER_WORK = 1;
 		final int ADJUST_CONFIG_WORK = 90;
 		final int GENERATE_CODE_WORK = 7;
@@ -256,7 +257,7 @@ public abstract class AbstractCplusplusCodeGenerator extends AbstractCodeGenerat
 	 * @throws CoreException A problem occurs while generating code files for the implementation
 	 * @since 5.0
 	 */
-	protected abstract void generateCode(Implementation impl, ImplementationSettings implSettings, IProject project, String componentName, PrintStream out,
+	protected abstract void generateCode(Implementation impl, ImplementationSettings implSettings, IProject project, String componentName, PrintStream out, // SUPPRESS CHECKSTYLE Arguments
 		PrintStream err, IProgressMonitor monitor, String[] generateFiles, List<FileToCRCMap> crcMap) throws CoreException;
 
 }

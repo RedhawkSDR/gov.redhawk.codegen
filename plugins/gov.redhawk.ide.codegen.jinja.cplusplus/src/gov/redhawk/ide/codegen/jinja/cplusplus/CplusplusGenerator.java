@@ -79,7 +79,7 @@ public class CplusplusGenerator extends AbstractCplusplusCodeGenerator {
 	}
 
 	@Override
-	protected void generateCode(final Implementation impl, final ImplementationSettings implSettings, final IProject project, final String componentName,
+	protected void generateCode(final Implementation impl, final ImplementationSettings implSettings, final IProject project, final String componentName, // SUPPRESS CHECKSTYLE Arguments
 	        final PrintStream out, final PrintStream err, final IProgressMonitor monitor, final String[] generateFiles, final List<FileToCRCMap> crcMap)
 	        throws CoreException {
 		this.generator.generate(implSettings, impl, out, err, monitor, generateFiles);

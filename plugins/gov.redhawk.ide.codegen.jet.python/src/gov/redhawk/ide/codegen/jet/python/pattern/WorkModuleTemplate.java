@@ -34,6 +34,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 
 public class WorkModuleTemplate implements IScaComponentCodegenTemplate {
+	// CHECKSTYLE:OFF
 
 	public WorkModuleTemplate() {
 	}

@@ -142,9 +142,7 @@ public class CodegeneratorApplication implements IApplication {
 				if (arg.length() > 11) {
 					preserveFiles = arg.substring(11).split(",");
 				} else {
-					preserveFiles = new String[] {
-						"*"
-					};
+					preserveFiles = new String[] { "*" };
 				}
 			} else if (arg.equals("-Dusage")) {
 				usage = true;
@@ -246,7 +244,7 @@ public class CodegeneratorApplication implements IApplication {
 	}
 
 	private void create_project(final String project_path, final String lang, final String codegenId, final String templateId, String project_type,
-	        final IProgressMonitor progressMonitor) throws CoreException {
+		final IProgressMonitor progressMonitor) throws CoreException {
 		final SubMonitor monitor = SubMonitor.convert(progressMonitor, 2);
 		final IPath projectPath = new Path(project_path);
 
@@ -255,10 +253,8 @@ public class CodegeneratorApplication implements IApplication {
 		}
 
 		if (lang == null) {
-			throw new CoreException(new Status(IStatus.ERROR,
-			        CodegeneratorApplication.PLUGIN_ID,
-			        "You must provide a programming language when creating a new component project",
-			        null));
+			throw new CoreException(new Status(IStatus.ERROR, CodegeneratorApplication.PLUGIN_ID,
+				"You must provide a programming language when creating a new component project", null));
 		}
 
 		// Clean-up project_type
@@ -279,7 +275,7 @@ public class CodegeneratorApplication implements IApplication {
 	}
 
 	private void create_component_project(final IPath projectPath, final String lang, final String codegenId, final String templateId,
-	        final IProgressMonitor progressMonitor) throws CoreException {
+		final IProgressMonitor progressMonitor) throws CoreException {
 		final SubMonitor monitor = SubMonitor.convert(progressMonitor, 1);
 
 		final String projectName = projectPath.lastSegment();
@@ -322,7 +318,7 @@ public class CodegeneratorApplication implements IApplication {
 	}
 
 	private void create_device_project(final IPath projectPath, final String deviceType, final String lang, final String codegenId, final String templateId,
-	        final IProgressMonitor progressMonitor) throws CoreException {
+		final IProgressMonitor progressMonitor) throws CoreException {
 		final SubMonitor monitor = SubMonitor.convert(progressMonitor, 1);
 
 		final String projectName = projectPath.lastSegment();
@@ -366,7 +362,7 @@ public class CodegeneratorApplication implements IApplication {
 	}
 
 	private void initializeSoftPkg(final String lang, final String projectName, final ICodeGeneratorDescriptor code_gen, final ITemplateDesc template,
-	        final SoftPkg spd, final Implementation impl, final ImplementationSettings settings) {
+		final SoftPkg spd, final Implementation impl, final ImplementationSettings settings) {
 		spd.setId(DceUuidUtil.createDceUUID());
 		spd.setName(projectName);
 
@@ -450,7 +446,7 @@ public class CodegeneratorApplication implements IApplication {
 
 	// TODO - turn this into an OSGi command
 	private void generate_code(final String project_path, final String lang, String codegenId, final String templateId, final String[] preserveFiles,
-	        final NullProgressMonitor progressMonitor) throws CoreException {
+		final NullProgressMonitor progressMonitor) throws CoreException {
 		final SubMonitor monitor = SubMonitor.convert(progressMonitor, 2);
 
 		final ResourceSet set = ScaResourceFactoryUtil.createResourceSet();
@@ -518,14 +514,8 @@ public class CodegeneratorApplication implements IApplication {
 					}
 				}
 				// Generate the files
-				final IStatus status = generator.generate(settings,
-				        impl,
-				        System.out,
-				        System.err,
-				        monitor.newChild(1),
-				        fileList.toArray(new String[0]),
-				        generator.shouldGenerate(),
-				        crcMap);
+				final IStatus status = generator.generate(settings, impl, System.out, System.err, monitor.newChild(1), fileList.toArray(new String[0]),
+					generator.shouldGenerate(), crcMap);
 				// Save the workspace
 				final WorkspaceModifyOperation operation = new WorkspaceModifyOperation() {
 
@@ -557,13 +547,14 @@ public class CodegeneratorApplication implements IApplication {
 				System.err.println("No generator specified for implementation: " + implName + ". No code generated.");
 			}
 		}
-		
+
 		project.build(IncrementalProjectBuilder.FULL_BUILD, monitor.newChild(1));
 
 	}
 
+	@SuppressWarnings("deprecation")
 	private WaveDevSettings getWaveDevSettings(final ResourceSet set, final SoftPkg softPkg, final String codegenId, final String templateId)
-	        throws CoreException {
+		throws CoreException {
 		WaveDevSettings retVal = null;
 		// First, try to get the .wavedev from disk. This will throw an exception if it fails.
 		try {
@@ -611,8 +602,8 @@ public class CodegeneratorApplication implements IApplication {
 					if (templateId != null) {
 						templateDesc = RedhawkCodegenActivator.getCodeGeneratorTemplatesRegistry().findTemplate(templateId);
 					} else {
-						final ITemplateDesc[] templates = RedhawkCodegenActivator.getCodeGeneratorTemplatesRegistry()
-						        .findTemplatesByCodegen(settings.getGeneratorId());
+						final ITemplateDesc[] templates = RedhawkCodegenActivator.getCodeGeneratorTemplatesRegistry().findTemplatesByCodegen(
+							settings.getGeneratorId());
 						for (final ITemplateDesc itd : templates) {
 							if (itd.isSelectable() && !itd.notDefaultableGenerator()) {
 								templateDesc = itd;

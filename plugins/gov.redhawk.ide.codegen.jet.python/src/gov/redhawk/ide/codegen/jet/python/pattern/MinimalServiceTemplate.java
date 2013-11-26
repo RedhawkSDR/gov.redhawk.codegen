@@ -31,6 +31,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 
 public class MinimalServiceTemplate implements IScaComponentCodegenTemplate {
+	// CHECKSTYLE:OFF
 
 	public MinimalServiceTemplate() {
 	}

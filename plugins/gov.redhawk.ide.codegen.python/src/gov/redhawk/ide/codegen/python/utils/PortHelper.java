@@ -58,11 +58,11 @@ public class PortHelper {
 			name = name.substring(0, name.indexOf("Struct"));
 		}
 
-		if (name.equalsIgnoreCase("true")) {
+		if ("true".equalsIgnoreCase(name)) {
 			name = "True";
 		}
 
-		if (name.equalsIgnoreCase("false")) {
+		if ("false".equals(name)) {
 			name = "False";
 		}
 

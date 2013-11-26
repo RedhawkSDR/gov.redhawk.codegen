@@ -38,6 +38,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 
 public class ManualTemplate implements IScaComponentCodegenTemplate {
+	// CHECKSTYLE:OFF
 
 	public ManualTemplate() {
 	}

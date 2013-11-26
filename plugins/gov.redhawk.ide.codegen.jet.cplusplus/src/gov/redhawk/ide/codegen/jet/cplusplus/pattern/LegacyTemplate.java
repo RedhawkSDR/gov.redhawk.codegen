@@ -56,6 +56,7 @@ import org.eclipse.core.runtime.IPath;
  * @since 6.0
  */
 public class LegacyTemplate implements IScaComponentCodegenTemplate {
+	// CHECKSTYLE:OFF
 
 	public LegacyTemplate() {
 	}

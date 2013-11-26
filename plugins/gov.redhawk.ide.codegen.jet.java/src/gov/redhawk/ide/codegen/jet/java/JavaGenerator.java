@@ -102,7 +102,7 @@ public class JavaGenerator extends AbstractJavaCodeGenerator {
 	 * @since 4.0
 	 */
 	@Override
-	protected void generateCode(final Implementation impl, final ImplementationSettings implSettings, final IProject project, final String componentName,
+	protected void generateCode(final Implementation impl, final ImplementationSettings implSettings, final IProject project, final String componentName, // SUPPRESS CHECKSTYLE Arguments
 		PrintStream out, PrintStream err, final IProgressMonitor monitor, String[] generateFiles, final List<FileToCRCMap> crcMap) throws CoreException {
 		final ITemplateDesc template = CodegenUtil.getTemplate(implSettings.getTemplate(), implSettings.getGeneratorId());
 		final JavaTemplateParameter templ = new JavaTemplateParameter(impl, implSettings, getPackage(impl, implSettings));

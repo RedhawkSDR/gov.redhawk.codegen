@@ -32,6 +32,7 @@ import org.eclipse.core.runtime.CoreException;
  * @since 9.1
  */
 public class PullPortTemplate implements IScaPortCodegenTemplate {
+	// CHECKSTYLE:OFF
 
 	private List<String> interfaces = new ArrayList<String>();
 

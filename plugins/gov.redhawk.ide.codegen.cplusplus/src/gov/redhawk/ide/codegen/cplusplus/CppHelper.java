@@ -35,6 +35,7 @@ public class CppHelper {
 			CppHelper.RESERVED_KEYWORDS.add(reservedKeyword);
 		}
 	};
+	// CHECKSTYLE:OFF
 
 	public int convertType(final String value) {
 		if (value.equals("short")) {

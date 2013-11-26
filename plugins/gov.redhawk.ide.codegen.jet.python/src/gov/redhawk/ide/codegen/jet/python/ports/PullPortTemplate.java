@@ -29,8 +29,9 @@ public class PullPortTemplate implements IScaPortCodegenTemplate {
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public String generateFile(final String fileName, final boolean providesPort, final SoftPkg softPkg, final ImplementationSettings implSettings,
-	        final Object helperObject, final String language) throws CoreException {
+		final Object helperObject, final String language) throws CoreException {
 		final TemplateParameter templ = (TemplateParameter) helperObject;
 		String file = "";
 
@@ -43,7 +44,7 @@ public class PullPortTemplate implements IScaPortCodegenTemplate {
 
 	@Override
 	public String generateClassDefinition(final String repId, final boolean providesPort, final SoftPkg softPkg, final ImplementationSettings implSettings,
-	        final Object helperObject, final String language) throws CoreException {
+		final Object helperObject, final String language) throws CoreException {
 		final TemplateParameter templ = (TemplateParameter) helperObject;
 		String file = "";
 
@@ -60,7 +61,7 @@ public class PullPortTemplate implements IScaPortCodegenTemplate {
 
 	@Override
 	public String generateClassImplementation(final String repId, final boolean providesPort, final SoftPkg softPkg, final ImplementationSettings implSettings,
-	        final Object helperObject, final String language) throws CoreException {
+		final Object helperObject, final String language) throws CoreException {
 		final TemplateParameter templ = (TemplateParameter) helperObject;
 		String file = "";
 
@@ -77,7 +78,7 @@ public class PullPortTemplate implements IScaPortCodegenTemplate {
 
 	@Override
 	public String generateClassSupport(final String repId, final boolean providesPort, final SoftPkg softPkg, final ImplementationSettings implSettings,
-	        final Object helperObject, final String language) throws CoreException {
+		final Object helperObject, final String language) throws CoreException {
 		final TemplateParameter templ = (TemplateParameter) helperObject;
 		String file = "";
 
@@ -94,7 +95,7 @@ public class PullPortTemplate implements IScaPortCodegenTemplate {
 
 	@Override
 	public String generateClassInstantiator(final String repId, final boolean providesPort, final SoftPkg softPkg, final ImplementationSettings implSettings,
-	        final Object helperObject, final String language) throws CoreException {
+		final Object helperObject, final String language) throws CoreException {
 		return null;
 	}
 

@@ -72,7 +72,7 @@ public class JavaGenerator extends AbstractJavaCodeGenerator {
 	}
 
 	@Override
-	protected void generateCode(final Implementation impl, final ImplementationSettings implSettings, final IProject project, final String componentName, final PrintStream out, final PrintStream err,
+	protected void generateCode(final Implementation impl, final ImplementationSettings implSettings, final IProject project, final String componentName, final PrintStream out, final PrintStream err, // SUPPRESS CHECKSTYLE Arguments
 	        final IProgressMonitor monitor, final String[] generateFiles, final List<FileToCRCMap> crcMap) throws CoreException {
 		this.generator.generate(implSettings, impl, out, err, monitor, generateFiles);
 		project.refreshLocal(IResource.DEPTH_INFINITE, monitor);

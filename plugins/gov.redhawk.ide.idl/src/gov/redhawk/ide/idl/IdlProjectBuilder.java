@@ -101,7 +101,7 @@ class IDLBuildVisitor implements IResourceDeltaVisitor, IResourceVisitor {
 					SpecificationImpl idlFile = (SpecificationImpl) root;
 					return true;
 				}
-			} catch (final Exception e) {
+			} catch (final Exception e) { // SUPPRESS CHECKSTYLE Fallback
 				return false;
 			}
 		}

@@ -8,14 +8,16 @@
  * the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at 
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-  // BEGIN GENERATED CODE
+// BEGIN GENERATED CODE
 package gov.redhawk.ide.codegen.tests;
 
 import gov.redhawk.ide.codegen.CodegenFactory;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.Property;
 import gov.redhawk.ide.codegen.WaveDevSettings;
+
 import org.junit.Assert;
+
 import junit.framework.TestCase;
 import junit.textui.TestRunner;
 
@@ -105,6 +107,7 @@ public class WaveDevSettingsTest extends TestCase {
 		this.resourceSet = null;
 	}
 
+	@SuppressWarnings("deprecation")
 	public void test_parse() throws Exception {
 		Assert.assertNotNull(this.wave);
 

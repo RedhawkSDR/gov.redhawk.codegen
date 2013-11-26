@@ -37,6 +37,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
 public class PullPortDataTemplate implements IScaComponentCodegenTemplate {
+	// CHECKSTYLE:OFF
 
 	public PullPortDataTemplate() {
 	}

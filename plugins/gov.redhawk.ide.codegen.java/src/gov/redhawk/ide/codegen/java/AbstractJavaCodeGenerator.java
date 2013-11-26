@@ -58,7 +58,7 @@ public abstract class AbstractJavaCodeGenerator extends AbstractCodeGenerator {
 	 * @since 5.0
 	 */
 	@Override
-	public IStatus generate(final ImplementationSettings implSettings, final Implementation impl, final PrintStream out, final PrintStream err,
+	public IStatus generate(final ImplementationSettings implSettings, final Implementation impl, final PrintStream out, final PrintStream err, // SUPPRESS CHECKSTYLE Arguments
 	        final IProgressMonitor monitor, final String[] generateFiles, final boolean shouldGenerate, final List<FileToCRCMap> crcMap) {
 		final int STANDARD_WORK = 1;
 		final int GENERATE_CODE_WORK = 30;
@@ -178,7 +178,7 @@ public abstract class AbstractJavaCodeGenerator extends AbstractCodeGenerator {
 	 *            given monitor. Accepts null, indicating that no progress
 	 *            should be reported and that the operation cannot be canceled.
 	 */
-	protected abstract void generateCode(Implementation impl, ImplementationSettings implSettings, IProject project, String componentName, PrintStream out,
+	protected abstract void generateCode(Implementation impl, ImplementationSettings implSettings, IProject project, String componentName, PrintStream out, // SUPPRESS CHECKSTYLE Arguments
 	        PrintStream err, IProgressMonitor monitor, String[] generateFiles, List<FileToCRCMap> crcMap) throws CoreException;
 
 }

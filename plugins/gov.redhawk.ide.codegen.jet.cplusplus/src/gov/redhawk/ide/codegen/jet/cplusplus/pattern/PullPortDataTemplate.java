@@ -43,6 +43,7 @@ import org.eclipse.core.runtime.IPath;
  * @since 6.0
  */
 public class PullPortDataTemplate implements IScaComponentCodegenTemplate {
+	// CHECKSTYLE:OFF
 
 	public PullPortDataTemplate() {
 	}

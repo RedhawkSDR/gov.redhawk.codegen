@@ -242,6 +242,7 @@ public class JavaJetGeneratorPropertiesComposite extends BaseGeneratorProperties
 	 * @since 8.0
 	 */
 	@Override
+	@SuppressWarnings("deprecation")
 	protected void preBind(final Implementation impl, final ImplementationSettings implSettings, final List<Binding> bindList) {
 		this.packageName = null;
 
@@ -274,6 +275,7 @@ public class JavaJetGeneratorPropertiesComposite extends BaseGeneratorProperties
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	protected void templateSelected(final ITemplateDesc desc) {
 		// Remove the old properties in the ImplementationSettings
 		final EList<Property> properties = this.getImplSettings().getProperties();

@@ -40,6 +40,7 @@ import org.eclipse.emf.ecore.util.FeatureMap.Entry;
  * @since 7.0
  */
 public class CppProperties {
+	// CHECKSTYLE:OFF
 
 	private CppProperties() {
 	}

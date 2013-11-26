@@ -45,6 +45,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jdt.core.IJavaProject;
 
 public class ManualGenerator extends AbstractCodeGenerator {
+	// CHECKSTYLE:OFF
 
 	@Override
 	public IStatus cleanupSourceFolders(final IProject project, final IProgressMonitor monitor) {

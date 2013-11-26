@@ -60,6 +60,7 @@ import org.jacorb.idl.Interface;
  */
 public class JavaGeneratorUtils {
 
+	// CHECKSTYLE:OFF
 	public static final String NEWLINE = "\n";
 
 	private JavaGeneratorUtils() {

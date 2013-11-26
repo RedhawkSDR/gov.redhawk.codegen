@@ -30,6 +30,7 @@ import mil.jpeojtrs.sca.spd.SoftPkg;
 import org.eclipse.core.runtime.CoreException;
 
 public class MinimalTemplate implements IScaComponentCodegenTemplate {
+	// CHECKSTYLE:OFF
 
 	public MinimalTemplate() {
 	}

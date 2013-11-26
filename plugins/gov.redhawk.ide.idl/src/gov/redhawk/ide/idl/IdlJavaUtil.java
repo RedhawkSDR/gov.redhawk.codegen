@@ -242,8 +242,8 @@ public class IdlJavaUtil extends AbstractIdlUtil {
 
 	@SuppressWarnings("hiding")
 	@Override
-	public < Interface > List<Interface> getInterfaces(final List<IPath> searchPaths, final List<String> requestedInterfaces, final boolean cached, final MultiStatus status)
-	        throws CoreException {
+	public < Interface > List<Interface> getInterfaces(final List<IPath> searchPaths, final List<String> requestedInterfaces, final boolean cached,
+		final MultiStatus status) throws CoreException {
 		return super.getInterfaces(searchPaths, requestedInterfaces, cached, status);
 	}
 
@@ -291,7 +291,7 @@ public class IdlJavaUtil extends AbstractIdlUtil {
 
 		try {
 			parser.compile(new String[] { "-syntax", "-d", "/tmp/idl", paths, idlFile.toOSString() }, writer);
-		} catch (Exception e) {  // SUPPRESS CHECKSTYLE Logged Catch all exception
+		} catch (Exception e) { // SUPPRESS CHECKSTYLE Logged Catch all exception
 			throw new CoreException(new Status(IStatus.ERROR, RedhawkIdeIdlPlugin.PLUGIN_ID, "Unable to parse " + idlFile, e));
 		}
 
@@ -338,15 +338,16 @@ public class IdlJavaUtil extends AbstractIdlUtil {
 	 * @since 3.1
 	 */
 	public static String getReturnCast(final Operation op) {
-		if (IdlJavaUtil.getReturnType(op).equalsIgnoreCase("int")) {
+		String returnType = IdlJavaUtil.getReturnType(op);
+		if ("int".equalsIgnoreCase(returnType)) {
 			return "(Integer)";
-		} else if (IdlJavaUtil.getReturnType(op).equalsIgnoreCase("char")) {
+		} else if ("char".equalsIgnoreCase(returnType)) {
 			return "(Character)";
-		} else if (IdlJavaUtil.getReturnType(op).equalsIgnoreCase("boolean")) {
+		} else if ("boolean".equalsIgnoreCase(returnType)) {
 			return "(Boolean)";
-		} else if (IdlJavaUtil.getReturnType(op).equalsIgnoreCase("float")) {
+		} else if ("float".equalsIgnoreCase(returnType)) {
 			return "(Float)";
-		} else if (IdlJavaUtil.getReturnType(op).equalsIgnoreCase("double")) {
+		} else if ("double".equalsIgnoreCase(returnType)) {
 			return "(Double)";
 		}
 

@@ -25,7 +25,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 /**
  * An abstract class for Java implementation generation. It handles most aspects of configuring JDT, but leaves
  * generating code files up to the sub-class.
- * @deprecated
+ * @deprecated  Use Jinja
  */
 @Deprecated
 public abstract class AbstractJavaGenerator extends AbstractJavaCodeGenerator {
@@ -38,7 +38,7 @@ public abstract class AbstractJavaGenerator extends AbstractJavaCodeGenerator {
 	}
 
 	@Override
-	protected void generateCode(final Implementation impl, final ImplementationSettings implSettings, final IProject project, final String componentName,
+	protected void generateCode(final Implementation impl, final ImplementationSettings implSettings, final IProject project, final String componentName, // SUPPRESS CHECKSTYLE Arguments
 	        final PrintStream out, final PrintStream err, final IProgressMonitor monitor, final String[] generateFiles, final List<FileToCRCMap> crcMap)
 	        throws CoreException {
 		generateCode(impl, implSettings, project, componentName, monitor, generateFiles, crcMap);

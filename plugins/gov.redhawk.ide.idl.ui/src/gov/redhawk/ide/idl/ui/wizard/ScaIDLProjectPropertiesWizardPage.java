@@ -156,7 +156,7 @@ public class ScaIDLProjectPropertiesWizardPage extends WizardNewProjectCreationP
 	@Override
 	protected boolean validatePage() {
 		ProjectNameValidator nameValidator = new ProjectNameValidator();
-		
+
 		if (!super.validatePage()) {
 			return false;
 		}
@@ -379,9 +379,9 @@ public class ScaIDLProjectPropertiesWizardPage extends WizardNewProjectCreationP
 				final String[] splitNames = line.split("[ ]+");
 
 				for (final String token : splitNames) {
-					if (!token.equals("module") && token.matches("[A-Z]+") && !this.moduleNameText.getText().equalsIgnoreCase(token)) {
+					if (!"module".equals(token) && token.matches("[A-Z]+") && !this.moduleNameText.getText().equalsIgnoreCase(token)) {
 						final MessageDialog dialog = new MessageDialog(getShell(), "Update Module Name", null, "Module " + token
-						        + " was found in the imported IDL file(s).  Update?", MessageDialog.QUESTION, new String[] { "No", "Yes" }, 1);
+							+ " was found in the imported IDL file(s).  Update?", MessageDialog.QUESTION, new String[] { "No", "Yes" }, 1);
 						final int selection = dialog.open();
 
 						if (selection == 1) {
