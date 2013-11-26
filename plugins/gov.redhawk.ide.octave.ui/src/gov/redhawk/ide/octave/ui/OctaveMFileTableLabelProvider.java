@@ -33,11 +33,7 @@ public class OctaveMFileTableLabelProvider extends LabelProvider implements ITab
 			}
 
 			if (octaveVar.getMapping() != null && octaveVar.getMapping().equals(OctaveVariableMappingEnum.PORT)) {
-				if (octaveVar.isInputVariable()) {
-					return octaveVar.getName() + "_in";
-				} else {
-					return octaveVar.getName() + "_out";
-				}
+					return octaveVar.getName();
 			}
 
 			return octaveVar.getName();

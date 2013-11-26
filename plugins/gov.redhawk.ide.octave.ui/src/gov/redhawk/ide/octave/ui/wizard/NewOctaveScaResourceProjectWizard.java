@@ -271,12 +271,12 @@ public class NewOctaveScaResourceProjectWizard extends NewScaResourceWizard impl
 	private void createProvidesPort(final SoftPkg eSpd, OctaveFunctionVariables var) {
 		Ports ports = createPorts(eSpd);
 		Provides providesPort = ScdFactory.eINSTANCE.createProvides();
-		initPort(providesPort, var, "_in", eSpd);
+		initPort(providesPort, var, eSpd);
 		ports.getProvides().add(providesPort);
 	}
 	
-	private void initPort(AbstractPort port, OctaveFunctionVariables var, String type, final SoftPkg eSpd) {
-		port.setName(var.getName() + type);
+	private void initPort(AbstractPort port, OctaveFunctionVariables var, final SoftPkg eSpd) {
+		port.setName(var.getName());
 		port.setRepID(dataDoubleHelper.id());
 		addInterface(SdrUiPlugin.getDefault().getTargetSdrRoot().getIdlLibrary(), port.getRepID(), eSpd.getDescriptor().getComponent().getInterfaces());
 	}
@@ -284,7 +284,7 @@ public class NewOctaveScaResourceProjectWizard extends NewScaResourceWizard impl
 	private void createUsesPort(final SoftPkg eSpd, OctaveFunctionVariables var) {
 		Ports ports = createPorts(eSpd);
 		Uses usesPort = ScdFactory.eINSTANCE.createUses();
-		initPort(usesPort, var, "_out", eSpd);
+		initPort(usesPort, var, eSpd);
 		ports.getUses().add(usesPort);
 	}
 
