@@ -108,8 +108,7 @@ public class MFileVariableMapingWizardPage extends WizardPage {
 		theTableViewer.setContentProvider(new ArrayContentProvider());
 		theTableViewer.setLabelProvider(new OctaveMFileTableLabelProvider());
 
-		this.dataBindingContext.bindValue(ViewerProperties.input().observe(theTableViewer),
-			BeanProperties.value(propName).observe(this.octaveProjProps));
+		this.dataBindingContext.bindValue(ViewerProperties.input().observe(theTableViewer), BeanProperties.value(propName).observe(this.octaveProjProps));
 
 		// TODO: Combine the Type Editing support class and the Mapping editing support class. 
 		EditingSupport octaveTypeEditingSupport = new OctaveMFileTableTypeEditingSupport(typeColumn.getViewer(), this);
@@ -121,8 +120,9 @@ public class MFileVariableMapingWizardPage extends WizardPage {
 
 	@Override
 	public boolean isPageComplete() {
-		if (this.octaveProjProps == null || this.octaveProjProps.getPrimaryMFile() == null)
+		if (this.octaveProjProps == null || this.octaveProjProps.getPrimaryMFile() == null) {
 			return false;
+		}
 
 		for (OctaveFunctionVariables inputvar : this.octaveProjProps.getFunctionInputs()) {
 			if (inputvar.getMapping() == null || inputvar.getType() == null) {
