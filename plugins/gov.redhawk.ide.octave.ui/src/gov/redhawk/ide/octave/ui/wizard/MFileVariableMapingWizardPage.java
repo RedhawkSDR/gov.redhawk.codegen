@@ -16,10 +16,27 @@ import gov.redhawk.ide.octave.ui.OctaveMFileTableLabelProvider;
 import gov.redhawk.ide.octave.ui.OctaveMFileTableMappingEditingSupport;
 import gov.redhawk.ide.octave.ui.OctaveMFileTableTypeEditingSupport;
 import gov.redhawk.ide.octave.ui.OctaveProjectProperties;
+import gov.redhawk.ide.octave.ui.OctaveVariableMappingEnum;
+import gov.redhawk.ide.octave.ui.OctaveVariableTypeEnum;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.ValidationStatusProvider;
 import org.eclipse.core.databinding.beans.BeanProperties;
+import org.eclipse.core.databinding.observable.Observables;
+import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.list.WritableList;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.WritableValue;
+import org.eclipse.core.databinding.validation.IValidator;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.viewers.ViewerProperties;
+import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -46,10 +63,45 @@ public class MFileVariableMapingWizardPage extends WizardPage {
 	private static final int NUM_COLUMNS = 1;
 	private OctaveProjectProperties octaveProjProps;
 	private DataBindingContext dataBindingContext = new DataBindingContext();
+	private TableViewerColumn typeColumn;
+	private TableViewerColumn mappingColumn;
+	private WritableValue validationValue = new WritableValue();
+	private IValidator validator = new IValidator() {
+
+		@Override
+		public IStatus validate(Object value) {
+			StringBuilder builder = new StringBuilder();
+			List<OctaveFunctionVariables> vars = new ArrayList<OctaveFunctionVariables>();
+			vars.addAll(octaveProjProps.getFunctionInputs());
+			vars.addAll(octaveProjProps.getFunctionOutputs());
+
+			for (OctaveFunctionVariables ofv : vars) {
+				OctaveVariableMappingEnum mapping = ofv.getMapping();
+				OctaveVariableTypeEnum type = ofv.getType();
+
+				if (mapping.equals(OctaveVariableMappingEnum.PORT) && type.equals(OctaveVariableTypeEnum.String)) {
+					builder.append("Variable " + ofv.getName() + " may not have a port type of string.\n");
+				}
+
+				if (mapping.equals(OctaveVariableMappingEnum.PROPERTY_SEQUENCE) && type.equals(OctaveVariableTypeEnum.String)) {
+					builder.append("Variable " + ofv.getName() + " may not have a sequence property of string type.\n");
+				}
+			}
+			IStatus mStatus;
+			if (builder.length() == 0) {
+				mStatus = Status.OK_STATUS;
+			} else {
+				mStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, builder.toString(), null);
+			}
+			validationValue.setValue(mStatus);
+			return mStatus;
+		}
+	};
 
 	public MFileVariableMapingWizardPage(OctaveProjectProperties octaveProjProps, String name, String componentType) {
 		super(name, "Map M-file", MFileVariableMapingWizardPage.TITLE_IMAGE);
 		this.octaveProjProps = octaveProjProps;
+		validationValue.setValue(Status.OK_STATUS);
 	}
 
 	@Override
@@ -78,6 +130,30 @@ public class MFileVariableMapingWizardPage extends WizardPage {
 		createOctaveTable(mFileInputsGroup, "functionInputs");
 		createOctaveTable(mFileOutputsGroup, "functionOutputs");
 
+		dataBindingContext.addValidationStatusProvider(new ValidationStatusProvider() {
+			private IObservableList list = new WritableList();
+			{
+				list.add(validationValue);
+			}
+
+			@Override
+			public IObservableValue getValidationStatus() {
+				return validationValue;
+			}
+
+			@Override
+			public IObservableList getTargets() {
+				return list;
+			}
+
+			@Override
+			public IObservableList getModels() {
+				return Observables.emptyObservableList();
+			}
+		});
+
+		WizardPageSupport.create(this, this.dataBindingContext);
+
 		this.setControl(client);
 	}
 
@@ -99,23 +175,25 @@ public class MFileVariableMapingWizardPage extends WizardPage {
 		TableViewerColumn nameIDColumn = new TableViewerColumn(theTableViewer, SWT.NONE);
 		nameIDColumn.getColumn().setText("Name/ID");
 
-		TableViewerColumn mappingColumn = new TableViewerColumn(theTableViewer, SWT.NONE);
+		mappingColumn = new TableViewerColumn(theTableViewer, SWT.NONE);
 		mappingColumn.getColumn().setText("Mapping");
 
-		TableViewerColumn typeColumn = new TableViewerColumn(theTableViewer, SWT.NONE);
+		typeColumn = new TableViewerColumn(theTableViewer, SWT.NONE);
 		typeColumn.getColumn().setText("Type");
 
 		theTableViewer.setContentProvider(new ArrayContentProvider());
 		theTableViewer.setLabelProvider(new OctaveMFileTableLabelProvider());
 
-		this.dataBindingContext.bindValue(ViewerProperties.input().observe(theTableViewer), BeanProperties.value(propName).observe(this.octaveProjProps));
+		Binding binding = this.dataBindingContext.bindValue(ViewerProperties.input().observe(theTableViewer), BeanProperties.value(propName).observe(this.octaveProjProps), null, null);
 
-		// TODO: Combine the Type Editing support class and the Mapping editing support class. 
-		EditingSupport octaveTypeEditingSupport = new OctaveMFileTableTypeEditingSupport(typeColumn.getViewer(), this);
+		EditingSupport octaveTypeEditingSupport = new OctaveMFileTableTypeEditingSupport(typeColumn.getViewer(), this.validator);
 		typeColumn.setEditingSupport(octaveTypeEditingSupport);
 
-		EditingSupport octaveMappingEditingSupport = new OctaveMFileTableMappingEditingSupport(mappingColumn.getViewer(), this);
+		EditingSupport octaveMappingEditingSupport = new OctaveMFileTableMappingEditingSupport(mappingColumn.getViewer(), this.validator);
 		mappingColumn.setEditingSupport(octaveMappingEditingSupport);
+		
+		// add cool control decoration
+		ControlDecorationSupport.create(binding, SWT.TOP | SWT.LEFT);
 	}
 
 	@Override
@@ -124,18 +202,12 @@ public class MFileVariableMapingWizardPage extends WizardPage {
 			return false;
 		}
 
-		for (OctaveFunctionVariables inputvar : this.octaveProjProps.getFunctionInputs()) {
-			if (inputvar.getMapping() == null || inputvar.getType() == null) {
-				return false;
-			}
-		}
-
-		for (OctaveFunctionVariables outputvar : this.octaveProjProps.getFunctionOutputs()) {
-			if (outputvar.getMapping() == null || outputvar.getType() == null) {
-				return false;
-			}
-		}
-
+		
 		return super.isPageComplete();
 	}
+
+	public DataBindingContext getDataBindingContext() {
+		return dataBindingContext;
+	}
+
 }

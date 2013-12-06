@@ -12,8 +12,7 @@
 
 package gov.redhawk.ide.octave.ui;
 
-import gov.redhawk.ide.octave.ui.wizard.MFileVariableMapingWizardPage;
-
+import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
@@ -27,16 +26,16 @@ public class OctaveMFileTableTypeEditingSupport extends EditingSupport {
 
 	private ComboBoxViewerCellEditor cellEditor = null;
 	private ColumnViewer viewer;
-	private MFileVariableMapingWizardPage mfileWizardPage;
+	private IValidator validator;
 
-	public OctaveMFileTableTypeEditingSupport(ColumnViewer viewer, MFileVariableMapingWizardPage mfileWizardPage) {
+	public OctaveMFileTableTypeEditingSupport(ColumnViewer viewer, IValidator validator) {
 		super(viewer);
 		cellEditor = new ComboBoxViewerCellEditor((Composite) getViewer().getControl(), SWT.READ_ONLY);
 		cellEditor.setLabelProvider(new LabelProvider());
 		cellEditor.setContentProvider(new ArrayContentProvider());
 		cellEditor.setInput(OctaveVariableTypeEnum.values());
+		this.validator = validator;
 		this.viewer = viewer;
-		this.mfileWizardPage = mfileWizardPage;
 	}
 
 	@Override
@@ -66,8 +65,8 @@ public class OctaveMFileTableTypeEditingSupport extends EditingSupport {
 			/* only set new value if it differs from old one */
 			if (octFuncVar.getType() == null || !octFuncVar.getType().equals(newType)) {
 				octFuncVar.setType(newType);
+				validator.validate(null);
 				this.viewer.refresh();
-				this.mfileWizardPage.getWizard().getContainer().updateButtons();
 			}
 		}
 	}
