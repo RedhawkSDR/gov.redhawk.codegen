@@ -38,7 +38,7 @@ public class OctaveImplementationWizardPage extends ImplementationWizardPage {
 		// Set the Programming language viewer to C++ 
 
 		List<String> languageOptions = Arrays.asList(RedhawkCodegenActivator.getCodeGeneratorsRegistry().getLanguages());
-		int indexOfCpp = languageOptions.indexOf("C++");  // TODO: Is there a better way to reference C++ without using a string literal?
+		int indexOfCpp = languageOptions.indexOf("C++");
 		
 		this.getProgLangEntryViewer().select(indexOfCpp);
 		this.getProgLangEntryViewer().setEnabled(false);

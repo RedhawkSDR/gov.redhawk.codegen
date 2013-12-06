@@ -40,7 +40,8 @@ import org.eclipse.core.runtime.IStatus;
 public class CplusplusOctaveGenerator extends AbstractCplusplusCodeGenerator {
 	
 	public static final String ID = "gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusOctaveGenerator";
-
+	public static final String TEMPLATE = "redhawk.codegen.jinja.cpp.component.octave";
+	
 	public CplusplusOctaveGenerator() {
 		// TODO Auto-generated constructor stub
 	}
