@@ -148,7 +148,9 @@ public class MFileSelectionWizardPage extends WizardPage {
 				FileDialog fd = new FileDialog(client.getShell(), SWT.OPEN);
 				String selectedFile = fd.open();
 
-				MFileSelectionWizardPage.this.primaryMFileTextBox.setText(selectedFile);
+				if (selectedFile != null) {
+					MFileSelectionWizardPage.this.primaryMFileTextBox.setText(selectedFile);
+				}
 			}
 
 			@Override

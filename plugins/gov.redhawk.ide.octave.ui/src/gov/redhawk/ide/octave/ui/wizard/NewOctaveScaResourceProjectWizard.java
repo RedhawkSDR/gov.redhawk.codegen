@@ -17,7 +17,6 @@ import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.RedhawkCodegenActivator;
 import gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusOctaveGenerator;
-import gov.redhawk.ide.codegen.ui.BooleanGeneratorPropertiesWizardPage;
 import gov.redhawk.ide.codegen.util.ProjectCreator;
 import gov.redhawk.ide.octave.ui.Activator;
 import gov.redhawk.ide.octave.ui.OctaveFunctionVariables;
@@ -75,7 +74,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
@@ -103,6 +101,7 @@ public class NewOctaveScaResourceProjectWizard extends NewScaResourceWizard impl
 	private OctaveProjectProperties octaveProjectProperties;
 	private MFileSelectionWizardPage mfileSelectionWizardPage = null;
 	private MFileVariableMapingWizardPage mFileVariableMapingWizardPage;
+	private ImplementationSettings settings = null;
 
 	public NewOctaveScaResourceProjectWizard() {
 		super(ICodeGeneratorDescriptor.COMPONENT_TYPE_RESOURCE);
@@ -131,11 +130,9 @@ public class NewOctaveScaResourceProjectWizard extends NewScaResourceWizard impl
 	public void addPages() {
 		setResourcePropertiesPage(new ScaResourceProjectPropertiesWizardPage("", "Octave Component"));
 		ScaProjectPropertiesWizardPage wizardPage = getResourcePropertiesPage();
-		
-		// They have not been created yet...duh.
-//		wizardPage.getContentsGroup().getCreateNewResourceButton().setEnabled(false);
-//		wizardPage.getContentsGroup().getImportFileButton().setEnabled(false);
-		
+
+		// Do not allow users to import an SPD file.  We do not allow java or Python Octave projects.  
+		wizardPage.setShowContentsGroup(false);
 		this.addPage(wizardPage);
 
 		setMFileSelectionPage(new MFileSelectionWizardPage(this.octaveProjectProperties, "", ICodeGeneratorDescriptor.COMPONENT_TYPE_RESOURCE));
@@ -173,7 +170,6 @@ public class NewOctaveScaResourceProjectWizard extends NewScaResourceWizard impl
 	@Override
 	public boolean performFinish() {
 		this.updateEntryPoints();
-		final boolean isCreateNewResource = getResourcePropertiesPage().getContentsGroup().isCreateNewResource();
 		final IWorkingSet[] workingSets = getResourcePropertiesPage().getSelectedWorkingSets();
 		final String projectName = getResourcePropertiesPage().getProjectName();
 		final java.net.URI locationURI;
@@ -183,8 +179,7 @@ public class NewOctaveScaResourceProjectWizard extends NewScaResourceWizard impl
 			locationURI = getResourcePropertiesPage().getLocationURI();
 		}
 		getResourcePropertiesPage().getProjectHandle();
-		final IPath existingResourceLocation = getResourcePropertiesPage().getContentsGroup().getExistingResourcePath();
-
+		
 		// Create the SCA component project
 		final WorkspaceModifyOperation operation = new WorkspaceModifyOperation() {
 
@@ -201,61 +196,57 @@ public class NewOctaveScaResourceProjectWizard extends NewScaResourceWizard impl
 						}
 						BasicNewProjectResourceWizard.updatePerspective(getfConfig());
 
-						// If we're creating a new component (vs importing one)
-						if (isCreateNewResource) {
-							// Create the SCA XML files
-							setOpenEditorOn(createComponentFiles(project, projectName, getSoftPkg().getId(), null, progress.newChild(1)));
+						// Create the SCA XML files
+						setOpenEditorOn(createComponentFiles(project, projectName, getSoftPkg().getId(), null, progress.newChild(1)));
 
-							// Create the implementation
-							final Implementation impl = SpdFactory.eINSTANCE.createImplementation();
-							impl.setDescription("The implementation contains descriptive information about the template for a software component.");
-							impl.setId("");
-							
-							
-							final ICodeGeneratorDescriptor[] tempCodegens = 
-									RedhawkCodegenActivator.getCodeGeneratorsRegistry().findCodegenByLanguage("C++", ICodeGeneratorDescriptor.COMPONENT_TYPE_RESOURCE);
-							
-							ICodeGeneratorDescriptor tmpCodeGen = null;
-							
-							for (ICodeGeneratorDescriptor codeGeneratorDescriptor : tempCodegens) {
-								if (codeGeneratorDescriptor.getId().trim().equals(CplusplusOctaveGenerator.ID)) {
-									tmpCodeGen = codeGeneratorDescriptor;
-									break;
-								}
+						// Create the implementation
+						final Implementation impl = SpdFactory.eINSTANCE.createImplementation();
+						impl.setDescription("The implementation contains descriptive information about the template for a software component.");
+						impl.setId("");
+						
+						
+						final ICodeGeneratorDescriptor[] tempCodegens = 
+								RedhawkCodegenActivator.getCodeGeneratorsRegistry().findCodegenByLanguage("C++", ICodeGeneratorDescriptor.COMPONENT_TYPE_RESOURCE);
+						
+						ICodeGeneratorDescriptor tmpCodeGen = null;
+						
+						for (ICodeGeneratorDescriptor codeGeneratorDescriptor : tempCodegens) {
+							if (codeGeneratorDescriptor.getId().trim().equals(CplusplusOctaveGenerator.ID)) {
+								tmpCodeGen = codeGeneratorDescriptor;
+								break;
 							}
-							
-							final Compiler compiler = SpdFactory.eINSTANCE.createCompiler();
-							compiler.setName(tmpCodeGen.getCompiler());
-							impl.setCompiler(compiler);
-							
-							final Runtime runtime = SpdFactory.eINSTANCE.createRuntime();
-							runtime.setName(tmpCodeGen.getRuntime());
-							runtime.setVersion(tmpCodeGen.getCompilerVersion());
-							impl.setRuntime(runtime);
-							
-							ProgrammingLanguage progLang = SpdFactory.eINSTANCE.createProgrammingLanguage();
-							progLang.setName("C++");
-							impl.setProgrammingLanguage(progLang);
-							
-							impl.setId("cpp");
-							impl.setRuntime(null);
-							
-							HumanLanguage humanLang = SpdFactory.eINSTANCE.createHumanLanguage();
-							humanLang.setName(RedhawkCodegenActivator.ENGLISH);
-							impl.setHumanLanguage(humanLang);
-							
-							
-							final ImplementationSettings settings = CodegenFactory.eINSTANCE.createImplementationSettings();
-							settings.setGeneratedOn(null);
-							settings.setGeneratorId(CplusplusOctaveGenerator.ID);
-							settings.setOutputDir("cpp");
-							settings.setTemplate(CplusplusOctaveGenerator.TEMPLATE);
-							
-							
-							ProjectCreator.addImplementation(project, projectName, impl, settings, progress.newChild(1));
-						} else {
-							setOpenEditorOn(ProjectCreator.importFiles(project, existingResourceLocation, getImplList(), getImportedSettingsMap(), progress.newChild(2), getSoftPkg().getId()));
 						}
+						
+						final Compiler compiler = SpdFactory.eINSTANCE.createCompiler();
+						compiler.setName(tmpCodeGen.getCompiler());
+						compiler.setVersion(tmpCodeGen.getCompilerVersion());
+						impl.setCompiler(compiler);
+						
+						final Runtime runtime = SpdFactory.eINSTANCE.createRuntime();
+						runtime.setName(tmpCodeGen.getRuntime());
+						runtime.setVersion(tmpCodeGen.getCompilerVersion());
+						impl.setRuntime(runtime);
+						
+						ProgrammingLanguage progLang = SpdFactory.eINSTANCE.createProgrammingLanguage();
+						progLang.setName("C++");
+						impl.setProgrammingLanguage(progLang);
+						
+						impl.setId("cpp");
+						impl.setRuntime(null);
+						
+						HumanLanguage humanLang = SpdFactory.eINSTANCE.createHumanLanguage();
+						humanLang.setName(RedhawkCodegenActivator.ENGLISH);
+						impl.setHumanLanguage(humanLang);
+						
+						
+						settings  = CodegenFactory.eINSTANCE.createImplementationSettings();
+						settings.setGeneratedOn(null);
+						settings.setGeneratorId(CplusplusOctaveGenerator.ID);
+						settings.setOutputDir("cpp");
+						settings.setTemplate(CplusplusOctaveGenerator.TEMPLATE);
+						
+						
+						ProjectCreator.addImplementation(project, projectName, impl, settings, progress.newChild(1));
 						
 						String spdFileName = project.getName() + SpdPackage.FILE_EXTENSION; //SUPPRESS CHECKSTYLE AvoidInLine
 						final IFile spdFile = project.getFile(spdFileName);
@@ -376,16 +367,8 @@ public class NewOctaveScaResourceProjectWizard extends NewScaResourceWizard impl
 			throw new CoreException(new Status(Status.ERROR, Activator.PLUGIN_ID, "Failed to write Octave Settings to SCA resources.", e));
 		}
 
-		List<IWizardPage> wizPages = getWizPages();
-		ImplementationSettings settings = null;
-		for (IWizardPage page : wizPages) {
-			if (page instanceof BooleanGeneratorPropertiesWizardPage) {
-				BooleanGeneratorPropertiesWizardPage wizPage = (BooleanGeneratorPropertiesWizardPage) page;
-				settings = wizPage.getSettings();
-			}
-		}
-		if (settings != null) {
-			String outputDirStr = settings.getOutputDir();
+		if (this.settings != null) {
+			String outputDirStr = this.settings.getOutputDir();
 			IFolder outputDir = project.getFolder(new Path(outputDirStr));
 			if (!outputDir.exists()) {
 				outputDir.create(true, true, null);
