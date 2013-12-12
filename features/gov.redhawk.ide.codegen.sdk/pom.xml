@@ -10,7 +10,6 @@
   </parent>
   <groupId>gov.redhawk.codegen</groupId>
   <artifactId>gov.redhawk.ide.codegen.sdk</artifactId>
-  <version>1.9.1-SNAPSHOT</version>
   <packaging>eclipse-feature</packaging>
 
     <build>
