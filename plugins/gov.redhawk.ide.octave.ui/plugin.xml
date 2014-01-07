@@ -18,5 +18,17 @@
             id="gov.redhawk.ide.octave.ui.wizards.newoctavecomponent">
       </primaryWizard>
    </extension>
+   <extension
+         point="gov.redhawk.ide.codegen.ui.codegenPages">
+      <codegenPage
+            compositeClass="gov.redhawk.ide.octave.ui.OctaveGeneratorDisplayFactory"
+            id="gov.redhawk.ide.octave.ui.OctaveGeneratorDisplayFactory"
+            name="Octave Generator Wizard Pages"
+            wizardClass="gov.redhawk.ide.octave.ui.OctaveGeneratorDisplayFactory">
+         <codegenId
+               targetCodegenId="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusOctaveGenerator">
+         </codegenId>
+      </codegenPage>
+   </extension>
 
 </plugin>

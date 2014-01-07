@@ -10,6 +10,10 @@
  *******************************************************************************/
 package gov.redhawk.ide.octave.ui.wizard;
 
+import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
+import gov.redhawk.ide.codegen.ImplementationSettings;
+import gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusOctaveGenerator;
+import gov.redhawk.ide.codegen.ui.ICodegenWizardPage;
 import gov.redhawk.ide.octave.ui.Activator;
 import gov.redhawk.ide.octave.ui.OctaveFunctionVariables;
 import gov.redhawk.ide.octave.ui.OctaveProjectProperties;
@@ -26,6 +30,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import mil.jpeojtrs.sca.spd.Implementation;
+import mil.jpeojtrs.sca.spd.SoftPkg;
 
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
@@ -63,7 +70,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 /**
  * @since 8.1
  */
-public class MFileSelectionWizardPage extends WizardPage {
+public class MFileSelectionWizardPage extends WizardPage implements ICodegenWizardPage {
 
 	private static final Debug DEBUG = new Debug(Activator.PLUGIN_ID, "MFileSelectionWizardPage");
 
@@ -80,6 +87,9 @@ public class MFileSelectionWizardPage extends WizardPage {
 	private Button depsRemoveButton;
 	private Binding currentDepBindValue;
 	private Binding primaryMFileBindValue;
+
+	private Implementation impl;
+	private ImplementationSettings implSettings;
 
 	public MFileSelectionWizardPage(final OctaveProjectProperties octaveProjProps, final String name, final String componenttype) {
 		super(name, "New M-File", MFileSelectionWizardPage.TITLE_IMAGE);
@@ -415,5 +425,34 @@ public class MFileSelectionWizardPage extends WizardPage {
 		}
 		this.octaveProjProps.setFunctionOutputs(outputs);
 		this.octaveProjProps.setFunctionName(mFile.getFunction().getName());
+	}
+
+
+	@Override
+	public void configure(SoftPkg softpkg, Implementation impl, ICodeGeneratorDescriptor desc, ImplementationSettings implSettings, String componentType) {
+		this.impl = impl;
+		this.implSettings = implSettings;
+		
+		this.implSettings.setOutputDir("cpp");
+		this.implSettings.setTemplate(CplusplusOctaveGenerator.TEMPLATE);
+	}
+
+	@Override
+	public ImplementationSettings getSettings() {
+		return this.implSettings;
+	}
+
+	@Override
+	public boolean canFinish() {
+		return false;
+	}
+
+	@Override
+	public void setCanFlipToNextPage(boolean canFlip) {
+		
+	}
+
+	@Override
+	public void setCanFinish(boolean canFinish) {
 	}
 }

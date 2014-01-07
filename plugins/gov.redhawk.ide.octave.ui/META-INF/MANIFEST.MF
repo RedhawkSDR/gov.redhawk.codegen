@@ -23,6 +23,8 @@ Require-Bundle: org.eclipse.ui,
  idl.bulkio,
  gov.redhawk.eclipsecorba.library,
  gov.redhawk.ide.sdr.ui;bundle-version="3.2.0",
- org.eclipse.ui.ide
+ org.eclipse.ui.ide,
+ org.eclipse.ui.forms
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
+Export-Package: gov.redhawk.ide.octave.ui.wizard

@@ -10,6 +10,9 @@
  *******************************************************************************/
 package gov.redhawk.ide.octave.ui.wizard;
 
+import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
+import gov.redhawk.ide.codegen.ImplementationSettings;
+import gov.redhawk.ide.codegen.ui.ICodegenWizardPage;
 import gov.redhawk.ide.octave.ui.Activator;
 import gov.redhawk.ide.octave.ui.OctaveFunctionVariables;
 import gov.redhawk.ide.octave.ui.OctaveMFileTableLabelProvider;
@@ -21,6 +24,9 @@ import gov.redhawk.ide.octave.ui.OctaveVariableTypeEnum;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import mil.jpeojtrs.sca.spd.Implementation;
+import mil.jpeojtrs.sca.spd.SoftPkg;
 
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
@@ -57,7 +63,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 /**
  * @since 8.1
  */
-public class MFileVariableMapingWizardPage extends WizardPage {
+public class MFileVariableMapingWizardPage extends WizardPage implements ICodegenWizardPage {
 
 	private static final ImageDescriptor TITLE_IMAGE = AbstractUIPlugin.imageDescriptorFromPlugin(Activator.PLUGIN_ID, "icons/octaveLogo.png");
 	private static final int NUM_COLUMNS = 1;
@@ -97,6 +103,10 @@ public class MFileVariableMapingWizardPage extends WizardPage {
 			return mStatus;
 		}
 	};
+	
+	// These aren't really used but are needed because of the inheritance 
+	private Implementation impl;
+	private ImplementationSettings implSettings;
 
 	public MFileVariableMapingWizardPage(OctaveProjectProperties octaveProjProps, String name, String componentType) {
 		super(name, "Map M-file", MFileVariableMapingWizardPage.TITLE_IMAGE);
@@ -208,6 +218,35 @@ public class MFileVariableMapingWizardPage extends WizardPage {
 
 	public DataBindingContext getDataBindingContext() {
 		return dataBindingContext;
+	}
+
+	@Override
+	public void configure(SoftPkg softpkg, Implementation impl, ICodeGeneratorDescriptor desc, ImplementationSettings implSettings, String componentType) {
+		this.impl = impl;
+		this.implSettings = implSettings;
+	}
+
+	@Override
+	public ImplementationSettings getSettings() {
+		return this.implSettings;
+	}
+
+	@Override
+	public boolean canFinish() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setCanFlipToNextPage(boolean canFlip) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setCanFinish(boolean canFinish) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

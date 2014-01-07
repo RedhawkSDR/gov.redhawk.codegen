@@ -133,6 +133,9 @@ public class NewOctaveScaResourceProjectWizard extends NewScaResourceWizard impl
 
 		// Do not allow users to import an SPD file.  We do not allow java or Python Octave projects.  
 		wizardPage.setShowContentsGroup(false);
+		wizardPage.setShowComponentIDGroup(false);
+		wizardPage.setShowWorkingSetGroup(false);
+		
 		this.addPage(wizardPage);
 
 		setMFileSelectionPage(new MFileSelectionWizardPage(this.octaveProjectProperties, "", ICodeGeneratorDescriptor.COMPONENT_TYPE_RESOURCE));

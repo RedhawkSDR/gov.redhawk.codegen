@@ -11,9 +11,6 @@
          <codegenId
                targetCodegenId="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusGenerator">
          </codegenId>
-         <codegenId
-               targetCodegenId="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusOctaveGenerator">
-         </codegenId>
       </codegenPage>
    </extension>
 
