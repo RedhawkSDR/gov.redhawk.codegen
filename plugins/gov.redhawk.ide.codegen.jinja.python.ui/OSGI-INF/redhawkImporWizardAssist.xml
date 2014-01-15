@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="gov.redhawk.ide.codegen.jinja.python.ui">
+   <implementation class="gov.redhawk.ide.codegen.jinja.python.ui.PythonRedhawkImportWizardAssistant"/>
+   <service>
+      <provide interface="gov.redhawk.ide.ui.wizard.IRedhawkImportProjectWizardAssist"/>
+   </service>
+</scr:component>
