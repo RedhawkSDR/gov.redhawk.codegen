@@ -66,7 +66,7 @@ public class JavaRedhawkWizardAssistant implements IRedhawkImportProjectWizardAs
 	public String getDefaultTemplate() {
 		return "redhawk.codegen.jinja.java.component.pull";
 	}
-	
+
 	@Override
 	public boolean handlesLanguage(String lang) {
 		return "Java".equalsIgnoreCase(lang);
@@ -77,8 +77,7 @@ public class JavaRedhawkWizardAssistant implements IRedhawkImportProjectWizardAs
 		boolean hasUseJni = false;
 		List<Property> properties = settings.getProperties();
 		for (Property prop : properties) {
-			// Validate java_package name and create a default one if
-			// necessary
+			// Validate java_package name and create a default one if necessary
 			if ("java_package".equals(prop.getId())) {
 				if (prop.getValue() == null || prop.getValue().isEmpty()) {
 					prop.setValue(projectName + ".java");
