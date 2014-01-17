@@ -1,0 +1,26 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Front End Interfaces Wizard Factory
+Bundle-SymbolicName: gov.redhawk.ide.codegen.frontend.ui;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: gov.redhawk.ide.codegen.frontend.ui.FrontEndDeviceWizardPlugin
+Bundle-Vendor: REDHAWK
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ gov.redhawk.ide.codegen.ui,
+ org.eclipse.ui.forms;bundle-version="3.5.200",
+ org.eclipse.core.resources,
+ gov.redhawk.sca.util,
+ mil.jpeojtrs.sca.spd,
+ gov.redhawk.ide.codegen,
+ org.eclipse.swt,
+ org.eclipse.core.databinding,
+ org.eclipse.core.databinding.observable;bundle-version="1.4.1",
+ org.eclipse.core.databinding.property;bundle-version="1.4.100",
+ mil.jpeojtrs.sca.util,
+ gov.redhawk.ide.sdr.ui,
+ org.eclipse.jface.databinding,
+ org.eclipse.core.databinding.beans,
+ gov.redhawk.ide.dcd.ui
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
