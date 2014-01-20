@@ -21,6 +21,7 @@ Require-Bundle: org.eclipse.ui,
  gov.redhawk.ide.sdr.ui,
  org.eclipse.jface.databinding,
  org.eclipse.core.databinding.beans,
- gov.redhawk.ide.dcd.ui
+ gov.redhawk.ide.dcd.ui,
+ gov.redhawk.ide.spd.ui;bundle-version="8.1.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
