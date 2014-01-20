@@ -17,6 +17,7 @@ import gov.redhawk.ide.codegen.frontend.ui.FrontEndProjectValidator;
 import gov.redhawk.ide.codegen.ui.ICodegenWizardPage;
 import gov.redhawk.ide.dcd.ui.wizard.ScaDeviceProjectPropertiesWizardPage;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -141,7 +142,13 @@ public class FrontEndWizardPage extends WizardPage implements ICodegenWizardPage
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				SelectFRIPropertyDialog dialog = new SelectFRIPropertyDialog(theTable.getShell());
-				dialog.setInput(FrontEndDeviceUIUtils.INSTANCE.getOptionalFrontEndProps());
+				Set<FrontEndProp> inputSet = new HashSet<FrontEndProp>();
+				inputSet.addAll(FrontEndDeviceUIUtils.INSTANCE.getOptionalFrontEndProps());
+
+				// Don't display any that we have already added.
+				inputSet.removeAll(FrontEndWizardPage.this.selectedProps);
+				
+				dialog.setInput(new ArrayList<FrontEndProp>(inputSet));
 				int dialogStatus = dialog.open();
 				if (dialogStatus == Dialog.OK) {
 					selectedProps.addAll(dialog.getResult());
