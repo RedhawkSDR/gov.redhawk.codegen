@@ -79,12 +79,14 @@ public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 		this.octaveProjectProperties = new OctaveProjectProperties();
 		this.mFileSelectionWizardPage = new MFileSelectionWizardPage(octaveProjectProperties, "", ICodeGeneratorDescriptor.COMPONENT_TYPE_RESOURCE);
 		pages.add(this.mFileSelectionWizardPage);
+		this.mFileSelectionWizardPage.setDescription("Select an M-File for this component."
+			+ " If the primary M-File depends on non-standard methods, select the dependent M-Files ");
 
 		this.mFileVariableMapingWizardPage = new MFileVariableMapingWizardPage(octaveProjectProperties, "",
 			ICodeGeneratorDescriptor.COMPONENT_TYPE_RESOURCE);
 
-		mFileVariableMapingWizardPage.setDescription("Create a mapping of octave input(s)/output(s) to a REDHAWK port or property "
-			+ "Ports and properties may also be modified in the component editor.");
+		mFileVariableMapingWizardPage.setDescription("Create a mapping of octave input(s)/output(s) to a REDHAWK port or property. "
+			+ "\nPorts and properties may also be modified in the component editor.");
 
 		pages.add(mFileVariableMapingWizardPage);
 

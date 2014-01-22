@@ -10,15 +10,16 @@
  *******************************************************************************/
 package gov.redhawk.ide.octave.ui.wizard;
 
-import java.util.Arrays;
-import java.util.List;
-
-import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
 import gov.redhawk.ide.codegen.RedhawkCodegenActivator;
+import gov.redhawk.ide.codegen.internal.CodeGeneratorDescriptor;
 import gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusOctaveGenerator;
 import gov.redhawk.ide.spd.ui.wizard.ImplementationWizardPage;
 
-import org.eclipse.jface.viewers.StructuredSelection;
+import java.util.Arrays;
+import java.util.List;
+
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -36,28 +37,31 @@ public class OctaveImplementationWizardPage extends ImplementationWizardPage {
 		super.createControl(parent);
 		
 		// Set the Programming language viewer to C++ 
-
 		List<String> languageOptions = Arrays.asList(RedhawkCodegenActivator.getCodeGeneratorsRegistry().getLanguages());
 		int indexOfCpp = languageOptions.indexOf("C++");
-		
 		this.getProgLangEntryViewer().select(indexOfCpp);
 		this.getProgLangEntryViewer().setEnabled(false);
 
-		this.handleProgLangSelection();
 		
-		// We need to acquire the list of code generators for C++ and then pick the Octave one
-		final String temp = this.getProgLangEntryViewer().getText();
-		final ICodeGeneratorDescriptor[] tempCodegens = RedhawkCodegenActivator.getCodeGeneratorsRegistry().findCodegenByLanguage(temp, this.getComponenttype());
-		
-		for (ICodeGeneratorDescriptor codeGeneratorDescriptor : tempCodegens) {
-			if (codeGeneratorDescriptor.getId().trim().equals(CplusplusOctaveGenerator.ID)) { 
-				this.getCodeGeneratorEntryViewer().setSelection(new StructuredSelection(codeGeneratorDescriptor), true);
-				this.handleCodeGenerationSelection(new StructuredSelection(codeGeneratorDescriptor));
-				break;
+		ViewerFilter filter = new ViewerFilter() {
+			
+			@SuppressWarnings("restriction")
+			@Override
+			public boolean select(Viewer viewer, Object parentElement, Object element) {
+				if (CplusplusOctaveGenerator.ID.equalsIgnoreCase(((CodeGeneratorDescriptor) element).getId())) {
+					return true;
+				}
+				return false;
 			}
-		}
+		};
 		
-		this.getCodeGeneratorEntryViewer().getCombo().setEnabled(false);
+		ViewerFilter[] filters = new ViewerFilter[1];
+		filters[0] = filter;
+		
+		getCodeGeneratorEntryViewer().setFilters(filters);
+		
+		// Must do this after the filter is set since it is used in the selection
+		this.handleProgLangSelection();
 	}
 	
 	@Override

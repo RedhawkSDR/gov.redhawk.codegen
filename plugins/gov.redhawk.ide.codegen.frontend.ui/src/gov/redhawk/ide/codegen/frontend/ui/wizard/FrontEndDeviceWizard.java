@@ -8,11 +8,11 @@
  * the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at 
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package gov.redhawk.ide.octave.ui.wizard;
+package gov.redhawk.ide.codegen.frontend.ui.wizard;
 
 import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
 import gov.redhawk.ide.codegen.util.ImplementationAndSettings;
-import gov.redhawk.ide.spd.ui.wizard.NewScaResourceProjectWizard;
+import gov.redhawk.ide.dcd.ui.wizard.NewScaDeviceCreationProjectWizard;
 import gov.redhawk.ide.ui.wizard.IImportWizard;
 
 import java.lang.reflect.Field;
@@ -22,21 +22,18 @@ import java.util.List;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 
-/**
- * @since 8.1
- */
-public class NewOctaveScaResourceProjectWizard extends NewScaResourceProjectWizard implements IImportWizard {
+public class FrontEndDeviceWizard extends NewScaDeviceCreationProjectWizard implements IImportWizard {
 
-	public NewOctaveScaResourceProjectWizard() {
+	public FrontEndDeviceWizard() {
 		super();
 	}
-
+	
 	@Override
 	public void addPages() {
-		setResourcePropertiesPage(new OctaveProjectPropertiesWizardPage("", "Component"));
+		setResourcePropertiesPage(new FrontEndDeviceProjectPropertiesWizardPage("", "Device"));
 		addPage(getResourcePropertiesPage());
 		
-		setImplPage(new OctaveImplementationWizardPage("", ICodeGeneratorDescriptor.COMPONENT_TYPE_RESOURCE));
+		setImplPage(new FrontEndImplementationWizardPage("", ICodeGeneratorDescriptor.COMPONENT_TYPE_DEVICE));
 		getImplPage().setDescription("Choose the initial settings for the new implementation.");
 		getImplPage().setImpl(this.getImplementation());
 		addPage(getImplPage());

@@ -10,6 +10,8 @@
  *******************************************************************************/
 package gov.redhawk.ide.codegen.frontend.ui.wizard;
 
+import gov.redhawk.ide.codegen.frontend.ui.FrontEndDeviceUIUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 

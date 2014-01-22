@@ -8,7 +8,10 @@
  * the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at 
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package gov.redhawk.ide.codegen.frontend.ui.wizard;
+package gov.redhawk.ide.codegen.frontend.ui;
+
+import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndProp;
+import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndPropLabelProvider;
 
 import java.util.ArrayList;
 import java.util.List;

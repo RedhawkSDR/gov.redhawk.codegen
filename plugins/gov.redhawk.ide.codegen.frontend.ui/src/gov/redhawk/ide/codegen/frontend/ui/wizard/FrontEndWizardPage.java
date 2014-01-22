@@ -12,6 +12,7 @@ package gov.redhawk.ide.codegen.frontend.ui.wizard;
 
 import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
 import gov.redhawk.ide.codegen.ImplementationSettings;
+import gov.redhawk.ide.codegen.frontend.ui.FrontEndDeviceUIUtils;
 import gov.redhawk.ide.codegen.frontend.ui.FrontEndDeviceWizardPlugin;
 import gov.redhawk.ide.codegen.frontend.ui.FrontEndProjectValidator;
 import gov.redhawk.ide.codegen.ui.ICodegenWizardPage;
