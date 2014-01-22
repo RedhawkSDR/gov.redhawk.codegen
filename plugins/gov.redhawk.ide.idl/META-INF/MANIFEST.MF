@@ -23,4 +23,4 @@ Export-Package: gov.redhawk.ide.idl,
  gov.redhawk.ide.idl.generator.internal;x-friends:="gov.redhawk.ide.idl.tests",
  gov.redhawk.ide.idl.generator.newidl
 Bundle-Vendor: %Bundle-Vendor
-Import-Package: org.jacorb.idl;version="3.3.0"
+Import-Package: org.jacorb.idl
