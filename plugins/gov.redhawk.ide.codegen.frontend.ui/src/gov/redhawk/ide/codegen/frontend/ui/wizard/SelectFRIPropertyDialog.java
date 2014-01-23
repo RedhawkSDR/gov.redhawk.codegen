@@ -13,8 +13,13 @@ package gov.redhawk.ide.codegen.frontend.ui.wizard;
 import gov.redhawk.ide.codegen.frontend.ui.FrontEndDeviceUIUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.observable.set.WritableSet;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
@@ -27,9 +32,10 @@ public class SelectFRIPropertyDialog extends Dialog {
 
 	private static final int DIALOG_HORIZONTAL_HINT=800;
 	private static final int DIALOG_VERTICAL_HINT=400;
-	private List<FrontEndProp> output = null;
 	private CheckboxTableViewer theTableViewer;
-	private List<FrontEndProp> input = null;
+	private final WritableSet input = new WritableSet();
+	private final WritableSet output = new WritableSet();
+	private DataBindingContext context = new DataBindingContext();
 	
 	protected SelectFRIPropertyDialog(Shell parentShell) {
 		super(parentShell);
@@ -51,24 +57,16 @@ public class SelectFRIPropertyDialog extends Dialog {
 	private void createTable(Composite client) {
 		theTableViewer = FrontEndDeviceUIUtils.INSTANCE.getCheckboxTableViewer(client);
 		theTableViewer.setInput(this.input);
+		context.bindSet(ViewersObservables.observeCheckedElements(theTableViewer, FrontEndProp.class), this.output);
 	}
 	
 	public void setInput(List<FrontEndProp> input) {
-		this.input = input;
+		this.input.clear();
+		this.input.addAll(input);
 	}
 	
-	public List<FrontEndProp> getResult() {
-		return this.output;
-	}
-	
-	@Override
-	protected void okPressed() {
-		output = new ArrayList<FrontEndProp>();
-		Object[] checkedElements = this.theTableViewer.getCheckedElements();
-		for (Object element : checkedElements) {
-			output.add((FrontEndProp) element);
-		}
-		super.okPressed();
+	public Set<FrontEndProp> getResult() {
+		return Collections.unmodifiableSet(this.output);
 	}
 	
 }

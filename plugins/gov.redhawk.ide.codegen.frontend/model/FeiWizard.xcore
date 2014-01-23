@@ -1,0 +1,36 @@
+@Ecore(nsURI="http://codegen.redhawk.gov/frontend/1.0.0")
+@GenModel(prefix="Frontend", dataTypeConverters="true", binaryCompantibleReflectiveMethods="true", fileExtensions="xml", colorProviders="true", fontProviders="true", tablesProviders="true", resource="XML", templateDirectory="/gov.redhawk.ide.codegen.frontend/templates", forceOverwrite="true", modelPluginVariables="org.eclipse.xtext.xbase.lib", tableProviders="true")
+@GenModel(contentTypeIdentifier="http://codegen.redhawk.gov/frontend/1.0.0")
+@GenModel(modelDirectory="/gov.redhawk.ide.codegen.frontend/src-model")
+@GenModel(editDirectory="/gov.redhawk.ide.codegen.frontend.edit/src-gen")
+package gov.redhawk.ide.codegen.frontend
+
+import gov.redhawk.model.sca.ScaStructProperty
+
+type TunerStatusStruct wraps ScaStructProperty
+
+class FeiDevice {
+
+	// Basic Device properties
+	boolean isAntenna
+	boolean ingestsGPS
+	boolean outputsGPS
+	
+	
+	// Specific props to Tuner
+	boolean isRxTuner
+	boolean hasAnalogInput
+	int numberOfAnalogInputs
+	boolean hasDigitalInput
+	String digitalInputType //This could also be an enum
+	boolean isMultiOut
+	String digitalOutputType //This could also be an enum
+	
+	// Transmit props 
+	boolean isTxTuner
+	int numberOfDigitalInputsForTx
+	String digitalInputTypeForTx //This could also be an enum
+	
+	// Tuner status properties
+	TunerStatusStruct tunerStatusStruct
+}

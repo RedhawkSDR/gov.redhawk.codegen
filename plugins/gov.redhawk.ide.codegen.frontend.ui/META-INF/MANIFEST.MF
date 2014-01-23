@@ -25,6 +25,7 @@ Require-Bundle: org.eclipse.ui,
  gov.redhawk.ide.spd.ui;bundle-version="8.1.0",
  gov.redhawk.ide.ui,
  org.eclipse.ui.ide,
- gov.redhawk.ide.codegen.jinja.cplusplus
+ gov.redhawk.ide.codegen.jinja.cplusplus,
+ idl.frontend
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy

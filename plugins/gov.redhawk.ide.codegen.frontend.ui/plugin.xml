@@ -9,7 +9,7 @@
             name="Front End Generator Wizard Pages"
             wizardClass="gov.redhawk.ide.codegen.frontend.ui.FrontEndGeneratorDisplayFactory">
          <codegenId
-               targetCodegenId="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusFrontEndGenerator">
+               targetCodegenId="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusGenerator">
          </codegenId>
       </codegenPage>
    </extension>
@@ -29,6 +29,17 @@
       <primaryWizard
             id="gov.redhawk.ide.codegen.frontend.ui.newfridevicewizard">
       </primaryWizard>
+   </extension>
+   <extension
+         point="gov.redhawk.ide.codegen.ui.codegenTemplatePages">
+      <codegenTemplatePage
+            id="gov.redhawk.ide.codegen.ui.FrontEndGeneratorDisplayFactory"
+            name="Front End Generator Wizard Pages"
+            wizardClass="gov.redhawk.ide.codegen.frontend.ui.FrontEndGeneratorTemplateDisplayFactory">
+         <codegenTemplateId
+               targetCodegenTemplateId="redhawk.codegen.jinja.cpp.component.frontend">
+         </codegenTemplateId>
+      </codegenTemplatePage>
    </extension>
    
 </plugin>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated FeiWizard -->
+      <package
+            uri="http://codegen.redhawk.gov/frontend/1.0.0"
+            class="gov.redhawk.ide.codegen.frontend.FrontendPackage"
+            genModel="model/FeiWizard.xcore"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.content_parser">
+      <!-- @generated FeiWizard -->
+      <parser
+            contentTypeIdentifier="http://codegen.redhawk.gov/frontend/1.0.0"
+            class="gov.redhawk.ide.codegen.frontend.util.FrontendResourceFactoryImpl"/>
+   </extension>
+
+   <extension point="org.eclipse.core.contenttype.contentTypes">
+      <!-- @generated FeiWizard -->
+      <content-type
+            base-type="org.eclipse.core.runtime.xml"
+            file-extensions="xml"
+            id="http://codegen.redhawk.gov/frontend/1.0.0"
+            name="%_UI_Frontend_content_type"
+            priority="normal">
+         <describer class="org.eclipse.emf.ecore.xmi.impl.RootXMLContentHandlerImpl$Describer">
+            <parameter name="namespace" value="http://codegen.redhawk.gov/frontend/1.0.0"/>
+         </describer>
+      </content-type>
+   </extension>
+
+</plugin>

@@ -3,6 +3,8 @@ package gov.redhawk.ide.codegen.frontend.ui.wizard;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
+import org.eclipse.emf.ecore.util.EcoreUtil;
+
 import mil.jpeojtrs.sca.prf.Simple;
 
 
@@ -22,7 +24,7 @@ public class FrontEndProp {
 	}
 	
 	public Simple getProp() {
-		return this.prop;
+		return EcoreUtil.copy(this.prop);
 	}
 
 	/**

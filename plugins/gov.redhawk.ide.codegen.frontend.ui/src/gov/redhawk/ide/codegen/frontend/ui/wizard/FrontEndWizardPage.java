@@ -19,6 +19,7 @@ import gov.redhawk.ide.codegen.ui.ICodegenWizardPage;
 import gov.redhawk.ide.dcd.ui.wizard.ScaDeviceProjectPropertiesWizardPage;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,14 +30,19 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.observable.ChangeEvent;
 import org.eclipse.core.databinding.observable.IChangeListener;
+import org.eclipse.core.databinding.observable.set.WritableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
@@ -49,6 +55,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.ui.PlatformUI;
 
 public class FrontEndWizardPage extends WizardPage implements ICodegenWizardPage {
 
@@ -60,10 +67,10 @@ public class FrontEndWizardPage extends WizardPage implements ICodegenWizardPage
 	private TableViewer theTableViewer;
 	private Table theTable;
 	private Button removeTunerStatusPropButton;
-	private Set<FrontEndProp> selectedProps = new HashSet<FrontEndProp>();
+	private WritableSet selectedProps = new WritableSet();
 	private ImplementationSettings implSettings;
 	private FrontEndProjectValidator validator;
-	
+
 	public FrontEndWizardPage(String pageName) {
 		super(pageName);
 	}
@@ -74,14 +81,14 @@ public class FrontEndWizardPage extends WizardPage implements ICodegenWizardPage
 
 	@Override
 	public void createControl(Composite parent) {
-		
+
 		final Composite client = new Composite(parent, SWT.NULL);
 		selectedProps.addAll(FrontEndDeviceUIUtils.INSTANCE.getRequiredFrontEndProps());
 
 		// Creates the basic layout of the UI elements
 		createUIElements(client);
 		createListeners();
-		
+
 		this.setControl(client);
 	}
 
@@ -89,32 +96,31 @@ public class FrontEndWizardPage extends WizardPage implements ICodegenWizardPage
 		DataBindingContext ctx = new DataBindingContext();
 		ISWTObservableValue target = WidgetProperties.selection().observe(digitalTunerPortButton);
 		IObservableValue model = PojoProperties.value("digitalTunerPortSelected").observe(this);
-		
+
 		ctx.bindValue(target, model);
-		
+
 		// This is really just to get the Finish button to behave
 		WizardPageSupport.create(this, ctx);
-		
-		 IWizardPage[] wizPages = this.getWizard().getPages();
-		 ScaDeviceProjectPropertiesWizardPage propWizPage = null;
-		 
-		 for (IWizardPage wizPage : wizPages) {
-			 if (wizPage instanceof ScaDeviceProjectPropertiesWizardPage) {
-				 propWizPage = (ScaDeviceProjectPropertiesWizardPage) wizPage;
-				 break;
-			 }
-		 }
-		
-		 
-		 // This must come after the creation of the page support since creation of page support updates the 
-		 // error message.  The WizardPageSupport doesn't update the error message because no UI elements have changed
-		 // so this is a bit of a hack.
+
+		IWizardPage[] wizPages = this.getWizard().getPages();
+		ScaDeviceProjectPropertiesWizardPage propWizPage = null;
+
+		for (IWizardPage wizPage : wizPages) {
+			if (wizPage instanceof ScaDeviceProjectPropertiesWizardPage) {
+				propWizPage = (ScaDeviceProjectPropertiesWizardPage) wizPage;
+				break;
+			}
+		}
+
+		// This must come after the creation of the page support since creation of page support updates the 
+		// error message.  The WizardPageSupport doesn't update the error message because no UI elements have changed
+		// so this is a bit of a hack.
 		if (propWizPage != null) {
 			this.validator = new FrontEndProjectValidator(propWizPage.getProjectSettings(), this);
 			ctx.addValidationStatusProvider(validator);
 			IObservableValue validationStatus = validator.getValidationStatus();
 			validationStatus.addChangeListener(new IChangeListener() {
-				
+
 				@Override
 				public void handleChange(ChangeEvent event) {
 					if (validator != null) {
@@ -139,7 +145,7 @@ public class FrontEndWizardPage extends WizardPage implements ICodegenWizardPage
 	private void createListeners() {
 		// Button Listener
 		this.addTunerStatusPropButton.addSelectionListener(new SelectionListener() {
-			
+
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				SelectFRIPropertyDialog dialog = new SelectFRIPropertyDialog(theTable.getShell());
@@ -148,59 +154,49 @@ public class FrontEndWizardPage extends WizardPage implements ICodegenWizardPage
 
 				// Don't display any that we have already added.
 				inputSet.removeAll(FrontEndWizardPage.this.selectedProps);
-				
+
 				dialog.setInput(new ArrayList<FrontEndProp>(inputSet));
 				int dialogStatus = dialog.open();
 				if (dialogStatus == Dialog.OK) {
 					selectedProps.addAll(dialog.getResult());
-					theTableViewer.refresh();
 				}
 			}
-			
+
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				widgetSelected(e);
 			}
 		});
-		
+
 		this.removeTunerStatusPropButton.addSelectionListener(new SelectionListener() {
-			
+
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				for (TableItem selection : theTable.getSelection()) {
-					selectedProps.remove(selection.getData());
-				}
-				theTableViewer.refresh();
+				selectedProps.removeAll(((IStructuredSelection) theTableViewer.getSelection()).toList());
 			}
-			
+
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				widgetSelected(e);
 			}
 		});
-		
+
 		// Prevent the removal of required props
-		this.theTable.addSelectionListener(new SelectionListener() {
+		theTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			
 			@Override
-			public void widgetSelected(SelectionEvent e) {
-				TableItem[] itemsSelected = theTable.getSelection();
-				for (TableItem selection : itemsSelected) {
-					if (((FrontEndProp)selection.getData()).isRequired()) {
+			public void selectionChanged(SelectionChangedEvent event) {
+				for (Object obj : ((IStructuredSelection)event.getSelection()).toList()) {
+					if (((FrontEndProp)obj).isRequired()) {
 						removeTunerStatusPropButton.setEnabled(false);
 						return;
 					}
 				}
-				removeTunerStatusPropButton.setEnabled(true);
-			}
-			
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				widgetSelected(e);
+				removeTunerStatusPropButton.setEnabled(!event.getSelection().isEmpty());
 			}
 		});
 	}
-	
+
 	private void createUIElements(Composite client) {
 		client.setLayout(new GridLayout(FrontEndWizardPage.NUM_COLUMNS, false));
 		createTunerPortSection(client);
@@ -213,12 +209,12 @@ public class FrontEndWizardPage extends WizardPage implements ICodegenWizardPage
 		tunerPortTypeSelectionGroup.setText("Tuner Port Type");
 		tunerPortTypeSelectionGroup.setLayout(new GridLayout(1, false));
 		tunerPortTypeSelectionGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-		
+
 		this.digitalTunerPortButton = new Button(tunerPortTypeSelectionGroup, SWT.RADIO);
 		this.digitalTunerPortButton.setText("Digital Tuner Port (default)");
 		this.digitalTunerPortButton.setLayoutData(GridDataFactory.fillDefaults().create());
 		this.digitalTunerPortButton.setSelection(true);
-		
+
 		this.analogTunerPortButton = new Button(tunerPortTypeSelectionGroup, SWT.RADIO);
 		this.analogTunerPortButton.setText("Analog Tuner Port");
 		this.analogTunerPortButton.setLayoutData(GridDataFactory.fillDefaults().create());
@@ -229,15 +225,15 @@ public class FrontEndWizardPage extends WizardPage implements ICodegenWizardPage
 		tunerStatusPropertyGroup.setText("Tuner Status Property Selection");
 		tunerStatusPropertyGroup.setLayout(new GridLayout(2, false));
 		tunerStatusPropertyGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-		
+
 		theTableViewer = FrontEndDeviceUIUtils.INSTANCE.getTableViewer(tunerStatusPropertyGroup);
 		theTable = theTableViewer.getTable();
-		
+
 		// Create Add/Remove button
 		Composite buttonComposite = new Composite(tunerStatusPropertyGroup, SWT.None);
 		buttonComposite.setLayout(new GridLayout(1, false));
 		buttonComposite.setLayoutData(GridDataFactory.fillDefaults().create());
-		
+
 		this.addTunerStatusPropButton = new Button(buttonComposite, SWT.PUSH);
 		this.addTunerStatusPropButton.setImage(FrontEndDeviceWizardPlugin.imageDescriptorFromPlugin(FrontEndDeviceWizardPlugin.PLUGIN_ID, "icons/add.gif").createImage());
 		this.addTunerStatusPropButton.setLayoutData(GridDataFactory.swtDefaults().create());
@@ -245,7 +241,7 @@ public class FrontEndWizardPage extends WizardPage implements ICodegenWizardPage
 		this.removeTunerStatusPropButton = new Button(buttonComposite, SWT.PUSH);
 		this.removeTunerStatusPropButton.setImage(FrontEndDeviceWizardPlugin.imageDescriptorFromPlugin(FrontEndDeviceWizardPlugin.PLUGIN_ID, "icons/remove.gif").createImage());
 		this.removeTunerStatusPropButton.setLayoutData(GridDataFactory.swtDefaults().create());
-		
+
 		return theTableViewer;
 	}
 
@@ -253,7 +249,7 @@ public class FrontEndWizardPage extends WizardPage implements ICodegenWizardPage
 	public void configure(SoftPkg softpkg, Implementation impl, ICodeGeneratorDescriptor desc, ImplementationSettings implSettings, String componentType) {
 		this.implSettings = implSettings;
 	}
-	
+
 	@Override
 	public ImplementationSettings getSettings() {
 		return this.implSettings;
@@ -269,13 +265,13 @@ public class FrontEndWizardPage extends WizardPage implements ICodegenWizardPage
 		// Page is complete as long as the validator is okay.
 		if (this.validator == null) {
 			return false;
-		} else if (((IStatus)this.validator.getValidationStatus().getValue()).isOK()) {
+		} else if (((IStatus) this.validator.getValidationStatus().getValue()).isOK()) {
 			return super.isPageComplete();
 		} else {
 			return false;
 		}
 	}
-	
+
 	@Override
 	public void setCanFlipToNextPage(boolean canFlip) {
 	}
@@ -285,13 +281,22 @@ public class FrontEndWizardPage extends WizardPage implements ICodegenWizardPage
 	}
 
 	public Set<FrontEndProp> getSelectedProperties() {
-		return this.selectedProps;
+		final Set<FrontEndProp> retVal = new HashSet<FrontEndProp>();
+		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+
+			@Override
+			public void run() {
+				retVal.addAll(selectedProps);
+			}
+			
+		});
+		return Collections.unmodifiableSet(retVal);
 	}
-	
+
 	public boolean isDigitalTunerPortSelected() {
 		return digitalTunerPortSelected;
 	}
-	
+
 	public void setDigitalTunerPortSelected(boolean value) {
 		this.digitalTunerPortSelected = value;
 	}

@@ -72,38 +72,6 @@
                type="resource">
          </componenttype>
       </codegen>
-      <codegen
-            autoGenerate="false"
-            class="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusFrontEndGenerator"
-            compiler="/usr/bin/gcc"
-            compilerVersion="4.1.2"
-            hasSettings="true"
-            humanLanguage="EN"
-            id="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusFrontEndGenerator"
-            language="C++"
-            languageVersion="0"
-            name="C++ Front End Interfaces"
-            notDefaultable="false"
-            priority="normal">
-         <description>
-            Integrated &apos;redhawk-codegen&apos; Front End C++ code generator for components.
-         </description>
-         <operatingSystem
-               default="true"
-               os="Linux">
-         </operatingSystem>
-         <processor
-               default="true"
-               proc_type="x86">
-         </processor>
-         <processor
-               default="true"
-               proc_type="x86_64">
-         </processor>
-         <componenttype
-               type="device">
-         </componenttype>
-      </codegen>
    </extension>
    <extension
          point="gov.redhawk.ide.codegen.codegenTemplate">
@@ -160,18 +128,18 @@
       </template>
       <template
             class="gov.redhawk.ide.codegen.jinja.cplusplus.template.DefaultCppTemplate"
-            codegenId="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusFrontEndGenerator"
+            codegenId="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusGenerator"
             hasSettings="false"
-            id="redhawk.codegen.jinja.cpp.device.frontend"
-            name="Front End Pull Port Data"
-            notDefaultable="false"
+            id="redhawk.codegen.jinja.cpp.component.frontend"
+            name="Front End Device Template"
+            notDefaultable="true"
             selectable="true"
             usesPortTemplates="false">
          <componenttype
                type="device">
          </componenttype>
          <description>
-            This template will queue all data inside each input port. It is the developers responsibility to pull the data from the port's queue for processing.
+            TBD
          </description>
       </template>
    </extension>
