@@ -4,8 +4,7 @@ Bundle-Name: Jinja Java Code Generator UI
 Bundle-SymbolicName: gov.redhawk.ide.codegen.jinja.java.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: REDHAWK
-Service-Component: OSGI-INF/redhawkImporWizardAssist.xml,
- OSGI-INF/redhawkImportWizardAssist.xml
+Service-Component: OSGI-INF/redhawkImportWizardAssist.xml
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: gov.redhawk.ide.codegen.ui;bundle-version="7.0.0",
  gov.redhawk.ide.codegen.jet.java.ui;bundle-version="8.1.0",
