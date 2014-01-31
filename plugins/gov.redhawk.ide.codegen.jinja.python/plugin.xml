@@ -70,6 +70,22 @@
             Standard Python service.
          </description>
       </template>
+      <template
+            class="gov.redhawk.ide.codegen.jinja.python.template.DefaultPythonTemplate"
+            codegenId="gov.redhawk.ide.codegen.jinja.python.PythonGenerator"
+            hasSettings="false"
+            id="redhawk.codegen.jinja.python.component.frontend"
+            name="Front End Device Template"
+            notDefaultable="true"
+            selectable="true"
+            usesPortTemplates="false">
+         <componenttype
+               type="device">
+         </componenttype>
+         <description>
+            A template to aid in development of a Front End Interfaces compliant device.
+         </description>
+      </template>
    </extension>
    <extension
          point="gov.redhawk.ide.debug.launchConfigurationFactories">

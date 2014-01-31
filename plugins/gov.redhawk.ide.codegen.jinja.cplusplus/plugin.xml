@@ -139,7 +139,7 @@
                type="device">
          </componenttype>
          <description>
-            TBD
+            A template to aid in development of a Front End Interfaces compliant device.
          </description>
       </template>
    </extension>

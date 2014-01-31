@@ -19,10 +19,17 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.List;
 
+import mil.jpeojtrs.sca.spd.Implementation;
+
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 
 public class FrontEndDeviceWizard extends NewScaDeviceCreationProjectWizard implements IImportWizard {
+
+	private FrontEndTunerTypeSelectionWizardPage frontEndTunerTypeSelectionPage;
+	private FrontEndTunerPropsPage frontEndTunerStatusPropsPage;
+	private ICodeGeneratorDescriptor codeGeneratorDescriptor;
+	private FrontEndWizardPage2 frontEndTunerPropsPage;
 
 	public FrontEndDeviceWizard() {
 		super();
@@ -39,6 +46,16 @@ public class FrontEndDeviceWizard extends NewScaDeviceCreationProjectWizard impl
 		addPage(getImplPage());
 
 		getImplList().add(new ImplementationAndSettings(getImplPage().getImplementation(), getImplPage().getImplSettings()));
+		
+		this.frontEndTunerTypeSelectionPage = new FrontEndTunerTypeSelectionWizardPage("");
+		addPage(this.frontEndTunerTypeSelectionPage);
+		
+		this.frontEndTunerPropsPage = new FrontEndWizardPage2("");
+		addPage(this.frontEndTunerPropsPage);
+		
+		this.frontEndTunerStatusPropsPage = new FrontEndTunerPropsPage("");
+		addPage(this.frontEndTunerStatusPropsPage);
+		
 
 		try {
 			final Field field = Wizard.class.getDeclaredField("pages");
@@ -56,5 +73,14 @@ public class FrontEndDeviceWizard extends NewScaDeviceCreationProjectWizard impl
 		} catch (final IllegalAccessException e) {
 			// PASS
 		}
+	}
+	
+	// Over riding this method since I do not want the dynamically added codegentemplate page.
+	@Override
+	public void generatorChanged(final Implementation impl, final ICodeGeneratorDescriptor codeGeneratorDescriptor, final String previousImplId) {
+		if (codeGeneratorDescriptor != null && !"".equals(codeGeneratorDescriptor.getName())) {
+			getImplPage().setPageComplete(true);
+		}
+			
 	}
 }

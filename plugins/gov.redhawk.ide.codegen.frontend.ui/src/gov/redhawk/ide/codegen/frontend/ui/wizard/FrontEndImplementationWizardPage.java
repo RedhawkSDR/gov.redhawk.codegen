@@ -11,10 +11,11 @@
 package gov.redhawk.ide.codegen.frontend.ui.wizard;
 
 import gov.redhawk.ide.codegen.internal.CodeGeneratorDescriptor;
-import gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusFrontEndGenerator;
+import gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusGenerator;
+import gov.redhawk.ide.codegen.jinja.java.JavaGenerator;
+import gov.redhawk.ide.codegen.jinja.python.PythonGenerator;
 import gov.redhawk.ide.spd.ui.wizard.ImplementationWizardPage;
 
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.widgets.Composite;
@@ -30,9 +31,11 @@ public class FrontEndImplementationWizardPage extends ImplementationWizardPage {
 			@SuppressWarnings("restriction")
 			@Override
 			public boolean select(Viewer viewer, Object parentElement, Object element) {
-				if (CplusplusFrontEndGenerator.ID.equalsIgnoreCase(((CodeGeneratorDescriptor) element).getId())) {
+				if (CplusplusGenerator.ID.equalsIgnoreCase(((CodeGeneratorDescriptor) element).getId()) ||
+						PythonGenerator.ID.equalsIgnoreCase(((CodeGeneratorDescriptor) element).getId()) || 
+							JavaGenerator.ID.equalsIgnoreCase(((CodeGeneratorDescriptor) element).getId())) {
 					return true;
-				}
+				} 
 				return false;
 			}
 		};

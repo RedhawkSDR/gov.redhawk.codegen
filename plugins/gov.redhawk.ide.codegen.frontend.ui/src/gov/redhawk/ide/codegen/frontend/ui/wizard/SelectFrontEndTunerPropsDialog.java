@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-public class SelectFRIPropertyDialog extends Dialog {
+public class SelectFrontEndTunerPropsDialog extends Dialog {
 
 	private static final int DIALOG_HORIZONTAL_HINT=800;
 	private static final int DIALOG_VERTICAL_HINT=400;
@@ -37,7 +37,7 @@ public class SelectFRIPropertyDialog extends Dialog {
 	private final WritableSet output = new WritableSet();
 	private DataBindingContext context = new DataBindingContext();
 	
-	protected SelectFRIPropertyDialog(Shell parentShell) {
+	protected SelectFrontEndTunerPropsDialog(Shell parentShell) {
 		super(parentShell);
 	}
 	

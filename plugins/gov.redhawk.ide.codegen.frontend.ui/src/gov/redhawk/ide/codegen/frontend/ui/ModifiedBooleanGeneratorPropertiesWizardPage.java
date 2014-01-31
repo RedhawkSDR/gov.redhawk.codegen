@@ -1,8 +1,5 @@
 package gov.redhawk.ide.codegen.frontend.ui;
 
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.ecore.util.EContentAdapter;
-
 import gov.redhawk.ide.codegen.CodegenPackage;
 import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
 import gov.redhawk.ide.codegen.ImplementationSettings;
@@ -12,6 +9,9 @@ import gov.redhawk.ide.codegen.ui.RedhawkCodegenUiActivator;
 import gov.redhawk.ide.spd.ui.wizard.NewScaResourceWizard;
 import mil.jpeojtrs.sca.spd.Implementation;
 import mil.jpeojtrs.sca.spd.SoftPkg;
+
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.util.EContentAdapter;
 
 public class ModifiedBooleanGeneratorPropertiesWizardPage extends BooleanGeneratorPropertiesWizardPage {
 
@@ -52,12 +52,25 @@ public class ModifiedBooleanGeneratorPropertiesWizardPage extends BooleanGenerat
 				case CodegenPackage.IMPLEMENTATION_SETTINGS__TEMPLATE:
 					if (msg.getNotifier() instanceof ImplementationSettings) {
 						ImplementationSettings newSettings = (ImplementationSettings) msg.getNotifier();
-						if (ModifiedBooleanGeneratorPropertiesWizardPage.this.template == null || !newSettings.getTemplate().equals(ModifiedBooleanGeneratorPropertiesWizardPage.this.template)) {
-							removeCustomPages();
-							ModifiedBooleanGeneratorPropertiesWizardPage.this.template = newSettings.getTemplate();
-							addCustomPages();
+						
+						// If our current template is null and the template coming in is not then we just need to add pages.
+						if (ModifiedBooleanGeneratorPropertiesWizardPage.this.template == null) {
+							if (newSettings.getTemplate() != null) {
+								ModifiedBooleanGeneratorPropertiesWizardPage.this.template = newSettings.getTemplate();
+								addCustomPages();
+							}
+						} else {
+							// If our current template is not null and the template coming in is null then we need to remove.
+							if (newSettings.getTemplate() == null) {
+								removeCustomPages();
+								ModifiedBooleanGeneratorPropertiesWizardPage.this.template = null;
+							} else if(!ModifiedBooleanGeneratorPropertiesWizardPage.this.template.equals(newSettings.getTemplate())) {
+								// If our current template is not null and the template coming in is not null and they are not the same we need to remove and replace.
+								removeCustomPages();
+								ModifiedBooleanGeneratorPropertiesWizardPage.this.template = newSettings.getTemplate();
+								addCustomPages();
+							}
 						}
-							
 					}
 				break;
 				}

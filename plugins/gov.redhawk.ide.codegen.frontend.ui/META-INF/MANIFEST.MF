@@ -26,6 +26,10 @@ Require-Bundle: org.eclipse.ui,
  gov.redhawk.ide.ui,
  org.eclipse.ui.ide,
  gov.redhawk.ide.codegen.jinja.cplusplus,
- idl.frontend
+ idl.frontend,
+ gov.redhawk.ide.codegen.frontend,
+ org.eclipse.core.expressions;bundle-version="3.4.400",
+ gov.redhawk.ide.codegen.jinja.java;bundle-version="1.0.0",
+ gov.redhawk.ide.codegen.jinja.python;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy

@@ -19,6 +19,7 @@ import gov.redhawk.ide.codegen.ui.ICodegenWizardPage;
 import gov.redhawk.ide.dcd.ui.wizard.ScaDeviceProjectPropertiesWizardPage;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -27,15 +28,11 @@ import mil.jpeojtrs.sca.spd.Implementation;
 import mil.jpeojtrs.sca.spd.SoftPkg;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.observable.ChangeEvent;
 import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.databinding.observable.set.WritableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.databinding.swt.ISWTObservableValue;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -54,14 +51,11 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.PlatformUI;
 
-public class FrontEndWizardPage extends WizardPage implements ICodegenWizardPage {
+public class FrontEndTunerPropsPage extends WizardPage implements ICodegenWizardPage {
 
 	private static final int NUM_COLUMNS = 1;
-	private Button digitalTunerPortButton;
-	private Button analogTunerPortButton;
 	private boolean digitalTunerPortSelected = true;
 	private Button addTunerStatusPropButton;
 	private TableViewer theTableViewer;
@@ -71,19 +65,27 @@ public class FrontEndWizardPage extends WizardPage implements ICodegenWizardPage
 	private ImplementationSettings implSettings;
 	private FrontEndProjectValidator validator;
 
-	public FrontEndWizardPage(String pageName) {
+	public FrontEndTunerPropsPage(String pageName) {
+		super(pageName);
+	}
+	
+	public FrontEndTunerPropsPage(String pageName, Collection<FrontEndProp> initialSet) {
 		super(pageName);
 	}
 
-	public FrontEndWizardPage(String pageName, String title, ImageDescriptor titleImage) {
+	public FrontEndTunerPropsPage(String pageName, String title, ImageDescriptor titleImage) {
 		super(pageName, title, titleImage);
 	}
 
 	@Override
 	public void createControl(Composite parent) {
-
+		this.setTitle("Front End Interfaces Tuner Status Customization");
+		this.setDescription("Select the tuner port type and the set of tuner status properties for the tuner status struct.  Note that required properties may not be removed.");
+		
 		final Composite client = new Composite(parent, SWT.NULL);
-		selectedProps.addAll(FrontEndDeviceUIUtils.INSTANCE.getRequiredFrontEndProps());
+		if (this.selectedProps.isEmpty()) {
+			selectedProps.addAll(FrontEndDeviceUIUtils.INSTANCE.getRequiredFrontEndProps());
+		}
 
 		// Creates the basic layout of the UI elements
 		createUIElements(client);
@@ -94,11 +96,6 @@ public class FrontEndWizardPage extends WizardPage implements ICodegenWizardPage
 
 	private void createBindings() {
 		DataBindingContext ctx = new DataBindingContext();
-		ISWTObservableValue target = WidgetProperties.selection().observe(digitalTunerPortButton);
-		IObservableValue model = PojoProperties.value("digitalTunerPortSelected").observe(this);
-
-		ctx.bindValue(target, model);
-
 		// This is really just to get the Finish button to behave
 		WizardPageSupport.create(this, ctx);
 
@@ -148,12 +145,12 @@ public class FrontEndWizardPage extends WizardPage implements ICodegenWizardPage
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				SelectFRIPropertyDialog dialog = new SelectFRIPropertyDialog(theTable.getShell());
+				SelectFrontEndTunerPropsDialog dialog = new SelectFrontEndTunerPropsDialog(theTable.getShell());
 				Set<FrontEndProp> inputSet = new HashSet<FrontEndProp>();
 				inputSet.addAll(FrontEndDeviceUIUtils.INSTANCE.getOptionalFrontEndProps());
 
 				// Don't display any that we have already added.
-				inputSet.removeAll(FrontEndWizardPage.this.selectedProps);
+				inputSet.removeAll(FrontEndTunerPropsPage.this.selectedProps);
 
 				dialog.setInput(new ArrayList<FrontEndProp>(inputSet));
 				int dialogStatus = dialog.open();
@@ -198,26 +195,9 @@ public class FrontEndWizardPage extends WizardPage implements ICodegenWizardPage
 	}
 
 	private void createUIElements(Composite client) {
-		client.setLayout(new GridLayout(FrontEndWizardPage.NUM_COLUMNS, false));
-		createTunerPortSection(client);
+		client.setLayout(new GridLayout(FrontEndTunerPropsPage.NUM_COLUMNS, false));
 		createTunerStatusPropSection(client).setInput(this.selectedProps);
 		createBindings();
-	}
-
-	private void createTunerPortSection(Composite client) {
-		Group tunerPortTypeSelectionGroup = new Group(client, SWT.None);
-		tunerPortTypeSelectionGroup.setText("Tuner Port Type");
-		tunerPortTypeSelectionGroup.setLayout(new GridLayout(1, false));
-		tunerPortTypeSelectionGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-
-		this.digitalTunerPortButton = new Button(tunerPortTypeSelectionGroup, SWT.RADIO);
-		this.digitalTunerPortButton.setText("Digital Tuner Port (default)");
-		this.digitalTunerPortButton.setLayoutData(GridDataFactory.fillDefaults().create());
-		this.digitalTunerPortButton.setSelection(true);
-
-		this.analogTunerPortButton = new Button(tunerPortTypeSelectionGroup, SWT.RADIO);
-		this.analogTunerPortButton.setText("Analog Tuner Port");
-		this.analogTunerPortButton.setLayoutData(GridDataFactory.fillDefaults().create());
 	}
 
 	private TableViewer createTunerStatusPropSection(Composite parent) {
@@ -264,7 +244,7 @@ public class FrontEndWizardPage extends WizardPage implements ICodegenWizardPage
 	public boolean isPageComplete() {
 		// Page is complete as long as the validator is okay.
 		if (this.validator == null) {
-			return false;
+			return true;
 		} else if (((IStatus) this.validator.getValidationStatus().getValue()).isOK()) {
 			return super.isPageComplete();
 		} else {
@@ -278,6 +258,7 @@ public class FrontEndWizardPage extends WizardPage implements ICodegenWizardPage
 
 	@Override
 	public void setCanFinish(boolean canFinish) {
+		
 	}
 
 	public Set<FrontEndProp> getSelectedProperties() {

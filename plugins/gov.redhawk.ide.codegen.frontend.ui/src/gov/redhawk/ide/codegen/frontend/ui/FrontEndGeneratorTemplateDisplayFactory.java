@@ -13,7 +13,10 @@ package gov.redhawk.ide.codegen.frontend.ui;
 import gov.redhawk.eclipsecorba.idl.IdlInterfaceDcl;
 import gov.redhawk.eclipsecorba.library.IdlLibrary;
 import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndProp;
-import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndWizardPage;
+import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndTunerPropsPage;
+import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndTunerTypeSelectionWizardPage;
+import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndWizardPage2;
+import gov.redhawk.ide.codegen.frontend.util.FrontEndProjectNature;
 import gov.redhawk.ide.codegen.ui.BooleanGeneratorPropertiesComposite;
 import gov.redhawk.ide.codegen.ui.ICodegenComposite;
 import gov.redhawk.ide.codegen.ui.ICodegenTemplateDisplayFactory;
@@ -56,7 +59,9 @@ import FRONTEND.DigitalTunerHelper;
 
 public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplateDisplayFactory {
 
-	private FrontEndWizardPage frontEndWizardPage;
+	private FrontEndTunerPropsPage frontEndTunerPropsWizardPage;
+	private FrontEndTunerTypeSelectionWizardPage frontEndTunerTypeSelectionPage ;
+	private FrontEndWizardPage2 frontEndWizardPage2;
 
 	@Override
 	public ICodegenWizardPage createPage() {
@@ -80,9 +85,13 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 	@Override
 	public ICodegenWizardPage[] createPages() {
 		List<ICodegenWizardPage> pages = new ArrayList<ICodegenWizardPage>();
-		this.frontEndWizardPage = new FrontEndWizardPage("Port and Property Selection", "Port and Property Selection", null);
-		this.frontEndWizardPage.setDescription("Select the tuner port type and the set of tuner status properties for the tuner status struct.  Note that required properties may not be removed.");
-		pages.add(this.frontEndWizardPage);
+		this.frontEndTunerTypeSelectionPage = new FrontEndTunerTypeSelectionWizardPage("Front End Device Type Selection");
+		this.frontEndWizardPage2 = new FrontEndWizardPage2("Tuner Properties Page");
+		this.frontEndTunerPropsWizardPage = new FrontEndTunerPropsPage("Port and Property Selection", "Port and Property Selection", null);
+		
+		pages.add(this.frontEndTunerTypeSelectionPage);
+		pages.add(this.frontEndWizardPage2);
+		pages.add(this.frontEndTunerPropsWizardPage);
 		
 		return pages.toArray(new ICodegenWizardPage[pages.size()]);
 	}
@@ -94,7 +103,7 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		final SoftPkg eSpd = (SoftPkg) resourceSet.getEObject(spdUri, true);
 		
 		// Add the properties from the Wizard page.
-		Set<FrontEndProp> properties = this.frontEndWizardPage.getSelectedProperties();
+		Set<FrontEndProp> properties = this.frontEndTunerPropsWizardPage.getSelectedProperties();
 		
 		StructSequence structSeq = PrfFactory.eINSTANCE.createStructSequence();
 		structSeq.setId("frontend_tuner_status");
@@ -123,7 +132,7 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		
 		Ports ports = createPorts(eSpd);
 		Provides providesPort = ScdFactory.eINSTANCE.createProvides();
-		if (this.frontEndWizardPage.isDigitalTunerPortSelected()) {
+		if (this.frontEndTunerPropsWizardPage.isDigitalTunerPortSelected()) {
 			//TODO: This needs to be moved into a helper class similar to dataDoubleHelper
 			providesPort.setName("DigitalTuner");
 			providesPort.setRepID(DigitalTunerHelper.id());
@@ -136,13 +145,16 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		
 		SoftwareComponent scd = eSpd.getDescriptor().getComponent();
 		Properties props = eSpd.getPropertyFile().getProperties();
+		
+		// Finally add the front end nature to the project
+		FrontEndProjectNature.addNature(project, null, newChild);
 		 
 		try {
 			props.eResource().save(null);
 			scd.eResource().save(null);
 			eSpd.eResource().save(null);
 		} catch (IOException e) {
-			throw new CoreException(new Status(Status.ERROR, FrontEndDeviceWizardPlugin.PLUGIN_ID, "Failed to write Octave Settings to SCA resources.", e));
+			throw new CoreException(new Status(Status.ERROR, FrontEndDeviceWizardPlugin.PLUGIN_ID, "Failed to write Settings to SCA resources.", e));
 		}
 		
 	}

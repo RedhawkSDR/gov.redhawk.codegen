@@ -11,6 +11,12 @@
          <codegenId
                targetCodegenId="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusGenerator">
          </codegenId>
+         <codegenId
+               targetCodegenId="gov.redhawk.ide.codegen.jinja.java.JavaGenerator">
+         </codegenId>
+         <codegenId
+               targetCodegenId="gov.redhawk.ide.codegen.jinja.python.PythonGenerator">
+         </codegenId>
       </codegenPage>
    </extension>
    <extension
@@ -39,7 +45,38 @@
          <codegenTemplateId
                targetCodegenTemplateId="redhawk.codegen.jinja.cpp.component.frontend">
          </codegenTemplateId>
+         <codegenTemplateId
+               targetCodegenTemplateId="redhawk.codegen.jinja.java.component.frontend">
+         </codegenTemplateId>
+         <codegenTemplateId
+               targetCodegenTemplateId="redhawk.codegen.jinja.python.component.frontend">
+         </codegenTemplateId>
       </codegenTemplatePage>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:gov.redhawk.ide.spd.internal.ui.editor.overview.toolbar?before=additions">
+         <command
+               commandId="gov.redhawk.ide.codegen.frontend.ui.command.settings"
+               icon="icons/gear_10x.gif"
+               label="Edit FrontEnd Properties"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            categoryId="gov.redhawk.ide.ui.category"
+            defaultHandler="gov.redhawk.ide.codegen.frontend.ui.EditFrontEndInterfacesSettingsHandler"
+            id="gov.redhawk.ide.codegen.frontend.ui.command.settings"
+            name="Edit FrontEnd Properties">
+      </command>
    </extension>
    
 </plugin>

@@ -1,5 +1,6 @@
 package gov.redhawk.ide.codegen.frontend.ui;
 
+import gov.redhawk.ide.codegen.ui.BooleanGeneratorPropertiesComposite;
 import gov.redhawk.ide.codegen.ui.ICodegenComposite;
 import gov.redhawk.ide.codegen.ui.ICodegenDisplayFactory2;
 import gov.redhawk.ide.codegen.ui.ICodegenWizardPage;
@@ -29,7 +30,7 @@ public class FrontEndGeneratorDisplayFactory implements ICodegenDisplayFactory2 
 
 	@Override
 	public ICodegenComposite createComposite(Composite parent, int style, FormToolkit toolkit) {
-		return null;
+		return new BooleanGeneratorPropertiesComposite(parent, style, toolkit);
 	}
 
 	@Override

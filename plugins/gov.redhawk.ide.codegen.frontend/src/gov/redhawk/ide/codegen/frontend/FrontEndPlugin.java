@@ -1,26 +1,26 @@
-package gov.redhawk.ide.codegen.frontend.ui;
+package gov.redhawk.ide.codegen.frontend;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
  * The activator class controls the plug-in life cycle
  */
-public class FrontEndDeviceWizardPlugin extends AbstractUIPlugin {
+public class FrontEndPlugin extends Plugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "gov.redhawk.ide.codegen.frontend.ui"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = "gov.redhawk.ide.codegen.frontend"; //$NON-NLS-1$
 
 	// The shared instance
-	private static FrontEndDeviceWizardPlugin plugin;
+	private static FrontEndPlugin plugin;
 	
 	/**
 	 * The constructor
 	 */
-	public FrontEndDeviceWizardPlugin() {
+	public FrontEndPlugin() {
 	}
 
 	/*
@@ -46,12 +46,12 @@ public class FrontEndDeviceWizardPlugin extends AbstractUIPlugin {
 	 *
 	 * @return the shared instance
 	 */
-	public static FrontEndDeviceWizardPlugin getDefault() {
+	public static FrontEndPlugin getDefault() {
 		return plugin;
 	}
-	
+
 	public static void logError(String msg, CoreException e) {
-		FrontEndDeviceWizardPlugin.getDefault().getLog().log(new Status(IStatus.ERROR, FrontEndDeviceWizardPlugin.PLUGIN_ID, msg, e));
+		FrontEndPlugin.getDefault().getLog().log(new Status(IStatus.ERROR, FrontEndPlugin.PLUGIN_ID, msg, e));
 	}
 
 }
