@@ -23,7 +23,9 @@ import gov.redhawk.ide.codegen.RedhawkCodegenActivator;
 import gov.redhawk.ide.codegen.jet.java.JavaGeneratorProperties;
 import gov.redhawk.ide.codegen.jet.java.JavaPackageNameValidator;
 import gov.redhawk.ide.codegen.ui.ICodegenWizardPage;
+import gov.redhawk.ide.codegen.ui.RedhawkCodegenUiActivator;
 import gov.redhawk.ide.codegen.util.CodegenFileHelper;
+import gov.redhawk.ide.spd.ui.wizard.NewScaResourceWizard;
 import gov.redhawk.ui.util.EMFEmptyStringToNullUpdateValueStrategy;
 
 import java.util.ArrayList;
@@ -41,10 +43,12 @@ import org.eclipse.core.databinding.observable.set.ISetChangeListener;
 import org.eclipse.core.databinding.observable.set.SetChangeEvent;
 import org.eclipse.core.databinding.observable.set.WritableSet;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.databinding.EMFUpdateValueStrategy;
+import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
@@ -125,6 +129,44 @@ public class JavaJetGeneratorPropertiesWizardPage extends WizardPage implements 
 	private Binding propBinding;
 	private String componentType;
 	private Implementation impl;
+	// TODO: Marry up with the selectedTemplate
+	private String currentTemplate;
+	
+	private EContentAdapter templateListener = new EContentAdapter() {
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void notifyChanged(final Notification msg) {
+			super.notifyChanged(msg);
+			switch(msg.getFeatureID(ImplementationSettings.class)) {
+			case CodegenPackage.IMPLEMENTATION_SETTINGS__TEMPLATE:
+				if (msg.getNotifier() instanceof ImplementationSettings) {
+					ImplementationSettings newSettings = (ImplementationSettings) msg.getNotifier();
+					
+					// If our current template is null and the template coming in is not then we just need to add pages.
+					if (JavaJetGeneratorPropertiesWizardPage.this.currentTemplate == null) {
+						if (newSettings.getTemplate() != null) {
+							JavaJetGeneratorPropertiesWizardPage.this.currentTemplate = newSettings.getTemplate();
+							addCustomPages();
+						}
+					} else {
+						// If our current template is not null and the template coming in is null then we need to remove.
+						if (newSettings.getTemplate() == null) {
+							removeCustomPages();
+							JavaJetGeneratorPropertiesWizardPage.this.currentTemplate = null;
+						} else if (!JavaJetGeneratorPropertiesWizardPage.this.currentTemplate.equals(newSettings.getTemplate())) {
+							// If our current template is not null and the template coming in is not null and they are not the same we need to remove and replace.
+							removeCustomPages();
+							JavaJetGeneratorPropertiesWizardPage.this.currentTemplate = newSettings.getTemplate();
+							addCustomPages();
+						}
+					}
+				}
+			break;
+			}
+		}
+	};
 
 	/**
 	 * The Constructor.
@@ -241,6 +283,11 @@ public class JavaJetGeneratorPropertiesWizardPage extends WizardPage implements 
 		if (this.created) {
 			bind();
 		}
+		
+		if (!this.implSettings.eAdapters().contains(templateListener)) {
+			this.implSettings.eAdapters().add(templateListener);
+		}
+		
 		this.configured = true;
 	}
 
@@ -773,5 +820,21 @@ public class JavaJetGeneratorPropertiesWizardPage extends WizardPage implements 
 	@Override
 	public void setCanFinish(final boolean canFinish) {
 		this.canFinish = canFinish;
+	}
+	
+
+	private void addCustomPages() {
+		ICodegenWizardPage[] codeGenTemplatePages = RedhawkCodegenUiActivator.getCodeGeneratorsTemplateRegistry().findPageByGeneratorId(this.currentTemplate);
+		((NewScaResourceWizard) this.getWizard()).addTemplatePages(this, codeGenTemplatePages);
+	}
+	
+	private void removeCustomPages() {
+		if (this.currentTemplate == null || "".equals(this.currentTemplate)) {
+			return;
+		}
+		
+		ICodegenWizardPage[] codeGenTemplatePages = RedhawkCodegenUiActivator.getCodeGeneratorsTemplateRegistry().findPageByGeneratorId(this.currentTemplate);
+		((NewScaResourceWizard) this.getWizard()).removeTemplatePages(this, codeGenTemplatePages);
+		
 	}
 }

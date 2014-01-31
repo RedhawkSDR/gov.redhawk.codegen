@@ -11,12 +11,6 @@
          <codegenId
                targetCodegenId="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusGenerator">
          </codegenId>
-         <codegenId
-               targetCodegenId="gov.redhawk.ide.codegen.jinja.java.JavaGenerator">
-         </codegenId>
-         <codegenId
-               targetCodegenId="gov.redhawk.ide.codegen.jinja.python.PythonGenerator">
-         </codegenId>
       </codegenPage>
    </extension>
    <extension
@@ -77,6 +71,15 @@
             id="gov.redhawk.ide.codegen.frontend.ui.command.settings"
             name="Edit FrontEnd Properties">
       </command>
+   </extension>
+   <extension
+         id="gov.redhawk.ide.codgen.natures.frontend"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="gov.redhawk.ide.codegen.frontend.ui.FrontEndProjectNature">
+         </run>
+      </runtime>
    </extension>
    
 </plugin>

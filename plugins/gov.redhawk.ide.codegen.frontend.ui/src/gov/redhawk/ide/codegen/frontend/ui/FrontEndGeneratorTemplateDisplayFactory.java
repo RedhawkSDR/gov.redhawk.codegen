@@ -16,7 +16,6 @@ import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndProp;
 import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndTunerPropsPage;
 import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndTunerTypeSelectionWizardPage;
 import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndWizardPage2;
-import gov.redhawk.ide.codegen.frontend.util.FrontEndProjectNature;
 import gov.redhawk.ide.codegen.ui.BooleanGeneratorPropertiesComposite;
 import gov.redhawk.ide.codegen.ui.ICodegenComposite;
 import gov.redhawk.ide.codegen.ui.ICodegenTemplateDisplayFactory;

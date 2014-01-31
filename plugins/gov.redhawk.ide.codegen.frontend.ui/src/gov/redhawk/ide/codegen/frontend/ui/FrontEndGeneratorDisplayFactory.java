@@ -1,6 +1,8 @@
 package gov.redhawk.ide.codegen.frontend.ui;
 
+import gov.redhawk.ide.codegen.jinja.cplusplus.ui.wizard.BooleanGeneratorPropertiesWizardPage2;
 import gov.redhawk.ide.codegen.ui.BooleanGeneratorPropertiesComposite;
+import gov.redhawk.ide.codegen.ui.BooleanGeneratorPropertiesWizardPage;
 import gov.redhawk.ide.codegen.ui.ICodegenComposite;
 import gov.redhawk.ide.codegen.ui.ICodegenDisplayFactory2;
 import gov.redhawk.ide.codegen.ui.ICodegenWizardPage;
@@ -17,7 +19,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 public class FrontEndGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 
-	private ModifiedBooleanGeneratorPropertiesWizardPage propertiesPage;
+	private BooleanGeneratorPropertiesWizardPage2 propertiesPage;
 
 	/**
 	 * 
@@ -40,7 +42,7 @@ public class FrontEndGeneratorDisplayFactory implements ICodegenDisplayFactory2 
 
 	@Override
 	public ICodegenWizardPage[] createPages() {
-		this.propertiesPage = new ModifiedBooleanGeneratorPropertiesWizardPage();
+		this.propertiesPage = new BooleanGeneratorPropertiesWizardPage2();
 		List<ICodegenWizardPage> pages = new ArrayList<ICodegenWizardPage>();
 		pages.add(this.propertiesPage);
 		
