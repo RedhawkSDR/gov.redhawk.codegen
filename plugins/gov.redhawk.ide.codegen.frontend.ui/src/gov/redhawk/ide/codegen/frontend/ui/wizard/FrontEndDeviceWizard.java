@@ -11,6 +11,8 @@
 package gov.redhawk.ide.codegen.frontend.ui.wizard;
 
 import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
+import gov.redhawk.ide.codegen.frontend.FeiDevice;
+import gov.redhawk.ide.codegen.frontend.FrontendFactory;
 import gov.redhawk.ide.codegen.util.ImplementationAndSettings;
 import gov.redhawk.ide.dcd.ui.wizard.NewScaDeviceCreationProjectWizard;
 import gov.redhawk.ide.ui.wizard.IImportWizard;
@@ -29,10 +31,12 @@ public class FrontEndDeviceWizard extends NewScaDeviceCreationProjectWizard impl
 	private FrontEndTunerTypeSelectionWizardPage frontEndTunerTypeSelectionPage;
 	private FrontEndTunerPropsPage frontEndTunerStatusPropsPage;
 	private ICodeGeneratorDescriptor codeGeneratorDescriptor;
-	private FrontEndWizardPage2 frontEndTunerPropsPage;
-
+	private FrontEndTunerOptionsWizardPage frontEndTunerPropsPage;
+	private FeiDevice feiDevice;
+	
 	public FrontEndDeviceWizard() {
 		super();
+		 this.feiDevice = FrontendFactory.eINSTANCE.createFeiDevice();
 	}
 	
 	@Override
@@ -47,13 +51,13 @@ public class FrontEndDeviceWizard extends NewScaDeviceCreationProjectWizard impl
 
 		getImplList().add(new ImplementationAndSettings(getImplPage().getImplementation(), getImplPage().getImplSettings()));
 		
-		this.frontEndTunerTypeSelectionPage = new FrontEndTunerTypeSelectionWizardPage("");
+		this.frontEndTunerTypeSelectionPage = new FrontEndTunerTypeSelectionWizardPage(feiDevice);
 		addPage(this.frontEndTunerTypeSelectionPage);
 		
-		this.frontEndTunerPropsPage = new FrontEndWizardPage2("");
+		this.frontEndTunerPropsPage = new FrontEndTunerOptionsWizardPage(feiDevice);
 		addPage(this.frontEndTunerPropsPage);
 		
-		this.frontEndTunerStatusPropsPage = new FrontEndTunerPropsPage("");
+		this.frontEndTunerStatusPropsPage = new FrontEndTunerPropsPage(feiDevice);
 		addPage(this.frontEndTunerStatusPropsPage);
 		
 

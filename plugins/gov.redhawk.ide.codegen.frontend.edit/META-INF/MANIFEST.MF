@@ -7,7 +7,7 @@ Bundle-ClassPath: .
 Bundle-Activator: gov.redhawk.ide.codegen.frontend.provider.FrontendEditPlugin$Implementation
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: gov.redhawk.ide.codegen.frontend.provider
 Require-Bundle: org.eclipse.core.runtime,
  gov.redhawk.ide.codegen.frontend;visibility:=reexport,

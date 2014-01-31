@@ -12,10 +12,12 @@ package gov.redhawk.ide.codegen.frontend.ui;
 
 import gov.redhawk.eclipsecorba.idl.IdlInterfaceDcl;
 import gov.redhawk.eclipsecorba.library.IdlLibrary;
+import gov.redhawk.ide.codegen.frontend.FeiDevice;
+import gov.redhawk.ide.codegen.frontend.FrontendFactory;
 import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndProp;
 import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndTunerPropsPage;
 import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndTunerTypeSelectionWizardPage;
-import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndWizardPage2;
+import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndTunerOptionsWizardPage;
 import gov.redhawk.ide.codegen.ui.BooleanGeneratorPropertiesComposite;
 import gov.redhawk.ide.codegen.ui.ICodegenComposite;
 import gov.redhawk.ide.codegen.ui.ICodegenTemplateDisplayFactory;
@@ -60,7 +62,7 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 
 	private FrontEndTunerPropsPage frontEndTunerPropsWizardPage;
 	private FrontEndTunerTypeSelectionWizardPage frontEndTunerTypeSelectionPage ;
-	private FrontEndWizardPage2 frontEndWizardPage2;
+	private FrontEndTunerOptionsWizardPage frontEndWizardPage2;
 
 	@Override
 	public ICodegenWizardPage createPage() {
@@ -84,9 +86,12 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 	@Override
 	public ICodegenWizardPage[] createPages() {
 		List<ICodegenWizardPage> pages = new ArrayList<ICodegenWizardPage>();
-		this.frontEndTunerTypeSelectionPage = new FrontEndTunerTypeSelectionWizardPage("Front End Device Type Selection");
-		this.frontEndWizardPage2 = new FrontEndWizardPage2("Tuner Properties Page");
-		this.frontEndTunerPropsWizardPage = new FrontEndTunerPropsPage("Port and Property Selection", "Port and Property Selection", null);
+		// Factory instance is created once and kept in a map so the feiDevice cannot be a class variable.  
+		// we need some way to access the feiDevice after Wizard closes by getting it out of one of the pages.
+		FeiDevice feiDevice = FrontendFactory.eINSTANCE.createFeiDevice();
+		this.frontEndTunerTypeSelectionPage = new FrontEndTunerTypeSelectionWizardPage(feiDevice);
+		this.frontEndWizardPage2 = new FrontEndTunerOptionsWizardPage(feiDevice);
+		this.frontEndTunerPropsWizardPage = new FrontEndTunerPropsPage(feiDevice);
 		
 		pages.add(this.frontEndTunerTypeSelectionPage);
 		pages.add(this.frontEndWizardPage2);

@@ -2,12 +2,12 @@ package gov.redhawk.ide.codegen.frontend.ui.wizard;
 
 import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
 import gov.redhawk.ide.codegen.ImplementationSettings;
+import gov.redhawk.ide.codegen.frontend.FeiDevice;
 import gov.redhawk.ide.codegen.ui.ICodegenWizardPage;
 import mil.jpeojtrs.sca.spd.Implementation;
 import mil.jpeojtrs.sca.spd.SoftPkg;
 
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -21,16 +21,14 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 
-public class FrontEndWizardPage2 extends WizardPage implements ICodegenWizardPage {
+public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodegenWizardPage {
 
 	private ImplementationSettings implSettings;
+	private FeiDevice feiDevice;
 
-	public FrontEndWizardPage2(String pageName) {
-		super(pageName);
-	}
-
-	public FrontEndWizardPage2(String pageName, String title, ImageDescriptor titleImage) {
-		super(pageName, title, titleImage);
+	public FrontEndTunerOptionsWizardPage(FeiDevice feiDevice) {
+		super("");
+		this.feiDevice = feiDevice;
 	}
 
 	@Override

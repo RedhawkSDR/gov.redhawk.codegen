@@ -2,6 +2,7 @@ package gov.redhawk.ide.codegen.frontend.ui.wizard;
 
 import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
 import gov.redhawk.ide.codegen.ImplementationSettings;
+import gov.redhawk.ide.codegen.frontend.FeiDevice;
 import gov.redhawk.ide.codegen.ui.ICodegenWizardPage;
 import mil.jpeojtrs.sca.spd.Implementation;
 import mil.jpeojtrs.sca.spd.SoftPkg;
@@ -20,6 +21,7 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 	private Implementation impl;
 	private ICodeGeneratorDescriptor codeGenDescriptor;
 	private ImplementationSettings implSettings;
+	private FeiDevice feiDevice;
 	private boolean apiCanFinish = true;
 	private boolean apiCanFlip = true;
 	private Button deviceTypeTunerButton;
@@ -30,8 +32,9 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 	private Button transmitOnlyTunerButton;
 	private Button bothRxTxButton;
 
-	public FrontEndTunerTypeSelectionWizardPage(String pageName) {
-		super(pageName);
+	public FrontEndTunerTypeSelectionWizardPage(FeiDevice feiDevice) {
+		super("");
+		this.feiDevice = feiDevice;
 	}
 
 	@Override
@@ -41,6 +44,8 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 		this.setControl(client);
 	}
 
+	
+	
 	private void createUIElements(Composite client) {
 		client.setLayout(new GridLayout(1, false));
 		

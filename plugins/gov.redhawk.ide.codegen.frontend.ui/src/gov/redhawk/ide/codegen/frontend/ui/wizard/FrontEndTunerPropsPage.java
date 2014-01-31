@@ -12,6 +12,7 @@ package gov.redhawk.ide.codegen.frontend.ui.wizard;
 
 import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
 import gov.redhawk.ide.codegen.ImplementationSettings;
+import gov.redhawk.ide.codegen.frontend.FeiDevice;
 import gov.redhawk.ide.codegen.frontend.ui.FrontEndDeviceUIUtils;
 import gov.redhawk.ide.codegen.frontend.ui.FrontEndDeviceWizardPlugin;
 import gov.redhawk.ide.codegen.frontend.ui.FrontEndProjectValidator;
@@ -19,7 +20,6 @@ import gov.redhawk.ide.codegen.ui.ICodegenWizardPage;
 import gov.redhawk.ide.dcd.ui.wizard.ScaDeviceProjectPropertiesWizardPage;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -36,7 +36,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -63,20 +62,14 @@ public class FrontEndTunerPropsPage extends WizardPage implements ICodegenWizard
 	private Button removeTunerStatusPropButton;
 	private WritableSet selectedProps = new WritableSet();
 	private ImplementationSettings implSettings;
+	private FeiDevice feiDevice;
 	private FrontEndProjectValidator validator;
 
-	public FrontEndTunerPropsPage(String pageName) {
-		super(pageName);
+	public FrontEndTunerPropsPage(FeiDevice feiDevice) {
+		super("");
+		this.feiDevice = feiDevice;
 	}
 	
-	public FrontEndTunerPropsPage(String pageName, Collection<FrontEndProp> initialSet) {
-		super(pageName);
-	}
-
-	public FrontEndTunerPropsPage(String pageName, String title, ImageDescriptor titleImage) {
-		super(pageName, title, titleImage);
-	}
-
 	@Override
 	public void createControl(Composite parent) {
 		this.setTitle("Front End Interfaces Tuner Status Customization");
