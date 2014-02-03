@@ -144,7 +144,7 @@
       </template>
       <template
             class="gov.redhawk.ide.codegen.jinja.cplusplus.template.DefaultCppTemplate"
-            codegenId="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusGenerator"
+            codegenId="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusOctaveGenerator"
             hasSettings="false"
             id="redhawk.codegen.jinja.cpp.component.octave"
             name="Octave Pull Port Data"
