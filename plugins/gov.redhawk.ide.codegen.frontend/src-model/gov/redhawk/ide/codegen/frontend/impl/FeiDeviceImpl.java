@@ -108,10 +108,9 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @see #isRxTuner()
-   * @generated
    * @ordered
    */
-  protected static final boolean RX_TUNER_EDEFAULT = false;
+  protected static final boolean RX_TUNER_EDEFAULT = true;
 
   /**
    * The cached value of the '{@link #isRxTuner() <em>Rx Tuner</em>}' attribute.
@@ -208,10 +207,9 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @see #isHasDigitalOutput()
-   * @generated
    * @ordered
    */
-  protected static final boolean HAS_DIGITAL_OUTPUT_EDEFAULT = false;
+  protected static final boolean HAS_DIGITAL_OUTPUT_EDEFAULT = true;
 
   /**
    * The cached value of the '{@link #isHasDigitalOutput() <em>Has Digital Output</em>}' attribute.

@@ -77,7 +77,7 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 
 		// Binding for the antenna only option
 		this.ctx.bindValue(SWTObservables.observeSelection(this.deviceTypeAntennaButton),
-			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__IS_ANTENNA), new UpdateValueStrategy(), new UpdateValueStrategy());
+			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__ANTENNA), new UpdateValueStrategy(), new UpdateValueStrategy());
 
 		// Binding for GPS ingest & output
 		this.ctx.bindValue(SWTObservables.observeSelection(this.ingestGPSCheckbox),
@@ -107,39 +107,39 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 		});
 		
 		this.ctx.bindValue(SWTObservables.observeEnabled(this.tunerTypeGroup), 
-			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__IS_ANTENNA), new UpdateValueStrategy(), tunerTypeGroupUVS);
+			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__ANTENNA), new UpdateValueStrategy(), tunerTypeGroupUVS);
 		
 		this.ctx.bindValue(SWTObservables.observeEnabled(this.receiveOnlyTunerButton), 
-			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__IS_ANTENNA), new UpdateValueStrategy(), tunerTypeGroupUVS);
+			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__ANTENNA), new UpdateValueStrategy(), tunerTypeGroupUVS);
 		
 		this.ctx.bindValue(SWTObservables.observeEnabled(this.transmitOnlyTunerButton), 
-			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__IS_ANTENNA), new UpdateValueStrategy(), tunerTypeGroupUVS);
+			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__ANTENNA), new UpdateValueStrategy(), tunerTypeGroupUVS);
 		
 		this.ctx.bindValue(SWTObservables.observeEnabled(this.bothRxTxButton), 
-			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__IS_ANTENNA), new UpdateValueStrategy(), tunerTypeGroupUVS);
+			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__ANTENNA), new UpdateValueStrategy(), tunerTypeGroupUVS);
 		
 		// Bindings for the tuner type is difficult since it is a 3 way with the third option being both the 1st and 2nd so listeners are used.
 		this.bothRxTxButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				FrontEndTunerTypeSelectionWizardPage.this.feiDevice.setIsRxTuner(true);
-				FrontEndTunerTypeSelectionWizardPage.this.feiDevice.setIsTxTuner(true);
+				FrontEndTunerTypeSelectionWizardPage.this.feiDevice.setRxTuner(true);
+				FrontEndTunerTypeSelectionWizardPage.this.feiDevice.setTxTuner(true);
 			}
 		});
 		
 		this.receiveOnlyTunerButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				FrontEndTunerTypeSelectionWizardPage.this.feiDevice.setIsRxTuner(true);
-				FrontEndTunerTypeSelectionWizardPage.this.feiDevice.setIsTxTuner(false);
+				FrontEndTunerTypeSelectionWizardPage.this.feiDevice.setRxTuner(true);
+				FrontEndTunerTypeSelectionWizardPage.this.feiDevice.setTxTuner(false);
 			}
 		});
 		
 		this.transmitOnlyTunerButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				FrontEndTunerTypeSelectionWizardPage.this.feiDevice.setIsRxTuner(false);
-				FrontEndTunerTypeSelectionWizardPage.this.feiDevice.setIsTxTuner(true);
+				FrontEndTunerTypeSelectionWizardPage.this.feiDevice.setRxTuner(false);
+				FrontEndTunerTypeSelectionWizardPage.this.feiDevice.setTxTuner(true);
 			}
 		});
 		
@@ -221,7 +221,7 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 
 	@Override
 	public boolean canFinish() {
-		return (this.apiCanFinish && this.feiDevice.isIsAntenna());
+		return (this.apiCanFinish && this.feiDevice.isAntenna());
 	}
 
 	@Override
@@ -231,7 +231,7 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 
 	@Override
 	public boolean canFlipToNextPage() {
-		return (super.canFlipToNextPage() && !this.feiDevice.isIsAntenna());
+		return (super.canFlipToNextPage() && !this.feiDevice.isAntenna());
 	}
 	
 	@Override

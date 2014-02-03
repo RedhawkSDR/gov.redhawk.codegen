@@ -1,10 +1,19 @@
 package gov.redhawk.ide.codegen.frontend.ui.wizard;
 
+import gov.redhawk.eclipsecorba.idl.Definition;
+import gov.redhawk.eclipsecorba.idl.IdlInterfaceDcl;
+import gov.redhawk.eclipsecorba.library.IdlLibrary;
+import gov.redhawk.eclipsecorba.library.RepositoryModule;
 import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.frontend.FeiDevice;
 import gov.redhawk.ide.codegen.frontend.FrontendPackage;
 import gov.redhawk.ide.codegen.ui.ICodegenWizardPage;
+import gov.redhawk.ui.RedhawkUiActivator;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import mil.jpeojtrs.sca.spd.Implementation;
 import mil.jpeojtrs.sca.spd.SoftPkg;
 
@@ -29,6 +38,9 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 
 	private ImplementationSettings implSettings;
 	private FeiDevice feiDevice;
+	private Composite client;
+	DataBindingContext ctx;
+	String[] propertyTypes;
 
 	public FrontEndTunerOptionsWizardPage(FeiDevice feiDevice) {
 		super("");
@@ -39,28 +51,61 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 	public void createControl(Composite parent) {
 		this.setTitle("Front End Interface Tuner Options");
 		this.setDescription("Select the input and output types for this Front End Interfaces Tuner Device");
-		final Composite client = new Composite(parent, SWT.NULL);
+		client = new Composite(parent, SWT.NULL);
+		ctx = new DataBindingContext();
 
+		populatePropertyTypes();
 		createUIElements(client);
 
 		this.setControl(client);
 	}
 
+	private void populatePropertyTypes() {
+		IdlLibrary idlLibrary = RedhawkUiActivator.getDefault().getIdlLibraryService().getLibrary();
+		RepositoryModule bulkioIdl;
+		List<String> bulkioTypes = new ArrayList<String>();
+
+		// Grab array of available BULKIO types
+		for (Definition def : idlLibrary.getDefinitions()) {
+			if ("BULKIO".equals(def.getName())) {
+				bulkioIdl = (RepositoryModule) def;
+				for (Definition bulkioDef : bulkioIdl.getDefinitions()) {
+					if (bulkioDef instanceof IdlInterfaceDcl) {
+						bulkioTypes.add(bulkioDef.getName());
+					}
+				}
+			}
+		}
+
+		// Convert to String[] for convenience in passing to SWT widgets
+		propertyTypes = new String[bulkioTypes.size()];
+		for (int i = 0; i < propertyTypes.length; i++) {
+			propertyTypes[i] = bulkioTypes.get(i);
+		}
+	}
+
 	private void createUIElements(Composite client) {
 		client.setLayout(new GridLayout(1, false));
 
-		//TODO Logic to determine which group to show
-		//		if (feiDevice.isRxTuner()) {
-		//	createReceiverGroup(client);
-		//		 } else if (feiDevice.isTxTuner()){
-		//	createTransmitterGroup(client);
-		// } else {
-		createReceiverGroup(client);
-		createTransmitterGroup(client);
-		// }
+		if (feiDevice.isRxTuner()) {
+			createReceiverGroup(client);
+		} else if (feiDevice.isTxTuner()) {
+			createTransmitterGroup(client);
+		} else {
+			createReceiverGroup(client);
+			createTransmitterGroup(client);
+		}
 
 	}
 
+	@Override
+	public void setVisible(boolean visible) {
+		super.setVisible(visible);
+		if(visible) {
+			createUIElements(client);
+		}
+	}
+	
 	// Create Receiver Group and all sub-methods
 	private void createReceiverGroup(Composite client) {
 		Group receiverGroup = new Group(client, SWT.SHADOW_ETCHED_IN);
@@ -71,10 +116,8 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		createInputControl(receiverGroup);
 		createOutputControl(receiverGroup);
 	}
-
+	
 	private void createInputControl(Group parent) {
-		DataBindingContext ctx = new DataBindingContext();
-
 		Composite inputContainer = new Composite(parent, SWT.None);
 		inputContainer.setLayout(new GridLayout(1, false));
 		inputContainer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
@@ -82,19 +125,20 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		Button analogInputButton = new Button(inputContainer, SWT.RADIO);
 		analogInputButton.setText("Analog Input (default)");
 		analogInputButton.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, true, false, 2, 1));
-		final Composite analogIn = createAnalogIn(inputContainer, ctx);
+		createAnalogIn(inputContainer);
+		UpdateValueStrategy uvs = booleanConverter();
 		ctx.bindValue(WidgetProperties.selection().observe(analogInputButton),
-			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__HAS_ANALOG_INPUT));
+			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__HAS_ANALOG_INPUT), uvs, uvs);
 
 		Button digitalInputButton = new Button(inputContainer, SWT.RADIO);
 		digitalInputButton.setText("Digital Input");
 		digitalInputButton.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, true, false, 2, 1));
-		final Composite digitalIn = createDigitalIn(inputContainer, ctx);
+		createDigitalIn(inputContainer);
 		ctx.bindValue(WidgetProperties.selection().observe(digitalInputButton),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__HAS_DIGITAL_INPUT));
 	}
 
-	private Composite createAnalogIn(Composite parent, DataBindingContext ctx) {
+	private Composite createAnalogIn(Composite parent) {
 		Composite analogIn = new Composite(parent, SWT.SHADOW_NONE);
 		analogIn.setLayout(new GridLayout(2, false));
 		analogIn.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(-35, 0).align(SWT.CENTER, SWT.CENTER).create());
@@ -104,25 +148,7 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 
 		Spinner numAnalogSpinner = new Spinner(analogIn, SWT.None);
 		numAnalogSpinner.setMinimum(1);
-		UpdateValueStrategy uvs = new UpdateValueStrategy();
-		uvs.setConverter(new IConverter() {
-
-			@Override
-			public Object getToType() {
-				return Boolean.class;
-			}
-
-			@Override
-			public Object getFromType() {
-				return Boolean.class;
-			}
-
-			@Override
-			public Object convert(Object fromObject) {
-				return !((Boolean) fromObject).booleanValue();
-			}
-		});
-
+		UpdateValueStrategy uvs = booleanConverter();
 		ctx.bindValue(WidgetProperties.selection().observe(numAnalogSpinner),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__NUMBER_OF_ANALOG_INPUTS));
 		ctx.bindValue(WidgetProperties.enabled().observe(numAnalogSpinner),
@@ -130,7 +156,7 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		return analogIn;
 	}
 
-	private Composite createDigitalIn(Composite parent, DataBindingContext ctx) {
+	private Composite createDigitalIn(Composite parent) {
 		Composite digitalIn = new Composite(parent, SWT.SHADOW_NONE);
 		digitalIn.setLayout(new GridLayout(2, false));
 		digitalIn.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(30, 0).align(SWT.CENTER, SWT.CENTER).create());
@@ -138,9 +164,8 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		Label digitalInputTypeLabel = new Label(digitalIn, SWT.None);
 		digitalInputTypeLabel.setText("Digital Input Type: ");
 
-		//TODO Generate combo items dynamically
 		Combo digitalInputCombo = new Combo(digitalIn, SWT.None);
-		digitalInputCombo.setText("Temp");
+		digitalInputCombo.setItems(propertyTypes);
 		ctx.bindValue(WidgetProperties.selection().observe(digitalInputCombo),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__DIGITAL_INPUT_TYPE));
 		ctx.bindValue(WidgetProperties.enabled().observe(digitalInputCombo),
@@ -149,8 +174,6 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 	}
 
 	private void createOutputControl(Group parent) {
-		DataBindingContext ctx = new DataBindingContext();
-
 		Composite outputContainer = new Composite(parent, SWT.None);
 		outputContainer.setLayout(new GridLayout(1, false));
 		outputContainer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
@@ -160,14 +183,14 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		analogOutputButton.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, true, false, 2, 1));
 
 		Button digitalOutputButton = new Button(outputContainer, SWT.RADIO);
-		digitalOutputButton.setText("Digital Output");
+		digitalOutputButton.setText("Digital Output (default)");
 		digitalOutputButton.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, true, false, 2, 1));
-		final Composite digitalOut = createDigitalOut(outputContainer, ctx);
+		createDigitalOut(outputContainer);
 		ctx.bindValue(WidgetProperties.selection().observe(digitalOutputButton),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__HAS_DIGITAL_OUTPUT));
 	}
 
-	private Composite createDigitalOut(Composite parent, DataBindingContext ctx) {
+	private Composite createDigitalOut(Composite parent) {
 		Composite digitalOut = new Composite(parent, SWT.SHADOW_NONE);
 		digitalOut.setLayout(new GridLayout(2, false));
 		digitalOut.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(30, 0).align(SWT.CENTER, SWT.CENTER).create());
@@ -175,9 +198,8 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		Label digitalOutputTypeLabel = new Label(digitalOut, SWT.None);
 		digitalOutputTypeLabel.setText("Digital Output Type: ");
 
-		//TODO populate combo box
 		Combo digitalOutputCombo = new Combo(digitalOut, SWT.None);
-		digitalOutputCombo.setText("Temp");
+		digitalOutputCombo.setItems(propertyTypes);
 		ctx.bindValue(WidgetProperties.selection().observe(digitalOutputCombo),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__DIGITAL_OUTPUT_TYPE));
 		ctx.bindValue(WidgetProperties.enabled().observe(digitalOutputCombo),
@@ -194,8 +216,6 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 
 	//Create Transmitter Group and all sub-methods
 	private void createTransmitterGroup(Composite client) {
-		DataBindingContext ctx = new DataBindingContext();
-
 		Group transmitterGroup = new Group(client, SWT.SHADOW_ETCHED_IN);
 		transmitterGroup.setText("Transmitter Properties");
 		transmitterGroup.setLayout(new GridLayout(4, false));
@@ -213,12 +233,33 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		digitalInputTypeLabel.setText("Digital Input Type: ");
 		digitalInputTypeLabel.setLayoutData(GridDataFactory.fillDefaults().indent(50, 0).align(SWT.CENTER, SWT.CENTER).create());
 
-		//TODO Generate combo items dynamically
 		Combo digitalInputCombo = new Combo(transmitterGroup, SWT.None);
-		digitalInputCombo.setText("Temp");
+		digitalInputCombo.setItems(propertyTypes);
 		ctx.bindValue(WidgetProperties.selection().observe(digitalInputCombo),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__DIGITAL_INPUT_TYPE_FOR_TX));
 	} //End Transmitter Group
+
+	private UpdateValueStrategy booleanConverter() {
+		UpdateValueStrategy converter = new UpdateValueStrategy();
+		converter.setConverter(new IConverter() {
+
+			@Override
+			public Object getToType() {
+				return Boolean.class;
+			}
+
+			@Override
+			public Object getFromType() {
+				return Boolean.class;
+			}
+
+			@Override
+			public Object convert(Object fromObject) {
+				return !((Boolean) fromObject).booleanValue();
+			}
+		});
+		return converter;
+	}
 
 	@Override
 	public void configure(SoftPkg softpkg, Implementation impl, ICodeGeneratorDescriptor desc, ImplementationSettings implSettings, String componentType) {
