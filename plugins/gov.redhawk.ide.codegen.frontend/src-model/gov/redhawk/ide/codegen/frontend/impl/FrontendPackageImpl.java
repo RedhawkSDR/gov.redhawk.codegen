@@ -119,7 +119,7 @@ public class FrontendPackageImpl extends EPackageImpl implements FrontendPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getFeiDevice_IsAntenna()
+  public EAttribute getFeiDevice_Antenna()
   {
     return (EAttribute)feiDeviceEClass.getEStructuralFeatures().get(0);
   }
@@ -149,7 +149,7 @@ public class FrontendPackageImpl extends EPackageImpl implements FrontendPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getFeiDevice_IsRxTuner()
+  public EAttribute getFeiDevice_RxTuner()
   {
     return (EAttribute)feiDeviceEClass.getEStructuralFeatures().get(3);
   }
@@ -199,7 +199,7 @@ public class FrontendPackageImpl extends EPackageImpl implements FrontendPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getFeiDevice_IsMultiOut()
+  public EAttribute getFeiDevice_HasDigitalOutput()
   {
     return (EAttribute)feiDeviceEClass.getEStructuralFeatures().get(8);
   }
@@ -219,7 +219,7 @@ public class FrontendPackageImpl extends EPackageImpl implements FrontendPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getFeiDevice_IsTxTuner()
+  public EAttribute getFeiDevice_MultiOut()
   {
     return (EAttribute)feiDeviceEClass.getEStructuralFeatures().get(10);
   }
@@ -229,7 +229,7 @@ public class FrontendPackageImpl extends EPackageImpl implements FrontendPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getFeiDevice_NumberOfDigitalInputsForTx()
+  public EAttribute getFeiDevice_TxTuner()
   {
     return (EAttribute)feiDeviceEClass.getEStructuralFeatures().get(11);
   }
@@ -239,7 +239,7 @@ public class FrontendPackageImpl extends EPackageImpl implements FrontendPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getFeiDevice_DigitalInputTypeForTx()
+  public EAttribute getFeiDevice_NumberOfDigitalInputsForTx()
   {
     return (EAttribute)feiDeviceEClass.getEStructuralFeatures().get(12);
   }
@@ -249,9 +249,19 @@ public class FrontendPackageImpl extends EPackageImpl implements FrontendPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getFeiDevice_TunerStatusStruct()
+  public EAttribute getFeiDevice_DigitalInputTypeForTx()
   {
     return (EAttribute)feiDeviceEClass.getEStructuralFeatures().get(13);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getFeiDevice_TunerStatusStruct()
+  {
+    return (EAttribute)feiDeviceEClass.getEStructuralFeatures().get(14);
   }
 
   /**
@@ -295,17 +305,18 @@ public class FrontendPackageImpl extends EPackageImpl implements FrontendPackage
 
     // Create classes and their features
     feiDeviceEClass = createEClass(FEI_DEVICE);
-    createEAttribute(feiDeviceEClass, FEI_DEVICE__IS_ANTENNA);
+    createEAttribute(feiDeviceEClass, FEI_DEVICE__ANTENNA);
     createEAttribute(feiDeviceEClass, FEI_DEVICE__INGESTS_GPS);
     createEAttribute(feiDeviceEClass, FEI_DEVICE__OUTPUTS_GPS);
-    createEAttribute(feiDeviceEClass, FEI_DEVICE__IS_RX_TUNER);
+    createEAttribute(feiDeviceEClass, FEI_DEVICE__RX_TUNER);
     createEAttribute(feiDeviceEClass, FEI_DEVICE__HAS_ANALOG_INPUT);
     createEAttribute(feiDeviceEClass, FEI_DEVICE__NUMBER_OF_ANALOG_INPUTS);
     createEAttribute(feiDeviceEClass, FEI_DEVICE__HAS_DIGITAL_INPUT);
     createEAttribute(feiDeviceEClass, FEI_DEVICE__DIGITAL_INPUT_TYPE);
-    createEAttribute(feiDeviceEClass, FEI_DEVICE__IS_MULTI_OUT);
+    createEAttribute(feiDeviceEClass, FEI_DEVICE__HAS_DIGITAL_OUTPUT);
     createEAttribute(feiDeviceEClass, FEI_DEVICE__DIGITAL_OUTPUT_TYPE);
-    createEAttribute(feiDeviceEClass, FEI_DEVICE__IS_TX_TUNER);
+    createEAttribute(feiDeviceEClass, FEI_DEVICE__MULTI_OUT);
+    createEAttribute(feiDeviceEClass, FEI_DEVICE__TX_TUNER);
     createEAttribute(feiDeviceEClass, FEI_DEVICE__NUMBER_OF_DIGITAL_INPUTS_FOR_TX);
     createEAttribute(feiDeviceEClass, FEI_DEVICE__DIGITAL_INPUT_TYPE_FOR_TX);
     createEAttribute(feiDeviceEClass, FEI_DEVICE__TUNER_STATUS_STRUCT);
@@ -349,17 +360,18 @@ public class FrontendPackageImpl extends EPackageImpl implements FrontendPackage
 
     // Initialize classes, features, and operations; add parameters
     initEClass(feiDeviceEClass, FeiDevice.class, "FeiDevice", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getFeiDevice_IsAntenna(), theEcorePackage.getEBoolean(), "isAntenna", null, 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getFeiDevice_Antenna(), theEcorePackage.getEBoolean(), "Antenna", null, 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getFeiDevice_IngestsGPS(), theEcorePackage.getEBoolean(), "ingestsGPS", null, 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getFeiDevice_OutputsGPS(), theEcorePackage.getEBoolean(), "outputsGPS", null, 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getFeiDevice_IsRxTuner(), theEcorePackage.getEBoolean(), "isRxTuner", null, 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getFeiDevice_RxTuner(), theEcorePackage.getEBoolean(), "RxTuner", null, 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getFeiDevice_HasAnalogInput(), theEcorePackage.getEBoolean(), "hasAnalogInput", null, 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getFeiDevice_NumberOfAnalogInputs(), theEcorePackage.getEInt(), "numberOfAnalogInputs", null, 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getFeiDevice_HasDigitalInput(), theEcorePackage.getEBoolean(), "hasDigitalInput", null, 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getFeiDevice_DigitalInputType(), theEcorePackage.getEString(), "digitalInputType", null, 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getFeiDevice_IsMultiOut(), theEcorePackage.getEBoolean(), "isMultiOut", null, 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getFeiDevice_HasDigitalOutput(), theEcorePackage.getEBoolean(), "hasDigitalOutput", null, 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getFeiDevice_DigitalOutputType(), theEcorePackage.getEString(), "digitalOutputType", null, 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getFeiDevice_IsTxTuner(), theEcorePackage.getEBoolean(), "isTxTuner", null, 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getFeiDevice_MultiOut(), theEcorePackage.getEBoolean(), "MultiOut", null, 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getFeiDevice_TxTuner(), theEcorePackage.getEBoolean(), "TxTuner", null, 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getFeiDevice_NumberOfDigitalInputsForTx(), theEcorePackage.getEInt(), "numberOfDigitalInputsForTx", null, 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getFeiDevice_DigitalInputTypeForTx(), theEcorePackage.getEString(), "digitalInputTypeForTx", null, 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getFeiDevice_TunerStatusStruct(), this.getTunerStatusStruct(), "tunerStatusStruct", null, 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

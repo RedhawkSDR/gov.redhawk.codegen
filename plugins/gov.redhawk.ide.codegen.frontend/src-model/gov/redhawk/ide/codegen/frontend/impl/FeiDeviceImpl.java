@@ -21,17 +21,18 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isIsAntenna <em>Is Antenna</em>}</li>
+ *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isAntenna <em>Antenna</em>}</li>
  *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isIngestsGPS <em>Ingests GPS</em>}</li>
  *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isOutputsGPS <em>Outputs GPS</em>}</li>
- *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isIsRxTuner <em>Is Rx Tuner</em>}</li>
+ *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isRxTuner <em>Rx Tuner</em>}</li>
  *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isHasAnalogInput <em>Has Analog Input</em>}</li>
  *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#getNumberOfAnalogInputs <em>Number Of Analog Inputs</em>}</li>
  *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isHasDigitalInput <em>Has Digital Input</em>}</li>
  *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#getDigitalInputType <em>Digital Input Type</em>}</li>
- *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isIsMultiOut <em>Is Multi Out</em>}</li>
+ *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isHasDigitalOutput <em>Has Digital Output</em>}</li>
  *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#getDigitalOutputType <em>Digital Output Type</em>}</li>
- *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isIsTxTuner <em>Is Tx Tuner</em>}</li>
+ *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isMultiOut <em>Multi Out</em>}</li>
+ *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isTxTuner <em>Tx Tuner</em>}</li>
  *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#getNumberOfDigitalInputsForTx <em>Number Of Digital Inputs For Tx</em>}</li>
  *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#getDigitalInputTypeForTx <em>Digital Input Type For Tx</em>}</li>
  *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#getTunerStatusStruct <em>Tuner Status Struct</em>}</li>
@@ -43,24 +44,24 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDevice
 {
   /**
-   * The default value of the '{@link #isIsAntenna() <em>Is Antenna</em>}' attribute.
+   * The default value of the '{@link #isAntenna() <em>Antenna</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #isIsAntenna()
+   * @see #isAntenna()
    * @generated
    * @ordered
    */
-  protected static final boolean IS_ANTENNA_EDEFAULT = false;
+  protected static final boolean ANTENNA_EDEFAULT = false;
 
   /**
-   * The cached value of the '{@link #isIsAntenna() <em>Is Antenna</em>}' attribute.
+   * The cached value of the '{@link #isAntenna() <em>Antenna</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #isIsAntenna()
+   * @see #isAntenna()
    * @generated
    * @ordered
    */
-  protected boolean isAntenna = IS_ANTENNA_EDEFAULT;
+  protected boolean antenna = ANTENNA_EDEFAULT;
 
   /**
    * The default value of the '{@link #isIngestsGPS() <em>Ingests GPS</em>}' attribute.
@@ -103,24 +104,24 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
   protected boolean outputsGPS = OUTPUTS_GPS_EDEFAULT;
 
   /**
-   * The default value of the '{@link #isIsRxTuner() <em>Is Rx Tuner</em>}' attribute.
+   * The default value of the '{@link #isRxTuner() <em>Rx Tuner</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #isIsRxTuner()
+   * @see #isRxTuner()
    * @generated
    * @ordered
    */
-  protected static final boolean IS_RX_TUNER_EDEFAULT = false;
+  protected static final boolean RX_TUNER_EDEFAULT = false;
 
   /**
-   * The cached value of the '{@link #isIsRxTuner() <em>Is Rx Tuner</em>}' attribute.
+   * The cached value of the '{@link #isRxTuner() <em>Rx Tuner</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #isIsRxTuner()
+   * @see #isRxTuner()
    * @generated
    * @ordered
    */
-  protected boolean isRxTuner = IS_RX_TUNER_EDEFAULT;
+  protected boolean rxTuner = RX_TUNER_EDEFAULT;
 
   /**
    * The default value of the '{@link #isHasAnalogInput() <em>Has Analog Input</em>}' attribute.
@@ -203,24 +204,24 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
   protected String digitalInputType = DIGITAL_INPUT_TYPE_EDEFAULT;
 
   /**
-   * The default value of the '{@link #isIsMultiOut() <em>Is Multi Out</em>}' attribute.
+   * The default value of the '{@link #isHasDigitalOutput() <em>Has Digital Output</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #isIsMultiOut()
+   * @see #isHasDigitalOutput()
    * @generated
    * @ordered
    */
-  protected static final boolean IS_MULTI_OUT_EDEFAULT = false;
+  protected static final boolean HAS_DIGITAL_OUTPUT_EDEFAULT = false;
 
   /**
-   * The cached value of the '{@link #isIsMultiOut() <em>Is Multi Out</em>}' attribute.
+   * The cached value of the '{@link #isHasDigitalOutput() <em>Has Digital Output</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #isIsMultiOut()
+   * @see #isHasDigitalOutput()
    * @generated
    * @ordered
    */
-  protected boolean isMultiOut = IS_MULTI_OUT_EDEFAULT;
+  protected boolean hasDigitalOutput = HAS_DIGITAL_OUTPUT_EDEFAULT;
 
   /**
    * The default value of the '{@link #getDigitalOutputType() <em>Digital Output Type</em>}' attribute.
@@ -243,24 +244,44 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
   protected String digitalOutputType = DIGITAL_OUTPUT_TYPE_EDEFAULT;
 
   /**
-   * The default value of the '{@link #isIsTxTuner() <em>Is Tx Tuner</em>}' attribute.
+   * The default value of the '{@link #isMultiOut() <em>Multi Out</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #isIsTxTuner()
+   * @see #isMultiOut()
    * @generated
    * @ordered
    */
-  protected static final boolean IS_TX_TUNER_EDEFAULT = false;
+  protected static final boolean MULTI_OUT_EDEFAULT = false;
 
   /**
-   * The cached value of the '{@link #isIsTxTuner() <em>Is Tx Tuner</em>}' attribute.
+   * The cached value of the '{@link #isMultiOut() <em>Multi Out</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #isIsTxTuner()
+   * @see #isMultiOut()
    * @generated
    * @ordered
    */
-  protected boolean isTxTuner = IS_TX_TUNER_EDEFAULT;
+  protected boolean multiOut = MULTI_OUT_EDEFAULT;
+
+  /**
+   * The default value of the '{@link #isTxTuner() <em>Tx Tuner</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #isTxTuner()
+   * @generated
+   * @ordered
+   */
+  protected static final boolean TX_TUNER_EDEFAULT = false;
+
+  /**
+   * The cached value of the '{@link #isTxTuner() <em>Tx Tuner</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #isTxTuner()
+   * @generated
+   * @ordered
+   */
+  protected boolean txTuner = TX_TUNER_EDEFAULT;
 
   /**
    * The default value of the '{@link #getNumberOfDigitalInputsForTx() <em>Number Of Digital Inputs For Tx</em>}' attribute.
@@ -348,9 +369,9 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
    * <!-- end-user-doc -->
    * @generated
    */
-  public boolean isIsAntenna()
+  public boolean isAntenna()
   {
-    return isAntenna;
+    return antenna;
   }
 
   /**
@@ -358,12 +379,12 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setIsAntenna(boolean newIsAntenna)
+  public void setAntenna(boolean newAntenna)
   {
-    boolean oldIsAntenna = isAntenna;
-    isAntenna = newIsAntenna;
+    boolean oldAntenna = antenna;
+    antenna = newAntenna;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, FrontendPackage.FEI_DEVICE__IS_ANTENNA, oldIsAntenna, isAntenna));
+      eNotify(new ENotificationImpl(this, Notification.SET, FrontendPackage.FEI_DEVICE__ANTENNA, oldAntenna, antenna));
   }
 
   /**
@@ -417,9 +438,9 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
    * <!-- end-user-doc -->
    * @generated
    */
-  public boolean isIsRxTuner()
+  public boolean isRxTuner()
   {
-    return isRxTuner;
+    return rxTuner;
   }
 
   /**
@@ -427,12 +448,12 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setIsRxTuner(boolean newIsRxTuner)
+  public void setRxTuner(boolean newRxTuner)
   {
-    boolean oldIsRxTuner = isRxTuner;
-    isRxTuner = newIsRxTuner;
+    boolean oldRxTuner = rxTuner;
+    rxTuner = newRxTuner;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, FrontendPackage.FEI_DEVICE__IS_RX_TUNER, oldIsRxTuner, isRxTuner));
+      eNotify(new ENotificationImpl(this, Notification.SET, FrontendPackage.FEI_DEVICE__RX_TUNER, oldRxTuner, rxTuner));
   }
 
   /**
@@ -532,9 +553,9 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
    * <!-- end-user-doc -->
    * @generated
    */
-  public boolean isIsMultiOut()
+  public boolean isHasDigitalOutput()
   {
-    return isMultiOut;
+    return hasDigitalOutput;
   }
 
   /**
@@ -542,12 +563,12 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setIsMultiOut(boolean newIsMultiOut)
+  public void setHasDigitalOutput(boolean newHasDigitalOutput)
   {
-    boolean oldIsMultiOut = isMultiOut;
-    isMultiOut = newIsMultiOut;
+    boolean oldHasDigitalOutput = hasDigitalOutput;
+    hasDigitalOutput = newHasDigitalOutput;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, FrontendPackage.FEI_DEVICE__IS_MULTI_OUT, oldIsMultiOut, isMultiOut));
+      eNotify(new ENotificationImpl(this, Notification.SET, FrontendPackage.FEI_DEVICE__HAS_DIGITAL_OUTPUT, oldHasDigitalOutput, hasDigitalOutput));
   }
 
   /**
@@ -578,9 +599,9 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
    * <!-- end-user-doc -->
    * @generated
    */
-  public boolean isIsTxTuner()
+  public boolean isMultiOut()
   {
-    return isTxTuner;
+    return multiOut;
   }
 
   /**
@@ -588,12 +609,35 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setIsTxTuner(boolean newIsTxTuner)
+  public void setMultiOut(boolean newMultiOut)
   {
-    boolean oldIsTxTuner = isTxTuner;
-    isTxTuner = newIsTxTuner;
+    boolean oldMultiOut = multiOut;
+    multiOut = newMultiOut;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, FrontendPackage.FEI_DEVICE__IS_TX_TUNER, oldIsTxTuner, isTxTuner));
+      eNotify(new ENotificationImpl(this, Notification.SET, FrontendPackage.FEI_DEVICE__MULTI_OUT, oldMultiOut, multiOut));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public boolean isTxTuner()
+  {
+    return txTuner;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setTxTuner(boolean newTxTuner)
+  {
+    boolean oldTxTuner = txTuner;
+    txTuner = newTxTuner;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, FrontendPackage.FEI_DEVICE__TX_TUNER, oldTxTuner, txTuner));
   }
 
   /**
@@ -675,14 +719,14 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
   {
     switch (featureID)
     {
-      case FrontendPackage.FEI_DEVICE__IS_ANTENNA:
-        return isIsAntenna();
+      case FrontendPackage.FEI_DEVICE__ANTENNA:
+        return isAntenna();
       case FrontendPackage.FEI_DEVICE__INGESTS_GPS:
         return isIngestsGPS();
       case FrontendPackage.FEI_DEVICE__OUTPUTS_GPS:
         return isOutputsGPS();
-      case FrontendPackage.FEI_DEVICE__IS_RX_TUNER:
-        return isIsRxTuner();
+      case FrontendPackage.FEI_DEVICE__RX_TUNER:
+        return isRxTuner();
       case FrontendPackage.FEI_DEVICE__HAS_ANALOG_INPUT:
         return isHasAnalogInput();
       case FrontendPackage.FEI_DEVICE__NUMBER_OF_ANALOG_INPUTS:
@@ -691,12 +735,14 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
         return isHasDigitalInput();
       case FrontendPackage.FEI_DEVICE__DIGITAL_INPUT_TYPE:
         return getDigitalInputType();
-      case FrontendPackage.FEI_DEVICE__IS_MULTI_OUT:
-        return isIsMultiOut();
+      case FrontendPackage.FEI_DEVICE__HAS_DIGITAL_OUTPUT:
+        return isHasDigitalOutput();
       case FrontendPackage.FEI_DEVICE__DIGITAL_OUTPUT_TYPE:
         return getDigitalOutputType();
-      case FrontendPackage.FEI_DEVICE__IS_TX_TUNER:
-        return isIsTxTuner();
+      case FrontendPackage.FEI_DEVICE__MULTI_OUT:
+        return isMultiOut();
+      case FrontendPackage.FEI_DEVICE__TX_TUNER:
+        return isTxTuner();
       case FrontendPackage.FEI_DEVICE__NUMBER_OF_DIGITAL_INPUTS_FOR_TX:
         return getNumberOfDigitalInputsForTx();
       case FrontendPackage.FEI_DEVICE__DIGITAL_INPUT_TYPE_FOR_TX:
@@ -717,8 +763,8 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
   {
     switch (featureID)
     {
-      case FrontendPackage.FEI_DEVICE__IS_ANTENNA:
-        setIsAntenna((Boolean)newValue);
+      case FrontendPackage.FEI_DEVICE__ANTENNA:
+        setAntenna((Boolean)newValue);
         return;
       case FrontendPackage.FEI_DEVICE__INGESTS_GPS:
         setIngestsGPS((Boolean)newValue);
@@ -726,8 +772,8 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
       case FrontendPackage.FEI_DEVICE__OUTPUTS_GPS:
         setOutputsGPS((Boolean)newValue);
         return;
-      case FrontendPackage.FEI_DEVICE__IS_RX_TUNER:
-        setIsRxTuner((Boolean)newValue);
+      case FrontendPackage.FEI_DEVICE__RX_TUNER:
+        setRxTuner((Boolean)newValue);
         return;
       case FrontendPackage.FEI_DEVICE__HAS_ANALOG_INPUT:
         setHasAnalogInput((Boolean)newValue);
@@ -741,14 +787,17 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
       case FrontendPackage.FEI_DEVICE__DIGITAL_INPUT_TYPE:
         setDigitalInputType((String)newValue);
         return;
-      case FrontendPackage.FEI_DEVICE__IS_MULTI_OUT:
-        setIsMultiOut((Boolean)newValue);
+      case FrontendPackage.FEI_DEVICE__HAS_DIGITAL_OUTPUT:
+        setHasDigitalOutput((Boolean)newValue);
         return;
       case FrontendPackage.FEI_DEVICE__DIGITAL_OUTPUT_TYPE:
         setDigitalOutputType((String)newValue);
         return;
-      case FrontendPackage.FEI_DEVICE__IS_TX_TUNER:
-        setIsTxTuner((Boolean)newValue);
+      case FrontendPackage.FEI_DEVICE__MULTI_OUT:
+        setMultiOut((Boolean)newValue);
+        return;
+      case FrontendPackage.FEI_DEVICE__TX_TUNER:
+        setTxTuner((Boolean)newValue);
         return;
       case FrontendPackage.FEI_DEVICE__NUMBER_OF_DIGITAL_INPUTS_FOR_TX:
         setNumberOfDigitalInputsForTx((Integer)newValue);
@@ -773,8 +822,8 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
   {
     switch (featureID)
     {
-      case FrontendPackage.FEI_DEVICE__IS_ANTENNA:
-        setIsAntenna(IS_ANTENNA_EDEFAULT);
+      case FrontendPackage.FEI_DEVICE__ANTENNA:
+        setAntenna(ANTENNA_EDEFAULT);
         return;
       case FrontendPackage.FEI_DEVICE__INGESTS_GPS:
         setIngestsGPS(INGESTS_GPS_EDEFAULT);
@@ -782,8 +831,8 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
       case FrontendPackage.FEI_DEVICE__OUTPUTS_GPS:
         setOutputsGPS(OUTPUTS_GPS_EDEFAULT);
         return;
-      case FrontendPackage.FEI_DEVICE__IS_RX_TUNER:
-        setIsRxTuner(IS_RX_TUNER_EDEFAULT);
+      case FrontendPackage.FEI_DEVICE__RX_TUNER:
+        setRxTuner(RX_TUNER_EDEFAULT);
         return;
       case FrontendPackage.FEI_DEVICE__HAS_ANALOG_INPUT:
         setHasAnalogInput(HAS_ANALOG_INPUT_EDEFAULT);
@@ -797,14 +846,17 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
       case FrontendPackage.FEI_DEVICE__DIGITAL_INPUT_TYPE:
         setDigitalInputType(DIGITAL_INPUT_TYPE_EDEFAULT);
         return;
-      case FrontendPackage.FEI_DEVICE__IS_MULTI_OUT:
-        setIsMultiOut(IS_MULTI_OUT_EDEFAULT);
+      case FrontendPackage.FEI_DEVICE__HAS_DIGITAL_OUTPUT:
+        setHasDigitalOutput(HAS_DIGITAL_OUTPUT_EDEFAULT);
         return;
       case FrontendPackage.FEI_DEVICE__DIGITAL_OUTPUT_TYPE:
         setDigitalOutputType(DIGITAL_OUTPUT_TYPE_EDEFAULT);
         return;
-      case FrontendPackage.FEI_DEVICE__IS_TX_TUNER:
-        setIsTxTuner(IS_TX_TUNER_EDEFAULT);
+      case FrontendPackage.FEI_DEVICE__MULTI_OUT:
+        setMultiOut(MULTI_OUT_EDEFAULT);
+        return;
+      case FrontendPackage.FEI_DEVICE__TX_TUNER:
+        setTxTuner(TX_TUNER_EDEFAULT);
         return;
       case FrontendPackage.FEI_DEVICE__NUMBER_OF_DIGITAL_INPUTS_FOR_TX:
         setNumberOfDigitalInputsForTx(NUMBER_OF_DIGITAL_INPUTS_FOR_TX_EDEFAULT);
@@ -829,14 +881,14 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
   {
     switch (featureID)
     {
-      case FrontendPackage.FEI_DEVICE__IS_ANTENNA:
-        return isAntenna != IS_ANTENNA_EDEFAULT;
+      case FrontendPackage.FEI_DEVICE__ANTENNA:
+        return antenna != ANTENNA_EDEFAULT;
       case FrontendPackage.FEI_DEVICE__INGESTS_GPS:
         return ingestsGPS != INGESTS_GPS_EDEFAULT;
       case FrontendPackage.FEI_DEVICE__OUTPUTS_GPS:
         return outputsGPS != OUTPUTS_GPS_EDEFAULT;
-      case FrontendPackage.FEI_DEVICE__IS_RX_TUNER:
-        return isRxTuner != IS_RX_TUNER_EDEFAULT;
+      case FrontendPackage.FEI_DEVICE__RX_TUNER:
+        return rxTuner != RX_TUNER_EDEFAULT;
       case FrontendPackage.FEI_DEVICE__HAS_ANALOG_INPUT:
         return hasAnalogInput != HAS_ANALOG_INPUT_EDEFAULT;
       case FrontendPackage.FEI_DEVICE__NUMBER_OF_ANALOG_INPUTS:
@@ -845,12 +897,14 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
         return hasDigitalInput != HAS_DIGITAL_INPUT_EDEFAULT;
       case FrontendPackage.FEI_DEVICE__DIGITAL_INPUT_TYPE:
         return DIGITAL_INPUT_TYPE_EDEFAULT == null ? digitalInputType != null : !DIGITAL_INPUT_TYPE_EDEFAULT.equals(digitalInputType);
-      case FrontendPackage.FEI_DEVICE__IS_MULTI_OUT:
-        return isMultiOut != IS_MULTI_OUT_EDEFAULT;
+      case FrontendPackage.FEI_DEVICE__HAS_DIGITAL_OUTPUT:
+        return hasDigitalOutput != HAS_DIGITAL_OUTPUT_EDEFAULT;
       case FrontendPackage.FEI_DEVICE__DIGITAL_OUTPUT_TYPE:
         return DIGITAL_OUTPUT_TYPE_EDEFAULT == null ? digitalOutputType != null : !DIGITAL_OUTPUT_TYPE_EDEFAULT.equals(digitalOutputType);
-      case FrontendPackage.FEI_DEVICE__IS_TX_TUNER:
-        return isTxTuner != IS_TX_TUNER_EDEFAULT;
+      case FrontendPackage.FEI_DEVICE__MULTI_OUT:
+        return multiOut != MULTI_OUT_EDEFAULT;
+      case FrontendPackage.FEI_DEVICE__TX_TUNER:
+        return txTuner != TX_TUNER_EDEFAULT;
       case FrontendPackage.FEI_DEVICE__NUMBER_OF_DIGITAL_INPUTS_FOR_TX:
         return numberOfDigitalInputsForTx != NUMBER_OF_DIGITAL_INPUTS_FOR_TX_EDEFAULT;
       case FrontendPackage.FEI_DEVICE__DIGITAL_INPUT_TYPE_FOR_TX:
@@ -872,14 +926,14 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
     if (eIsProxy()) return super.toString();
 
     StringBuffer result = new StringBuffer(super.toString());
-    result.append(" (isAntenna: ");
-    result.append(isAntenna);
+    result.append(" (Antenna: ");
+    result.append(antenna);
     result.append(", ingestsGPS: ");
     result.append(ingestsGPS);
     result.append(", outputsGPS: ");
     result.append(outputsGPS);
-    result.append(", isRxTuner: ");
-    result.append(isRxTuner);
+    result.append(", RxTuner: ");
+    result.append(rxTuner);
     result.append(", hasAnalogInput: ");
     result.append(hasAnalogInput);
     result.append(", numberOfAnalogInputs: ");
@@ -888,12 +942,14 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
     result.append(hasDigitalInput);
     result.append(", digitalInputType: ");
     result.append(digitalInputType);
-    result.append(", isMultiOut: ");
-    result.append(isMultiOut);
+    result.append(", hasDigitalOutput: ");
+    result.append(hasDigitalOutput);
     result.append(", digitalOutputType: ");
     result.append(digitalOutputType);
-    result.append(", isTxTuner: ");
-    result.append(isTxTuner);
+    result.append(", MultiOut: ");
+    result.append(multiOut);
+    result.append(", TxTuner: ");
+    result.append(txTuner);
     result.append(", numberOfDigitalInputsForTx: ");
     result.append(numberOfDigitalInputsForTx);
     result.append(", digitalInputTypeForTx: ");

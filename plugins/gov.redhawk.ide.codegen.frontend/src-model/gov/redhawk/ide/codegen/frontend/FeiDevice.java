@@ -14,17 +14,18 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isIsAntenna <em>Is Antenna</em>}</li>
+ *   <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isAntenna <em>Antenna</em>}</li>
  *   <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isIngestsGPS <em>Ingests GPS</em>}</li>
  *   <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isOutputsGPS <em>Outputs GPS</em>}</li>
- *   <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isIsRxTuner <em>Is Rx Tuner</em>}</li>
+ *   <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isRxTuner <em>Rx Tuner</em>}</li>
  *   <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isHasAnalogInput <em>Has Analog Input</em>}</li>
  *   <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#getNumberOfAnalogInputs <em>Number Of Analog Inputs</em>}</li>
  *   <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isHasDigitalInput <em>Has Digital Input</em>}</li>
  *   <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#getDigitalInputType <em>Digital Input Type</em>}</li>
- *   <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isIsMultiOut <em>Is Multi Out</em>}</li>
+ *   <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isHasDigitalOutput <em>Has Digital Output</em>}</li>
  *   <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#getDigitalOutputType <em>Digital Output Type</em>}</li>
- *   <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isIsTxTuner <em>Is Tx Tuner</em>}</li>
+ *   <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isMultiOut <em>Multi Out</em>}</li>
+ *   <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isTxTuner <em>Tx Tuner</em>}</li>
  *   <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#getNumberOfDigitalInputsForTx <em>Number Of Digital Inputs For Tx</em>}</li>
  *   <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#getDigitalInputTypeForTx <em>Digital Input Type For Tx</em>}</li>
  *   <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#getTunerStatusStruct <em>Tuner Status Struct</em>}</li>
@@ -38,30 +39,30 @@ import org.eclipse.emf.ecore.EObject;
 public interface FeiDevice extends EObject
 {
   /**
-   * Returns the value of the '<em><b>Is Antenna</b></em>' attribute.
+   * Returns the value of the '<em><b>Antenna</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Is Antenna</em>' attribute isn't clear,
+   * If the meaning of the '<em>Antenna</em>' attribute isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Is Antenna</em>' attribute.
-   * @see #setIsAntenna(boolean)
-   * @see gov.redhawk.ide.codegen.frontend.FrontendPackage#getFeiDevice_IsAntenna()
+   * @return the value of the '<em>Antenna</em>' attribute.
+   * @see #setAntenna(boolean)
+   * @see gov.redhawk.ide.codegen.frontend.FrontendPackage#getFeiDevice_Antenna()
    * @model unique="false"
    * @generated
    */
-  boolean isIsAntenna();
+  boolean isAntenna();
 
   /**
-   * Sets the value of the '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isIsAntenna <em>Is Antenna</em>}' attribute.
+   * Sets the value of the '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isAntenna <em>Antenna</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Is Antenna</em>' attribute.
-   * @see #isIsAntenna()
+   * @param value the new value of the '<em>Antenna</em>' attribute.
+   * @see #isAntenna()
    * @generated
    */
-  void setIsAntenna(boolean value);
+  void setAntenna(boolean value);
 
   /**
    * Returns the value of the '<em><b>Ingests GPS</b></em>' attribute.
@@ -116,30 +117,30 @@ public interface FeiDevice extends EObject
   void setOutputsGPS(boolean value);
 
   /**
-   * Returns the value of the '<em><b>Is Rx Tuner</b></em>' attribute.
+   * Returns the value of the '<em><b>Rx Tuner</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Is Rx Tuner</em>' attribute isn't clear,
+   * If the meaning of the '<em>Rx Tuner</em>' attribute isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Is Rx Tuner</em>' attribute.
-   * @see #setIsRxTuner(boolean)
-   * @see gov.redhawk.ide.codegen.frontend.FrontendPackage#getFeiDevice_IsRxTuner()
+   * @return the value of the '<em>Rx Tuner</em>' attribute.
+   * @see #setRxTuner(boolean)
+   * @see gov.redhawk.ide.codegen.frontend.FrontendPackage#getFeiDevice_RxTuner()
    * @model unique="false"
    * @generated
    */
-  boolean isIsRxTuner();
+  boolean isRxTuner();
 
   /**
-   * Sets the value of the '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isIsRxTuner <em>Is Rx Tuner</em>}' attribute.
+   * Sets the value of the '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isRxTuner <em>Rx Tuner</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Is Rx Tuner</em>' attribute.
-   * @see #isIsRxTuner()
+   * @param value the new value of the '<em>Rx Tuner</em>' attribute.
+   * @see #isRxTuner()
    * @generated
    */
-  void setIsRxTuner(boolean value);
+  void setRxTuner(boolean value);
 
   /**
    * Returns the value of the '<em><b>Has Analog Input</b></em>' attribute.
@@ -246,30 +247,30 @@ public interface FeiDevice extends EObject
   void setDigitalInputType(String value);
 
   /**
-   * Returns the value of the '<em><b>Is Multi Out</b></em>' attribute.
+   * Returns the value of the '<em><b>Has Digital Output</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Is Multi Out</em>' attribute isn't clear,
+   * If the meaning of the '<em>Has Digital Output</em>' attribute isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Is Multi Out</em>' attribute.
-   * @see #setIsMultiOut(boolean)
-   * @see gov.redhawk.ide.codegen.frontend.FrontendPackage#getFeiDevice_IsMultiOut()
+   * @return the value of the '<em>Has Digital Output</em>' attribute.
+   * @see #setHasDigitalOutput(boolean)
+   * @see gov.redhawk.ide.codegen.frontend.FrontendPackage#getFeiDevice_HasDigitalOutput()
    * @model unique="false"
    * @generated
    */
-  boolean isIsMultiOut();
+  boolean isHasDigitalOutput();
 
   /**
-   * Sets the value of the '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isIsMultiOut <em>Is Multi Out</em>}' attribute.
+   * Sets the value of the '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isHasDigitalOutput <em>Has Digital Output</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Is Multi Out</em>' attribute.
-   * @see #isIsMultiOut()
+   * @param value the new value of the '<em>Has Digital Output</em>' attribute.
+   * @see #isHasDigitalOutput()
    * @generated
    */
-  void setIsMultiOut(boolean value);
+  void setHasDigitalOutput(boolean value);
 
   /**
    * Returns the value of the '<em><b>Digital Output Type</b></em>' attribute.
@@ -298,30 +299,56 @@ public interface FeiDevice extends EObject
   void setDigitalOutputType(String value);
 
   /**
-   * Returns the value of the '<em><b>Is Tx Tuner</b></em>' attribute.
+   * Returns the value of the '<em><b>Multi Out</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Is Tx Tuner</em>' attribute isn't clear,
+   * If the meaning of the '<em>Multi Out</em>' attribute isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Is Tx Tuner</em>' attribute.
-   * @see #setIsTxTuner(boolean)
-   * @see gov.redhawk.ide.codegen.frontend.FrontendPackage#getFeiDevice_IsTxTuner()
+   * @return the value of the '<em>Multi Out</em>' attribute.
+   * @see #setMultiOut(boolean)
+   * @see gov.redhawk.ide.codegen.frontend.FrontendPackage#getFeiDevice_MultiOut()
    * @model unique="false"
    * @generated
    */
-  boolean isIsTxTuner();
+  boolean isMultiOut();
 
   /**
-   * Sets the value of the '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isIsTxTuner <em>Is Tx Tuner</em>}' attribute.
+   * Sets the value of the '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isMultiOut <em>Multi Out</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Is Tx Tuner</em>' attribute.
-   * @see #isIsTxTuner()
+   * @param value the new value of the '<em>Multi Out</em>' attribute.
+   * @see #isMultiOut()
    * @generated
    */
-  void setIsTxTuner(boolean value);
+  void setMultiOut(boolean value);
+
+  /**
+   * Returns the value of the '<em><b>Tx Tuner</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of the '<em>Tx Tuner</em>' attribute isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Tx Tuner</em>' attribute.
+   * @see #setTxTuner(boolean)
+   * @see gov.redhawk.ide.codegen.frontend.FrontendPackage#getFeiDevice_TxTuner()
+   * @model unique="false"
+   * @generated
+   */
+  boolean isTxTuner();
+
+  /**
+   * Sets the value of the '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isTxTuner <em>Tx Tuner</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Tx Tuner</em>' attribute.
+   * @see #isTxTuner()
+   * @generated
+   */
+  void setTxTuner(boolean value);
 
   /**
    * Returns the value of the '<em><b>Number Of Digital Inputs For Tx</b></em>' attribute.

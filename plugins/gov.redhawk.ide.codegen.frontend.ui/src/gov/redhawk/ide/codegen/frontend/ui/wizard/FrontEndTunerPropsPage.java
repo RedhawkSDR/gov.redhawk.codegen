@@ -70,10 +70,12 @@ public class FrontEndTunerPropsPage extends WizardPage implements ICodegenWizard
 		this.feiDevice = feiDevice;
 	}
 	
+	
+	
 	@Override
 	public void createControl(Composite parent) {
 		this.setTitle("Front End Interfaces Tuner Status Customization");
-		this.setDescription("Select the tuner port type and the set of tuner status properties for the tuner status struct.  Note that required properties may not be removed.");
+		this.setDescription("Select set of tuner status properties for the tuner status struct.  Note that required properties may not be removed.");
 		
 		final Composite client = new Composite(parent, SWT.NULL);
 		if (this.selectedProps.isEmpty()) {

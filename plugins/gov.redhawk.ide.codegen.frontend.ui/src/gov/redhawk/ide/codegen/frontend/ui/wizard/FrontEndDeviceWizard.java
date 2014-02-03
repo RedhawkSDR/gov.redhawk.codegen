@@ -31,12 +31,12 @@ public class FrontEndDeviceWizard extends NewScaDeviceCreationProjectWizard impl
 	private FrontEndTunerTypeSelectionWizardPage frontEndTunerTypeSelectionPage;
 	private FrontEndTunerPropsPage frontEndTunerStatusPropsPage;
 	private ICodeGeneratorDescriptor codeGeneratorDescriptor;
-	private FrontEndTunerOptionsWizardPage frontEndTunerPropsPage;
+	private FrontEndTunerOptionsWizardPage frontEndTunerOptionsPage;
 	private FeiDevice feiDevice;
 	
 	public FrontEndDeviceWizard() {
 		super();
-		 this.feiDevice = FrontendFactory.eINSTANCE.createFeiDevice();
+		this.feiDevice = FrontendFactory.eINSTANCE.createFeiDevice();
 	}
 	
 	@Override
@@ -54,8 +54,8 @@ public class FrontEndDeviceWizard extends NewScaDeviceCreationProjectWizard impl
 		this.frontEndTunerTypeSelectionPage = new FrontEndTunerTypeSelectionWizardPage(feiDevice);
 		addPage(this.frontEndTunerTypeSelectionPage);
 		
-		this.frontEndTunerPropsPage = new FrontEndTunerOptionsWizardPage(feiDevice);
-		addPage(this.frontEndTunerPropsPage);
+		this.frontEndTunerOptionsPage = new FrontEndTunerOptionsWizardPage(feiDevice);
+		addPage(this.frontEndTunerOptionsPage);
 		
 		this.frontEndTunerStatusPropsPage = new FrontEndTunerPropsPage(feiDevice);
 		addPage(this.frontEndTunerStatusPropsPage);

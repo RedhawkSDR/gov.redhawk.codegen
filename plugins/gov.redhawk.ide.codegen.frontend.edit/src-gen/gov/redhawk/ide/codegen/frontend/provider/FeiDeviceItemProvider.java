@@ -74,17 +74,18 @@ public class FeiDeviceItemProvider
     {
       super.getPropertyDescriptors(object);
 
-      addIsAntennaPropertyDescriptor(object);
+      addAntennaPropertyDescriptor(object);
       addIngestsGPSPropertyDescriptor(object);
       addOutputsGPSPropertyDescriptor(object);
-      addIsRxTunerPropertyDescriptor(object);
+      addRxTunerPropertyDescriptor(object);
       addHasAnalogInputPropertyDescriptor(object);
       addNumberOfAnalogInputsPropertyDescriptor(object);
       addHasDigitalInputPropertyDescriptor(object);
       addDigitalInputTypePropertyDescriptor(object);
-      addIsMultiOutPropertyDescriptor(object);
+      addHasDigitalOutputPropertyDescriptor(object);
       addDigitalOutputTypePropertyDescriptor(object);
-      addIsTxTunerPropertyDescriptor(object);
+      addMultiOutPropertyDescriptor(object);
+      addTxTunerPropertyDescriptor(object);
       addNumberOfDigitalInputsForTxPropertyDescriptor(object);
       addDigitalInputTypeForTxPropertyDescriptor(object);
       addTunerStatusStructPropertyDescriptor(object);
@@ -93,20 +94,20 @@ public class FeiDeviceItemProvider
   }
 
   /**
-   * This adds a property descriptor for the Is Antenna feature.
+   * This adds a property descriptor for the Antenna feature.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  protected void addIsAntennaPropertyDescriptor(Object object)
+  protected void addAntennaPropertyDescriptor(Object object)
   {
     itemPropertyDescriptors.add
       (createItemPropertyDescriptor
         (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
          getResourceLocator(),
-         getString("_UI_FeiDevice_isAntenna_feature"),
-         getString("_UI_PropertyDescriptor_description", "_UI_FeiDevice_isAntenna_feature", "_UI_FeiDevice_type"),
-         FrontendPackage.Literals.FEI_DEVICE__IS_ANTENNA,
+         getString("_UI_FeiDevice_Antenna_feature"),
+         getString("_UI_PropertyDescriptor_description", "_UI_FeiDevice_Antenna_feature", "_UI_FeiDevice_type"),
+         FrontendPackage.Literals.FEI_DEVICE__ANTENNA,
          true,
          false,
          false,
@@ -162,20 +163,20 @@ public class FeiDeviceItemProvider
   }
 
   /**
-   * This adds a property descriptor for the Is Rx Tuner feature.
+   * This adds a property descriptor for the Rx Tuner feature.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  protected void addIsRxTunerPropertyDescriptor(Object object)
+  protected void addRxTunerPropertyDescriptor(Object object)
   {
     itemPropertyDescriptors.add
       (createItemPropertyDescriptor
         (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
          getResourceLocator(),
-         getString("_UI_FeiDevice_isRxTuner_feature"),
-         getString("_UI_PropertyDescriptor_description", "_UI_FeiDevice_isRxTuner_feature", "_UI_FeiDevice_type"),
-         FrontendPackage.Literals.FEI_DEVICE__IS_RX_TUNER,
+         getString("_UI_FeiDevice_RxTuner_feature"),
+         getString("_UI_PropertyDescriptor_description", "_UI_FeiDevice_RxTuner_feature", "_UI_FeiDevice_type"),
+         FrontendPackage.Literals.FEI_DEVICE__RX_TUNER,
          true,
          false,
          false,
@@ -277,20 +278,20 @@ public class FeiDeviceItemProvider
   }
 
   /**
-   * This adds a property descriptor for the Is Multi Out feature.
+   * This adds a property descriptor for the Has Digital Output feature.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  protected void addIsMultiOutPropertyDescriptor(Object object)
+  protected void addHasDigitalOutputPropertyDescriptor(Object object)
   {
     itemPropertyDescriptors.add
       (createItemPropertyDescriptor
         (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
          getResourceLocator(),
-         getString("_UI_FeiDevice_isMultiOut_feature"),
-         getString("_UI_PropertyDescriptor_description", "_UI_FeiDevice_isMultiOut_feature", "_UI_FeiDevice_type"),
-         FrontendPackage.Literals.FEI_DEVICE__IS_MULTI_OUT,
+         getString("_UI_FeiDevice_hasDigitalOutput_feature"),
+         getString("_UI_PropertyDescriptor_description", "_UI_FeiDevice_hasDigitalOutput_feature", "_UI_FeiDevice_type"),
+         FrontendPackage.Literals.FEI_DEVICE__HAS_DIGITAL_OUTPUT,
          true,
          false,
          false,
@@ -323,20 +324,43 @@ public class FeiDeviceItemProvider
   }
 
   /**
-   * This adds a property descriptor for the Is Tx Tuner feature.
+   * This adds a property descriptor for the Multi Out feature.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  protected void addIsTxTunerPropertyDescriptor(Object object)
+  protected void addMultiOutPropertyDescriptor(Object object)
   {
     itemPropertyDescriptors.add
       (createItemPropertyDescriptor
         (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
          getResourceLocator(),
-         getString("_UI_FeiDevice_isTxTuner_feature"),
-         getString("_UI_PropertyDescriptor_description", "_UI_FeiDevice_isTxTuner_feature", "_UI_FeiDevice_type"),
-         FrontendPackage.Literals.FEI_DEVICE__IS_TX_TUNER,
+         getString("_UI_FeiDevice_MultiOut_feature"),
+         getString("_UI_PropertyDescriptor_description", "_UI_FeiDevice_MultiOut_feature", "_UI_FeiDevice_type"),
+         FrontendPackage.Literals.FEI_DEVICE__MULTI_OUT,
+         true,
+         false,
+         false,
+         ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
+         null,
+         null));
+  }
+
+  /**
+   * This adds a property descriptor for the Tx Tuner feature.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  protected void addTxTunerPropertyDescriptor(Object object)
+  {
+    itemPropertyDescriptors.add
+      (createItemPropertyDescriptor
+        (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+         getResourceLocator(),
+         getString("_UI_FeiDevice_TxTuner_feature"),
+         getString("_UI_PropertyDescriptor_description", "_UI_FeiDevice_TxTuner_feature", "_UI_FeiDevice_type"),
+         FrontendPackage.Literals.FEI_DEVICE__TX_TUNER,
          true,
          false,
          false,
@@ -436,7 +460,7 @@ public class FeiDeviceItemProvider
   public String getText(Object object)
   {
     FeiDevice feiDevice = (FeiDevice)object;
-    return getString("_UI_FeiDevice_type") + " " + feiDevice.isIsAntenna();
+    return getString("_UI_FeiDevice_type") + " " + feiDevice.isAntenna();
   }
 
   /**
@@ -453,17 +477,18 @@ public class FeiDeviceItemProvider
 
     switch (notification.getFeatureID(FeiDevice.class))
     {
-      case FrontendPackage.FEI_DEVICE__IS_ANTENNA:
+      case FrontendPackage.FEI_DEVICE__ANTENNA:
       case FrontendPackage.FEI_DEVICE__INGESTS_GPS:
       case FrontendPackage.FEI_DEVICE__OUTPUTS_GPS:
-      case FrontendPackage.FEI_DEVICE__IS_RX_TUNER:
+      case FrontendPackage.FEI_DEVICE__RX_TUNER:
       case FrontendPackage.FEI_DEVICE__HAS_ANALOG_INPUT:
       case FrontendPackage.FEI_DEVICE__NUMBER_OF_ANALOG_INPUTS:
       case FrontendPackage.FEI_DEVICE__HAS_DIGITAL_INPUT:
       case FrontendPackage.FEI_DEVICE__DIGITAL_INPUT_TYPE:
-      case FrontendPackage.FEI_DEVICE__IS_MULTI_OUT:
+      case FrontendPackage.FEI_DEVICE__HAS_DIGITAL_OUTPUT:
       case FrontendPackage.FEI_DEVICE__DIGITAL_OUTPUT_TYPE:
-      case FrontendPackage.FEI_DEVICE__IS_TX_TUNER:
+      case FrontendPackage.FEI_DEVICE__MULTI_OUT:
+      case FrontendPackage.FEI_DEVICE__TX_TUNER:
       case FrontendPackage.FEI_DEVICE__NUMBER_OF_DIGITAL_INPUTS_FOR_TX:
       case FrontendPackage.FEI_DEVICE__DIGITAL_INPUT_TYPE_FOR_TX:
       case FrontendPackage.FEI_DEVICE__TUNER_STATUS_STRUCT:

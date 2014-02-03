@@ -12,22 +12,23 @@ type TunerStatusStruct wraps ScaStructProperty
 class FeiDevice {
 
 	// Basic Device properties
-	boolean isAntenna
+	boolean Antenna
 	boolean ingestsGPS
 	boolean outputsGPS
 	
 	
 	// Specific props to Tuner
-	boolean isRxTuner
+	boolean RxTuner
 	boolean hasAnalogInput
 	int numberOfAnalogInputs
 	boolean hasDigitalInput
 	String digitalInputType //This could also be an enum
-	boolean isMultiOut
+	boolean hasDigitalOutput
 	String digitalOutputType //This could also be an enum
+	boolean MultiOut
 	
 	// Transmit props 
-	boolean isTxTuner
+	boolean TxTuner
 	int numberOfDigitalInputsForTx
 	String digitalInputTypeForTx //This could also be an enum
 	

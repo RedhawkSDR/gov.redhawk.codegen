@@ -77,13 +77,13 @@ public interface FrontendPackage extends EPackage
   int FEI_DEVICE = 0;
 
   /**
-   * The feature id for the '<em><b>Is Antenna</b></em>' attribute.
+   * The feature id for the '<em><b>Antenna</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int FEI_DEVICE__IS_ANTENNA = 0;
+  int FEI_DEVICE__ANTENNA = 0;
 
   /**
    * The feature id for the '<em><b>Ingests GPS</b></em>' attribute.
@@ -104,13 +104,13 @@ public interface FrontendPackage extends EPackage
   int FEI_DEVICE__OUTPUTS_GPS = 2;
 
   /**
-   * The feature id for the '<em><b>Is Rx Tuner</b></em>' attribute.
+   * The feature id for the '<em><b>Rx Tuner</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int FEI_DEVICE__IS_RX_TUNER = 3;
+  int FEI_DEVICE__RX_TUNER = 3;
 
   /**
    * The feature id for the '<em><b>Has Analog Input</b></em>' attribute.
@@ -149,13 +149,13 @@ public interface FrontendPackage extends EPackage
   int FEI_DEVICE__DIGITAL_INPUT_TYPE = 7;
 
   /**
-   * The feature id for the '<em><b>Is Multi Out</b></em>' attribute.
+   * The feature id for the '<em><b>Has Digital Output</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int FEI_DEVICE__IS_MULTI_OUT = 8;
+  int FEI_DEVICE__HAS_DIGITAL_OUTPUT = 8;
 
   /**
    * The feature id for the '<em><b>Digital Output Type</b></em>' attribute.
@@ -167,13 +167,22 @@ public interface FrontendPackage extends EPackage
   int FEI_DEVICE__DIGITAL_OUTPUT_TYPE = 9;
 
   /**
-   * The feature id for the '<em><b>Is Tx Tuner</b></em>' attribute.
+   * The feature id for the '<em><b>Multi Out</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int FEI_DEVICE__IS_TX_TUNER = 10;
+  int FEI_DEVICE__MULTI_OUT = 10;
+
+  /**
+   * The feature id for the '<em><b>Tx Tuner</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int FEI_DEVICE__TX_TUNER = 11;
 
   /**
    * The feature id for the '<em><b>Number Of Digital Inputs For Tx</b></em>' attribute.
@@ -182,7 +191,7 @@ public interface FrontendPackage extends EPackage
    * @generated
    * @ordered
    */
-  int FEI_DEVICE__NUMBER_OF_DIGITAL_INPUTS_FOR_TX = 11;
+  int FEI_DEVICE__NUMBER_OF_DIGITAL_INPUTS_FOR_TX = 12;
 
   /**
    * The feature id for the '<em><b>Digital Input Type For Tx</b></em>' attribute.
@@ -191,7 +200,7 @@ public interface FrontendPackage extends EPackage
    * @generated
    * @ordered
    */
-  int FEI_DEVICE__DIGITAL_INPUT_TYPE_FOR_TX = 12;
+  int FEI_DEVICE__DIGITAL_INPUT_TYPE_FOR_TX = 13;
 
   /**
    * The feature id for the '<em><b>Tuner Status Struct</b></em>' attribute.
@@ -200,7 +209,7 @@ public interface FrontendPackage extends EPackage
    * @generated
    * @ordered
    */
-  int FEI_DEVICE__TUNER_STATUS_STRUCT = 13;
+  int FEI_DEVICE__TUNER_STATUS_STRUCT = 14;
 
   /**
    * The number of structural features of the '<em>Fei Device</em>' class.
@@ -209,7 +218,7 @@ public interface FrontendPackage extends EPackage
    * @generated
    * @ordered
    */
-  int FEI_DEVICE_FEATURE_COUNT = 14;
+  int FEI_DEVICE_FEATURE_COUNT = 15;
 
   /**
    * The number of operations of the '<em>Fei Device</em>' class.
@@ -242,15 +251,15 @@ public interface FrontendPackage extends EPackage
   EClass getFeiDevice();
 
   /**
-   * Returns the meta object for the attribute '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isIsAntenna <em>Is Antenna</em>}'.
+   * Returns the meta object for the attribute '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isAntenna <em>Antenna</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Is Antenna</em>'.
-   * @see gov.redhawk.ide.codegen.frontend.FeiDevice#isIsAntenna()
+   * @return the meta object for the attribute '<em>Antenna</em>'.
+   * @see gov.redhawk.ide.codegen.frontend.FeiDevice#isAntenna()
    * @see #getFeiDevice()
    * @generated
    */
-  EAttribute getFeiDevice_IsAntenna();
+  EAttribute getFeiDevice_Antenna();
 
   /**
    * Returns the meta object for the attribute '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isIngestsGPS <em>Ingests GPS</em>}'.
@@ -275,15 +284,15 @@ public interface FrontendPackage extends EPackage
   EAttribute getFeiDevice_OutputsGPS();
 
   /**
-   * Returns the meta object for the attribute '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isIsRxTuner <em>Is Rx Tuner</em>}'.
+   * Returns the meta object for the attribute '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isRxTuner <em>Rx Tuner</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Is Rx Tuner</em>'.
-   * @see gov.redhawk.ide.codegen.frontend.FeiDevice#isIsRxTuner()
+   * @return the meta object for the attribute '<em>Rx Tuner</em>'.
+   * @see gov.redhawk.ide.codegen.frontend.FeiDevice#isRxTuner()
    * @see #getFeiDevice()
    * @generated
    */
-  EAttribute getFeiDevice_IsRxTuner();
+  EAttribute getFeiDevice_RxTuner();
 
   /**
    * Returns the meta object for the attribute '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isHasAnalogInput <em>Has Analog Input</em>}'.
@@ -330,15 +339,15 @@ public interface FrontendPackage extends EPackage
   EAttribute getFeiDevice_DigitalInputType();
 
   /**
-   * Returns the meta object for the attribute '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isIsMultiOut <em>Is Multi Out</em>}'.
+   * Returns the meta object for the attribute '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isHasDigitalOutput <em>Has Digital Output</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Is Multi Out</em>'.
-   * @see gov.redhawk.ide.codegen.frontend.FeiDevice#isIsMultiOut()
+   * @return the meta object for the attribute '<em>Has Digital Output</em>'.
+   * @see gov.redhawk.ide.codegen.frontend.FeiDevice#isHasDigitalOutput()
    * @see #getFeiDevice()
    * @generated
    */
-  EAttribute getFeiDevice_IsMultiOut();
+  EAttribute getFeiDevice_HasDigitalOutput();
 
   /**
    * Returns the meta object for the attribute '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#getDigitalOutputType <em>Digital Output Type</em>}'.
@@ -352,15 +361,26 @@ public interface FrontendPackage extends EPackage
   EAttribute getFeiDevice_DigitalOutputType();
 
   /**
-   * Returns the meta object for the attribute '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isIsTxTuner <em>Is Tx Tuner</em>}'.
+   * Returns the meta object for the attribute '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isMultiOut <em>Multi Out</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Is Tx Tuner</em>'.
-   * @see gov.redhawk.ide.codegen.frontend.FeiDevice#isIsTxTuner()
+   * @return the meta object for the attribute '<em>Multi Out</em>'.
+   * @see gov.redhawk.ide.codegen.frontend.FeiDevice#isMultiOut()
    * @see #getFeiDevice()
    * @generated
    */
-  EAttribute getFeiDevice_IsTxTuner();
+  EAttribute getFeiDevice_MultiOut();
+
+  /**
+   * Returns the meta object for the attribute '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isTxTuner <em>Tx Tuner</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Tx Tuner</em>'.
+   * @see gov.redhawk.ide.codegen.frontend.FeiDevice#isTxTuner()
+   * @see #getFeiDevice()
+   * @generated
+   */
+  EAttribute getFeiDevice_TxTuner();
 
   /**
    * Returns the meta object for the attribute '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#getNumberOfDigitalInputsForTx <em>Number Of Digital Inputs For Tx</em>}'.
@@ -441,12 +461,12 @@ public interface FrontendPackage extends EPackage
     EClass FEI_DEVICE = eINSTANCE.getFeiDevice();
 
     /**
-     * The meta object literal for the '<em><b>Is Antenna</b></em>' attribute feature.
+     * The meta object literal for the '<em><b>Antenna</b></em>' attribute feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EAttribute FEI_DEVICE__IS_ANTENNA = eINSTANCE.getFeiDevice_IsAntenna();
+    EAttribute FEI_DEVICE__ANTENNA = eINSTANCE.getFeiDevice_Antenna();
 
     /**
      * The meta object literal for the '<em><b>Ingests GPS</b></em>' attribute feature.
@@ -465,12 +485,12 @@ public interface FrontendPackage extends EPackage
     EAttribute FEI_DEVICE__OUTPUTS_GPS = eINSTANCE.getFeiDevice_OutputsGPS();
 
     /**
-     * The meta object literal for the '<em><b>Is Rx Tuner</b></em>' attribute feature.
+     * The meta object literal for the '<em><b>Rx Tuner</b></em>' attribute feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EAttribute FEI_DEVICE__IS_RX_TUNER = eINSTANCE.getFeiDevice_IsRxTuner();
+    EAttribute FEI_DEVICE__RX_TUNER = eINSTANCE.getFeiDevice_RxTuner();
 
     /**
      * The meta object literal for the '<em><b>Has Analog Input</b></em>' attribute feature.
@@ -505,12 +525,12 @@ public interface FrontendPackage extends EPackage
     EAttribute FEI_DEVICE__DIGITAL_INPUT_TYPE = eINSTANCE.getFeiDevice_DigitalInputType();
 
     /**
-     * The meta object literal for the '<em><b>Is Multi Out</b></em>' attribute feature.
+     * The meta object literal for the '<em><b>Has Digital Output</b></em>' attribute feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EAttribute FEI_DEVICE__IS_MULTI_OUT = eINSTANCE.getFeiDevice_IsMultiOut();
+    EAttribute FEI_DEVICE__HAS_DIGITAL_OUTPUT = eINSTANCE.getFeiDevice_HasDigitalOutput();
 
     /**
      * The meta object literal for the '<em><b>Digital Output Type</b></em>' attribute feature.
@@ -521,12 +541,20 @@ public interface FrontendPackage extends EPackage
     EAttribute FEI_DEVICE__DIGITAL_OUTPUT_TYPE = eINSTANCE.getFeiDevice_DigitalOutputType();
 
     /**
-     * The meta object literal for the '<em><b>Is Tx Tuner</b></em>' attribute feature.
+     * The meta object literal for the '<em><b>Multi Out</b></em>' attribute feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EAttribute FEI_DEVICE__IS_TX_TUNER = eINSTANCE.getFeiDevice_IsTxTuner();
+    EAttribute FEI_DEVICE__MULTI_OUT = eINSTANCE.getFeiDevice_MultiOut();
+
+    /**
+     * The meta object literal for the '<em><b>Tx Tuner</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute FEI_DEVICE__TX_TUNER = eINSTANCE.getFeiDevice_TxTuner();
 
     /**
      * The meta object literal for the '<em><b>Number Of Digital Inputs For Tx</b></em>' attribute feature.
