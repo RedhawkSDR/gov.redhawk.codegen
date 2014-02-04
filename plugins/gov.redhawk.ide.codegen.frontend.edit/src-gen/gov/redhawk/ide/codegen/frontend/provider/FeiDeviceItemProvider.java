@@ -78,7 +78,6 @@ public class FeiDeviceItemProvider
       addIngestsGPSPropertyDescriptor(object);
       addOutputsGPSPropertyDescriptor(object);
       addRxTunerPropertyDescriptor(object);
-      addHasAnalogInputPropertyDescriptor(object);
       addNumberOfAnalogInputsPropertyDescriptor(object);
       addHasDigitalInputPropertyDescriptor(object);
       addDigitalInputTypePropertyDescriptor(object);
@@ -177,29 +176,6 @@ public class FeiDeviceItemProvider
          getString("_UI_FeiDevice_RxTuner_feature"),
          getString("_UI_PropertyDescriptor_description", "_UI_FeiDevice_RxTuner_feature", "_UI_FeiDevice_type"),
          FrontendPackage.Literals.FEI_DEVICE__RX_TUNER,
-         true,
-         false,
-         false,
-         ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
-         null,
-         null));
-  }
-
-  /**
-   * This adds a property descriptor for the Has Analog Input feature.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  protected void addHasAnalogInputPropertyDescriptor(Object object)
-  {
-    itemPropertyDescriptors.add
-      (createItemPropertyDescriptor
-        (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
-         getResourceLocator(),
-         getString("_UI_FeiDevice_hasAnalogInput_feature"),
-         getString("_UI_PropertyDescriptor_description", "_UI_FeiDevice_hasAnalogInput_feature", "_UI_FeiDevice_type"),
-         FrontendPackage.Literals.FEI_DEVICE__HAS_ANALOG_INPUT,
          true,
          false,
          false,
@@ -481,7 +457,6 @@ public class FeiDeviceItemProvider
       case FrontendPackage.FEI_DEVICE__INGESTS_GPS:
       case FrontendPackage.FEI_DEVICE__OUTPUTS_GPS:
       case FrontendPackage.FEI_DEVICE__RX_TUNER:
-      case FrontendPackage.FEI_DEVICE__HAS_ANALOG_INPUT:
       case FrontendPackage.FEI_DEVICE__NUMBER_OF_ANALOG_INPUTS:
       case FrontendPackage.FEI_DEVICE__HAS_DIGITAL_INPUT:
       case FrontendPackage.FEI_DEVICE__DIGITAL_INPUT_TYPE:

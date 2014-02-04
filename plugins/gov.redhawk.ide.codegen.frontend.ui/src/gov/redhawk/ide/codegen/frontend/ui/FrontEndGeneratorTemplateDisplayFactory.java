@@ -139,7 +139,7 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 			addTunerSpecificProps(eSpd);
 			
 			if (this.feiDevice.isRxTuner()) {
-				if (this.feiDevice.isHasAnalogInput()) { // Has analog input
+				if (!this.feiDevice.isHasDigitalInput()) { // Has analog input
 					addRFInfoPorts(eSpd, this.feiDevice.getNumberOfAnalogInputs());
 					
 					if (this.feiDevice.isHasDigitalOutput()) { // Has digital output

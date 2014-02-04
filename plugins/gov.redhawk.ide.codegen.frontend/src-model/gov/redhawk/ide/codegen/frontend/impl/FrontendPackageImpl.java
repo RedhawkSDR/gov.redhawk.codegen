@@ -159,7 +159,7 @@ public class FrontendPackageImpl extends EPackageImpl implements FrontendPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getFeiDevice_HasAnalogInput()
+  public EAttribute getFeiDevice_NumberOfAnalogInputs()
   {
     return (EAttribute)feiDeviceEClass.getEStructuralFeatures().get(4);
   }
@@ -169,7 +169,7 @@ public class FrontendPackageImpl extends EPackageImpl implements FrontendPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getFeiDevice_NumberOfAnalogInputs()
+  public EAttribute getFeiDevice_HasDigitalInput()
   {
     return (EAttribute)feiDeviceEClass.getEStructuralFeatures().get(5);
   }
@@ -179,7 +179,7 @@ public class FrontendPackageImpl extends EPackageImpl implements FrontendPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getFeiDevice_HasDigitalInput()
+  public EAttribute getFeiDevice_DigitalInputType()
   {
     return (EAttribute)feiDeviceEClass.getEStructuralFeatures().get(6);
   }
@@ -189,7 +189,7 @@ public class FrontendPackageImpl extends EPackageImpl implements FrontendPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getFeiDevice_DigitalInputType()
+  public EAttribute getFeiDevice_HasDigitalOutput()
   {
     return (EAttribute)feiDeviceEClass.getEStructuralFeatures().get(7);
   }
@@ -199,7 +199,7 @@ public class FrontendPackageImpl extends EPackageImpl implements FrontendPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getFeiDevice_HasDigitalOutput()
+  public EAttribute getFeiDevice_DigitalOutputType()
   {
     return (EAttribute)feiDeviceEClass.getEStructuralFeatures().get(8);
   }
@@ -209,7 +209,7 @@ public class FrontendPackageImpl extends EPackageImpl implements FrontendPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getFeiDevice_DigitalOutputType()
+  public EAttribute getFeiDevice_MultiOut()
   {
     return (EAttribute)feiDeviceEClass.getEStructuralFeatures().get(9);
   }
@@ -219,7 +219,7 @@ public class FrontendPackageImpl extends EPackageImpl implements FrontendPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getFeiDevice_MultiOut()
+  public EAttribute getFeiDevice_TxTuner()
   {
     return (EAttribute)feiDeviceEClass.getEStructuralFeatures().get(10);
   }
@@ -229,7 +229,7 @@ public class FrontendPackageImpl extends EPackageImpl implements FrontendPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getFeiDevice_TxTuner()
+  public EAttribute getFeiDevice_NumberOfDigitalInputsForTx()
   {
     return (EAttribute)feiDeviceEClass.getEStructuralFeatures().get(11);
   }
@@ -239,7 +239,7 @@ public class FrontendPackageImpl extends EPackageImpl implements FrontendPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getFeiDevice_NumberOfDigitalInputsForTx()
+  public EAttribute getFeiDevice_DigitalInputTypeForTx()
   {
     return (EAttribute)feiDeviceEClass.getEStructuralFeatures().get(12);
   }
@@ -249,19 +249,9 @@ public class FrontendPackageImpl extends EPackageImpl implements FrontendPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getFeiDevice_DigitalInputTypeForTx()
-  {
-    return (EAttribute)feiDeviceEClass.getEStructuralFeatures().get(13);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public EAttribute getFeiDevice_TunerStatusStruct()
   {
-    return (EAttribute)feiDeviceEClass.getEStructuralFeatures().get(14);
+    return (EAttribute)feiDeviceEClass.getEStructuralFeatures().get(13);
   }
 
   /**
@@ -309,7 +299,6 @@ public class FrontendPackageImpl extends EPackageImpl implements FrontendPackage
     createEAttribute(feiDeviceEClass, FEI_DEVICE__INGESTS_GPS);
     createEAttribute(feiDeviceEClass, FEI_DEVICE__OUTPUTS_GPS);
     createEAttribute(feiDeviceEClass, FEI_DEVICE__RX_TUNER);
-    createEAttribute(feiDeviceEClass, FEI_DEVICE__HAS_ANALOG_INPUT);
     createEAttribute(feiDeviceEClass, FEI_DEVICE__NUMBER_OF_ANALOG_INPUTS);
     createEAttribute(feiDeviceEClass, FEI_DEVICE__HAS_DIGITAL_INPUT);
     createEAttribute(feiDeviceEClass, FEI_DEVICE__DIGITAL_INPUT_TYPE);
@@ -364,7 +353,6 @@ public class FrontendPackageImpl extends EPackageImpl implements FrontendPackage
     initEAttribute(getFeiDevice_IngestsGPS(), theEcorePackage.getEBoolean(), "ingestsGPS", null, 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getFeiDevice_OutputsGPS(), theEcorePackage.getEBoolean(), "outputsGPS", null, 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getFeiDevice_RxTuner(), theEcorePackage.getEBoolean(), "RxTuner", null, 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getFeiDevice_HasAnalogInput(), theEcorePackage.getEBoolean(), "hasAnalogInput", null, 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getFeiDevice_NumberOfAnalogInputs(), theEcorePackage.getEInt(), "numberOfAnalogInputs", null, 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getFeiDevice_HasDigitalInput(), theEcorePackage.getEBoolean(), "hasDigitalInput", null, 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getFeiDevice_DigitalInputType(), theEcorePackage.getEString(), "digitalInputType", null, 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

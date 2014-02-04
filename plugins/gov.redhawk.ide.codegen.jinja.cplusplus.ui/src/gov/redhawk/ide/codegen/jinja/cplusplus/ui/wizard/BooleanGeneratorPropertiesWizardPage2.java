@@ -24,7 +24,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 
 /**
- * @since 1.0
+ * @since 1.1
  */
 public class BooleanGeneratorPropertiesWizardPage2 extends BooleanGeneratorPropertiesWizardPage {
 	protected String template;

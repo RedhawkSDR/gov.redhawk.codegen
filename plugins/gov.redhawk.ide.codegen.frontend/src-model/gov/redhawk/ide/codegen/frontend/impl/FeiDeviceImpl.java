@@ -25,7 +25,6 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isIngestsGPS <em>Ingests GPS</em>}</li>
  *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isOutputsGPS <em>Outputs GPS</em>}</li>
  *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isRxTuner <em>Rx Tuner</em>}</li>
- *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isHasAnalogInput <em>Has Analog Input</em>}</li>
  *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#getNumberOfAnalogInputs <em>Number Of Analog Inputs</em>}</li>
  *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isHasDigitalInput <em>Has Digital Input</em>}</li>
  *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#getDigitalInputType <em>Digital Input Type</em>}</li>
@@ -121,26 +120,6 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
    * @ordered
    */
   protected boolean rxTuner = RX_TUNER_EDEFAULT;
-
-  /**
-   * The default value of the '{@link #isHasAnalogInput() <em>Has Analog Input</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #isHasAnalogInput()
-   * @generated
-   * @ordered
-   */
-  protected static final boolean HAS_ANALOG_INPUT_EDEFAULT = false;
-
-  /**
-   * The cached value of the '{@link #isHasAnalogInput() <em>Has Analog Input</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #isHasAnalogInput()
-   * @generated
-   * @ordered
-   */
-  protected boolean hasAnalogInput = HAS_ANALOG_INPUT_EDEFAULT;
 
   /**
    * The default value of the '{@link #getNumberOfAnalogInputs() <em>Number Of Analog Inputs</em>}' attribute.
@@ -459,29 +438,6 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
    * <!-- end-user-doc -->
    * @generated
    */
-  public boolean isHasAnalogInput()
-  {
-    return hasAnalogInput;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setHasAnalogInput(boolean newHasAnalogInput)
-  {
-    boolean oldHasAnalogInput = hasAnalogInput;
-    hasAnalogInput = newHasAnalogInput;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, FrontendPackage.FEI_DEVICE__HAS_ANALOG_INPUT, oldHasAnalogInput, hasAnalogInput));
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public int getNumberOfAnalogInputs()
   {
     return numberOfAnalogInputs;
@@ -725,8 +681,6 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
         return isOutputsGPS();
       case FrontendPackage.FEI_DEVICE__RX_TUNER:
         return isRxTuner();
-      case FrontendPackage.FEI_DEVICE__HAS_ANALOG_INPUT:
-        return isHasAnalogInput();
       case FrontendPackage.FEI_DEVICE__NUMBER_OF_ANALOG_INPUTS:
         return getNumberOfAnalogInputs();
       case FrontendPackage.FEI_DEVICE__HAS_DIGITAL_INPUT:
@@ -772,9 +726,6 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
         return;
       case FrontendPackage.FEI_DEVICE__RX_TUNER:
         setRxTuner((Boolean)newValue);
-        return;
-      case FrontendPackage.FEI_DEVICE__HAS_ANALOG_INPUT:
-        setHasAnalogInput((Boolean)newValue);
         return;
       case FrontendPackage.FEI_DEVICE__NUMBER_OF_ANALOG_INPUTS:
         setNumberOfAnalogInputs((Integer)newValue);
@@ -832,9 +783,6 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
       case FrontendPackage.FEI_DEVICE__RX_TUNER:
         setRxTuner(RX_TUNER_EDEFAULT);
         return;
-      case FrontendPackage.FEI_DEVICE__HAS_ANALOG_INPUT:
-        setHasAnalogInput(HAS_ANALOG_INPUT_EDEFAULT);
-        return;
       case FrontendPackage.FEI_DEVICE__NUMBER_OF_ANALOG_INPUTS:
         setNumberOfAnalogInputs(NUMBER_OF_ANALOG_INPUTS_EDEFAULT);
         return;
@@ -887,8 +835,6 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
         return outputsGPS != OUTPUTS_GPS_EDEFAULT;
       case FrontendPackage.FEI_DEVICE__RX_TUNER:
         return rxTuner != RX_TUNER_EDEFAULT;
-      case FrontendPackage.FEI_DEVICE__HAS_ANALOG_INPUT:
-        return hasAnalogInput != HAS_ANALOG_INPUT_EDEFAULT;
       case FrontendPackage.FEI_DEVICE__NUMBER_OF_ANALOG_INPUTS:
         return numberOfAnalogInputs != NUMBER_OF_ANALOG_INPUTS_EDEFAULT;
       case FrontendPackage.FEI_DEVICE__HAS_DIGITAL_INPUT:
@@ -932,8 +878,6 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
     result.append(outputsGPS);
     result.append(", RxTuner: ");
     result.append(rxTuner);
-    result.append(", hasAnalogInput: ");
-    result.append(hasAnalogInput);
     result.append(", numberOfAnalogInputs: ");
     result.append(numberOfAnalogInputs);
     result.append(", hasDigitalInput: ");

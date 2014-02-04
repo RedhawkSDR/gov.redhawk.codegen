@@ -13,6 +13,9 @@ package gov.redhawk.ide.codegen.jinja.java;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
+/**
+ * @since 1.1
+ */
 public class JavaGeneratorPlugin extends Plugin {
 
 	public static final String PLUGIN_ID = "gov.redhawk.ide.codegen.jinja.java";

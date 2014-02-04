@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
- * @since 1.0
+ * @since 1.1
  */
 public class BooleanGeneratorDisplayFactory2 implements ICodegenDisplayFactory {
 

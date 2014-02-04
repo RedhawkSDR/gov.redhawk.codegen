@@ -35,6 +35,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 
+/**
+ * @since 1.1
+ */
 public class PythonGenerator extends AbstractPythonGenerator {
 	public static final String ID = "gov.redhawk.ide.codegen.jinja.python.PythonGenerator";
 	private final JinjaGenerator generator = new JinjaGenerator();

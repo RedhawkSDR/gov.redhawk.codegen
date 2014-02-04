@@ -113,22 +113,13 @@ public interface FrontendPackage extends EPackage
   int FEI_DEVICE__RX_TUNER = 3;
 
   /**
-   * The feature id for the '<em><b>Has Analog Input</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int FEI_DEVICE__HAS_ANALOG_INPUT = 4;
-
-  /**
    * The feature id for the '<em><b>Number Of Analog Inputs</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int FEI_DEVICE__NUMBER_OF_ANALOG_INPUTS = 5;
+  int FEI_DEVICE__NUMBER_OF_ANALOG_INPUTS = 4;
 
   /**
    * The feature id for the '<em><b>Has Digital Input</b></em>' attribute.
@@ -137,7 +128,7 @@ public interface FrontendPackage extends EPackage
    * @generated
    * @ordered
    */
-  int FEI_DEVICE__HAS_DIGITAL_INPUT = 6;
+  int FEI_DEVICE__HAS_DIGITAL_INPUT = 5;
 
   /**
    * The feature id for the '<em><b>Digital Input Type</b></em>' attribute.
@@ -146,7 +137,7 @@ public interface FrontendPackage extends EPackage
    * @generated
    * @ordered
    */
-  int FEI_DEVICE__DIGITAL_INPUT_TYPE = 7;
+  int FEI_DEVICE__DIGITAL_INPUT_TYPE = 6;
 
   /**
    * The feature id for the '<em><b>Has Digital Output</b></em>' attribute.
@@ -155,7 +146,7 @@ public interface FrontendPackage extends EPackage
    * @generated
    * @ordered
    */
-  int FEI_DEVICE__HAS_DIGITAL_OUTPUT = 8;
+  int FEI_DEVICE__HAS_DIGITAL_OUTPUT = 7;
 
   /**
    * The feature id for the '<em><b>Digital Output Type</b></em>' attribute.
@@ -164,7 +155,7 @@ public interface FrontendPackage extends EPackage
    * @generated
    * @ordered
    */
-  int FEI_DEVICE__DIGITAL_OUTPUT_TYPE = 9;
+  int FEI_DEVICE__DIGITAL_OUTPUT_TYPE = 8;
 
   /**
    * The feature id for the '<em><b>Multi Out</b></em>' attribute.
@@ -173,7 +164,7 @@ public interface FrontendPackage extends EPackage
    * @generated
    * @ordered
    */
-  int FEI_DEVICE__MULTI_OUT = 10;
+  int FEI_DEVICE__MULTI_OUT = 9;
 
   /**
    * The feature id for the '<em><b>Tx Tuner</b></em>' attribute.
@@ -182,7 +173,7 @@ public interface FrontendPackage extends EPackage
    * @generated
    * @ordered
    */
-  int FEI_DEVICE__TX_TUNER = 11;
+  int FEI_DEVICE__TX_TUNER = 10;
 
   /**
    * The feature id for the '<em><b>Number Of Digital Inputs For Tx</b></em>' attribute.
@@ -191,7 +182,7 @@ public interface FrontendPackage extends EPackage
    * @generated
    * @ordered
    */
-  int FEI_DEVICE__NUMBER_OF_DIGITAL_INPUTS_FOR_TX = 12;
+  int FEI_DEVICE__NUMBER_OF_DIGITAL_INPUTS_FOR_TX = 11;
 
   /**
    * The feature id for the '<em><b>Digital Input Type For Tx</b></em>' attribute.
@@ -200,7 +191,7 @@ public interface FrontendPackage extends EPackage
    * @generated
    * @ordered
    */
-  int FEI_DEVICE__DIGITAL_INPUT_TYPE_FOR_TX = 13;
+  int FEI_DEVICE__DIGITAL_INPUT_TYPE_FOR_TX = 12;
 
   /**
    * The feature id for the '<em><b>Tuner Status Struct</b></em>' attribute.
@@ -209,7 +200,7 @@ public interface FrontendPackage extends EPackage
    * @generated
    * @ordered
    */
-  int FEI_DEVICE__TUNER_STATUS_STRUCT = 14;
+  int FEI_DEVICE__TUNER_STATUS_STRUCT = 13;
 
   /**
    * The number of structural features of the '<em>Fei Device</em>' class.
@@ -218,7 +209,7 @@ public interface FrontendPackage extends EPackage
    * @generated
    * @ordered
    */
-  int FEI_DEVICE_FEATURE_COUNT = 15;
+  int FEI_DEVICE_FEATURE_COUNT = 14;
 
   /**
    * The number of operations of the '<em>Fei Device</em>' class.
@@ -293,17 +284,6 @@ public interface FrontendPackage extends EPackage
    * @generated
    */
   EAttribute getFeiDevice_RxTuner();
-
-  /**
-   * Returns the meta object for the attribute '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isHasAnalogInput <em>Has Analog Input</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Has Analog Input</em>'.
-   * @see gov.redhawk.ide.codegen.frontend.FeiDevice#isHasAnalogInput()
-   * @see #getFeiDevice()
-   * @generated
-   */
-  EAttribute getFeiDevice_HasAnalogInput();
 
   /**
    * Returns the meta object for the attribute '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#getNumberOfAnalogInputs <em>Number Of Analog Inputs</em>}'.
@@ -491,14 +471,6 @@ public interface FrontendPackage extends EPackage
      * @generated
      */
     EAttribute FEI_DEVICE__RX_TUNER = eINSTANCE.getFeiDevice_RxTuner();
-
-    /**
-     * The meta object literal for the '<em><b>Has Analog Input</b></em>' attribute feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EAttribute FEI_DEVICE__HAS_ANALOG_INPUT = eINSTANCE.getFeiDevice_HasAnalogInput();
 
     /**
      * The meta object literal for the '<em><b>Number Of Analog Inputs</b></em>' attribute feature.

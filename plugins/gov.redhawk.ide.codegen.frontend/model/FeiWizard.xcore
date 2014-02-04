@@ -19,18 +19,17 @@ class FeiDevice {
 	
 	// Specific props to Tuner
 	boolean RxTuner
-	boolean hasAnalogInput
 	int numberOfAnalogInputs
 	boolean hasDigitalInput
-	String digitalInputType //This could also be an enum
+	String digitalInputType 
 	boolean hasDigitalOutput
-	String digitalOutputType //This could also be an enum
+	String digitalOutputType 
 	boolean MultiOut
 	
 	// Transmit props 
 	boolean TxTuner
 	int numberOfDigitalInputsForTx
-	String digitalInputTypeForTx //This could also be an enum
+	String digitalInputTypeForTx 
 	
 	// Tuner status properties
 	TunerStatusStruct tunerStatusStruct

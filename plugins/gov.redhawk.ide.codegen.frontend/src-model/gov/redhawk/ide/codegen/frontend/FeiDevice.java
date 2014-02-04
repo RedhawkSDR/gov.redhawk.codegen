@@ -18,7 +18,6 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isIngestsGPS <em>Ingests GPS</em>}</li>
  *   <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isOutputsGPS <em>Outputs GPS</em>}</li>
  *   <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isRxTuner <em>Rx Tuner</em>}</li>
- *   <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isHasAnalogInput <em>Has Analog Input</em>}</li>
  *   <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#getNumberOfAnalogInputs <em>Number Of Analog Inputs</em>}</li>
  *   <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isHasDigitalInput <em>Has Digital Input</em>}</li>
  *   <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#getDigitalInputType <em>Digital Input Type</em>}</li>
@@ -141,32 +140,6 @@ public interface FeiDevice extends EObject
    * @generated
    */
   void setRxTuner(boolean value);
-
-  /**
-   * Returns the value of the '<em><b>Has Analog Input</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Has Analog Input</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Has Analog Input</em>' attribute.
-   * @see #setHasAnalogInput(boolean)
-   * @see gov.redhawk.ide.codegen.frontend.FrontendPackage#getFeiDevice_HasAnalogInput()
-   * @model unique="false"
-   * @generated
-   */
-  boolean isHasAnalogInput();
-
-  /**
-   * Sets the value of the '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isHasAnalogInput <em>Has Analog Input</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Has Analog Input</em>' attribute.
-   * @see #isHasAnalogInput()
-   * @generated
-   */
-  void setHasAnalogInput(boolean value);
 
   /**
    * Returns the value of the '<em><b>Number Of Analog Inputs</b></em>' attribute.

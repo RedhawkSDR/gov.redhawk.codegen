@@ -34,6 +34,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 
+/**
+ * @since 1.1
+ */
 public class JavaGenerator extends AbstractJavaCodeGenerator {
 	public static final String ID = "gov.redhawk.ide.codegen.jinja.java.JavaGenerator";
 	private final JinjaGenerator generator = new JinjaGenerator();
