@@ -33,6 +33,7 @@ import java.util.Set;
 import mil.jpeojtrs.sca.prf.ConfigurationKind;
 import mil.jpeojtrs.sca.prf.Kind;
 import mil.jpeojtrs.sca.prf.PrfFactory;
+import mil.jpeojtrs.sca.prf.Properties;
 import mil.jpeojtrs.sca.prf.PropertyConfigurationType;
 import mil.jpeojtrs.sca.prf.PropertyValueType;
 import mil.jpeojtrs.sca.prf.Simple;
@@ -106,6 +107,14 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		
 		return pages.toArray(new ICodegenWizardPage[pages.size()]);
 	}
+	
+	/**
+	 * If this Factory is created and the createPages method is not invoked, the feiDevcie will be null unless this is called.
+	 * @param feiDevice
+	 */
+	public void setFeiDevice(FeiDevice feiDevice) {
+		this.feiDevice = feiDevice;
+	}
 
 	@Override
 	public void modifyProject(IProject project, IFile spdFile, SubMonitor newChild) throws CoreException {
@@ -126,28 +135,28 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		if (this.feiDevice.isAntenna()) {
 			addAntennaSpecificPorts(eSpd);
 			addAntennaSpecificProps(eSpd);
-		} else {
+		} else { // It's a Tuner
 			addTunerSpecificProps(eSpd);
 			
 			if (this.feiDevice.isRxTuner()) {
-				if (this.feiDevice.isHasAnalogInput()) {
+				if (this.feiDevice.isHasAnalogInput()) { // Has analog input
 					addRFInfoPorts(eSpd, this.feiDevice.getNumberOfAnalogInputs());
 					
-					if (this.feiDevice.isHasAnalogOutput()) {
-						addProvidesPort(eSpd, "AnalogTuner_in", AnalogTunerHelper.id());
-						addRFInfoPort(eSpd, "RFInfo_out");
-						addRFSourcePort(eSpd);
-					} else {
+					if (this.feiDevice.isHasDigitalOutput()) { // Has digital output
 						addProvidesPort(eSpd, "DigitalTuner_in", DigitalTunerHelper.id());
 						addUsesPort(eSpd, "Dig_out", this.feiDevice.getDigitalOutputType());
 						if (this.feiDevice.isMultiOut()) {
 							addMultiOutProperty(eSpd);
 						}
+					} else { // It has Analog Output
+						addProvidesPort(eSpd, "AnalogTuner_in", AnalogTunerHelper.id());
+						addRFInfoPort(eSpd, "RFInfo_out");
+						addRFSourcePort(eSpd);
 					}
 					
 					
-				} else {
-					// Not analog input
+				} else { // Has Digital Input
+					
 					addProvidesPort(eSpd, "Dig_in", this.feiDevice.getDigitalInputType());
 					addUsesPort(eSpd, "Dig_out", this.feiDevice.getDigitalOutputType());
 					if (this.feiDevice.isMultiOut()) {
@@ -165,9 +174,11 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		// Finally add the front end nature to the project
 		FrontEndProjectNature.addNature(project, null, newChild);
 		 
+		Properties ePrf = eSpd.getPropertyFile().getProperties();
 		try {
 			eScd.eResource().save(null);
 			eSpd.eResource().save(null);
+			ePrf.eResource().save(null);
 		} catch (IOException e) {
 			throw new CoreException(new Status(Status.ERROR, FrontEndDeviceWizardPlugin.PLUGIN_ID, "Failed to write Settings to SCA resources.", e));
 		}
@@ -270,6 +281,7 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 	private void addTunerSpecificProps(SoftPkg eSpd) {
 		
 		// Add the properties from the Wizard page.
+		// TODO: This should be depend on the wizard page and instead should pull from the model.
 		Set<FrontEndProp> properties = this.frontEndTunerPropsWizardPage.getSelectedProperties();
 		
 		StructSequence structSeq = PrfFactory.eINSTANCE.createStructSequence();
@@ -342,6 +354,14 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 				addInterface(library, inherited.getRepId(), interfaces);
 			}
 		}
+		
+		// Don't add it if we already have it.
+		for (Interface curInterface : interfaces.getInterface()) {
+			if (curInterface.getRepid().equals(i.getRepid())) {
+				return;
+			}
+		}
+		
 		interfaces.getInterface().add(i);
 	}
 	

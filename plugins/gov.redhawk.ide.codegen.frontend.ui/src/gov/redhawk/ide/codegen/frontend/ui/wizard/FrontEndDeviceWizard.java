@@ -13,9 +13,11 @@ package gov.redhawk.ide.codegen.frontend.ui.wizard;
 import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
 import gov.redhawk.ide.codegen.frontend.FeiDevice;
 import gov.redhawk.ide.codegen.frontend.FrontendFactory;
+import gov.redhawk.ide.codegen.frontend.ui.FrontEndGeneratorTemplateDisplayFactory;
 import gov.redhawk.ide.codegen.util.ImplementationAndSettings;
 import gov.redhawk.ide.dcd.ui.wizard.NewScaDeviceCreationProjectWizard;
 import gov.redhawk.ide.ui.wizard.IImportWizard;
+import gov.redhawk.sca.util.SubMonitor;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -23,6 +25,10 @@ import java.util.List;
 
 import mil.jpeojtrs.sca.spd.Implementation;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 
@@ -86,5 +92,12 @@ public class FrontEndDeviceWizard extends NewScaDeviceCreationProjectWizard impl
 			getImplPage().setPageComplete(true);
 		}
 			
+	}
+	
+	@Override
+	protected void modifyResult(IProject project, IFile spdFile, SubMonitor newChild) throws CoreException {
+		FrontEndGeneratorTemplateDisplayFactory feiFactory = new FrontEndGeneratorTemplateDisplayFactory();
+		feiFactory.setFeiDevice(this.feiDevice);
+		feiFactory.modifyProject(project, spdFile, newChild);
 	}
 }

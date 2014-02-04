@@ -146,7 +146,7 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		Label numAnalogLabel = new Label(analogIn, SWT.None);
 		numAnalogLabel.setText("Number of Analog input ports: ");
 
-		Spinner numAnalogSpinner = new Spinner(analogIn, SWT.None);
+		Spinner numAnalogSpinner = new Spinner(analogIn, SWT.BORDER);
 		numAnalogSpinner.setMinimum(1);
 		UpdateValueStrategy uvs = booleanConverter();
 		ctx.bindValue(WidgetProperties.selection().observe(numAnalogSpinner),
