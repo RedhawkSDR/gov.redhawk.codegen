@@ -51,14 +51,61 @@
          point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="false"
-            locationURI="toolbar:gov.redhawk.ide.spd.internal.ui.editor.overview.toolbar?before=additions">
+            locationURI="toolbar:gov.redhawk.prf.ui.editor.page.toolbar?before=additions">
          <command
                commandId="gov.redhawk.ide.codegen.frontend.ui.command.settings"
-               icon="icons/gear_10x.gif"
+               icon="icons/gear_16x.gif"
                label="Edit FrontEnd Properties"
                style="push">
             <visibleWhen
                   checkEnabled="false">
+               <with
+                     variable="activeEditor">
+                  <test
+                        forcePluginActivation="true"
+                        property="gov.redhawk.ide.codegen.frontend.ui.propertyTool">
+                  </test>
+               </with>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:gov.redhawk.ide.spd.internal.ui.editor.implementation.toolbar?before=additions">
+         <command
+               commandId="gov.redhawk.ide.codegen.frontend.ui.command.settings"
+               icon="icons/gear_16x.gif"
+               label="Edit FrontEnd Properties"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeEditor">
+                  <test
+                        forcePluginActivation="true"
+                        property="gov.redhawk.ide.codegen.frontend.ui.propertyTool">
+                  </test>
+               </with>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="toolbar:gov.redhawk.ide.spd.internal.ui.editor.overview.toolbar?before=additions">
+         <command
+               commandId="gov.redhawk.ide.codegen.frontend.ui.command.settings"
+               icon="icons/gear_16x.gif"
+               label="Edit FrontEnd Properties"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeEditor">
+                  <test
+                        forcePluginActivation="true"
+                        property="gov.redhawk.ide.codegen.frontend.ui.propertyTool">
+                  </test>
+               </with>
             </visibleWhen>
          </command>
       </menuContribution>
@@ -80,6 +127,16 @@
                class="gov.redhawk.ide.codegen.frontend.ui.FrontEndProjectNature">
          </run>
       </runtime>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="gov.redhawk.ide.codegen.frontend.ui.FrontEndPropertyTester"
+            id="gov.redhawk.ide.codegen.frontend.ui.propertyTester"
+            namespace="gov.redhawk.ide.codegen.frontend.ui"
+            properties="propertyTool"
+            type="java.lang.Object">
+      </propertyTester>
    </extension>
    
 </plugin>

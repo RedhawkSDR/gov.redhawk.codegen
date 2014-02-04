@@ -48,6 +48,12 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 	public FrontEndTunerOptionsWizardPage(FeiDevice feiDevice) {
 		super("");
 		this.feiDevice = feiDevice;
+		populatePropertyTypes();
+
+		// Initialize the model object
+		this.feiDevice.setDigitalInputTypeForTx(propertyTypes[0]);
+		this.feiDevice.setDigitalInputType(propertyTypes[0]);
+		this.feiDevice.setDigitalOutputType(propertyTypes[0]);
 	}
 
 	@Override
@@ -58,7 +64,6 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		client = new Composite(parent, SWT.NULL);
 		ctx = new DataBindingContext();
 
-		populatePropertyTypes();
 		createUIElements(client);
 
 		this.setControl(client);
@@ -190,7 +195,6 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__DIGITAL_INPUT_TYPE));
 		ctx.bindValue(WidgetProperties.enabled().observe(digitalInputCombo),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__HAS_DIGITAL_INPUT));
-		digitalInputCombo.setText(propertyTypes[0]);
 		return digitalIn;
 	}
 
@@ -230,7 +234,6 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__DIGITAL_OUTPUT_TYPE));
 		ctx.bindValue(WidgetProperties.enabled().observe(digitalOutputCombo),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__HAS_DIGITAL_OUTPUT));
-		digitalOutputCombo.setText(propertyTypes[0]);
 
 		Button multiOutCheck = new Button(digitalOut, SWT.CHECK);
 		multiOutCheck.setText("Multi-out");
@@ -264,7 +267,6 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		digitalInputCombo.setItems(propertyTypes);
 		ctx.bindValue(WidgetProperties.selection().observe(digitalInputCombo),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__DIGITAL_INPUT_TYPE_FOR_TX));
-		digitalInputCombo.setText(propertyTypes[0]);
 	} //End Transmitter Group
 
 	private UpdateValueStrategy booleanConverter() {

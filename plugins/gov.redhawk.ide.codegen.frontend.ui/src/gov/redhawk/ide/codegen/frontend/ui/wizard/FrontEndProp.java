@@ -65,5 +65,28 @@ public class FrontEndProp {
 	    changeSupport.firePropertyChange(propertyName, oldValue, newValue);
 	  }
 
+	  // Equality and hash code are based off of the properties Id field which is useful in the cases where a FrontEnd
+	  // prop is being added to a set.  
+	  @Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		
+		if (obj instanceof FrontEndProp) {
+			return ((FrontEndProp) obj).getProp().getId().equals(this.getProp().getId());
+		}
+		
+		if (obj instanceof Simple) {
+			return ((Simple) obj).getId().equals(this.getProp().getId());
+		}
+		
+		return false;
+	}
+	  
+	  @Override
+	public int hashCode() {
+		return this.getProp().getId().hashCode();
+	}
 
 }

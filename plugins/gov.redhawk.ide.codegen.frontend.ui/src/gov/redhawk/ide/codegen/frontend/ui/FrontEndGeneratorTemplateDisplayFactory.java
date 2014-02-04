@@ -71,6 +71,7 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 	private FrontEndTunerTypeSelectionWizardPage frontEndTunerTypeSelectionPage ;
 	private FrontEndTunerOptionsWizardPage frontEndTunerOptionsWizardPage;
 	private FeiDevice feiDevice;
+	private Set<FrontEndProp> tunerStatusStructProps;
 
 	@Override
 	public ICodegenWizardPage createPage() {
@@ -108,14 +109,6 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		return pages.toArray(new ICodegenWizardPage[pages.size()]);
 	}
 	
-	/**
-	 * If this Factory is created and the createPages method is not invoked, the feiDevcie will be null unless this is called.
-	 * @param feiDevice
-	 */
-	public void setFeiDevice(FeiDevice feiDevice) {
-		this.feiDevice = feiDevice;
-	}
-
 	@Override
 	public void modifyProject(IProject project, IFile spdFile, SubMonitor newChild) throws CoreException {
 		final ResourceSet resourceSet = ScaResourceFactoryUtil.createResourceSet();
@@ -133,14 +126,18 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		}
 		
 		if (this.feiDevice.isAntenna()) {
+			setDeviceKindName(eSpd, "FRONTEND::ANTENNA");
 			addAntennaSpecificPorts(eSpd);
 			addAntennaSpecificProps(eSpd);
 		} else { // It's a Tuner
-			addTunerSpecificProps(eSpd);
+			// Add the front end nature to the project if it's a tuner.
+			FrontEndProjectNature.addNature(project, null, newChild);
 			
+			addTunerSpecificProps(eSpd);
+			setDeviceKindName(eSpd, "FRONTEND::TUNER");
 			if (this.feiDevice.isRxTuner()) {
 				if (!this.feiDevice.isHasDigitalInput()) { // Has analog input
-					addRFInfoPorts(eSpd, this.feiDevice.getNumberOfAnalogInputs());
+					addRFInfoProvidesPorts(eSpd, this.feiDevice.getNumberOfAnalogInputs());
 					
 					if (this.feiDevice.isHasDigitalOutput()) { // Has digital output
 						addProvidesPort(eSpd, "DigitalTuner_in", DigitalTunerHelper.id());
@@ -150,7 +147,7 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 						}
 					} else { // It has Analog Output
 						addProvidesPort(eSpd, "AnalogTuner_in", AnalogTunerHelper.id());
-						addRFInfoPort(eSpd, "RFInfo_out");
+						addRFInfoUsesPort(eSpd, "RFInfo_out");
 						addRFSourcePort(eSpd);
 					}
 					
@@ -167,12 +164,10 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 			
 			if (this.feiDevice.isTxTuner()) {
 				addDigitalTunerProvidesPorts(eSpd, this.feiDevice.getNumberOfDigitalInputsForTx());
-				addRFInfoPorts(eSpd, this.feiDevice.getNumberOfDigitalInputsForTx());
+				addRFInfoUsesPorts(eSpd, this.feiDevice.getNumberOfDigitalInputsForTx());
 			}
 		}
 		
-		// Finally add the front end nature to the project
-		FrontEndProjectNature.addNature(project, null, newChild);
 		 
 		Properties ePrf = eSpd.getPropertyFile().getProperties();
 		try {
@@ -185,6 +180,16 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		
 	}
 	
+	private void setDeviceKindName(SoftPkg eSpd, String name) {
+		
+		for (Simple simpProp : eSpd.getPropertyFile().getProperties().getSimple()) {
+			if ("device_kind".equals(simpProp.getName())) {
+				simpProp.setValue(name);
+				return;
+			}
+		}
+	}
+
 	private void addDigitalTunerProvidesPorts(SoftPkg eSpd, int numberOfDigitalInputsForTx) {
 		
 		addProvidesPort(eSpd, "DigitalTuner_in", DigitalTunerHelper.id());
@@ -221,15 +226,27 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		return addProvidesPort(eSpd, "RFSource_in", RFSourceHelper.id());
 	}
 
-	private Ports addRFInfoPort(SoftPkg eSpd, String name) {
+	private Ports addRFInfoUsesPort(SoftPkg eSpd, String name) {
 		return addUsesPort(eSpd, name, RFInfoHelper.id());
 	}
 
-	private void addRFInfoPorts(SoftPkg eSpd, int numberOfPorts) {
-		addRFInfoPort(eSpd, "RFInfo_out");
+	private Ports addRFInfoProvidesPort(SoftPkg eSpd, String name) {
+		return addProvidesPort(eSpd, name, RFInfoHelper.id());
+	}
+	
+	private void addRFInfoUsesPorts(SoftPkg eSpd, int numberOfPorts) {
+		addRFInfoUsesPort(eSpd, "RFInfo_out");
 		
 		for (int i = 2; i < numberOfPorts + 1; i++) {
-			addRFInfoPort(eSpd, "RFInfo_out_" + i);
+			addRFInfoUsesPort(eSpd, "RFInfo_out_" + i);
+		}
+	}
+	
+	private void addRFInfoProvidesPorts(SoftPkg eSpd, int numberOfPorts) {
+		addRFInfoProvidesPort(eSpd, "RFInfo_in");
+		
+		for (int i = 2; i < numberOfPorts + 1; i++) {
+			addRFInfoProvidesPort(eSpd, "RFInfo_in_" + i);
 		}
 	}
 	
@@ -281,8 +298,9 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 	private void addTunerSpecificProps(SoftPkg eSpd) {
 		
 		// Add the properties from the Wizard page.
-		// TODO: This should be depend on the wizard page and instead should pull from the model.
-		Set<FrontEndProp> properties = this.frontEndTunerPropsWizardPage.getSelectedProperties();
+		if (this.tunerStatusStructProps == null && this.frontEndTunerPropsWizardPage != null) {
+			this.tunerStatusStructProps = this.frontEndTunerPropsWizardPage.getSelectedProperties();
+		}
 		
 		StructSequence structSeq = PrfFactory.eINSTANCE.createStructSequence();
 		structSeq.setId("frontend_tuner_status");
@@ -296,7 +314,7 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		struct.setId("frontend_tuner_status_struct");
 		struct.setName("frontend_tuner_status_struct");
 		
-		for (FrontEndProp frontEndProp : properties) {
+		for (FrontEndProp frontEndProp : this.tunerStatusStructProps) {
 			Simple prop = frontEndProp.getProp();
 			if (prop != null) {
 				struct.getSimple().add(prop);
@@ -315,7 +333,7 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 	}
 
 	private void addAntennaSpecificPorts(SoftPkg eSpd) {
-		Ports ports = addRFInfoPort(eSpd, "RFInfo_out");
+		Ports ports = addRFInfoUsesPort(eSpd, "RFInfo_out");
 		
 		// RF Source
 		Provides rfSourcePort = ScdFactory.eINSTANCE.createProvides();
@@ -374,6 +392,10 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 			scd.getComponentFeatures().setPorts(ScdFactory.eINSTANCE.createPorts());
 		}
 		return scd.getComponentFeatures().getPorts();
+	}
+
+	public void setTunerStatusStructProps(Set<FrontEndProp> tunerStatusStructProps) {
+		this.tunerStatusStructProps = tunerStatusStructProps;
 	}
 
 

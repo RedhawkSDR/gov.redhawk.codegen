@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import mil.jpeojtrs.sca.prf.Simple;
 import mil.jpeojtrs.sca.spd.Implementation;
 import mil.jpeojtrs.sca.spd.SoftPkg;
 
@@ -68,8 +69,23 @@ public class FrontEndTunerPropsPage extends WizardPage implements ICodegenWizard
 	public FrontEndTunerPropsPage(FeiDevice feiDevice) {
 		super("");
 		this.feiDevice = feiDevice;
+		if (this.selectedProps.isEmpty()) {
+			selectedProps.addAll(FrontEndDeviceUIUtils.INSTANCE.getRequiredFrontEndProps());
+		}
 	}
 	
+	public FrontEndTunerPropsPage(Set<Simple> props) {
+		super("");
+		
+		if (this.selectedProps.isEmpty()) {
+			selectedProps.addAll(FrontEndDeviceUIUtils.INSTANCE.getRequiredFrontEndProps());
+			
+			for (Simple prop : props) {
+				// Maybe it is required, but it's a set so we won't add it if it's already added and all required are added already
+				selectedProps.add(new FrontEndProp(prop, false));
+			}
+		}
+	}
 	
 	
 	@Override
@@ -78,9 +94,6 @@ public class FrontEndTunerPropsPage extends WizardPage implements ICodegenWizard
 		this.setDescription("Select set of tuner status properties for the tuner status struct.  Note that required properties may not be removed.");
 		
 		final Composite client = new Composite(parent, SWT.NULL);
-		if (this.selectedProps.isEmpty()) {
-			selectedProps.addAll(FrontEndDeviceUIUtils.INSTANCE.getRequiredFrontEndProps());
-		}
 
 		// Creates the basic layout of the UI elements
 		createUIElements(client);
