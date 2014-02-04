@@ -56,7 +56,7 @@ public abstract class AbstractPythonGenerator extends AbstractCodeGenerator {
 
 	@Override
 	public IStatus generate(final ImplementationSettings implSettings, final Implementation impl, final PrintStream out, final PrintStream err, // SUPPRESS CHECKSTYLE NumParameters
-	        final IProgressMonitor monitor, final String[] generateFiles, final boolean shouldGenerate, final List<FileToCRCMap> crcMap) {
+		final IProgressMonitor monitor, final String[] generateFiles, final boolean shouldGenerate, final List<FileToCRCMap> crcMap) {
 		Assert.isNotNull(implSettings);
 		Assert.isNotNull(impl);
 		Assert.isNotNull(out);
@@ -69,7 +69,8 @@ public abstract class AbstractPythonGenerator extends AbstractCodeGenerator {
 		final int CLEANUP_PROJECT_WORK = 10;
 		final SubMonitor progress;
 		if (shouldGenerate) {
-			progress = SubMonitor.convert(monitor, "Configuring Project", PYTHON_NATURE_WORK + ADD_SOURCE_PATH_WORK + ADD_BUILDER_WORK + GENERATE_CODE_WORK + CLEANUP_PROJECT_WORK);
+			progress = SubMonitor.convert(monitor, "Configuring Project", PYTHON_NATURE_WORK + ADD_SOURCE_PATH_WORK + ADD_BUILDER_WORK + GENERATE_CODE_WORK
+				+ CLEANUP_PROJECT_WORK);
 		} else {
 			progress = SubMonitor.convert(monitor, "Configuring Project", PYTHON_NATURE_WORK + ADD_SOURCE_PATH_WORK + ADD_BUILDER_WORK);
 		}
@@ -79,7 +80,7 @@ public abstract class AbstractPythonGenerator extends AbstractCodeGenerator {
 		final String componentName = CodegenFileHelper.getPreferredFilePrefix(softPkg, implSettings);
 		final IProject project = resource.getProject();
 		final String destinationDirectory = project.getFolder(implSettings.getOutputDir()).getFullPath().toString();
-		
+
 		// Check to see if interpeterManager is configured
 		final IInterpreterManager interpreterManager = PydevPlugin.getPythonInterpreterManager();
 		if (interpreterManager.isConfigured()) {
@@ -95,7 +96,7 @@ public abstract class AbstractPythonGenerator extends AbstractCodeGenerator {
 			pythonNature = PythonGeneratorUtils.addPythonProjectNature(project, progress.newChild(PYTHON_NATURE_WORK));
 		} catch (final CoreException e) {
 			retStatus.add(new Status(IStatus.ERROR, PythonGeneratorPlugin.PLUGIN_ID,
-			        "Unable to determine if the project has been configured with the python nature; cannot proceed with code generation", e));
+				"Unable to determine if the project has been configured with the python nature; cannot proceed with code generation", e));
 			return retStatus;
 		}
 
@@ -104,18 +105,17 @@ public abstract class AbstractPythonGenerator extends AbstractCodeGenerator {
 			PythonGeneratorUtils.addPythonSourcePath(project, destinationDirectory, progress.newChild(ADD_SOURCE_PATH_WORK));
 		} catch (final CoreException e) {
 			retStatus.add(new Status(IStatus.ERROR, PythonGeneratorPlugin.PLUGIN_ID,
-			        "Unable to set the python source path; cannot proceed with code generation", e));
+				"Unable to set the python source path; cannot proceed with code generation", e));
 			return retStatus;
 		}
-		
+
 		// Add our auto-inclusion builder
 		try {
-	        addAutoInclusionBuilder(project, progress.newChild(ADD_BUILDER_WORK));
-        } catch (final CoreException e) {
-        	retStatus.add(new Status(IStatus.ERROR, PythonGeneratorPlugin.PLUGIN_ID,
-			        "Unable to add the auto inclusion builder", e));
+			addAutoInclusionBuilder(project, progress.newChild(ADD_BUILDER_WORK));
+		} catch (final CoreException e) {
+			retStatus.add(new Status(IStatus.ERROR, PythonGeneratorPlugin.PLUGIN_ID, "Unable to add the auto inclusion builder", e));
 			return retStatus;
-        }
+		}
 
 		if (shouldGenerate) {
 			out.println("Targeting location " + destinationDirectory + " for code generation...");
@@ -139,8 +139,6 @@ public abstract class AbstractPythonGenerator extends AbstractCodeGenerator {
 
 		return retStatus;
 	}
-	
-
 
 	/**
 	 * Ensures the the auto-inclusion builder is added to a project.
@@ -230,7 +228,7 @@ public abstract class AbstractPythonGenerator extends AbstractCodeGenerator {
 	 * @since 5.0
 	 */
 	protected abstract void generateCode(Implementation impl, ImplementationSettings implSettings, IProject project, String componentName, // SUPPRESS CHECKSTYLE Parameters
-	        PrintStream out, PrintStream err, IProgressMonitor monitor, String[] generateFiles, List<FileToCRCMap> crcMap) throws CoreException;
+		PrintStream out, PrintStream err, IProgressMonitor monitor, String[] generateFiles, List<FileToCRCMap> crcMap) throws CoreException;
 
 	/**
 	 * @since 5.0

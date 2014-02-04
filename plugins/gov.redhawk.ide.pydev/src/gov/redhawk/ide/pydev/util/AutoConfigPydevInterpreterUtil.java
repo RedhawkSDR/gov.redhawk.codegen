@@ -24,9 +24,9 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.python.pydev.core.IInterpreterInfo;
 import org.python.pydev.core.IInterpreterManager;
 import org.python.pydev.core.MisconfigurationException;
+import org.python.pydev.core.docutils.StringUtils;
 import org.python.pydev.plugin.PydevPlugin;
 import org.python.pydev.runners.SimplePythonRunner;
-import org.python.pydev.shared_core.string.StringUtils;
 import org.python.pydev.shared_core.structure.Tuple;
 import org.python.pydev.ui.pythonpathconf.InterpreterInfo;
 
@@ -60,7 +60,7 @@ public final class AutoConfigPydevInterpreterUtil {
 	 * @since 3.1
 	 */
 	public static boolean checkPyDevConfiguration(final IProgressMonitor monitor, final String runtimePathLocation, final boolean attemptFixes)
-		throws CoreException {
+			throws CoreException {
 		final IInterpreterManager man = PydevPlugin.getPythonInterpreterManager(true);
 
 		// Obviously if nothing is configured, then the REDHAWK settings surely are not configured
@@ -95,7 +95,7 @@ public final class AutoConfigPydevInterpreterUtil {
 				}
 
 				configured = info.libs.contains(ossiePath + "/lib/python" + info.getVersion() + "/site-packages") // Prefix-style
-					|| info.libs.contains(ossiePath + "/lib/python"); // Home-style
+						|| info.libs.contains(ossiePath + "/lib/python"); // Home-style
 
 				configured &= info.libs.contains(ossiePath + "/lib");
 				if (configured == false) {
