@@ -28,6 +28,10 @@
       %license
    </license>
 
+   <requires>
+      <import feature="org.python.pydev.feature" version="2.8.0" match="compatible"/>
+   </requires>
+
    <plugin
          id="gov.redhawk.ide.codegen.cplusplus"
          download-size="0"
