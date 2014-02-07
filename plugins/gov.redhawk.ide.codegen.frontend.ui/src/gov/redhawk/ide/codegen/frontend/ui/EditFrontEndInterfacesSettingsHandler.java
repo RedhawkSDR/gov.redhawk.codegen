@@ -67,6 +67,7 @@ public class EditFrontEndInterfacesSettingsHandler extends AbstractHandler {
 				tunerStatusStructSeq = PrfFactory.eINSTANCE.createStructSequence();
 				tunerStatusStructSeq.setId("frontend_tuner_status");
 				tunerStatusStructSeq.setName("frontend_tuner_status");
+				currentProps.getStructSequence().add(tunerStatusStructSeq);
 			}
 
 			// They must have removed their Tuner Status Struct Property, we need to add it back for them.
