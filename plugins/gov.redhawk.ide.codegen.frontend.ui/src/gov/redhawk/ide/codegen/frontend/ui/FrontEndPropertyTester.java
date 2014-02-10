@@ -12,7 +12,6 @@ package gov.redhawk.ide.codegen.frontend.ui;
 
 import gov.redhawk.model.sca.util.ModelUtil;
 import gov.redhawk.ui.editor.SCAFormEditor;
-import mil.jpeojtrs.sca.util.ScaEcoreUtils;
 
 import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.core.resources.IProject;
@@ -28,19 +27,22 @@ public class FrontEndPropertyTester extends PropertyTester {
 	 * 
 	 */
 	public FrontEndPropertyTester() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
-		SCAFormEditor editor = (SCAFormEditor) receiver;
-		Resource resource = editor.getMainResource();
-		IProject project = ModelUtil.getProject(resource);
-		try {
-			return project.hasNature(FrontEndProjectNature.ID);
-		} catch (CoreException e) {
-			return false;
+		if (receiver instanceof SCAFormEditor) {
+			SCAFormEditor editor = (SCAFormEditor) receiver;
+			Resource resource = editor.getMainResource();
+			IProject project = ModelUtil.getProject(resource);
+			try {
+				return project.hasNature(FrontEndProjectNature.ID);
+			} catch (CoreException e) {
+				return false;
+			}
 		}
+		
+		return false;
 	}
 
 }
