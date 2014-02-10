@@ -7,15 +7,11 @@ import gov.redhawk.ide.codegen.frontend.FrontendPackage;
 import gov.redhawk.ide.codegen.ui.ICodegenWizardPage;
 import mil.jpeojtrs.sca.spd.Implementation;
 import mil.jpeojtrs.sca.spd.SoftPkg;
-import mil.jpeojtrs.sca.spd.SpdPackage;
 
-import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.IConverter;
-import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.databinding.swt.SWTObservables;
@@ -24,7 +20,6 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -39,8 +34,8 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 	private FeiDevice feiDevice;
 	private boolean apiCanFinish = true;
 	private boolean apiCanFlip = true;
-	private Button deviceTypeTunerButton;
-	private Button deviceTypeAntennaButton;
+//	private Button deviceTypeTunerButton;
+//	private Button deviceTypeAntennaButton;
 	private Button ingestGPSCheckbox;
 	private Button outputGPSCheckbox;
 	private Button receiveOnlyTunerButton;
@@ -60,7 +55,7 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 		createUIElements(client);
 		createBindings();
 		this.receiveOnlyTunerButton.setSelection(true);
-		this.deviceTypeTunerButton.setSelection(true);
+//		this.deviceTypeTunerButton.setSelection(true);
 		this.feiDevice.eAdapters().add(new AdapterImpl(){
 			@Override
 			public void notifyChanged(Notification msg) {
@@ -75,9 +70,10 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 		// create new Context
 		this.ctx = new DataBindingContext();
 
-		// Binding for the antenna only option
-		this.ctx.bindValue(SWTObservables.observeSelection(this.deviceTypeAntennaButton),
-			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__ANTENNA), new UpdateValueStrategy(), new UpdateValueStrategy());
+//		
+//		// Binding for the antenna only option
+//		this.ctx.bindValue(SWTObservables.observeSelection(this.deviceTypeAntennaButton),
+//			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__ANTENNA), new UpdateValueStrategy(), new UpdateValueStrategy());
 
 		// Binding for GPS ingest & output
 		this.ctx.bindValue(SWTObservables.observeSelection(this.ingestGPSCheckbox),
@@ -151,8 +147,11 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 		client.setLayout(new GridLayout(1, false));
 
 		this.setTitle("Front End Interfaces Device Type Selection");
-		this.setDescription("Select the device type and if this device will ingest and/or output GPS data.  If the device is a tuner, select whether this device is receive only, can transmit, or both.");
-
+//		this.setDescription("Select the device type and if this device will ingest and/or output GPS data.  If the device is a tuner, select whether this device is receive only, can transmit, or both.");
+		this.setDescription("Select if this tuner will ingest and/or output GPS data.  Select whether this device is receive only, can transmit, or both.");
+		
+/**  // Currently only allow the selection of a Tuner 
+ * 
 		// Device Type Group
 		Group deviceTypeGroup = new Group(client, SWT.BORDER);
 		deviceTypeGroup.setText("Device Type");
@@ -168,7 +167,7 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 		this.deviceTypeAntennaButton.setText("Antenna Only");
 		this.deviceTypeAntennaButton.setLayoutData(GridDataFactory.fillDefaults().create());
 		this.deviceTypeAntennaButton.setToolTipText("Frontend antennas provide an RF Info Uses and RF Source Provides port.");
-
+*/
 		// GPS Usage Group
 		Group gpsUsageGroup = new Group(client, SWT.BORDER);
 		gpsUsageGroup.setLayout(new GridLayout(1, false));

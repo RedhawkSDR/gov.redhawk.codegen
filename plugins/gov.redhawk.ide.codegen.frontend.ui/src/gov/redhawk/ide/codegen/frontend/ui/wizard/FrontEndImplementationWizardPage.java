@@ -12,8 +12,6 @@ package gov.redhawk.ide.codegen.frontend.ui.wizard;
 
 import gov.redhawk.ide.codegen.internal.CodeGeneratorDescriptor;
 import gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusGenerator;
-import gov.redhawk.ide.codegen.jinja.java.JavaGenerator;
-import gov.redhawk.ide.codegen.jinja.python.PythonGenerator;
 import gov.redhawk.ide.spd.ui.wizard.ImplementationWizardPage;
 
 import org.eclipse.jface.viewers.Viewer;
@@ -51,6 +49,10 @@ public class FrontEndImplementationWizardPage extends ImplementationWizardPage {
 		super.createControl(parent);
 		this.getCodeGeneratorEntryViewer().setFilters(this.viewerFilters);
 		this.getProgLangEntryViewer().setItems(allowedLanguages);
+		if (allowedLanguages.length == 1) {
+			this.getProgLangEntryViewer().select(0);
+			handleProgLangSelection();
+		}
 	}
 
 }
