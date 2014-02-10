@@ -555,6 +555,13 @@ public class JavaJetGeneratorPropertiesWizardPage extends WizardPage implements 
 	 */
 	@Override
 	public void dispose() {
+		
+		removeCustomPages();
+		
+		if (this.implSettings != null && this.implSettings.eAdapters().contains(templateListener)) {
+			this.implSettings.eAdapters().remove(templateListener);
+		}
+		
 		if (this.support != null) {
 			this.support.dispose();
 		}

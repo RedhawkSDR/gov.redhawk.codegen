@@ -90,4 +90,13 @@ public class BooleanGeneratorPropertiesWizardPage2 extends BooleanGeneratorPrope
 			this.getImplSettings().eAdapters().add(templateListener);
 		}
 	}
+	
+	@Override
+	public void dispose() {
+		removeCustomPages();
+		if (getImplSettings() != null && getImplSettings().eAdapters().contains(templateListener)) {
+			this.getImplSettings().eAdapters().remove(templateListener);
+		}
+		super.dispose();
+	}
 }
