@@ -8,7 +8,9 @@ import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.frontend.FeiDevice;
 import gov.redhawk.ide.codegen.frontend.FrontendPackage;
+import gov.redhawk.ide.codegen.frontend.ui.FrontEndProjectValidator;
 import gov.redhawk.ide.codegen.ui.ICodegenWizardPage;
+import gov.redhawk.ide.dcd.ui.wizard.ScaDeviceProjectPropertiesWizardPage;
 import gov.redhawk.ui.RedhawkUiActivator;
 
 import java.util.ArrayList;
@@ -20,9 +22,14 @@ import mil.jpeojtrs.sca.spd.SoftPkg;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.IConverter;
+import org.eclipse.core.databinding.observable.ChangeEvent;
+import org.eclipse.core.databinding.observable.IChangeListener;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -44,7 +51,8 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 	DataBindingContext ctx;
 	String[] propertyTypes;
 	private Composite parent;
-
+	private FrontEndProjectValidator validator;
+	
 	public FrontEndTunerOptionsWizardPage(FeiDevice feiDevice) {
 		super("");
 		this.feiDevice = feiDevice;
@@ -67,8 +75,49 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		createUIElements(client);
 
 		this.setControl(client);
-	}
 
+
+		IWizardPage[] wizPages = this.getWizard().getPages();
+		ScaDeviceProjectPropertiesWizardPage propWizPage = null;
+
+		for (IWizardPage wizPage : wizPages) {
+			if (wizPage instanceof ScaDeviceProjectPropertiesWizardPage) {
+				propWizPage = (ScaDeviceProjectPropertiesWizardPage) wizPage;
+				break;
+			}
+		}
+
+		// This must come after the creation of the page support since creation of page support updates the 
+		// error message.  The WizardPageSupport doesn't update the error message because no UI elements have changed
+		// so this is a bit of a hack.
+		if (propWizPage != null) {
+			this.validator = new FrontEndProjectValidator(propWizPage.getProjectSettings(), this);
+			ctx.addValidationStatusProvider(validator);
+			IObservableValue validationStatus = validator.getValidationStatus();
+			validationStatus.addChangeListener(new IChangeListener() {
+
+				@Override
+				public void handleChange(ChangeEvent event) {
+					if (validator != null) {
+						updateErrorMessage();
+					}
+				}
+			});
+
+			updateErrorMessage();
+		}
+
+	}
+	
+	protected void updateErrorMessage() {
+		IStatus status = (IStatus) this.validator.getValidationStatus().getValue();
+		if (status.isOK()) {
+			this.setErrorMessage(null);
+		} else {
+			this.setErrorMessage(status.getMessage());
+		}
+	}
+	
 	private void populatePropertyTypes() {
 		IdlLibrary idlLibrary = RedhawkUiActivator.getDefault().getIdlLibraryService().getLibrary();
 		RepositoryModule bulkioIdl;
@@ -303,9 +352,21 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 
 	@Override
 	public boolean canFinish() {
-		// TODO Auto-generated method stub
-		return false;
+		return this.isPageComplete();
 	}
+
+	@Override
+	public boolean isPageComplete() {
+		// Page is complete as long as the validator is okay.
+		if (this.validator == null) {
+			return true;
+		} else if (((IStatus) this.validator.getValidationStatus().getValue()).isOK()) {
+			return super.isPageComplete();
+		} else {
+			return false;
+		}
+	}
+
 
 	@Override
 	public void setCanFlipToNextPage(boolean canFlip) {

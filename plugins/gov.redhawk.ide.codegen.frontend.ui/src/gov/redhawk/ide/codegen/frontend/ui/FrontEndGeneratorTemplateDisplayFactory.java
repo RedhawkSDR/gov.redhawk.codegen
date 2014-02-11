@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import mil.jpeojtrs.sca.prf.AccessType;
 import mil.jpeojtrs.sca.prf.ConfigurationKind;
 import mil.jpeojtrs.sca.prf.Kind;
 import mil.jpeojtrs.sca.prf.PrfFactory;
@@ -305,7 +306,9 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		
 		StructSequence structSeq = PrfFactory.eINSTANCE.createStructSequence();
 		structSeq.setId(FrontEndDeviceUIUtils.TUNER_STATUS_STRUCT_SEQ_ID);
+		structSeq.setDescription(FrontEndDeviceUIUtils.TUNER_STATUS_STRUCT_SEQ_DESCRIPTION);
 		structSeq.setName(FrontEndDeviceUIUtils.TUNER_STATUS_STRUCT_SEQ_NAME);
+		structSeq.setMode(AccessType.READONLY);
 		
 		final ConfigurationKind kind = PrfFactory.eINSTANCE.createConfigurationKind();
 		kind.setType(StructPropertyConfigurationType.CONFIGURE);

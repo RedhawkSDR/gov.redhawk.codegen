@@ -4,18 +4,25 @@ import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.frontend.FeiDevice;
 import gov.redhawk.ide.codegen.frontend.FrontendPackage;
+import gov.redhawk.ide.codegen.frontend.ui.FrontEndProjectValidator;
 import gov.redhawk.ide.codegen.ui.ICodegenWizardPage;
+import gov.redhawk.ide.dcd.ui.wizard.ScaDeviceProjectPropertiesWizardPage;
 import mil.jpeojtrs.sca.spd.Implementation;
 import mil.jpeojtrs.sca.spd.SoftPkg;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.IConverter;
+import org.eclipse.core.databinding.observable.ChangeEvent;
+import org.eclipse.core.databinding.observable.IChangeListener;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -43,7 +50,8 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 	private Button bothRxTxButton;
 	private DataBindingContext ctx;
 	private Group tunerTypeGroup;
-
+	private FrontEndProjectValidator validator;
+	
 	public FrontEndTunerTypeSelectionWizardPage(FeiDevice feiDevice) {
 		super("");
 		this.feiDevice = feiDevice;
@@ -139,10 +147,48 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 			}
 		});
 		
-		
+
+		IWizardPage[] wizPages = this.getWizard().getPages();
+		ScaDeviceProjectPropertiesWizardPage propWizPage = null;
+
+		for (IWizardPage wizPage : wizPages) {
+			if (wizPage instanceof ScaDeviceProjectPropertiesWizardPage) {
+				propWizPage = (ScaDeviceProjectPropertiesWizardPage) wizPage;
+				break;
+			}
+		}
+
+		// This must come after the creation of the page support since creation of page support updates the 
+		// error message.  The WizardPageSupport doesn't update the error message because no UI elements have changed
+		// so this is a bit of a hack.
+		if (propWizPage != null) {
+			this.validator = new FrontEndProjectValidator(propWizPage.getProjectSettings(), this);
+			ctx.addValidationStatusProvider(validator);
+			IObservableValue validationStatus = validator.getValidationStatus();
+			validationStatus.addChangeListener(new IChangeListener() {
+
+				@Override
+				public void handleChange(ChangeEvent event) {
+					if (validator != null) {
+						updateErrorMessage();
+					}
+				}
+			});
+
+			updateErrorMessage();
+		}
 
 	}
-
+	
+	protected void updateErrorMessage() {
+		IStatus status = (IStatus) this.validator.getValidationStatus().getValue();
+		if (status.isOK()) {
+			this.setErrorMessage(null);
+		} else {
+			this.setErrorMessage(status.getMessage());
+		}
+	}
+	
 	private void createUIElements(Composite client) {
 		client.setLayout(new GridLayout(1, false));
 
@@ -220,7 +266,19 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 
 	@Override
 	public boolean canFinish() {
-		return (this.apiCanFinish && this.feiDevice.isAntenna());
+		return this.isPageComplete();
+	}
+
+	@Override
+	public boolean isPageComplete() {
+		// Page is complete as long as the validator is okay.
+		if (this.validator == null && this.apiCanFinish) {
+			return true;
+		} else if (((IStatus) this.validator.getValidationStatus().getValue()).isOK() && this.apiCanFinish ) {
+			return super.isPageComplete();
+		} else {
+			return false;
+		}
 	}
 
 	@Override

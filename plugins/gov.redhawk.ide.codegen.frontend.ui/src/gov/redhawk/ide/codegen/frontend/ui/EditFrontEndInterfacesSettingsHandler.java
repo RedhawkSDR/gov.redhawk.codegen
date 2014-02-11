@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import mil.jpeojtrs.sca.prf.AccessType;
 import mil.jpeojtrs.sca.prf.PrfFactory;
 import mil.jpeojtrs.sca.prf.Properties;
 import mil.jpeojtrs.sca.prf.Simple;
@@ -67,6 +68,8 @@ public class EditFrontEndInterfacesSettingsHandler extends AbstractHandler {
 				tunerStatusStructSeq = PrfFactory.eINSTANCE.createStructSequence();
 				tunerStatusStructSeq.setId(FrontEndDeviceUIUtils.TUNER_STATUS_STRUCT_SEQ_ID);
 				tunerStatusStructSeq.setName(FrontEndDeviceUIUtils.TUNER_STATUS_STRUCT_SEQ_NAME);
+				tunerStatusStructSeq.setDescription(FrontEndDeviceUIUtils.TUNER_STATUS_STRUCT_SEQ_DESCRIPTION);
+				tunerStatusStructSeq.setMode(AccessType.READONLY);
 				currentProps.getStructSequence().add(tunerStatusStructSeq);
 			}
 
