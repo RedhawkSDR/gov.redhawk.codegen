@@ -21,7 +21,8 @@ import org.eclipse.swt.widgets.Composite;
 public class FrontEndImplementationWizardPage extends ImplementationWizardPage {
 
 	ViewerFilter[] viewerFilters = new ViewerFilter[1];
-
+	boolean pageViewed = false;
+	
 	// First round we are only supporting C++, no java or python.
 	String[] allowedLanguages = {"C++"};
 	
@@ -53,6 +54,18 @@ public class FrontEndImplementationWizardPage extends ImplementationWizardPage {
 			this.getProgLangEntryViewer().select(0);
 			handleProgLangSelection();
 		}
+	}
+	
+	// Complete if the page has been drawn.
+	@Override
+	public boolean isPageComplete() {
+		return pageViewed;
+	}
+	
+	@Override
+	public void setVisible(boolean visible) {
+		super.setVisible(visible);
+		pageViewed = true;
 	}
 
 }
