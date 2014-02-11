@@ -48,6 +48,8 @@ import mil.jpeojtrs.sca.scd.Provides;
 import mil.jpeojtrs.sca.scd.ScdFactory;
 import mil.jpeojtrs.sca.scd.SoftwareComponent;
 import mil.jpeojtrs.sca.scd.Uses;
+import mil.jpeojtrs.sca.spd.Code;
+import mil.jpeojtrs.sca.spd.LocalFile;
 import mil.jpeojtrs.sca.spd.SoftPkg;
 import mil.jpeojtrs.sca.util.ScaResourceFactoryUtil;
 
@@ -108,6 +110,25 @@ public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 		Assert.isTrue(spdFile.exists());
 		final SoftPkg eSpd = (SoftPkg) resourceSet.getEObject(spdUri, true);
 		
+		// We need to modify the local file variable since this dictates what is being deployed into the SDRROOT.
+		// In the octave case, we need the m-files which would normally be left behind since only the binary is deployed.
+		// This causes all of the source code to also be deployed as well which isn't really a bad thing.
+		Code codeVar = eSpd.getImplementation("cpp").getCode();
+		LocalFile entryPoint = codeVar.getLocalFile();
+		String[] tokens = entryPoint.getName().split("/");
+		
+		StringBuilder builder = new StringBuilder();
+		
+		for (int i = 0; i < tokens.length - 1; i++) {
+			builder.append(tokens[i]);
+			if (i != tokens.length - 2) {
+				builder.append("/");
+			}
+		}
+		
+		entryPoint.setName(builder.toString());
+		eSpd.getImplementation("cpp").getCode().setLocalFile(entryPoint);
+		
 		// You must have a property of type exec param called __mFunction that has the a type of String
 		// and the value is the name of the m-function
 		Simple simple = PrfFactory.eINSTANCE.createSimple();
@@ -153,6 +174,7 @@ public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 		}
 
 		SoftwareComponent scd = eSpd.getDescriptor().getComponent();
+		
 		Properties props = eSpd.getPropertyFile().getProperties();
 
 		try {
