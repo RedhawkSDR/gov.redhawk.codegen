@@ -37,11 +37,27 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 
+import FRONTEND.FE_TUNER_DEVICE_KIND;
+
 public enum FrontEndDeviceUIUtils { 
 	INSTANCE;
+	
+
+	public static String TUNER_DEVICE_KIND_NAME = FE_TUNER_DEVICE_KIND.value;
+
+	// Antenna device kind name is still in flux but should eventually be defined within the IDL
+	public static String ANTENNA_DEVICE_KIND_NAME = "FRONTEND::RFSOURCE";
+	
+	public static String TUNER_STATUS_STRUCT_NAME = "frontend_tuner_status_struct";
+	public static String TUNER_STATUS_STRUCT_ID = "FRONTEND::tuner_status_struct";
+	
+	public static String TUNER_STATUS_STRUCT_SEQ_ID = "FRONTEND::tuner_status";
+	public static String TUNER_STATUS_STRUCT_SEQ_NAME = "frontend_tuner_status";
+	
 	private List<FrontEndProp> allFrontEndProps = null;
 	private List<FrontEndProp> optionalFrontEndProps = null;
 	private List<FrontEndProp> requiredFrontEndProps = null;
+	
 	
 	private FrontEndDeviceUIUtils() {
 		initFriProps();

@@ -56,7 +56,7 @@ public class EditFrontEndInterfacesSettingsHandler extends AbstractHandler {
 
 			// Get the current tuner status properties.
 			for (StructSequence structSequence : currentProps.getStructSequence()) {
-				if (structSequence.getId().equals("frontend_tuner_status")) {
+				if (structSequence.getId().equals(FrontEndDeviceUIUtils.TUNER_STATUS_STRUCT_SEQ_ID)) {
 					tunerStatusStructSeq = structSequence;
 					break;
 				}
@@ -65,16 +65,16 @@ public class EditFrontEndInterfacesSettingsHandler extends AbstractHandler {
 			// They must have removed their Tuner Status Struct Seq Property, we need to add it back for them.
 			if (tunerStatusStructSeq == null) {
 				tunerStatusStructSeq = PrfFactory.eINSTANCE.createStructSequence();
-				tunerStatusStructSeq.setId("frontend_tuner_status");
-				tunerStatusStructSeq.setName("frontend_tuner_status");
+				tunerStatusStructSeq.setId(FrontEndDeviceUIUtils.TUNER_STATUS_STRUCT_SEQ_ID);
+				tunerStatusStructSeq.setName(FrontEndDeviceUIUtils.TUNER_STATUS_STRUCT_SEQ_NAME);
 				currentProps.getStructSequence().add(tunerStatusStructSeq);
 			}
 
 			// They must have removed their Tuner Status Struct Property, we need to add it back for them.
 			if (tunerStatusStructSeq.getStruct() == null) {
 				tunerStatusStruct = PrfFactory.eINSTANCE.createStruct();
-				tunerStatusStruct.setName("frontend_tuner_status_struct");
-				tunerStatusStruct.setId("frontend_tuner_status_struct");
+				tunerStatusStruct.setName(FrontEndDeviceUIUtils.TUNER_STATUS_STRUCT_NAME);
+				tunerStatusStruct.setId(FrontEndDeviceUIUtils.TUNER_STATUS_STRUCT_ID);
 				tunerStatusStructSeq.setStruct(tunerStatusStruct);
 			}
 

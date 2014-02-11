@@ -126,7 +126,7 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		}
 		
 		if (this.feiDevice.isAntenna()) {
-			setDeviceKindName(eSpd, "FRONTEND::ANTENNA");
+			setDeviceKindName(eSpd, FrontEndDeviceUIUtils.ANTENNA_DEVICE_KIND_NAME);
 			addAntennaSpecificPorts(eSpd);
 			addAntennaSpecificProps(eSpd);
 		} else { // It's a Tuner
@@ -134,7 +134,7 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 			FrontEndProjectNature.addNature(project, null, newChild);
 			
 			addTunerSpecificProps(eSpd);
-			setDeviceKindName(eSpd, "FRONTEND::TUNER");
+			setDeviceKindName(eSpd, FrontEndDeviceUIUtils.TUNER_DEVICE_KIND_NAME);
 			if (this.feiDevice.isRxTuner()) {
 				if (!this.feiDevice.isHasDigitalInput()) { // Has analog input
 					addRFInfoProvidesPorts(eSpd, this.feiDevice.getNumberOfAnalogInputs());
@@ -153,7 +153,8 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 					
 					
 				} else { // Has Digital Input
-					
+					// If it has Digital Input it must have Digital Output 
+					addProvidesPort(eSpd, "DigitalTuner_in", DigitalTunerHelper.id());
 					addProvidesPort(eSpd, "Dig_in", this.feiDevice.getDigitalInputType());
 					addUsesPort(eSpd, "Dig_out", this.feiDevice.getDigitalOutputType());
 					if (this.feiDevice.isMultiOut()) {
@@ -303,16 +304,16 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		}
 		
 		StructSequence structSeq = PrfFactory.eINSTANCE.createStructSequence();
-		structSeq.setId("frontend_tuner_status");
-		structSeq.setName("frontend_tuner_status");
+		structSeq.setId(FrontEndDeviceUIUtils.TUNER_STATUS_STRUCT_SEQ_ID);
+		structSeq.setName(FrontEndDeviceUIUtils.TUNER_STATUS_STRUCT_SEQ_NAME);
 		
 		final ConfigurationKind kind = PrfFactory.eINSTANCE.createConfigurationKind();
 		kind.setType(StructPropertyConfigurationType.CONFIGURE);
 		structSeq.getConfigurationKind().add(kind);
 		
 		Struct struct = PrfFactory.eINSTANCE.createStruct();
-		struct.setId("frontend_tuner_status_struct");
-		struct.setName("frontend_tuner_status_struct");
+		struct.setId(FrontEndDeviceUIUtils.TUNER_STATUS_STRUCT_ID);
+		struct.setName(FrontEndDeviceUIUtils.TUNER_STATUS_STRUCT_NAME);
 		
 		for (FrontEndProp frontEndProp : this.tunerStatusStructProps) {
 			Simple prop = frontEndProp.getProp();
