@@ -36,12 +36,14 @@ public class FrontEndPropertyTester extends PropertyTester {
 			Resource resource = editor.getMainResource();
 			IProject project = ModelUtil.getProject(resource);
 			try {
-				return project.hasNature(FrontEndProjectNature.ID);
+				if (project != null) {
+					return project.hasNature(FrontEndProjectNature.ID);
+				}
 			} catch (CoreException e) {
 				return false;
 			}
 		}
-		
+
 		return false;
 	}
 
