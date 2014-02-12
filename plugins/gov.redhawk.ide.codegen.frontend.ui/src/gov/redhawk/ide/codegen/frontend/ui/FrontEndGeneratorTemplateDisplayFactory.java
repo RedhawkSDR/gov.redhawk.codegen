@@ -44,6 +44,8 @@ import mil.jpeojtrs.sca.prf.StructSequence;
 import mil.jpeojtrs.sca.scd.InheritsInterface;
 import mil.jpeojtrs.sca.scd.Interface;
 import mil.jpeojtrs.sca.scd.Interfaces;
+import mil.jpeojtrs.sca.scd.PortType;
+import mil.jpeojtrs.sca.scd.PortTypeContainer;
 import mil.jpeojtrs.sca.scd.Ports;
 import mil.jpeojtrs.sca.scd.Provides;
 import mil.jpeojtrs.sca.scd.ScdFactory;
@@ -141,13 +143,13 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 					addRFInfoProvidesPorts(eSpd, this.feiDevice.getNumberOfAnalogInputs());
 					
 					if (this.feiDevice.isHasDigitalOutput()) { // Has digital output
-						addProvidesPort(eSpd, "DigitalTuner_in", DigitalTunerHelper.id());
-						addUsesPort(eSpd, "Dig_out", this.feiDevice.getDigitalOutputType());
+						addProvidesControlPort(eSpd, "DigitalTuner_in", DigitalTunerHelper.id());
+						addUsesDataPort(eSpd, "Dig_out", this.feiDevice.getDigitalOutputType());
 						if (this.feiDevice.isMultiOut()) {
 							addMultiOutProperty(eSpd);
 						}
 					} else { // It has Analog Output
-						addProvidesPort(eSpd, "AnalogTuner_in", AnalogTunerHelper.id());
+						addProvidesControlPort(eSpd, "AnalogTuner_in", AnalogTunerHelper.id());
 						addRFInfoUsesPort(eSpd, "RFInfo_out");
 //						addRFSourcePort(eSpd);  // Holding off on supporting RFSourcePorts until post CCB
 					}
@@ -155,9 +157,9 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 					
 				} else { // Has Digital Input
 					// If it has Digital Input it must have Digital Output 
-					addProvidesPort(eSpd, "DigitalTuner_in", DigitalTunerHelper.id());
-					addProvidesPort(eSpd, "Dig_in", this.feiDevice.getDigitalInputType());
-					addUsesPort(eSpd, "Dig_out", this.feiDevice.getDigitalOutputType());
+					addProvidesControlPort(eSpd, "DigitalTuner_in", DigitalTunerHelper.id());
+					addProvidesDataPort(eSpd, "Dig_in", this.feiDevice.getDigitalInputType());
+					addUsesDataPort(eSpd, "Dig_out", this.feiDevice.getDigitalOutputType());
 					if (this.feiDevice.isMultiOut()) {
 						addMultiOutProperty(eSpd);
 					}
@@ -194,17 +196,29 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 
 	private void addDigitalTunerProvidesPorts(SoftPkg eSpd, int numberOfDigitalInputsForTx) {
 		
-		addProvidesPort(eSpd, "DigitalTuner_in", DigitalTunerHelper.id());
+		addProvidesControlPort(eSpd, "DigitalTuner_in", DigitalTunerHelper.id());
 		
 		for (int i = 2; i < numberOfDigitalInputsForTx + 1; i++) {
-			addProvidesPort(eSpd, "DigitalTuner_in_" + i, DigitalTunerHelper.id());
+			addProvidesControlPort(eSpd, "DigitalTuner_in_" + i, DigitalTunerHelper.id());
 		}
 	}
 
-
-	private Ports addProvidesPort(SoftPkg eSpd, String name, String repId) {
+	private Ports addProvidesDataPort(SoftPkg eSpd, String name, String repId) {
+		return addProvidesPort(eSpd, name, repId, PortType.DATA);
+	}
+	
+	private Ports addProvidesControlPort(SoftPkg eSpd, String name, String repId) {
+		return addProvidesPort(eSpd, name, repId, PortType.CONTROL);
+	}
+	
+	private Ports addProvidesPort(SoftPkg eSpd, String name, String repId, PortType portType) {
 		Ports ports = createPorts(eSpd);
 		Provides portToAdd = ScdFactory.eINSTANCE.createProvides();
+		
+		PortTypeContainer portTypeContainer = ScdFactory.eINSTANCE.createPortTypeContainer();
+		portTypeContainer.setType(portType);
+		portToAdd.getPortType().add(portTypeContainer);
+		
 		portToAdd.setRepID(repId);
 		portToAdd.setName(name);
 		addInterface(SdrUiPlugin.getDefault().getTargetSdrRoot().getIdlLibrary(), portToAdd.getRepID(), eSpd.getDescriptor().getComponent().getInterfaces());
@@ -213,9 +227,22 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		return ports;		
 	}
 
-	private Ports addUsesPort(SoftPkg eSpd, String name, String repId) {
+	private Ports addUsesDataPort(SoftPkg eSpd, String name, String repId) {
+		return addUsesPort(eSpd, name, repId, PortType.DATA);
+	}
+	
+	private Ports addUsesControlPort(SoftPkg eSpd, String name, String repId) {
+		return addUsesPort(eSpd, name, repId, PortType.CONTROL);
+	}
+	
+	private Ports addUsesPort(SoftPkg eSpd, String name, String repId, PortType portType) {
 		Ports ports = createPorts(eSpd);
 		Uses portToAdd = ScdFactory.eINSTANCE.createUses();
+
+		PortTypeContainer portTypeContainer = ScdFactory.eINSTANCE.createPortTypeContainer();
+		portTypeContainer.setType(portType);
+		portToAdd.getPortType().add(portTypeContainer);
+		
 		portToAdd.setRepID(repId);
 		portToAdd.setName(name);
 		addInterface(SdrUiPlugin.getDefault().getTargetSdrRoot().getIdlLibrary(), portToAdd.getRepID(), eSpd.getDescriptor().getComponent().getInterfaces());
@@ -225,15 +252,15 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 	}
 
 	private Ports addRFSourcePort(SoftPkg eSpd) {
-		return addProvidesPort(eSpd, "RFSource_in", RFSourceHelper.id());
+		return addProvidesControlPort(eSpd, "RFSource_in", RFSourceHelper.id());
 	}
 
 	private Ports addRFInfoUsesPort(SoftPkg eSpd, String name) {
-		return addUsesPort(eSpd, name, RFInfoHelper.id());
+		return addUsesDataPort(eSpd, name, RFInfoHelper.id());
 	}
 
 	private Ports addRFInfoProvidesPort(SoftPkg eSpd, String name) {
-		return addProvidesPort(eSpd, name, RFInfoHelper.id());
+		return addProvidesDataPort(eSpd, name, RFInfoHelper.id());
 	}
 	
 	private void addRFInfoUsesPorts(SoftPkg eSpd, int numberOfPorts) {
@@ -348,11 +375,11 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 	}
 
 	private void addGPSUsesPort(SoftPkg eSpd) {
-		addUsesPort(eSpd, "GPS_in", GPSHelper.id());
+		addUsesDataPort(eSpd, "GPS_in", GPSHelper.id());
 	}
 	
 	private void addGPSProvidesPort(SoftPkg eSpd) {
-		addProvidesPort(eSpd, "GPS_out", GPSHelper.id());
+		addProvidesDataPort(eSpd, "GPS_out", GPSHelper.id());
 	}
 
 	private void addInterface(final IdlLibrary library, final String repId, Interfaces interfaces) {
