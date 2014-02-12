@@ -149,7 +149,7 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 					} else { // It has Analog Output
 						addProvidesPort(eSpd, "AnalogTuner_in", AnalogTunerHelper.id());
 						addRFInfoUsesPort(eSpd, "RFInfo_out");
-						addRFSourcePort(eSpd);
+//						addRFSourcePort(eSpd);  // Holding off on supporting RFSourcePorts until post CCB
 					}
 					
 					
