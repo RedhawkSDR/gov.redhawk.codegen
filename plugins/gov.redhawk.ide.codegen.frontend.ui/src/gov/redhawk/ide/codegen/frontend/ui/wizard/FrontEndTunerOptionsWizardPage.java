@@ -312,6 +312,13 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		numDigitalInLabel.setText("Number of Digital input ports: ");
 
 		Spinner numDigitalSpinner = new Spinner(transmitterGroup, SWT.BORDER);
+		GC gc = new GC(numDigitalSpinner);
+		try {
+			Point size = gc.textExtent("XXX");
+			numDigitalSpinner.setLayoutData(GridDataFactory.fillDefaults().hint(size.x, SWT.DEFAULT).create());
+		} finally {
+			gc.dispose();
+		}
 		numDigitalSpinner.setMinimum(1);
 		ctx.bindValue(WidgetProperties.selection().observe(numDigitalSpinner),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__NUMBER_OF_DIGITAL_INPUTS_FOR_TX));
