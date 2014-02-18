@@ -34,6 +34,8 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -52,7 +54,7 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 	String[] propertyTypes;
 	private Composite parent;
 	private FrontEndProjectValidator validator;
-	
+
 	public FrontEndTunerOptionsWizardPage(FeiDevice feiDevice) {
 		super("");
 		this.feiDevice = feiDevice;
@@ -75,7 +77,6 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		createUIElements(client);
 
 		this.setControl(client);
-
 
 		IWizardPage[] wizPages = this.getWizard().getPages();
 		ScaDeviceProjectPropertiesWizardPage propWizPage = null;
@@ -108,7 +109,7 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		}
 
 	}
-	
+
 	protected void updateErrorMessage() {
 		IStatus status = (IStatus) this.validator.getValidationStatus().getValue();
 		if (status.isOK()) {
@@ -117,7 +118,7 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 			this.setErrorMessage(status.getMessage());
 		}
 	}
-	
+
 	private void populatePropertyTypes() {
 		IdlLibrary idlLibrary = RedhawkUiActivator.getDefault().getIdlLibraryService().getLibrary();
 		RepositoryModule bulkioIdl;
@@ -127,18 +128,18 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		for (Definition def : idlLibrary.getDefinitions()) {
 			if ("BULKIO".equals(def.getName())) {
 				bulkioIdl = (RepositoryModule) def;
-				
+
 				// We don't want these to show up in any combos
-				List <String> removedTypes = new ArrayList<String> (); 
+				List<String> removedTypes = new ArrayList<String>();
 				removedTypes.add("IDL:BULKIO/ProvidesPortStatisticsProvider:1.0");
 				removedTypes.add("IDL:BULKIO/UsesPortStatisticsProvider:1.0");
 				removedTypes.add("IDL:BULKIO/dataFile:1.0");
 				removedTypes.add("IDL:BULKIO/updateSRI:1.0");
 				removedTypes.add("IDL:BULKIO/dataXML:1.0");
-				
+
 				for (Definition bulkioDef : bulkioIdl.getDefinitions()) {
 					if (bulkioDef instanceof IdlInterfaceDcl) {
-						if(removedTypes.contains(bulkioDef.getRepId())) {
+						if (removedTypes.contains(bulkioDef.getRepId())) {
 							continue;
 						}
 						bulkioTypes.add(bulkioDef.getRepId());
@@ -183,10 +184,12 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		inputContainer.setLayout(new GridLayout(1, false));
 		inputContainer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
+		GridData layoutData = GridDataFactory.fillDefaults().grab(true, false).indent(30, 0).align(SWT.LEFT, SWT.CENTER).create();
+
 		Button analogInputButton = new Button(inputContainer, SWT.RADIO);
 		analogInputButton.setText("Analog Input (default)");
 		analogInputButton.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, true, false, 2, 1));
-		createAnalogIn(inputContainer);
+		createAnalogIn(inputContainer).setLayoutData(layoutData);
 		UpdateValueStrategy uvs = booleanConverter();
 		ctx.bindValue(WidgetProperties.selection().observe(analogInputButton),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__HAS_DIGITAL_INPUT), uvs, uvs);
@@ -194,17 +197,17 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		Button digitalInputButton = new Button(inputContainer, SWT.RADIO);
 		digitalInputButton.setText("Digital Input");
 		digitalInputButton.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, true, false, 2, 1));
-		createDigitalIn(inputContainer);
+		createDigitalIn(inputContainer).setLayoutData(layoutData);
 		ctx.bindValue(WidgetProperties.selection().observe(digitalInputButton),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__HAS_DIGITAL_INPUT));
-		
+
 		digitalInputButton.addSelectionListener(new SelectionListener() {
-			
+
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				feiDevice.setHasDigitalOutput(true);
 			}
-			
+
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				widgetSelected(e);
@@ -215,13 +218,19 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 	private Composite createAnalogIn(Composite parent) {
 		Composite analogIn = new Composite(parent, SWT.SHADOW_NONE);
 		analogIn.setLayout(new GridLayout(2, false));
-		analogIn.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(-35, 0).align(SWT.CENTER, SWT.CENTER).create());
 
 		Label numAnalogLabel = new Label(analogIn, SWT.None);
 		numAnalogLabel.setText("Number of Analog input ports: ");
 
 		Spinner numAnalogSpinner = new Spinner(analogIn, SWT.BORDER);
 		numAnalogSpinner.setMinimum(1);
+		GC gc = new GC(numAnalogSpinner);
+		try {
+			Point size = gc.textExtent("XXX");
+			numAnalogSpinner.setLayoutData(GridDataFactory.fillDefaults().hint(size.x, SWT.DEFAULT).create());
+		} finally {
+			gc.dispose();
+		}
 		UpdateValueStrategy uvs = booleanConverter();
 		ctx.bindValue(WidgetProperties.selection().observe(numAnalogSpinner),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__NUMBER_OF_ANALOG_INPUTS));
@@ -233,7 +242,6 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 	private Composite createDigitalIn(Composite parent) {
 		Composite digitalIn = new Composite(parent, SWT.SHADOW_NONE);
 		digitalIn.setLayout(new GridLayout(2, false));
-		digitalIn.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(30, 0).align(SWT.CENTER, SWT.CENTER).create());
 
 		Label digitalInputTypeLabel = new Label(digitalIn, SWT.None);
 		digitalInputTypeLabel.setText("Digital Input Type: ");
@@ -257,9 +265,9 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		analogOutputButton.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, true, false, 2, 1));
 		UpdateValueStrategy uvs = booleanConverter();
 		ctx.bindValue(WidgetProperties.enabled().observe(analogOutputButton),
-			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__HAS_DIGITAL_INPUT),uvs,uvs);
+			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__HAS_DIGITAL_INPUT), uvs, uvs);
 		ctx.bindValue(WidgetProperties.selection().observe(analogOutputButton),
-			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__HAS_DIGITAL_OUTPUT),uvs,uvs);
+			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__HAS_DIGITAL_OUTPUT), uvs, uvs);
 
 		Button digitalOutputButton = new Button(outputContainer, SWT.RADIO);
 		digitalOutputButton.setText("Digital Output (default)");
@@ -304,6 +312,13 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		numDigitalInLabel.setText("Number of Digital input ports: ");
 
 		Spinner numDigitalSpinner = new Spinner(transmitterGroup, SWT.BORDER);
+		GC gc = new GC(numDigitalSpinner);
+		try {
+			Point size = gc.textExtent("XXX");
+			numDigitalSpinner.setLayoutData(GridDataFactory.fillDefaults().hint(size.x, SWT.DEFAULT).create());
+		} finally {
+			gc.dispose();
+		}
 		numDigitalSpinner.setMinimum(1);
 		ctx.bindValue(WidgetProperties.selection().observe(numDigitalSpinner),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__NUMBER_OF_DIGITAL_INPUTS_FOR_TX));
@@ -366,7 +381,6 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 			return false;
 		}
 	}
-
 
 	@Override
 	public void setCanFlipToNextPage(boolean canFlip) {
