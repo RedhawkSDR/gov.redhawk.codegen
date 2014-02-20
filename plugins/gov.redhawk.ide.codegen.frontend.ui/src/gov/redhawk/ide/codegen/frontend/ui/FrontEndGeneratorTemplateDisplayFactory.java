@@ -143,8 +143,8 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 					addRFInfoProvidesPorts(eSpd, this.feiDevice.getNumberOfAnalogInputs());
 					
 					if (this.feiDevice.isHasDigitalOutput()) { // Has digital output
-						addProvidesControlPort(eSpd, "DigitalTuner_in", DigitalTunerHelper.id());
-						addUsesDataPort(eSpd, "Dig_out", this.feiDevice.getDigitalOutputType());
+						addDigitalTunerPort(eSpd);
+						addUsesDataPort(eSpd, this.feiDevice.getDigitalOutputType().getName() + "_out", this.feiDevice.getDigitalOutputType().getRepId());
 						if (this.feiDevice.isMultiOut()) {
 							addMultiOutProperty(eSpd);
 						}
@@ -156,10 +156,10 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 					
 					
 				} else { // Has Digital Input
-					// If it has Digital Input it must have Digital Output 
-					addProvidesControlPort(eSpd, "DigitalTuner_in", DigitalTunerHelper.id());
-					addProvidesDataPort(eSpd, "Dig_in", this.feiDevice.getDigitalInputType());
-					addUsesDataPort(eSpd, "Dig_out", this.feiDevice.getDigitalOutputType());
+					// If it has Digital Input it must have Digital Output
+					addDigitalTunerPort(eSpd);
+					addProvidesDataPort(eSpd, this.feiDevice.getDigitalInputType().getName() + "_in", this.feiDevice.getDigitalInputType().getRepId());
+					addUsesDataPort(eSpd, this.feiDevice.getDigitalOutputType().getName() + "_out", this.feiDevice.getDigitalOutputType().getRepId());
 					if (this.feiDevice.isMultiOut()) {
 						addMultiOutProperty(eSpd);
 					}
@@ -167,8 +167,9 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 			}
 			
 			if (this.feiDevice.isTxTuner()) {
-				addDigitalTunerProvidesPorts(eSpd, this.feiDevice.getNumberOfDigitalInputsForTx());
-				addRFInfoUsesPorts(eSpd, this.feiDevice.getNumberOfDigitalInputsForTx());
+				addDigitalTunerPort(eSpd);
+				addRFInfoUsesTXPorts(eSpd, this.feiDevice.getNumberOfDigitalInputsForTx());
+				addProvidesDataPorts(eSpd, this.feiDevice.getDigitalInputTypeForTx().getName() + "TX_in", this.feiDevice.getDigitalInputTypeForTx().getRepId(), this.feiDevice.getNumberOfDigitalInputsForTx());
 			}
 		}
 		
@@ -184,6 +185,25 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		
 	}
 	
+	private void addProvidesDataPorts(SoftPkg eSpd, String name, String repId, int numberOfPorts) {
+		addProvidesDataPort(eSpd, name, repId);
+		
+		for (int i = 2; i < numberOfPorts + 1; i++) {
+			addProvidesDataPort(eSpd, name + "_" + i , repId);
+		}
+	}
+
+	private void addDigitalTunerPort(SoftPkg eSpd) {
+		Ports ports = createPorts(eSpd);
+		for (Provides providesPort: ports.getProvides()) {
+			if (providesPort.getRepID().equals(DigitalTunerHelper.id())) {
+				// Only one digital tuner provides port allowed.
+				return;
+			}
+		}
+		addProvidesControlPort(eSpd, "DigitalTuner_in", DigitalTunerHelper.id());
+	}
+
 	private void setDeviceKindName(SoftPkg eSpd, String name) {
 		
 		for (Simple simpProp : eSpd.getPropertyFile().getProperties().getSimple()) {
@@ -191,15 +211,6 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 				simpProp.setValue(name);
 				return;
 			}
-		}
-	}
-
-	private void addDigitalTunerProvidesPorts(SoftPkg eSpd, int numberOfDigitalInputsForTx) {
-		
-		addProvidesControlPort(eSpd, "DigitalTuner_in", DigitalTunerHelper.id());
-		
-		for (int i = 2; i < numberOfDigitalInputsForTx + 1; i++) {
-			addProvidesControlPort(eSpd, "DigitalTuner_in_" + i, DigitalTunerHelper.id());
 		}
 	}
 
@@ -263,11 +274,11 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		return addProvidesDataPort(eSpd, name, RFInfoHelper.id());
 	}
 	
-	private void addRFInfoUsesPorts(SoftPkg eSpd, int numberOfPorts) {
-		addRFInfoUsesPort(eSpd, "RFInfo_out");
+	private void addRFInfoUsesTXPorts(SoftPkg eSpd, int numberOfPorts) {
+		addRFInfoUsesPort(eSpd, "RFInfoTX_out");
 		
 		for (int i = 2; i < numberOfPorts + 1; i++) {
-			addRFInfoUsesPort(eSpd, "RFInfo_out_" + i);
+			addRFInfoUsesPort(eSpd, "RFInfoTX_out_" + i);
 		}
 	}
 	

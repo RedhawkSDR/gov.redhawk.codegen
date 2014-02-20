@@ -5,9 +5,11 @@
 @GenModel(editDirectory="/gov.redhawk.ide.codegen.frontend.edit/src-gen")
 package gov.redhawk.ide.codegen.frontend
 
+import gov.redhawk.eclipsecorba.idl.Definition
 import gov.redhawk.model.sca.ScaStructProperty
 
 type TunerStatusStruct wraps ScaStructProperty
+type IDLDef wraps Definition
 
 class FeiDevice {
 
@@ -21,15 +23,15 @@ class FeiDevice {
 	boolean RxTuner
 	int numberOfAnalogInputs
 	boolean hasDigitalInput
-	String digitalInputType 
+	IDLDef digitalInputType 
 	boolean hasDigitalOutput
-	String digitalOutputType 
+	IDLDef digitalOutputType 
 	boolean MultiOut
 	
 	// Transmit props 
 	boolean TxTuner
 	int numberOfDigitalInputsForTx
-	String digitalInputTypeForTx 
+	IDLDef digitalInputTypeForTx 
 	
 	// Tuner status properties
 	TunerStatusStruct tunerStatusStruct

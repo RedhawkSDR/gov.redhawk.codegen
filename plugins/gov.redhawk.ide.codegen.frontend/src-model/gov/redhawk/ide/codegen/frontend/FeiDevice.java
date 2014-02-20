@@ -2,6 +2,7 @@
  */
 package gov.redhawk.ide.codegen.frontend;
 
+import gov.redhawk.eclipsecorba.idl.Definition;
 import gov.redhawk.model.sca.ScaStructProperty;
 
 import org.eclipse.emf.ecore.EObject;
@@ -202,12 +203,12 @@ public interface FeiDevice extends EObject
    * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Digital Input Type</em>' attribute.
-   * @see #setDigitalInputType(String)
+   * @see #setDigitalInputType(Definition)
    * @see gov.redhawk.ide.codegen.frontend.FrontendPackage#getFeiDevice_DigitalInputType()
-   * @model unique="false"
+   * @model unique="false" dataType="gov.redhawk.ide.codegen.frontend.IDLDef"
    * @generated
    */
-  String getDigitalInputType();
+  Definition getDigitalInputType();
 
   /**
    * Sets the value of the '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#getDigitalInputType <em>Digital Input Type</em>}' attribute.
@@ -217,7 +218,7 @@ public interface FeiDevice extends EObject
    * @see #getDigitalInputType()
    * @generated
    */
-  void setDigitalInputType(String value);
+  void setDigitalInputType(Definition value);
 
   /**
    * Returns the value of the '<em><b>Has Digital Output</b></em>' attribute.
@@ -254,12 +255,12 @@ public interface FeiDevice extends EObject
    * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Digital Output Type</em>' attribute.
-   * @see #setDigitalOutputType(String)
+   * @see #setDigitalOutputType(Definition)
    * @see gov.redhawk.ide.codegen.frontend.FrontendPackage#getFeiDevice_DigitalOutputType()
-   * @model unique="false"
+   * @model unique="false" dataType="gov.redhawk.ide.codegen.frontend.IDLDef"
    * @generated
    */
-  String getDigitalOutputType();
+  Definition getDigitalOutputType();
 
   /**
    * Sets the value of the '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#getDigitalOutputType <em>Digital Output Type</em>}' attribute.
@@ -269,7 +270,7 @@ public interface FeiDevice extends EObject
    * @see #getDigitalOutputType()
    * @generated
    */
-  void setDigitalOutputType(String value);
+  void setDigitalOutputType(Definition value);
 
   /**
    * Returns the value of the '<em><b>Multi Out</b></em>' attribute.
@@ -358,12 +359,12 @@ public interface FeiDevice extends EObject
    * </p>
    * <!-- end-user-doc -->
    * @return the value of the '<em>Digital Input Type For Tx</em>' attribute.
-   * @see #setDigitalInputTypeForTx(String)
+   * @see #setDigitalInputTypeForTx(Definition)
    * @see gov.redhawk.ide.codegen.frontend.FrontendPackage#getFeiDevice_DigitalInputTypeForTx()
-   * @model unique="false"
+   * @model unique="false" dataType="gov.redhawk.ide.codegen.frontend.IDLDef"
    * @generated
    */
-  String getDigitalInputTypeForTx();
+  Definition getDigitalInputTypeForTx();
 
   /**
    * Sets the value of the '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#getDigitalInputTypeForTx <em>Digital Input Type For Tx</em>}' attribute.
@@ -373,7 +374,7 @@ public interface FeiDevice extends EObject
    * @see #getDigitalInputTypeForTx()
    * @generated
    */
-  void setDigitalInputTypeForTx(String value);
+  void setDigitalInputTypeForTx(Definition value);
 
   /**
    * Returns the value of the '<em><b>Tuner Status Struct</b></em>' attribute.

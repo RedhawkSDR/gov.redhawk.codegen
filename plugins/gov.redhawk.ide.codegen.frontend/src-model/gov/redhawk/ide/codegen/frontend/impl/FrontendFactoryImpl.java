@@ -2,6 +2,7 @@
  */
 package gov.redhawk.ide.codegen.frontend.impl;
 
+import gov.redhawk.eclipsecorba.idl.Definition;
 import gov.redhawk.ide.codegen.frontend.*;
 
 import gov.redhawk.model.sca.ScaStructProperty;
@@ -85,6 +86,8 @@ public class FrontendFactoryImpl extends EFactoryImpl implements FrontendFactory
     {
       case FrontendPackage.TUNER_STATUS_STRUCT:
         return createTunerStatusStructFromString(eDataType, initialValue);
+      case FrontendPackage.IDL_DEF:
+        return createIDLDefFromString(eDataType, initialValue);
       default:
         throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
     }
@@ -102,6 +105,8 @@ public class FrontendFactoryImpl extends EFactoryImpl implements FrontendFactory
     {
       case FrontendPackage.TUNER_STATUS_STRUCT:
         return convertTunerStatusStructToString(eDataType, instanceValue);
+      case FrontendPackage.IDL_DEF:
+        return convertIDLDefToString(eDataType, instanceValue);
       default:
         throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
     }
@@ -156,6 +161,46 @@ public class FrontendFactoryImpl extends EFactoryImpl implements FrontendFactory
   public String convertTunerStatusStructToString(EDataType eDataType, Object instanceValue)
   {
     return convertTunerStatusStruct((ScaStructProperty)instanceValue);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Definition createIDLDef(String literal)
+  {
+    return (Definition)super.createFromString(FrontendPackage.Literals.IDL_DEF, literal);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Definition createIDLDefFromString(EDataType eDataType, String initialValue)
+  {
+    return createIDLDef(initialValue);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public String convertIDLDef(Definition instanceValue)
+  {
+    return super.convertToString(FrontendPackage.Literals.IDL_DEF, instanceValue);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public String convertIDLDefToString(EDataType eDataType, Object instanceValue)
+  {
+    return convertIDLDef((Definition)instanceValue);
   }
 
   /**
