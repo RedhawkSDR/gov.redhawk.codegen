@@ -2,6 +2,7 @@
  */
 package gov.redhawk.ide.codegen.frontend.impl;
 
+import gov.redhawk.eclipsecorba.idl.Definition;
 import gov.redhawk.ide.codegen.frontend.FeiDevice;
 import gov.redhawk.ide.codegen.frontend.FrontendPackage;
 
@@ -169,7 +170,7 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
    * @generated
    * @ordered
    */
-  protected static final String DIGITAL_INPUT_TYPE_EDEFAULT = null;
+  protected static final Definition DIGITAL_INPUT_TYPE_EDEFAULT = null;
 
   /**
    * The cached value of the '{@link #getDigitalInputType() <em>Digital Input Type</em>}' attribute.
@@ -179,7 +180,7 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
    * @generated
    * @ordered
    */
-  protected String digitalInputType = DIGITAL_INPUT_TYPE_EDEFAULT;
+  protected Definition digitalInputType = DIGITAL_INPUT_TYPE_EDEFAULT;
 
   /**
    * The default value of the '{@link #isHasDigitalOutput() <em>Has Digital Output</em>}' attribute.
@@ -208,7 +209,7 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
    * @generated
    * @ordered
    */
-  protected static final String DIGITAL_OUTPUT_TYPE_EDEFAULT = null;
+  protected static final Definition DIGITAL_OUTPUT_TYPE_EDEFAULT = null;
 
   /**
    * The cached value of the '{@link #getDigitalOutputType() <em>Digital Output Type</em>}' attribute.
@@ -218,7 +219,7 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
    * @generated
    * @ordered
    */
-  protected String digitalOutputType = DIGITAL_OUTPUT_TYPE_EDEFAULT;
+  protected Definition digitalOutputType = DIGITAL_OUTPUT_TYPE_EDEFAULT;
 
   /**
    * The default value of the '{@link #isMultiOut() <em>Multi Out</em>}' attribute.
@@ -288,7 +289,7 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
    * @generated
    * @ordered
    */
-  protected static final String DIGITAL_INPUT_TYPE_FOR_TX_EDEFAULT = null;
+  protected static final Definition DIGITAL_INPUT_TYPE_FOR_TX_EDEFAULT = null;
 
   /**
    * The cached value of the '{@link #getDigitalInputTypeForTx() <em>Digital Input Type For Tx</em>}' attribute.
@@ -298,7 +299,7 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
    * @generated
    * @ordered
    */
-  protected String digitalInputTypeForTx = DIGITAL_INPUT_TYPE_FOR_TX_EDEFAULT;
+  protected Definition digitalInputTypeForTx = DIGITAL_INPUT_TYPE_FOR_TX_EDEFAULT;
 
   /**
    * The default value of the '{@link #getTunerStatusStruct() <em>Tuner Status Struct</em>}' attribute.
@@ -484,7 +485,7 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
    * <!-- end-user-doc -->
    * @generated
    */
-  public String getDigitalInputType()
+  public Definition getDigitalInputType()
   {
     return digitalInputType;
   }
@@ -494,9 +495,9 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setDigitalInputType(String newDigitalInputType)
+  public void setDigitalInputType(Definition newDigitalInputType)
   {
-    String oldDigitalInputType = digitalInputType;
+    Definition oldDigitalInputType = digitalInputType;
     digitalInputType = newDigitalInputType;
     if (eNotificationRequired())
       eNotify(new ENotificationImpl(this, Notification.SET, FrontendPackage.FEI_DEVICE__DIGITAL_INPUT_TYPE, oldDigitalInputType, digitalInputType));
@@ -530,7 +531,7 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
    * <!-- end-user-doc -->
    * @generated
    */
-  public String getDigitalOutputType()
+  public Definition getDigitalOutputType()
   {
     return digitalOutputType;
   }
@@ -540,9 +541,9 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setDigitalOutputType(String newDigitalOutputType)
+  public void setDigitalOutputType(Definition newDigitalOutputType)
   {
-    String oldDigitalOutputType = digitalOutputType;
+    Definition oldDigitalOutputType = digitalOutputType;
     digitalOutputType = newDigitalOutputType;
     if (eNotificationRequired())
       eNotify(new ENotificationImpl(this, Notification.SET, FrontendPackage.FEI_DEVICE__DIGITAL_OUTPUT_TYPE, oldDigitalOutputType, digitalOutputType));
@@ -622,7 +623,7 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
    * <!-- end-user-doc -->
    * @generated
    */
-  public String getDigitalInputTypeForTx()
+  public Definition getDigitalInputTypeForTx()
   {
     return digitalInputTypeForTx;
   }
@@ -632,9 +633,9 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setDigitalInputTypeForTx(String newDigitalInputTypeForTx)
+  public void setDigitalInputTypeForTx(Definition newDigitalInputTypeForTx)
   {
-    String oldDigitalInputTypeForTx = digitalInputTypeForTx;
+    Definition oldDigitalInputTypeForTx = digitalInputTypeForTx;
     digitalInputTypeForTx = newDigitalInputTypeForTx;
     if (eNotificationRequired())
       eNotify(new ENotificationImpl(this, Notification.SET, FrontendPackage.FEI_DEVICE__DIGITAL_INPUT_TYPE_FOR_TX, oldDigitalInputTypeForTx, digitalInputTypeForTx));
@@ -734,13 +735,13 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
         setHasDigitalInput((Boolean)newValue);
         return;
       case FrontendPackage.FEI_DEVICE__DIGITAL_INPUT_TYPE:
-        setDigitalInputType((String)newValue);
+        setDigitalInputType((Definition)newValue);
         return;
       case FrontendPackage.FEI_DEVICE__HAS_DIGITAL_OUTPUT:
         setHasDigitalOutput((Boolean)newValue);
         return;
       case FrontendPackage.FEI_DEVICE__DIGITAL_OUTPUT_TYPE:
-        setDigitalOutputType((String)newValue);
+        setDigitalOutputType((Definition)newValue);
         return;
       case FrontendPackage.FEI_DEVICE__MULTI_OUT:
         setMultiOut((Boolean)newValue);
@@ -752,7 +753,7 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
         setNumberOfDigitalInputsForTx((Integer)newValue);
         return;
       case FrontendPackage.FEI_DEVICE__DIGITAL_INPUT_TYPE_FOR_TX:
-        setDigitalInputTypeForTx((String)newValue);
+        setDigitalInputTypeForTx((Definition)newValue);
         return;
       case FrontendPackage.FEI_DEVICE__TUNER_STATUS_STRUCT:
         setTunerStatusStruct((ScaStructProperty)newValue);

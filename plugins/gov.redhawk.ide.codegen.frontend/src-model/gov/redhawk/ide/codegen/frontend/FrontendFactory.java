@@ -2,6 +2,7 @@
  */
 package gov.redhawk.ide.codegen.frontend;
 
+import gov.redhawk.eclipsecorba.idl.Definition;
 import gov.redhawk.model.sca.ScaStructProperty;
 
 import org.eclipse.emf.ecore.EFactory;
@@ -52,6 +53,26 @@ public interface FrontendFactory extends EFactory
    * @generated
    */
   String convertTunerStatusStruct(ScaStructProperty instanceValue);
+
+  /**
+   * Returns an instance of data type '<em>IDL Def</em>' corresponding the given literal.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param literal a literal of the data type.
+   * @return a new instance value of the data type.
+   * @generated
+   */
+  Definition createIDLDef(String literal);
+
+  /**
+   * Returns a literal representation of an instance of data type '<em>IDL Def</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param instanceValue an instance value of the data type.
+   * @return a literal representation of the instance value.
+   * @generated
+   */
+  String convertIDLDef(Definition instanceValue);
 
   /**
    * Returns the package supported by this factory.

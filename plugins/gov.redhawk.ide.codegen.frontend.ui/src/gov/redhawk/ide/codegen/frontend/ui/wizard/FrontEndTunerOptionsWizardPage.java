@@ -28,7 +28,12 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.IBaseLabelProvider;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -39,7 +44,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -51,9 +55,16 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 	private FeiDevice feiDevice;
 	private Composite client;
 	DataBindingContext ctx;
-	String[] propertyTypes;
+	Definition[] propertyTypes;
 	private Composite parent;
 	private FrontEndProjectValidator validator;
+	private IBaseLabelProvider definitionComboViewerLabelProvider = new LabelProvider() {
+		@Override
+		public String getText(final Object element) {
+			final Definition def = (Definition) element;
+			return def.getName();
+		}
+	};
 
 	public FrontEndTunerOptionsWizardPage(FeiDevice feiDevice) {
 		super("");
@@ -122,7 +133,7 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 	private void populatePropertyTypes() {
 		IdlLibrary idlLibrary = RedhawkUiActivator.getDefault().getIdlLibraryService().getLibrary();
 		RepositoryModule bulkioIdl;
-		List<String> bulkioTypes = new ArrayList<String>();
+		List<Definition> bulkioTypes = new ArrayList<Definition>();
 
 		// Grab array of available BULKIO types
 		for (Definition def : idlLibrary.getDefinitions()) {
@@ -142,17 +153,12 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 						if (removedTypes.contains(bulkioDef.getRepId())) {
 							continue;
 						}
-						bulkioTypes.add(bulkioDef.getRepId());
+						bulkioTypes.add(bulkioDef);
 					}
 				}
 			}
 		}
-
-		// Convert to String[] for convenience in passing to SWT widgets
-		propertyTypes = new String[bulkioTypes.size()];
-		for (int i = 0; i < propertyTypes.length; i++) {
-			propertyTypes[i] = bulkioTypes.get(i);
-		}
+		propertyTypes = bulkioTypes.toArray(new Definition[0]);
 	}
 
 	private void createUIElements(Composite client) {
@@ -246,11 +252,15 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		Label digitalInputTypeLabel = new Label(digitalIn, SWT.None);
 		digitalInputTypeLabel.setText("Digital Input Type: ");
 
-		Combo digitalInputCombo = new Combo(digitalIn, SWT.READ_ONLY);
-		digitalInputCombo.setItems(propertyTypes);
-		ctx.bindValue(WidgetProperties.selection().observe(digitalInputCombo),
+		ComboViewer digitalInputCombo = new ComboViewer(digitalIn, SWT.READ_ONLY);
+		digitalInputCombo.setContentProvider(new ArrayContentProvider());
+		digitalInputCombo.setLabelProvider(definitionComboViewerLabelProvider);
+		digitalInputCombo.setInput(propertyTypes);
+		ctx.bindValue(
+			ViewersObservables.observeSingleSelection(digitalInputCombo),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__DIGITAL_INPUT_TYPE));
-		ctx.bindValue(WidgetProperties.enabled().observe(digitalInputCombo),
+		
+		ctx.bindValue(WidgetProperties.enabled().observe(digitalInputCombo.getCombo()),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__HAS_DIGITAL_INPUT));
 		return digitalIn;
 	}
@@ -285,11 +295,13 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		Label digitalOutputTypeLabel = new Label(digitalOut, SWT.None);
 		digitalOutputTypeLabel.setText("Digital Output Type: ");
 
-		Combo digitalOutputCombo = new Combo(digitalOut, SWT.READ_ONLY);
-		digitalOutputCombo.setItems(propertyTypes);
-		ctx.bindValue(WidgetProperties.selection().observe(digitalOutputCombo),
+		ComboViewer digitalOutputCombo = new ComboViewer(digitalOut, SWT.READ_ONLY);
+		digitalOutputCombo.setContentProvider(new ArrayContentProvider());
+		digitalOutputCombo.setLabelProvider(definitionComboViewerLabelProvider);
+		digitalOutputCombo.setInput(propertyTypes);
+		ctx.bindValue(ViewersObservables.observeSingleSelection(digitalOutputCombo),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__DIGITAL_OUTPUT_TYPE));
-		ctx.bindValue(WidgetProperties.enabled().observe(digitalOutputCombo),
+		ctx.bindValue(WidgetProperties.enabled().observe(digitalOutputCombo.getCombo()),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__HAS_DIGITAL_OUTPUT));
 
 		Button multiOutCheck = new Button(digitalOut, SWT.CHECK);
@@ -327,9 +339,12 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		digitalInputTypeLabel.setText("Digital Input Type: ");
 		digitalInputTypeLabel.setLayoutData(GridDataFactory.fillDefaults().indent(50, 0).align(SWT.CENTER, SWT.CENTER).create());
 
-		Combo digitalInputCombo = new Combo(transmitterGroup, SWT.READ_ONLY);
-		digitalInputCombo.setItems(propertyTypes);
-		ctx.bindValue(WidgetProperties.selection().observe(digitalInputCombo),
+		ComboViewer digitalInputCombo = new ComboViewer(transmitterGroup, SWT.READ_ONLY);
+		digitalInputCombo.setContentProvider(new ArrayContentProvider());
+		digitalInputCombo.setLabelProvider(definitionComboViewerLabelProvider );
+		digitalInputCombo.setInput(propertyTypes);
+		
+		ctx.bindValue(ViewersObservables.observeSingleSelection(digitalInputCombo),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__DIGITAL_INPUT_TYPE_FOR_TX));
 	} //End Transmitter Group
 

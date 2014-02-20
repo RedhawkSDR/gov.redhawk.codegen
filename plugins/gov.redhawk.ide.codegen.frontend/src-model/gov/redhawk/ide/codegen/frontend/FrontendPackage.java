@@ -232,6 +232,17 @@ public interface FrontendPackage extends EPackage
 
 
   /**
+   * The meta object id for the '<em>IDL Def</em>' data type.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see gov.redhawk.eclipsecorba.idl.Definition
+   * @see gov.redhawk.ide.codegen.frontend.impl.FrontendPackageImpl#getIDLDef()
+   * @generated
+   */
+  int IDL_DEF = 2;
+
+
+  /**
    * Returns the meta object for class '{@link gov.redhawk.ide.codegen.frontend.FeiDevice <em>Fei Device</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -407,6 +418,17 @@ public interface FrontendPackage extends EPackage
   EDataType getTunerStatusStruct();
 
   /**
+   * Returns the meta object for data type '{@link gov.redhawk.eclipsecorba.idl.Definition <em>IDL Def</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for data type '<em>IDL Def</em>'.
+   * @see gov.redhawk.eclipsecorba.idl.Definition
+   * @model instanceClass="gov.redhawk.eclipsecorba.idl.Definition"
+   * @generated
+   */
+  EDataType getIDLDef();
+
+  /**
    * Returns the factory that creates the instances of the model.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -561,6 +583,16 @@ public interface FrontendPackage extends EPackage
      * @generated
      */
     EDataType TUNER_STATUS_STRUCT = eINSTANCE.getTunerStatusStruct();
+
+    /**
+     * The meta object literal for the '<em>IDL Def</em>' data type.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see gov.redhawk.eclipsecorba.idl.Definition
+     * @see gov.redhawk.ide.codegen.frontend.impl.FrontendPackageImpl#getIDLDef()
+     * @generated
+     */
+    EDataType IDL_DEF = eINSTANCE.getIDLDef();
 
   }
 
