@@ -35,12 +35,12 @@ import org.eclipse.core.databinding.observable.set.WritableSet;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -52,6 +52,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 public class FrontEndTunerPropsPage extends WizardPage implements ICodegenWizardPage {
 
@@ -73,26 +74,25 @@ public class FrontEndTunerPropsPage extends WizardPage implements ICodegenWizard
 			selectedProps.addAll(FrontEndDeviceUIUtils.INSTANCE.getRequiredFrontEndProps());
 		}
 	}
-	
+
 	public FrontEndTunerPropsPage(Set<Simple> props) {
 		super("");
-		
+
 		if (this.selectedProps.isEmpty()) {
 			selectedProps.addAll(FrontEndDeviceUIUtils.INSTANCE.getRequiredFrontEndProps());
-			
+
 			for (Simple prop : props) {
 				// Maybe it is required, but it's a set so we won't add it if it's already added and all required are added already
 				selectedProps.add(new FrontEndProp(prop, false));
 			}
 		}
 	}
-	
-	
+
 	@Override
 	public void createControl(Composite parent) {
 		this.setTitle("Front End Interfaces Tuner Status Customization");
 		this.setDescription("Select set of tuner status properties for the tuner status struct.  Note that required properties may not be removed.");
-		
+
 		final Composite client = new Composite(parent, SWT.NULL);
 
 		// Creates the basic layout of the UI elements
@@ -162,7 +162,7 @@ public class FrontEndTunerPropsPage extends WizardPage implements ICodegenWizard
 
 				dialog.setInput(new ArrayList<FrontEndProp>(inputSet));
 				int dialogStatus = dialog.open();
-				if (dialogStatus == Dialog.OK) {
+				if (dialogStatus == Window.OK) {
 					selectedProps.addAll(dialog.getResult());
 				}
 			}
@@ -188,11 +188,11 @@ public class FrontEndTunerPropsPage extends WizardPage implements ICodegenWizard
 
 		// Prevent the removal of required props
 		theTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-			
+
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
-				for (Object obj : ((IStructuredSelection)event.getSelection()).toList()) {
-					if (((FrontEndProp)obj).isRequired()) {
+				for (Object obj : ((IStructuredSelection) event.getSelection()).toList()) {
+					if (((FrontEndProp) obj).isRequired()) {
 						removeTunerStatusPropButton.setEnabled(false);
 						return;
 					}
@@ -223,11 +223,11 @@ public class FrontEndTunerPropsPage extends WizardPage implements ICodegenWizard
 		buttonComposite.setLayoutData(GridDataFactory.fillDefaults().create());
 
 		this.addTunerStatusPropButton = new Button(buttonComposite, SWT.PUSH);
-		this.addTunerStatusPropButton.setImage(FrontEndDeviceWizardPlugin.imageDescriptorFromPlugin(FrontEndDeviceWizardPlugin.PLUGIN_ID, "icons/add.gif").createImage());
+		this.addTunerStatusPropButton.setImage(AbstractUIPlugin.imageDescriptorFromPlugin(FrontEndDeviceWizardPlugin.PLUGIN_ID, "icons/add.gif").createImage());
 		this.addTunerStatusPropButton.setLayoutData(GridDataFactory.swtDefaults().create());
 
 		this.removeTunerStatusPropButton = new Button(buttonComposite, SWT.PUSH);
-		this.removeTunerStatusPropButton.setImage(FrontEndDeviceWizardPlugin.imageDescriptorFromPlugin(FrontEndDeviceWizardPlugin.PLUGIN_ID, "icons/remove.gif").createImage());
+		this.removeTunerStatusPropButton.setImage(AbstractUIPlugin.imageDescriptorFromPlugin(FrontEndDeviceWizardPlugin.PLUGIN_ID, "icons/remove.gif").createImage());
 		this.removeTunerStatusPropButton.setLayoutData(GridDataFactory.swtDefaults().create());
 
 		return theTableViewer;
@@ -266,7 +266,7 @@ public class FrontEndTunerPropsPage extends WizardPage implements ICodegenWizard
 
 	@Override
 	public void setCanFinish(boolean canFinish) {
-		
+
 	}
 
 	public Set<FrontEndProp> getSelectedProperties() {
@@ -277,7 +277,7 @@ public class FrontEndTunerPropsPage extends WizardPage implements ICodegenWizard
 			public void run() {
 				retVal.addAll(selectedProps);
 			}
-			
+
 		});
 		return Collections.unmodifiableSet(retVal);
 	}

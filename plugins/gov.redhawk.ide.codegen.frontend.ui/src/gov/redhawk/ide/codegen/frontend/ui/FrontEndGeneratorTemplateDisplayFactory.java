@@ -57,6 +57,7 @@ import mil.jpeojtrs.sca.util.ScaResourceFactoryUtil;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -71,7 +72,7 @@ import FRONTEND.RFSourceHelper;
 public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplateDisplayFactory {
 
 	private FrontEndTunerPropsPage frontEndTunerPropsWizardPage;
-	private FrontEndTunerTypeSelectionWizardPage frontEndTunerTypeSelectionPage ;
+	private FrontEndTunerTypeSelectionWizardPage frontEndTunerTypeSelectionPage;
 	private FrontEndTunerOptionsWizardPage frontEndTunerOptionsWizardPage;
 	private FeiDevice feiDevice;
 	private Set<FrontEndProp> tunerStatusStructProps;
@@ -79,7 +80,7 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 	@Override
 	public ICodegenWizardPage createPage() {
 		ICodegenWizardPage[] pages = createPages();
-		
+
 		if (pages.length > 0) {
 			return pages[0];
 		} else {
@@ -98,36 +99,36 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 	@Override
 	public ICodegenWizardPage[] createPages() {
 		List<ICodegenWizardPage> pages = new ArrayList<ICodegenWizardPage>();
-		
+
 		this.feiDevice = FrontendFactory.eINSTANCE.createFeiDevice();
-		
+
 		this.frontEndTunerTypeSelectionPage = new FrontEndTunerTypeSelectionWizardPage(feiDevice);
 		this.frontEndTunerOptionsWizardPage = new FrontEndTunerOptionsWizardPage(feiDevice);
 		this.frontEndTunerPropsWizardPage = new FrontEndTunerPropsPage(feiDevice);
-		
+
 		pages.add(this.frontEndTunerTypeSelectionPage);
 		pages.add(this.frontEndTunerOptionsWizardPage);
 		pages.add(this.frontEndTunerPropsWizardPage);
-		
+
 		return pages.toArray(new ICodegenWizardPage[pages.size()]);
 	}
-	
+
 	@Override
 	public void modifyProject(IProject project, IFile spdFile, SubMonitor newChild) throws CoreException {
 		final ResourceSet resourceSet = ScaResourceFactoryUtil.createResourceSet();
 		final URI spdUri = URI.createPlatformResourceURI(spdFile.getFullPath().toString(), true).appendFragment(SoftPkg.EOBJECT_PATH);
-		
+
 		final SoftPkg eSpd = (SoftPkg) resourceSet.getEObject(spdUri, true);
 		SoftwareComponent eScd = eSpd.getDescriptor().getComponent();
-		
+
 		if (this.feiDevice.isIngestsGPS()) {
 			addGPSProvidesPort(eSpd);
 		}
-		
+
 		if (this.feiDevice.isOutputsGPS()) {
 			addGPSUsesPort(eSpd);
 		}
-		
+
 		if (this.feiDevice.isAntenna()) {
 			setDeviceKindName(eSpd, FrontEndDeviceUIUtils.ANTENNA_DEVICE_KIND_NAME);
 			addAntennaSpecificPorts(eSpd);
@@ -135,13 +136,13 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		} else { // It's a Tuner
 			// Add the front end nature to the project if it's a tuner.
 			FrontEndProjectNature.addNature(project, null, newChild);
-			
+
 			addTunerSpecificProps(eSpd);
 			setDeviceKindName(eSpd, FrontEndDeviceUIUtils.TUNER_DEVICE_KIND_NAME);
 			if (this.feiDevice.isRxTuner()) {
 				if (!this.feiDevice.isHasDigitalInput()) { // Has analog input
 					addRFInfoProvidesPorts(eSpd, this.feiDevice.getNumberOfAnalogInputs());
-					
+
 					if (this.feiDevice.isHasDigitalOutput()) { // Has digital output
 						addDigitalTunerPort(eSpd);
 						addUsesDataPort(eSpd, this.feiDevice.getDigitalOutputType().getName() + "_out", this.feiDevice.getDigitalOutputType().getRepId());
@@ -151,10 +152,9 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 					} else { // It has Analog Output
 						addProvidesControlPort(eSpd, "AnalogTuner_in", AnalogTunerHelper.id());
 						addRFInfoUsesPort(eSpd, "RFInfo_out");
-//						addRFSourcePort(eSpd);  // Holding off on supporting RFSourcePorts until post CCB
+						//						addRFSourcePort(eSpd);  // Holding off on supporting RFSourcePorts until post CCB
 					}
-					
-					
+
 				} else { // Has Digital Input
 					// If it has Digital Input it must have Digital Output
 					addDigitalTunerPort(eSpd);
@@ -165,37 +165,37 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 					}
 				}
 			}
-			
+
 			if (this.feiDevice.isTxTuner()) {
 				addDigitalTunerPort(eSpd);
 				addRFInfoUsesTXPorts(eSpd, this.feiDevice.getNumberOfDigitalInputsForTx());
-				addProvidesDataPorts(eSpd, this.feiDevice.getDigitalInputTypeForTx().getName() + "TX_in", this.feiDevice.getDigitalInputTypeForTx().getRepId(), this.feiDevice.getNumberOfDigitalInputsForTx());
+				addProvidesDataPorts(eSpd, this.feiDevice.getDigitalInputTypeForTx().getName() + "TX_in", this.feiDevice.getDigitalInputTypeForTx().getRepId(),
+					this.feiDevice.getNumberOfDigitalInputsForTx());
 			}
 		}
-		
-		 
+
 		Properties ePrf = eSpd.getPropertyFile().getProperties();
 		try {
 			eScd.eResource().save(null);
 			eSpd.eResource().save(null);
 			ePrf.eResource().save(null);
 		} catch (IOException e) {
-			throw new CoreException(new Status(Status.ERROR, FrontEndDeviceWizardPlugin.PLUGIN_ID, "Failed to write Settings to SCA resources.", e));
+			throw new CoreException(new Status(IStatus.ERROR, FrontEndDeviceWizardPlugin.PLUGIN_ID, "Failed to write Settings to SCA resources.", e));
 		}
-		
+
 	}
-	
+
 	private void addProvidesDataPorts(SoftPkg eSpd, String name, String repId, int numberOfPorts) {
 		addProvidesDataPort(eSpd, name, repId);
-		
+
 		for (int i = 2; i < numberOfPorts + 1; i++) {
-			addProvidesDataPort(eSpd, name + "_" + i , repId);
+			addProvidesDataPort(eSpd, name + "_" + i, repId);
 		}
 	}
 
 	private void addDigitalTunerPort(SoftPkg eSpd) {
 		Ports ports = createPorts(eSpd);
-		for (Provides providesPort: ports.getProvides()) {
+		for (Provides providesPort : ports.getProvides()) {
 			if (providesPort.getRepID().equals(DigitalTunerHelper.id())) {
 				// Only one digital tuner provides port allowed.
 				return;
@@ -205,7 +205,7 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 	}
 
 	private void setDeviceKindName(SoftPkg eSpd, String name) {
-		
+
 		for (Simple simpProp : eSpd.getPropertyFile().getProperties().getSimple()) {
 			if ("device_kind".equals(simpProp.getName())) {
 				simpProp.setValue(name);
@@ -217,35 +217,35 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 	private Ports addProvidesDataPort(SoftPkg eSpd, String name, String repId) {
 		return addProvidesPort(eSpd, name, repId, PortType.DATA);
 	}
-	
+
 	private Ports addProvidesControlPort(SoftPkg eSpd, String name, String repId) {
 		return addProvidesPort(eSpd, name, repId, PortType.CONTROL);
 	}
-	
+
 	private Ports addProvidesPort(SoftPkg eSpd, String name, String repId, PortType portType) {
 		Ports ports = createPorts(eSpd);
 		Provides portToAdd = ScdFactory.eINSTANCE.createProvides();
-		
+
 		PortTypeContainer portTypeContainer = ScdFactory.eINSTANCE.createPortTypeContainer();
 		portTypeContainer.setType(portType);
 		portToAdd.getPortType().add(portTypeContainer);
-		
+
 		portToAdd.setRepID(repId);
 		portToAdd.setName(name);
 		addInterface(SdrUiPlugin.getDefault().getTargetSdrRoot().getIdlLibrary(), portToAdd.getRepID(), eSpd.getDescriptor().getComponent().getInterfaces());
 		ports.getProvides().add(portToAdd);
-		
-		return ports;		
+
+		return ports;
 	}
 
 	private Ports addUsesDataPort(SoftPkg eSpd, String name, String repId) {
 		return addUsesPort(eSpd, name, repId, PortType.DATA);
 	}
-	
+
 	private Ports addUsesControlPort(SoftPkg eSpd, String name, String repId) {
 		return addUsesPort(eSpd, name, repId, PortType.CONTROL);
 	}
-	
+
 	private Ports addUsesPort(SoftPkg eSpd, String name, String repId, PortType portType) {
 		Ports ports = createPorts(eSpd);
 		Uses portToAdd = ScdFactory.eINSTANCE.createUses();
@@ -253,12 +253,12 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		PortTypeContainer portTypeContainer = ScdFactory.eINSTANCE.createPortTypeContainer();
 		portTypeContainer.setType(portType);
 		portToAdd.getPortType().add(portTypeContainer);
-		
+
 		portToAdd.setRepID(repId);
 		portToAdd.setName(name);
 		addInterface(SdrUiPlugin.getDefault().getTargetSdrRoot().getIdlLibrary(), portToAdd.getRepID(), eSpd.getDescriptor().getComponent().getInterfaces());
 		ports.getUses().add(portToAdd);
-		
+
 		return ports;
 	}
 
@@ -273,89 +273,89 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 	private Ports addRFInfoProvidesPort(SoftPkg eSpd, String name) {
 		return addProvidesDataPort(eSpd, name, RFInfoHelper.id());
 	}
-	
+
 	private void addRFInfoUsesTXPorts(SoftPkg eSpd, int numberOfPorts) {
 		addRFInfoUsesPort(eSpd, "RFInfoTX_out");
-		
+
 		for (int i = 2; i < numberOfPorts + 1; i++) {
 			addRFInfoUsesPort(eSpd, "RFInfoTX_out_" + i);
 		}
 	}
-	
+
 	private void addRFInfoProvidesPorts(SoftPkg eSpd, int numberOfPorts) {
 		addRFInfoProvidesPort(eSpd, "RFInfo_in");
-		
+
 		for (int i = 2; i < numberOfPorts + 1; i++) {
 			addRFInfoProvidesPort(eSpd, "RFInfo_in_" + i);
 		}
 	}
-	
+
 	private void addMultiOutProperty(SoftPkg eSpd) {
-		
+
 		StructSequence structSeq = PrfFactory.eINSTANCE.createStructSequence();
 		structSeq.setId("connectionTable");
-		
+
 		final ConfigurationKind structKind = PrfFactory.eINSTANCE.createConfigurationKind();
 		structKind.setType(StructPropertyConfigurationType.CONFIGURE);
 		structSeq.getConfigurationKind().add(structKind);
-		
+
 		Struct struct = PrfFactory.eINSTANCE.createStruct();
 		struct.setId("connection_descriptor");
-		
+
 		Simple connectionName = PrfFactory.eINSTANCE.createSimple();
 		connectionName.setId("connection_name");
 		connectionName.setType(PropertyValueType.STRING);
-		
+
 		final Kind connectionNameKind = PrfFactory.eINSTANCE.createKind();
 		connectionNameKind.setType(PropertyConfigurationType.CONFIGURE);
 		connectionName.getKind().add(connectionNameKind);
-		
+
 		Simple streamId = PrfFactory.eINSTANCE.createSimple();
 		streamId.setId("stream_id");
 		streamId.setType(PropertyValueType.STRING);
-		
+
 		final Kind streamIdKind = PrfFactory.eINSTANCE.createKind();
 		streamIdKind.setType(PropertyConfigurationType.CONFIGURE);
 		streamId.getKind().add(streamIdKind);
-		
+
 		Simple portName = PrfFactory.eINSTANCE.createSimple();
 		portName.setId("port_name");
 		portName.setType(PropertyValueType.STRING);
-		
+
 		final Kind portNameKind = PrfFactory.eINSTANCE.createKind();
 		portNameKind.setType(PropertyConfigurationType.CONFIGURE);
 		portName.getKind().add(portNameKind);
-		
+
 		struct.getSimple().add(connectionName);
 		struct.getSimple().add(streamId);
 		struct.getSimple().add(portName);
-		
+
 		structSeq.setStruct(struct);
-		
+
 		eSpd.getPropertyFile().getProperties().getStructSequence().add(structSeq);
 	}
 
 	private void addTunerSpecificProps(SoftPkg eSpd) {
-		
+
 		// Add the properties from the Wizard page.
 		if (this.tunerStatusStructProps == null && this.frontEndTunerPropsWizardPage != null) {
 			this.tunerStatusStructProps = this.frontEndTunerPropsWizardPage.getSelectedProperties();
 		}
-		
+
 		StructSequence structSeq = PrfFactory.eINSTANCE.createStructSequence();
 		structSeq.setId(FrontEndDeviceUIUtils.TUNER_STATUS_STRUCT_SEQ_ID);
 		structSeq.setDescription(FrontEndDeviceUIUtils.TUNER_STATUS_STRUCT_SEQ_DESCRIPTION);
 		structSeq.setName(FrontEndDeviceUIUtils.TUNER_STATUS_STRUCT_SEQ_NAME);
 		structSeq.setMode(AccessType.READONLY);
-		
+
 		final ConfigurationKind kind = PrfFactory.eINSTANCE.createConfigurationKind();
 		kind.setType(StructPropertyConfigurationType.CONFIGURE);
 		structSeq.getConfigurationKind().add(kind);
-		
+
 		Struct struct = PrfFactory.eINSTANCE.createStruct();
 		struct.setId(FrontEndDeviceUIUtils.TUNER_STATUS_STRUCT_ID);
 		struct.setName(FrontEndDeviceUIUtils.TUNER_STATUS_STRUCT_NAME);
-		
+
 		for (FrontEndProp frontEndProp : this.tunerStatusStructProps) {
 			Simple prop = frontEndProp.getProp();
 			if (prop != null) {
@@ -376,7 +376,7 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 
 	private void addAntennaSpecificPorts(SoftPkg eSpd) {
 		Ports ports = addRFInfoUsesPort(eSpd, "RFInfo_out");
-		
+
 		// RF Source
 		Provides rfSourcePort = ScdFactory.eINSTANCE.createProvides();
 		rfSourcePort.setName("RFSource_In");
@@ -388,7 +388,7 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 	private void addGPSUsesPort(SoftPkg eSpd) {
 		addUsesDataPort(eSpd, "GPS_in", GPSHelper.id());
 	}
-	
+
 	private void addGPSProvidesPort(SoftPkg eSpd) {
 		addProvidesDataPort(eSpd, "GPS_out", GPSHelper.id());
 	}
@@ -414,17 +414,17 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 				addInterface(library, inherited.getRepId(), interfaces);
 			}
 		}
-		
+
 		// Don't add it if we already have it.
 		for (Interface curInterface : interfaces.getInterface()) {
 			if (curInterface.getRepid().equals(i.getRepid())) {
 				return;
 			}
 		}
-		
+
 		interfaces.getInterface().add(i);
 	}
-	
+
 	private Ports createPorts(SoftPkg eSpd) {
 		SoftwareComponent scd = eSpd.getDescriptor().getComponent();
 		if (scd.getComponentFeatures() == null) {
@@ -439,6 +439,5 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 	public void setTunerStatusStructProps(Set<FrontEndProp> tunerStatusStructProps) {
 		this.tunerStatusStructProps = tunerStatusStructProps;
 	}
-
 
 }

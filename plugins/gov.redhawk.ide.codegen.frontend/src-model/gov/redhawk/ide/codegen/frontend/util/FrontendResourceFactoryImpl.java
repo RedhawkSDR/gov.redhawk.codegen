@@ -15,30 +15,27 @@ import org.eclipse.emf.ecore.resource.impl.ResourceFactoryImpl;
  * @see gov.redhawk.ide.codegen.frontend.util.FrontendResourceImpl
  * @generated
  */
-public class FrontendResourceFactoryImpl extends ResourceFactoryImpl
-{
-  /**
-   * Creates an instance of the resource factory.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public FrontendResourceFactoryImpl()
-  {
-    super();
-  }
+public class FrontendResourceFactoryImpl extends ResourceFactoryImpl {
+	/**
+	* Creates an instance of the resource factory.
+	* <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	* @generated
+	*/
+	public FrontendResourceFactoryImpl() {
+		super();
+	}
 
-  /**
-   * Creates an instance of the resource.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public Resource createResource(URI uri)
-  {
-    Resource result = new FrontendResourceImpl(uri);
-    return result;
-  }
+	/**
+	* Creates an instance of the resource.
+	* <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	* @generated
+	*/
+	@Override
+	public Resource createResource(URI uri) {
+		Resource result = new FrontendResourceImpl(uri);
+		return result;
+	}
 
 } //FrontendResourceFactoryImpl

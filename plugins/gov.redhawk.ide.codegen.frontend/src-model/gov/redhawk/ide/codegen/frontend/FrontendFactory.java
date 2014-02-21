@@ -3,6 +3,7 @@
 package gov.redhawk.ide.codegen.frontend;
 
 import gov.redhawk.eclipsecorba.idl.Definition;
+
 import gov.redhawk.model.sca.ScaStructProperty;
 
 import org.eclipse.emf.ecore.EFactory;
@@ -15,72 +16,71 @@ import org.eclipse.emf.ecore.EFactory;
  * @see gov.redhawk.ide.codegen.frontend.FrontendPackage
  * @generated
  */
-public interface FrontendFactory extends EFactory
-{
-  /**
-   * The singleton instance of the factory.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  FrontendFactory eINSTANCE = gov.redhawk.ide.codegen.frontend.impl.FrontendFactoryImpl.init();
+public interface FrontendFactory extends EFactory {
+	/**
+	* The singleton instance of the factory.
+	* <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	* @generated
+	*/
+	FrontendFactory eINSTANCE = gov.redhawk.ide.codegen.frontend.impl.FrontendFactoryImpl.init();
 
-  /**
-   * Returns a new object of class '<em>Fei Device</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Fei Device</em>'.
-   * @generated
-   */
-  FeiDevice createFeiDevice();
+	/**
+	* Returns a new object of class '<em>Fei Device</em>'.
+	* <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	* @return a new object of class '<em>Fei Device</em>'.
+	* @generated
+	*/
+	FeiDevice createFeiDevice();
 
-  /**
-   * Returns an instance of data type '<em>Tuner Status Struct</em>' corresponding the given literal.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @param literal a literal of the data type.
-   * @return a new instance value of the data type.
-   * @generated
-   */
-  ScaStructProperty createTunerStatusStruct(String literal);
+	/**
+	* Returns an instance of data type '<em>Tuner Status Struct</em>' corresponding the given literal.
+	* <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	* @param literal a literal of the data type.
+	* @return a new instance value of the data type.
+	* @generated
+	*/
+	ScaStructProperty createTunerStatusStruct(String literal);
 
-  /**
-   * Returns a literal representation of an instance of data type '<em>Tuner Status Struct</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @param instanceValue an instance value of the data type.
-   * @return a literal representation of the instance value.
-   * @generated
-   */
-  String convertTunerStatusStruct(ScaStructProperty instanceValue);
+	/**
+	* Returns a literal representation of an instance of data type '<em>Tuner Status Struct</em>'.
+	* <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	* @param instanceValue an instance value of the data type.
+	* @return a literal representation of the instance value.
+	* @generated
+	*/
+	String convertTunerStatusStruct(ScaStructProperty instanceValue);
 
-  /**
-   * Returns an instance of data type '<em>IDL Def</em>' corresponding the given literal.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @param literal a literal of the data type.
-   * @return a new instance value of the data type.
-   * @generated
-   */
-  Definition createIDLDef(String literal);
+	/**
+	* Returns an instance of data type '<em>IDL Def</em>' corresponding the given literal.
+	* <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	* @param literal a literal of the data type.
+	* @return a new instance value of the data type.
+	* @generated
+	*/
+	Definition createIDLDef(String literal);
 
-  /**
-   * Returns a literal representation of an instance of data type '<em>IDL Def</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @param instanceValue an instance value of the data type.
-   * @return a literal representation of the instance value.
-   * @generated
-   */
-  String convertIDLDef(Definition instanceValue);
+	/**
+	* Returns a literal representation of an instance of data type '<em>IDL Def</em>'.
+	* <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	* @param instanceValue an instance value of the data type.
+	* @return a literal representation of the instance value.
+	* @generated
+	*/
+	String convertIDLDef(Definition instanceValue);
 
-  /**
-   * Returns the package supported by this factory.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the package supported by this factory.
-   * @generated
-   */
-  FrontendPackage getFrontendPackage();
+	/**
+	* Returns the package supported by this factory.
+	* <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	* @return the package supported by this factory.
+	* @generated
+	*/
+	FrontendPackage getFrontendPackage();
 
 } //FrontendFactory

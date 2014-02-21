@@ -29,27 +29,27 @@ import org.eclipse.swt.widgets.Shell;
 
 public class SelectFrontEndTunerPropsDialog extends Dialog {
 
-	private static final int DIALOG_HORIZONTAL_HINT=800;
-	private static final int DIALOG_VERTICAL_HINT=400;
+	private static final int DIALOG_HORIZONTAL_HINT = 800;
+	private static final int DIALOG_VERTICAL_HINT = 400;
 	private CheckboxTableViewer theTableViewer;
 	private final WritableSet input = new WritableSet();
 	private final WritableSet output = new WritableSet();
 	private DataBindingContext context = new DataBindingContext();
-	
+
 	protected SelectFrontEndTunerPropsDialog(Shell parentShell) {
 		super(parentShell);
 	}
-	
+
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		createUIElements(parent);
 		return parent;
 	}
 
-
 	private void createUIElements(Composite client) {
 		client.setLayout(new GridLayout(1, false));
-		client.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(DIALOG_HORIZONTAL_HINT, DIALOG_VERTICAL_HINT).create());
+		client.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SelectFrontEndTunerPropsDialog.DIALOG_HORIZONTAL_HINT,
+			SelectFrontEndTunerPropsDialog.DIALOG_VERTICAL_HINT).create());
 		createTable(client);
 	}
 
@@ -58,14 +58,14 @@ public class SelectFrontEndTunerPropsDialog extends Dialog {
 		theTableViewer.setInput(this.input);
 		context.bindSet(ViewersObservables.observeCheckedElements(theTableViewer, FrontEndProp.class), this.output);
 	}
-	
+
 	public void setInput(List<FrontEndProp> input) {
 		this.input.clear();
 		this.input.addAll(input);
 	}
-	
+
 	public Set<FrontEndProp> getResult() {
 		return Collections.unmodifiableSet(this.output);
 	}
-	
+
 }

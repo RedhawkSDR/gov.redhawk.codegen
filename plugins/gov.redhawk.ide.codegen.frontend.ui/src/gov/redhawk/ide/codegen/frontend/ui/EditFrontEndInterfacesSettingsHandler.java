@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * This file is protected by Copyright. 
+ * Please refer to the COPYRIGHT file distributed with this source distribution.
+ *
+ * This file is part of REDHAWK IDE.
+ *
+ * All rights reserved.  This program and the accompanying materials are made available under 
+ * the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at 
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************/
 package gov.redhawk.ide.codegen.frontend.ui;
 
 import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndProp;
@@ -82,11 +92,11 @@ public class EditFrontEndInterfacesSettingsHandler extends AbstractHandler {
 			}
 
 			tunerStatusStruct = tunerStatusStructSeq.getStruct();
-			
+
 			// struct seq properties is there current list of simples.
-//			structSeqProperties = new HashSet<Simple>(EcoreUtil.copyAll(tunerStatusStruct.getSimple()));
+			//			structSeqProperties = new HashSet<Simple>(EcoreUtil.copyAll(tunerStatusStruct.getSimple()));
 			structSeqProperties = new HashSet<Simple>(tunerStatusStruct.getSimple());
-			
+
 			// Pass it into the wizard page so that the displayed props are the ones they have.
 			this.frontEndWizardPage = new FrontEndTunerPropsPage(structSeqProperties);
 			this.frontEndWizardPage.setDescription("Select the tuner port type and the set of tuner status properties for the tuner status struct.  Note that required properties may not be removed.");
@@ -100,7 +110,7 @@ public class EditFrontEndInterfacesSettingsHandler extends AbstractHandler {
 
 				// Props selected is the full set of properties they want.
 				Set<FrontEndProp> propsSelected = this.frontEndWizardPage.getSelectedProperties();
-				
+
 				// Adding the new props.
 				for (FrontEndProp prop : propsSelected) {
 					boolean unique = true;
@@ -115,10 +125,10 @@ public class EditFrontEndInterfacesSettingsHandler extends AbstractHandler {
 						tunerStatusStruct.getSimple().add(prop.getProp());
 					}
 				}
-				
+
 				// Can't remove them while iterating so store those to remove.
 				List<Simple> simplesToRemove = new ArrayList<Simple>();
-				
+
 				// Removing the props the user wants removed.
 				for (Simple simp : tunerStatusStruct.getSimple()) {
 					boolean remove = true;
@@ -133,7 +143,7 @@ public class EditFrontEndInterfacesSettingsHandler extends AbstractHandler {
 						simplesToRemove.add(simp);
 					}
 				}
-				
+
 				// Remove all throws exception, must remove each one individually.
 				for (Simple simp : simplesToRemove) {
 					tunerStatusStruct.getSimple().remove(simp);
@@ -144,7 +154,7 @@ public class EditFrontEndInterfacesSettingsHandler extends AbstractHandler {
 					currentProps.eResource().save(null);
 				} catch (IOException e) {
 					FrontEndDeviceWizardPlugin.getDefault();
-					FrontEndDeviceWizardPlugin.logError("Failed to write Settings to SCA resources.", new CoreException(new Status(Status.ERROR,
+					FrontEndDeviceWizardPlugin.logError("Failed to write Settings to SCA resources.", new CoreException(new Status(IStatus.ERROR,
 						FrontEndDeviceWizardPlugin.PLUGIN_ID, "Failed to write Settings to SCA resources.", e)));
 				}
 			}
