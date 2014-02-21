@@ -1,5 +1,14 @@
-/**
- */
+/*******************************************************************************
+ * This file is protected by Copyright. 
+ * Please refer to the COPYRIGHT file distributed with this source distribution.
+ *
+ * This file is part of REDHAWK IDE.
+ *
+ * All rights reserved.  This program and the accompanying materials are made available under 
+ * the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at 
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************/
+// BEGIN GENERATED CODE
 package gov.redhawk.ide.codegen.frontend.impl;
 
 import gov.redhawk.eclipsecorba.idl.Definition;
@@ -25,11 +34,11 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
  */
 public class FrontendFactoryImpl extends EFactoryImpl implements FrontendFactory {
 	/**
-	* Creates the default factory implementation.
-	* <!-- begin-user-doc -->
+	 * Creates the default factory implementation.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public static FrontendFactory init() {
 		try {
 			FrontendFactory theFrontendFactory = (FrontendFactory) EPackage.Registry.INSTANCE.getEFactory(FrontendPackage.eNS_URI);
@@ -43,20 +52,20 @@ public class FrontendFactoryImpl extends EFactoryImpl implements FrontendFactory
 	}
 
 	/**
-	* Creates an instance of the factory.
-	* <!-- begin-user-doc -->
+	 * Creates an instance of the factory.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public FrontendFactoryImpl() {
 		super();
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
@@ -68,10 +77,10 @@ public class FrontendFactoryImpl extends EFactoryImpl implements FrontendFactory
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	@Override
 	public Object createFromString(EDataType eDataType, String initialValue) {
 		switch (eDataType.getClassifierID()) {
@@ -85,10 +94,10 @@ public class FrontendFactoryImpl extends EFactoryImpl implements FrontendFactory
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	@Override
 	public String convertToString(EDataType eDataType, Object instanceValue) {
 		switch (eDataType.getClassifierID()) {
@@ -102,105 +111,105 @@ public class FrontendFactoryImpl extends EFactoryImpl implements FrontendFactory
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public FeiDevice createFeiDevice() {
 		FeiDeviceImpl feiDevice = new FeiDeviceImpl();
 		return feiDevice;
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public ScaStructProperty createTunerStatusStruct(String literal) {
 		return (ScaStructProperty) super.createFromString(FrontendPackage.Literals.TUNER_STATUS_STRUCT, literal);
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public ScaStructProperty createTunerStatusStructFromString(EDataType eDataType, String initialValue) {
 		return createTunerStatusStruct(initialValue);
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public String convertTunerStatusStruct(ScaStructProperty instanceValue) {
 		return super.convertToString(FrontendPackage.Literals.TUNER_STATUS_STRUCT, instanceValue);
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public String convertTunerStatusStructToString(EDataType eDataType, Object instanceValue) {
 		return convertTunerStatusStruct((ScaStructProperty) instanceValue);
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public Definition createIDLDef(String literal) {
 		return (Definition) super.createFromString(FrontendPackage.Literals.IDL_DEF, literal);
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public Definition createIDLDefFromString(EDataType eDataType, String initialValue) {
 		return createIDLDef(initialValue);
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public String convertIDLDef(Definition instanceValue) {
 		return super.convertToString(FrontendPackage.Literals.IDL_DEF, instanceValue);
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public String convertIDLDefToString(EDataType eDataType, Object instanceValue) {
 		return convertIDLDef((Definition) instanceValue);
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public FrontendPackage getFrontendPackage() {
 		return (FrontendPackage) getEPackage();
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @deprecated
-	* @generated
-	*/
+	 * @deprecated
+	 * @generated
+	 */
 	@Deprecated
 	public static FrontendPackage getPackage() {
 		return FrontendPackage.eINSTANCE;
 	}
 
-} //FrontendFactoryImpl
+} // FrontendFactoryImpl

@@ -1,5 +1,14 @@
-/**
- */
+/*******************************************************************************
+ * This file is protected by Copyright. 
+ * Please refer to the COPYRIGHT file distributed with this source distribution.
+ *
+ * This file is part of REDHAWK IDE.
+ *
+ * All rights reserved.  This program and the accompanying materials are made available under 
+ * the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at 
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************/
+// BEGIN GENERATED CODE
 package gov.redhawk.ide.codegen.frontend.impl;
 
 import gov.redhawk.eclipsecorba.idl.Definition;
@@ -26,64 +35,64 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
  */
 public class FrontendPackageImpl extends EPackageImpl implements FrontendPackage {
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	private EClass feiDeviceEClass = null;
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	private EDataType tunerStatusStructEDataType = null;
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	private EDataType idlDefEDataType = null;
 
 	/**
-	* Creates an instance of the model <b>Package</b>, registered with
-	* {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
-	* package URI value.
-	* <p>Note: the correct way to create the package is via the static
-	* factory method {@link #init init()}, which also performs
-	* initialization of the package, or returns the registered package,
-	* if one already exists.
-	* <!-- begin-user-doc -->
+	 * Creates an instance of the model <b>Package</b>, registered with {@link org.eclipse.emf.ecore.EPackage.Registry
+	 * EPackage.Registry} by the package
+	 * package URI value.
+	 * <p>Note: the correct way to create the package is via the static
+	 * factory method {@link #init init()}, which also performs
+	 * initialization of the package, or returns the registered package,
+	 * if one already exists.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @see org.eclipse.emf.ecore.EPackage.Registry
-	* @see gov.redhawk.ide.codegen.frontend.FrontendPackage#eNS_URI
-	* @see #init()
-	* @generated
-	*/
+	 * @see org.eclipse.emf.ecore.EPackage.Registry
+	 * @see gov.redhawk.ide.codegen.frontend.FrontendPackage#eNS_URI
+	 * @see #init()
+	 * @generated
+	 */
 	private FrontendPackageImpl() {
 		super(eNS_URI, FrontendFactory.eINSTANCE);
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	private static boolean isInited = false;
 
 	/**
-	* Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-	* 
-	* <p>This method is used to initialize {@link FrontendPackage#eINSTANCE} when that field is accessed.
-	* Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
-	* <!-- begin-user-doc -->
+	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
+	 * 
+	 * <p>This method is used to initialize {@link FrontendPackage#eINSTANCE} when that field is accessed.
+	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @see #eNS_URI
-	* @see #createPackageContents()
-	* @see #initializePackageContents()
-	* @generated
-	*/
+	 * @see #eNS_URI
+	 * @see #createPackageContents()
+	 * @see #initializePackageContents()
+	 * @generated
+	 */
 	public static FrontendPackage init() {
 		if (isInited)
 			return (FrontendPackage) EPackage.Registry.INSTANCE.getEPackage(FrontendPackage.eNS_URI);
@@ -112,19 +121,19 @@ public class FrontendPackageImpl extends EPackageImpl implements FrontendPackage
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public EClass getFeiDevice() {
 		return feiDeviceEClass;
 	}
 
 	/**
-	* <!-- begin-user-doc -->
-	* <!-- end-user-doc -->
-	* @generated
-	*/
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EAttribute getFeiDevice_Antenna() {
 		return (EAttribute) feiDeviceEClass.getEStructuralFeatures().get(0);
 	}
@@ -139,154 +148,154 @@ public class FrontendPackageImpl extends EPackageImpl implements FrontendPackage
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public EAttribute getFeiDevice_OutputsGPS() {
 		return (EAttribute) feiDeviceEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public EAttribute getFeiDevice_RxTuner() {
 		return (EAttribute) feiDeviceEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public EAttribute getFeiDevice_NumberOfAnalogInputs() {
 		return (EAttribute) feiDeviceEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public EAttribute getFeiDevice_HasDigitalInput() {
 		return (EAttribute) feiDeviceEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public EAttribute getFeiDevice_DigitalInputType() {
 		return (EAttribute) feiDeviceEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public EAttribute getFeiDevice_HasDigitalOutput() {
 		return (EAttribute) feiDeviceEClass.getEStructuralFeatures().get(7);
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public EAttribute getFeiDevice_DigitalOutputType() {
 		return (EAttribute) feiDeviceEClass.getEStructuralFeatures().get(8);
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public EAttribute getFeiDevice_MultiOut() {
 		return (EAttribute) feiDeviceEClass.getEStructuralFeatures().get(9);
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public EAttribute getFeiDevice_TxTuner() {
 		return (EAttribute) feiDeviceEClass.getEStructuralFeatures().get(10);
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public EAttribute getFeiDevice_NumberOfDigitalInputsForTx() {
 		return (EAttribute) feiDeviceEClass.getEStructuralFeatures().get(11);
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public EAttribute getFeiDevice_DigitalInputTypeForTx() {
 		return (EAttribute) feiDeviceEClass.getEStructuralFeatures().get(12);
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public EAttribute getFeiDevice_TunerStatusStruct() {
 		return (EAttribute) feiDeviceEClass.getEStructuralFeatures().get(13);
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public EDataType getTunerStatusStruct() {
 		return tunerStatusStructEDataType;
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public EDataType getIDLDef() {
 		return idlDefEDataType;
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public FrontendFactory getFrontendFactory() {
 		return (FrontendFactory) getEFactoryInstance();
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	private boolean isCreated = false;
 
 	/**
-	* Creates the meta-model objects for the package.  This method is
-	* guarded to have no affect on any invocation but its first.
-	* <!-- begin-user-doc -->
+	 * Creates the meta-model objects for the package. This method is
+	 * guarded to have no affect on any invocation but its first.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public void createPackageContents() {
 		if (isCreated)
 			return;
@@ -315,19 +324,19 @@ public class FrontendPackageImpl extends EPackageImpl implements FrontendPackage
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	private boolean isInitialized = false;
 
 	/**
-	* Complete the initialization of the package and its meta-model.  This
-	* method is guarded to have no affect on any invocation but its first.
-	* <!-- begin-user-doc -->
+	 * Complete the initialization of the package and its meta-model. This
+	 * method is guarded to have no affect on any invocation but its first.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public void initializePackageContents() {
 		if (isInitialized)
 			return;
@@ -386,4 +395,4 @@ public class FrontendPackageImpl extends EPackageImpl implements FrontendPackage
 		createResource(eNS_URI);
 	}
 
-} //FrontendPackageImpl
+} // FrontendPackageImpl

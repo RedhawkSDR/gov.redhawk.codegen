@@ -1,5 +1,14 @@
-/**
- */
+/*******************************************************************************
+ * This file is protected by Copyright. 
+ * Please refer to the COPYRIGHT file distributed with this source distribution.
+ *
+ * This file is part of REDHAWK IDE.
+ *
+ * All rights reserved.  This program and the accompanying materials are made available under 
+ * the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at 
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************/
+// BEGIN GENERATED CODE
 package gov.redhawk.ide.codegen.frontend.provider;
 
 import gov.redhawk.ide.codegen.frontend.FeiDevice;
@@ -39,21 +48,21 @@ public class FeiDeviceItemProvider extends ItemProviderAdapter implements IEditi
 		IItemLabelProvider, IItemPropertySource, ITableItemLabelProvider, ITableItemColorProvider, ITableItemFontProvider, IItemColorProvider,
 		IItemFontProvider {
 	/**
-	* This constructs an instance from a factory and a notifier.
-	* <!-- begin-user-doc -->
+	 * This constructs an instance from a factory and a notifier.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public FeiDeviceItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
 	/**
-	* This returns the property descriptors for the adapted class.
-	* <!-- begin-user-doc -->
+	 * This returns the property descriptors for the adapted class.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	@Override
 	public List<IItemPropertyDescriptor> getPropertyDescriptors(Object object) {
 		if (itemPropertyDescriptors == null) {
@@ -78,11 +87,11 @@ public class FeiDeviceItemProvider extends ItemProviderAdapter implements IEditi
 	}
 
 	/**
-	* This adds a property descriptor for the Antenna feature.
-	* <!-- begin-user-doc -->
-	* <!-- end-user-doc -->
-	* @generated
-	*/
+	 * This adds a property descriptor for the Antenna feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	protected void addAntennaPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
 			getString("_UI_FeiDevice_Antenna_feature"), getString("_UI_PropertyDescriptor_description", "_UI_FeiDevice_Antenna_feature", "_UI_FeiDevice_type"),
@@ -103,11 +112,11 @@ public class FeiDeviceItemProvider extends ItemProviderAdapter implements IEditi
 	}
 
 	/**
-	* This adds a property descriptor for the Outputs GPS feature.
-	* <!-- begin-user-doc -->
+	 * This adds a property descriptor for the Outputs GPS feature.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	protected void addOutputsGPSPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
 			getString("_UI_FeiDevice_outputsGPS_feature"),
@@ -116,11 +125,11 @@ public class FeiDeviceItemProvider extends ItemProviderAdapter implements IEditi
 	}
 
 	/**
-	* This adds a property descriptor for the Rx Tuner feature.
-	* <!-- begin-user-doc -->
+	 * This adds a property descriptor for the Rx Tuner feature.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	protected void addRxTunerPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
 			getString("_UI_FeiDevice_RxTuner_feature"), getString("_UI_PropertyDescriptor_description", "_UI_FeiDevice_RxTuner_feature", "_UI_FeiDevice_type"),
@@ -128,11 +137,11 @@ public class FeiDeviceItemProvider extends ItemProviderAdapter implements IEditi
 	}
 
 	/**
-	* This adds a property descriptor for the Number Of Analog Inputs feature.
-	* <!-- begin-user-doc -->
+	 * This adds a property descriptor for the Number Of Analog Inputs feature.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	protected void addNumberOfAnalogInputsPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
 			getString("_UI_FeiDevice_numberOfAnalogInputs_feature"),
@@ -141,11 +150,11 @@ public class FeiDeviceItemProvider extends ItemProviderAdapter implements IEditi
 	}
 
 	/**
-	* This adds a property descriptor for the Has Digital Input feature.
-	* <!-- begin-user-doc -->
+	 * This adds a property descriptor for the Has Digital Input feature.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	protected void addHasDigitalInputPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
 			getString("_UI_FeiDevice_hasDigitalInput_feature"),
@@ -154,11 +163,11 @@ public class FeiDeviceItemProvider extends ItemProviderAdapter implements IEditi
 	}
 
 	/**
-	* This adds a property descriptor for the Digital Input Type feature.
-	* <!-- begin-user-doc -->
+	 * This adds a property descriptor for the Digital Input Type feature.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	protected void addDigitalInputTypePropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
 			getString("_UI_FeiDevice_digitalInputType_feature"),
@@ -167,11 +176,11 @@ public class FeiDeviceItemProvider extends ItemProviderAdapter implements IEditi
 	}
 
 	/**
-	* This adds a property descriptor for the Has Digital Output feature.
-	* <!-- begin-user-doc -->
+	 * This adds a property descriptor for the Has Digital Output feature.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	protected void addHasDigitalOutputPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
 			getString("_UI_FeiDevice_hasDigitalOutput_feature"),
@@ -180,11 +189,11 @@ public class FeiDeviceItemProvider extends ItemProviderAdapter implements IEditi
 	}
 
 	/**
-	* This adds a property descriptor for the Digital Output Type feature.
-	* <!-- begin-user-doc -->
+	 * This adds a property descriptor for the Digital Output Type feature.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	protected void addDigitalOutputTypePropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
 			getString("_UI_FeiDevice_digitalOutputType_feature"),
@@ -193,11 +202,11 @@ public class FeiDeviceItemProvider extends ItemProviderAdapter implements IEditi
 	}
 
 	/**
-	* This adds a property descriptor for the Multi Out feature.
-	* <!-- begin-user-doc -->
+	 * This adds a property descriptor for the Multi Out feature.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	protected void addMultiOutPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
 			getString("_UI_FeiDevice_MultiOut_feature"),
@@ -206,11 +215,11 @@ public class FeiDeviceItemProvider extends ItemProviderAdapter implements IEditi
 	}
 
 	/**
-	* This adds a property descriptor for the Tx Tuner feature.
-	* <!-- begin-user-doc -->
+	 * This adds a property descriptor for the Tx Tuner feature.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	protected void addTxTunerPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
 			getString("_UI_FeiDevice_TxTuner_feature"), getString("_UI_PropertyDescriptor_description", "_UI_FeiDevice_TxTuner_feature", "_UI_FeiDevice_type"),
@@ -218,11 +227,11 @@ public class FeiDeviceItemProvider extends ItemProviderAdapter implements IEditi
 	}
 
 	/**
-	* This adds a property descriptor for the Number Of Digital Inputs For Tx feature.
-	* <!-- begin-user-doc -->
+	 * This adds a property descriptor for the Number Of Digital Inputs For Tx feature.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	protected void addNumberOfDigitalInputsForTxPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
 			getString("_UI_FeiDevice_numberOfDigitalInputsForTx_feature"),
@@ -231,11 +240,11 @@ public class FeiDeviceItemProvider extends ItemProviderAdapter implements IEditi
 	}
 
 	/**
-	* This adds a property descriptor for the Digital Input Type For Tx feature.
-	* <!-- begin-user-doc -->
+	 * This adds a property descriptor for the Digital Input Type For Tx feature.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	protected void addDigitalInputTypeForTxPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
 			getString("_UI_FeiDevice_digitalInputTypeForTx_feature"),
@@ -244,11 +253,11 @@ public class FeiDeviceItemProvider extends ItemProviderAdapter implements IEditi
 	}
 
 	/**
-	* This adds a property descriptor for the Tuner Status Struct feature.
-	* <!-- begin-user-doc -->
+	 * This adds a property descriptor for the Tuner Status Struct feature.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	protected void addTunerStatusStructPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
 			getString("_UI_FeiDevice_tunerStatusStruct_feature"),
@@ -257,22 +266,22 @@ public class FeiDeviceItemProvider extends ItemProviderAdapter implements IEditi
 	}
 
 	/**
-	* This returns FeiDevice.gif.
-	* <!-- begin-user-doc -->
+	 * This returns FeiDevice.gif.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	@Override
 	public Object getImage(Object object) {
 		return overlayImage(object, getResourceLocator().getImage("full/obj16/FeiDevice"));
 	}
 
 	/**
-	* This returns the label text for the adapted class.
-	* <!-- begin-user-doc -->
+	 * This returns the label text for the adapted class.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	@Override
 	public String getText(Object object) {
 		FeiDevice feiDevice = (FeiDevice) object;
@@ -280,12 +289,12 @@ public class FeiDeviceItemProvider extends ItemProviderAdapter implements IEditi
 	}
 
 	/**
-	* This handles model notifications by calling {@link #updateChildren} to update any cached
-	* children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-	* <!-- begin-user-doc -->
+	 * This handles model notifications by calling {@link #updateChildren} to update any cached
+	 * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	@Override
 	public void notifyChanged(Notification notification) {
 		updateChildren(notification);
@@ -312,23 +321,23 @@ public class FeiDeviceItemProvider extends ItemProviderAdapter implements IEditi
 	}
 
 	/**
-	* This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-	* that can be created under this object.
-	* <!-- begin-user-doc -->
+	 * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
+	 * that can be created under this object.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	@Override
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 	}
 
 	/**
-	* Return the resource locator for this item provider's resources.
-	* <!-- begin-user-doc -->
+	 * Return the resource locator for this item provider's resources.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	@Override
 	public ResourceLocator getResourceLocator() {
 		return FrontendEditPlugin.INSTANCE;

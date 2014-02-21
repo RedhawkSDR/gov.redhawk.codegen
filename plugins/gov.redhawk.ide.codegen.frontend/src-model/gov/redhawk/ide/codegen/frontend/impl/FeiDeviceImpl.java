@@ -1,5 +1,14 @@
-/**
- */
+/*******************************************************************************
+ * This file is protected by Copyright. 
+ * Please refer to the COPYRIGHT file distributed with this source distribution.
+ *
+ * This file is part of REDHAWK IDE.
+ *
+ * All rights reserved.  This program and the accompanying materials are made available under 
+ * the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at 
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************/
+// BEGIN GENERATED CODE
 package gov.redhawk.ide.codegen.frontend.impl;
 
 import gov.redhawk.eclipsecorba.idl.Definition;
@@ -23,20 +32,25 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isAntenna <em>Antenna</em>}</li>
- *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isIngestsGPS <em>Ingests GPS</em>}</li>
- *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isOutputsGPS <em>Outputs GPS</em>}</li>
- *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isRxTuner <em>Rx Tuner</em>}</li>
- *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#getNumberOfAnalogInputs <em>Number Of Analog Inputs</em>}</li>
- *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isHasDigitalInput <em>Has Digital Input</em>}</li>
- *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#getDigitalInputType <em>Digital Input Type</em>}</li>
- *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isHasDigitalOutput <em>Has Digital Output</em>}</li>
- *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#getDigitalOutputType <em>Digital Output Type</em>}</li>
- *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isMultiOut <em>Multi Out</em>}</li>
- *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isTxTuner <em>Tx Tuner</em>}</li>
- *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#getNumberOfDigitalInputsForTx <em>Number Of Digital Inputs For Tx</em>}</li>
- *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#getDigitalInputTypeForTx <em>Digital Input Type For Tx</em>}</li>
- *   <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#getTunerStatusStruct <em>Tuner Status Struct</em>}</li>
+ * <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isAntenna <em>Antenna</em>}</li>
+ * <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isIngestsGPS <em>Ingests GPS</em>}</li>
+ * <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isOutputsGPS <em>Outputs GPS</em>}</li>
+ * <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isRxTuner <em>Rx Tuner</em>}</li>
+ * <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#getNumberOfAnalogInputs <em>Number Of Analog
+ * Inputs</em>}</li>
+ * <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isHasDigitalInput <em>Has Digital Input</em>}</li>
+ * <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#getDigitalInputType <em>Digital Input Type</em>}</li>
+ * <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isHasDigitalOutput <em>Has Digital Output</em>}</li>
+ * <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#getDigitalOutputType <em>Digital Output Type</em>}
+ * </li>
+ * <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isMultiOut <em>Multi Out</em>}</li>
+ * <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isTxTuner <em>Tx Tuner</em>}</li>
+ * <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#getNumberOfDigitalInputsForTx <em>Number Of Digital
+ * Inputs For Tx</em>}</li>
+ * <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#getDigitalInputTypeForTx <em>Digital Input Type For
+ * Tx</em>}</li>
+ * <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#getTunerStatusStruct <em>Tuner Status Struct</em>}
+ * </li>
  * </ul>
  * </p>
  *
@@ -44,13 +58,13 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  */
 public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDevice {
 	/**
-	* The default value of the '{@link #isAntenna() <em>Antenna</em>}' attribute.
-	* <!-- begin-user-doc -->
-	* <!-- end-user-doc -->
-	* @see #isAntenna()
-	* @generated
-	* @ordered
-	*/
+	 * The default value of the '{@link #isAntenna() <em>Antenna</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isAntenna()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final boolean ANTENNA_EDEFAULT = false;
 
 	/**
@@ -74,279 +88,281 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
 	protected static final boolean INGESTS_GPS_EDEFAULT = false;
 
 	/**
-	* The cached value of the '{@link #isIngestsGPS() <em>Ingests GPS</em>}' attribute.
-	* <!-- begin-user-doc -->
+	 * The cached value of the '{@link #isIngestsGPS() <em>Ingests GPS</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @see #isIngestsGPS()
-	* @generated
-	* @ordered
-	*/
+	 * @see #isIngestsGPS()
+	 * @generated
+	 * @ordered
+	 */
 	protected boolean ingestsGPS = INGESTS_GPS_EDEFAULT;
 
 	/**
-	* The default value of the '{@link #isOutputsGPS() <em>Outputs GPS</em>}' attribute.
-	* <!-- begin-user-doc -->
+	 * The default value of the '{@link #isOutputsGPS() <em>Outputs GPS</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @see #isOutputsGPS()
-	* @generated
-	* @ordered
-	*/
+	 * @see #isOutputsGPS()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final boolean OUTPUTS_GPS_EDEFAULT = false;
 
 	/**
-	* The cached value of the '{@link #isOutputsGPS() <em>Outputs GPS</em>}' attribute.
-	* <!-- begin-user-doc -->
+	 * The cached value of the '{@link #isOutputsGPS() <em>Outputs GPS</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @see #isOutputsGPS()
-	* @generated
-	* @ordered
-	*/
+	 * @see #isOutputsGPS()
+	 * @generated
+	 * @ordered
+	 */
 	protected boolean outputsGPS = OUTPUTS_GPS_EDEFAULT;
 
 	/**
-	* The default value of the '{@link #isRxTuner() <em>Rx Tuner</em>}' attribute.
-	* <!-- begin-user-doc -->
+	 * The default value of the '{@link #isRxTuner() <em>Rx Tuner</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @see #isRxTuner()
-	* @generated
-	* @ordered
-	*/
+	 * @see #isRxTuner()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final boolean RX_TUNER_EDEFAULT = false;
 
 	/**
-	* The cached value of the '{@link #isRxTuner() <em>Rx Tuner</em>}' attribute.
-	* <!-- begin-user-doc -->
+	 * The cached value of the '{@link #isRxTuner() <em>Rx Tuner</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @see #isRxTuner()
-	* @generated
-	* @ordered
-	*/
+	 * @see #isRxTuner()
+	 * @generated
+	 * @ordered
+	 */
 	protected boolean rxTuner = RX_TUNER_EDEFAULT;
 
 	/**
-	* The default value of the '{@link #getNumberOfAnalogInputs() <em>Number Of Analog Inputs</em>}' attribute.
-	* <!-- begin-user-doc -->
+	 * The default value of the '{@link #getNumberOfAnalogInputs() <em>Number Of Analog Inputs</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @see #getNumberOfAnalogInputs()
-	* @generated
-	* @ordered
-	*/
+	 * @see #getNumberOfAnalogInputs()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final int NUMBER_OF_ANALOG_INPUTS_EDEFAULT = 0;
 
 	/**
-	* The cached value of the '{@link #getNumberOfAnalogInputs() <em>Number Of Analog Inputs</em>}' attribute.
-	* <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getNumberOfAnalogInputs() <em>Number Of Analog Inputs</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @see #getNumberOfAnalogInputs()
-	* @generated
-	* @ordered
-	*/
+	 * @see #getNumberOfAnalogInputs()
+	 * @generated
+	 * @ordered
+	 */
 	protected int numberOfAnalogInputs = NUMBER_OF_ANALOG_INPUTS_EDEFAULT;
 
 	/**
-	* The default value of the '{@link #isHasDigitalInput() <em>Has Digital Input</em>}' attribute.
-	* <!-- begin-user-doc -->
+	 * The default value of the '{@link #isHasDigitalInput() <em>Has Digital Input</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @see #isHasDigitalInput()
-	* @generated
-	* @ordered
-	*/
+	 * @see #isHasDigitalInput()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final boolean HAS_DIGITAL_INPUT_EDEFAULT = false;
 
 	/**
-	* The cached value of the '{@link #isHasDigitalInput() <em>Has Digital Input</em>}' attribute.
-	* <!-- begin-user-doc -->
+	 * The cached value of the '{@link #isHasDigitalInput() <em>Has Digital Input</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @see #isHasDigitalInput()
-	* @generated
-	* @ordered
-	*/
+	 * @see #isHasDigitalInput()
+	 * @generated
+	 * @ordered
+	 */
 	protected boolean hasDigitalInput = HAS_DIGITAL_INPUT_EDEFAULT;
 
 	/**
-	* The default value of the '{@link #getDigitalInputType() <em>Digital Input Type</em>}' attribute.
-	* <!-- begin-user-doc -->
+	 * The default value of the '{@link #getDigitalInputType() <em>Digital Input Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @see #getDigitalInputType()
-	* @generated
-	* @ordered
-	*/
+	 * @see #getDigitalInputType()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final Definition DIGITAL_INPUT_TYPE_EDEFAULT = null;
 
 	/**
-	* The cached value of the '{@link #getDigitalInputType() <em>Digital Input Type</em>}' attribute.
-	* <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getDigitalInputType() <em>Digital Input Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @see #getDigitalInputType()
-	* @generated
-	* @ordered
-	*/
+	 * @see #getDigitalInputType()
+	 * @generated
+	 * @ordered
+	 */
 	protected Definition digitalInputType = DIGITAL_INPUT_TYPE_EDEFAULT;
 
 	/**
-	* The default value of the '{@link #isHasDigitalOutput() <em>Has Digital Output</em>}' attribute.
-	* <!-- begin-user-doc -->
+	 * The default value of the '{@link #isHasDigitalOutput() <em>Has Digital Output</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @see #isHasDigitalOutput()
-	* @generated
-	* @ordered
-	*/
+	 * @see #isHasDigitalOutput()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final boolean HAS_DIGITAL_OUTPUT_EDEFAULT = false;
 
 	/**
-	* The cached value of the '{@link #isHasDigitalOutput() <em>Has Digital Output</em>}' attribute.
-	* <!-- begin-user-doc -->
+	 * The cached value of the '{@link #isHasDigitalOutput() <em>Has Digital Output</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @see #isHasDigitalOutput()
-	* @generated
-	* @ordered
-	*/
+	 * @see #isHasDigitalOutput()
+	 * @generated
+	 * @ordered
+	 */
 	protected boolean hasDigitalOutput = HAS_DIGITAL_OUTPUT_EDEFAULT;
 
 	/**
-	* The default value of the '{@link #getDigitalOutputType() <em>Digital Output Type</em>}' attribute.
-	* <!-- begin-user-doc -->
+	 * The default value of the '{@link #getDigitalOutputType() <em>Digital Output Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @see #getDigitalOutputType()
-	* @generated
-	* @ordered
-	*/
+	 * @see #getDigitalOutputType()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final Definition DIGITAL_OUTPUT_TYPE_EDEFAULT = null;
 
 	/**
-	* The cached value of the '{@link #getDigitalOutputType() <em>Digital Output Type</em>}' attribute.
-	* <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getDigitalOutputType() <em>Digital Output Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @see #getDigitalOutputType()
-	* @generated
-	* @ordered
-	*/
+	 * @see #getDigitalOutputType()
+	 * @generated
+	 * @ordered
+	 */
 	protected Definition digitalOutputType = DIGITAL_OUTPUT_TYPE_EDEFAULT;
 
 	/**
-	* The default value of the '{@link #isMultiOut() <em>Multi Out</em>}' attribute.
-	* <!-- begin-user-doc -->
+	 * The default value of the '{@link #isMultiOut() <em>Multi Out</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @see #isMultiOut()
-	* @generated
-	* @ordered
-	*/
+	 * @see #isMultiOut()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final boolean MULTI_OUT_EDEFAULT = false;
 
 	/**
-	* The cached value of the '{@link #isMultiOut() <em>Multi Out</em>}' attribute.
-	* <!-- begin-user-doc -->
+	 * The cached value of the '{@link #isMultiOut() <em>Multi Out</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @see #isMultiOut()
-	* @generated
-	* @ordered
-	*/
+	 * @see #isMultiOut()
+	 * @generated
+	 * @ordered
+	 */
 	protected boolean multiOut = MULTI_OUT_EDEFAULT;
 
 	/**
-	* The default value of the '{@link #isTxTuner() <em>Tx Tuner</em>}' attribute.
-	* <!-- begin-user-doc -->
+	 * The default value of the '{@link #isTxTuner() <em>Tx Tuner</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @see #isTxTuner()
-	* @generated
-	* @ordered
-	*/
+	 * @see #isTxTuner()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final boolean TX_TUNER_EDEFAULT = false;
 
 	/**
-	* The cached value of the '{@link #isTxTuner() <em>Tx Tuner</em>}' attribute.
-	* <!-- begin-user-doc -->
+	 * The cached value of the '{@link #isTxTuner() <em>Tx Tuner</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @see #isTxTuner()
-	* @generated
-	* @ordered
-	*/
+	 * @see #isTxTuner()
+	 * @generated
+	 * @ordered
+	 */
 	protected boolean txTuner = TX_TUNER_EDEFAULT;
 
 	/**
-	* The default value of the '{@link #getNumberOfDigitalInputsForTx() <em>Number Of Digital Inputs For Tx</em>}' attribute.
-	* <!-- begin-user-doc -->
+	 * The default value of the '{@link #getNumberOfDigitalInputsForTx() <em>Number Of Digital Inputs For Tx</em>}'
+	 * attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @see #getNumberOfDigitalInputsForTx()
-	* @generated
-	* @ordered
-	*/
+	 * @see #getNumberOfDigitalInputsForTx()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final int NUMBER_OF_DIGITAL_INPUTS_FOR_TX_EDEFAULT = 0;
 
 	/**
-	* The cached value of the '{@link #getNumberOfDigitalInputsForTx() <em>Number Of Digital Inputs For Tx</em>}' attribute.
-	* <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getNumberOfDigitalInputsForTx() <em>Number Of Digital Inputs For Tx</em>}'
+	 * attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @see #getNumberOfDigitalInputsForTx()
-	* @generated
-	* @ordered
-	*/
+	 * @see #getNumberOfDigitalInputsForTx()
+	 * @generated
+	 * @ordered
+	 */
 	protected int numberOfDigitalInputsForTx = NUMBER_OF_DIGITAL_INPUTS_FOR_TX_EDEFAULT;
 
 	/**
-	* The default value of the '{@link #getDigitalInputTypeForTx() <em>Digital Input Type For Tx</em>}' attribute.
-	* <!-- begin-user-doc -->
+	 * The default value of the '{@link #getDigitalInputTypeForTx() <em>Digital Input Type For Tx</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @see #getDigitalInputTypeForTx()
-	* @generated
-	* @ordered
-	*/
+	 * @see #getDigitalInputTypeForTx()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final Definition DIGITAL_INPUT_TYPE_FOR_TX_EDEFAULT = null;
 
 	/**
-	* The cached value of the '{@link #getDigitalInputTypeForTx() <em>Digital Input Type For Tx</em>}' attribute.
-	* <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getDigitalInputTypeForTx() <em>Digital Input Type For Tx</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @see #getDigitalInputTypeForTx()
-	* @generated
-	* @ordered
-	*/
+	 * @see #getDigitalInputTypeForTx()
+	 * @generated
+	 * @ordered
+	 */
 	protected Definition digitalInputTypeForTx = DIGITAL_INPUT_TYPE_FOR_TX_EDEFAULT;
 
 	/**
-	* The default value of the '{@link #getTunerStatusStruct() <em>Tuner Status Struct</em>}' attribute.
-	* <!-- begin-user-doc -->
+	 * The default value of the '{@link #getTunerStatusStruct() <em>Tuner Status Struct</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @see #getTunerStatusStruct()
-	* @generated
-	* @ordered
-	*/
+	 * @see #getTunerStatusStruct()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final ScaStructProperty TUNER_STATUS_STRUCT_EDEFAULT = null;
 
 	/**
-	* The cached value of the '{@link #getTunerStatusStruct() <em>Tuner Status Struct</em>}' attribute.
-	* <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getTunerStatusStruct() <em>Tuner Status Struct</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @see #getTunerStatusStruct()
-	* @generated
-	* @ordered
-	*/
+	 * @see #getTunerStatusStruct()
+	 * @generated
+	 * @ordered
+	 */
 	protected ScaStructProperty tunerStatusStruct = TUNER_STATUS_STRUCT_EDEFAULT;
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	protected FeiDeviceImpl() {
 		super();
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	@Override
 	protected EClass eStaticClass() {
 		return FrontendPackage.Literals.FEI_DEVICE;
 	}
 
 	/**
-	* <!-- begin-user-doc -->
-	* <!-- end-user-doc -->
-	* @generated
-	*/
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public boolean isAntenna() {
 		return antenna;
 	}
@@ -373,10 +389,10 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public void setIngestsGPS(boolean newIngestsGPS) {
 		boolean oldIngestsGPS = ingestsGPS;
 		ingestsGPS = newIngestsGPS;
@@ -385,19 +401,19 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public boolean isOutputsGPS() {
 		return outputsGPS;
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public void setOutputsGPS(boolean newOutputsGPS) {
 		boolean oldOutputsGPS = outputsGPS;
 		outputsGPS = newOutputsGPS;
@@ -406,19 +422,19 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public boolean isRxTuner() {
 		return rxTuner;
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public void setRxTuner(boolean newRxTuner) {
 		boolean oldRxTuner = rxTuner;
 		rxTuner = newRxTuner;
@@ -427,19 +443,19 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public int getNumberOfAnalogInputs() {
 		return numberOfAnalogInputs;
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public void setNumberOfAnalogInputs(int newNumberOfAnalogInputs) {
 		int oldNumberOfAnalogInputs = numberOfAnalogInputs;
 		numberOfAnalogInputs = newNumberOfAnalogInputs;
@@ -449,19 +465,19 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public boolean isHasDigitalInput() {
 		return hasDigitalInput;
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public void setHasDigitalInput(boolean newHasDigitalInput) {
 		boolean oldHasDigitalInput = hasDigitalInput;
 		hasDigitalInput = newHasDigitalInput;
@@ -470,19 +486,19 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public Definition getDigitalInputType() {
 		return digitalInputType;
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public void setDigitalInputType(Definition newDigitalInputType) {
 		Definition oldDigitalInputType = digitalInputType;
 		digitalInputType = newDigitalInputType;
@@ -491,19 +507,19 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public boolean isHasDigitalOutput() {
 		return hasDigitalOutput;
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public void setHasDigitalOutput(boolean newHasDigitalOutput) {
 		boolean oldHasDigitalOutput = hasDigitalOutput;
 		hasDigitalOutput = newHasDigitalOutput;
@@ -512,19 +528,19 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public Definition getDigitalOutputType() {
 		return digitalOutputType;
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public void setDigitalOutputType(Definition newDigitalOutputType) {
 		Definition oldDigitalOutputType = digitalOutputType;
 		digitalOutputType = newDigitalOutputType;
@@ -533,19 +549,19 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public boolean isMultiOut() {
 		return multiOut;
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public void setMultiOut(boolean newMultiOut) {
 		boolean oldMultiOut = multiOut;
 		multiOut = newMultiOut;
@@ -554,19 +570,19 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public boolean isTxTuner() {
 		return txTuner;
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public void setTxTuner(boolean newTxTuner) {
 		boolean oldTxTuner = txTuner;
 		txTuner = newTxTuner;
@@ -575,19 +591,19 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public int getNumberOfDigitalInputsForTx() {
 		return numberOfDigitalInputsForTx;
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public void setNumberOfDigitalInputsForTx(int newNumberOfDigitalInputsForTx) {
 		int oldNumberOfDigitalInputsForTx = numberOfDigitalInputsForTx;
 		numberOfDigitalInputsForTx = newNumberOfDigitalInputsForTx;
@@ -597,19 +613,19 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public Definition getDigitalInputTypeForTx() {
 		return digitalInputTypeForTx;
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public void setDigitalInputTypeForTx(Definition newDigitalInputTypeForTx) {
 		Definition oldDigitalInputTypeForTx = digitalInputTypeForTx;
 		digitalInputTypeForTx = newDigitalInputTypeForTx;
@@ -619,19 +635,19 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public ScaStructProperty getTunerStatusStruct() {
 		return tunerStatusStruct;
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public void setTunerStatusStruct(ScaStructProperty newTunerStatusStruct) {
 		ScaStructProperty oldTunerStatusStruct = tunerStatusStruct;
 		tunerStatusStruct = newTunerStatusStruct;
@@ -640,10 +656,10 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -680,10 +696,10 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
@@ -734,10 +750,10 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
@@ -788,10 +804,10 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
@@ -829,10 +845,10 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
 	}
 
 	/**
-	* <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	@Override
 	public String toString() {
 		if (eIsProxy())
@@ -871,4 +887,4 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
 		return result.toString();
 	}
 
-} //FeiDeviceImpl
+} // FeiDeviceImpl

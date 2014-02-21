@@ -1,5 +1,14 @@
-/**
- */
+/*******************************************************************************
+ * This file is protected by Copyright. 
+ * Please refer to the COPYRIGHT file distributed with this source distribution.
+ *
+ * This file is part of REDHAWK IDE.
+ *
+ * All rights reserved.  This program and the accompanying materials are made available under 
+ * the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at 
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************/
+// BEGIN GENERATED CODE
 package gov.redhawk.ide.codegen.frontend.util;
 
 import gov.redhawk.ide.codegen.frontend.*;
@@ -21,19 +30,19 @@ import org.eclipse.emf.ecore.EObject;
  */
 public class FrontendAdapterFactory extends AdapterFactoryImpl {
 	/**
-	* The cached model package.
-	* <!-- begin-user-doc -->
+	 * The cached model package.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	protected static FrontendPackage modelPackage;
 
 	/**
-	* Creates an instance of the adapter factory.
-	* <!-- begin-user-doc -->
+	 * Creates an instance of the adapter factory.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	public FrontendAdapterFactory() {
 		if (modelPackage == null) {
 			modelPackage = FrontendPackage.eINSTANCE;
@@ -41,13 +50,14 @@ public class FrontendAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	* Returns whether this factory is applicable for the type of the object.
-	* <!-- begin-user-doc -->
-	 * This implementation returns <code>true</code> if the object is either the model's package or is an instance object of the model.
+	 * Returns whether this factory is applicable for the type of the object.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns <code>true</code> if the object is either the model's package or is an instance
+	 * object of the model.
 	 * <!-- end-user-doc -->
-	* @return whether this factory is applicable for the type of the object.
-	* @generated
-	*/
+	 * @return whether this factory is applicable for the type of the object.
+	 * @generated
+	 */
 	@Override
 	public boolean isFactoryForType(Object object) {
 		if (object == modelPackage) {
@@ -60,11 +70,11 @@ public class FrontendAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	* The switch that delegates to the <code>createXXX</code> methods.
-	* <!-- begin-user-doc -->
+	 * The switch that delegates to the <code>createXXX</code> methods.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @generated
-	*/
+	 * @generated
+	 */
 	protected FrontendSwitch<Adapter> modelSwitch = new FrontendSwitch<Adapter>() {
 		@Override
 		public Adapter caseFeiDevice(FeiDevice object) {
@@ -78,42 +88,43 @@ public class FrontendAdapterFactory extends AdapterFactoryImpl {
 	};
 
 	/**
-	* Creates an adapter for the <code>target</code>.
-	* <!-- begin-user-doc -->
+	 * Creates an adapter for the <code>target</code>.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	* @param target the object to adapt.
-	* @return the adapter for the <code>target</code>.
-	* @generated
-	*/
+	 * @param target the object to adapt.
+	 * @return the adapter for the <code>target</code>.
+	 * @generated
+	 */
 	@Override
 	public Adapter createAdapter(Notifier target) {
 		return modelSwitch.doSwitch((EObject) target);
 	}
 
 	/**
-	* Creates a new adapter for an object of class '{@link gov.redhawk.ide.codegen.frontend.FeiDevice <em>Fei Device</em>}'.
-	* <!-- begin-user-doc -->
+	 * Creates a new adapter for an object of class '{@link gov.redhawk.ide.codegen.frontend.FeiDevice <em>Fei
+	 * Device</em>}'.
+	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
-	* @return the new adapter.
-	* @see gov.redhawk.ide.codegen.frontend.FeiDevice
-	* @generated
-	*/
+	 * @return the new adapter.
+	 * @see gov.redhawk.ide.codegen.frontend.FeiDevice
+	 * @generated
+	 */
 	public Adapter createFeiDeviceAdapter() {
 		return null;
 	}
 
 	/**
-	* Creates a new adapter for the default case.
-	* <!-- begin-user-doc -->
+	 * Creates a new adapter for the default case.
+	 * <!-- begin-user-doc -->
 	 * This default implementation returns null.
 	 * <!-- end-user-doc -->
-	* @return the new adapter.
-	* @generated
-	*/
+	 * @return the new adapter.
+	 * @generated
+	 */
 	public Adapter createEObjectAdapter() {
 		return null;
 	}
 
-} //FrontendAdapterFactory
+} // FrontendAdapterFactory
