@@ -35,26 +35,26 @@ public class FrontEndProjectValidator extends ValidationStatusProvider {
 	{
 		list.add(status);
 	}
-	
+
 	public FrontEndProjectValidator(final DeviceProjectSettings projectSettings, WizardPage page) {
 		this.status.setValue(Status.OK_STATUS);
 		this.models = Observables.emptyObservableList();
 		this.projectSettings = projectSettings;
 		this.page = page;
-		
+
 		if (!"Device".equals(this.projectSettings.getDeviceType())) {
 			this.status.setValue(new Status(IStatus.ERROR, FrontEndDeviceWizardPlugin.PLUGIN_ID, "Front End Device must be of type: Device"));
 		}
-		
+
 		if (this.projectSettings.isAggregate()) {
 			this.status.setValue(new Status(IStatus.ERROR, FrontEndDeviceWizardPlugin.PLUGIN_ID, "Front End Device may not be an Aggregtate Device"));
 		}
-		
+
 		updateWizardMessage();
-		
+
 		//  Track the project settings in case they change.
 		this.projectSettings.addPropertyChangeListener(new PropertyChangeListener() {
-			
+
 			@Override
 			public void propertyChange(PropertyChangeEvent arg0) {
 				if (!"Device".equals(projectSettings.getDeviceType())) {
@@ -64,17 +64,17 @@ public class FrontEndProjectValidator extends ValidationStatusProvider {
 				} else {
 					status.setValue(new Status(IStatus.OK, FrontEndDeviceWizardPlugin.PLUGIN_ID, ""));
 				}
-				
+
 				updateWizardMessage();
 			}
 		});
 	}
-	
+
 	protected void updateWizardMessage() {
-		if (((IStatus)this.status.getValue()).isOK()) {
+		if (((IStatus) this.status.getValue()).isOK()) {
 			this.page.setErrorMessage(null);
 		} else {
-			this.page.setErrorMessage(((IStatus)this.status.getValue()).getMessage());
+			this.page.setErrorMessage(((IStatus) this.status.getValue()).getMessage());
 		}
 	}
 
@@ -92,5 +92,5 @@ public class FrontEndProjectValidator extends ValidationStatusProvider {
 	public IObservableList getModels() {
 		return this.models;
 	}
-	
+
 }

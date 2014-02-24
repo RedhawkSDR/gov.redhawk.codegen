@@ -20,31 +20,31 @@ import org.eclipse.swt.widgets.Composite;
 
 public class FrontEndImplementationWizardPage extends ImplementationWizardPage {
 
-	ViewerFilter[] viewerFilters = new ViewerFilter[1];
-	boolean pageViewed = false;
-	
+	private ViewerFilter[] viewerFilters = new ViewerFilter[1];
+	private boolean pageViewed = false;
+
 	// First round we are only supporting C++, no java or python.
-	String[] allowedLanguages = {"C++"};
-	
+	private String[] allowedLanguages = { "C++" };
+
 	public FrontEndImplementationWizardPage(String name, String componentTypeDevice) {
 		super(name, componentTypeDevice);
 		ViewerFilter viewerFilter = new ViewerFilter() {
-			
+
 			@SuppressWarnings("restriction")
 			@Override
 			public boolean select(Viewer viewer, Object parentElement, Object element) {
-				if (CplusplusGenerator.ID.equalsIgnoreCase(((CodeGeneratorDescriptor) element).getId())) {// ||
-//						PythonGenerator.ID.equalsIgnoreCase(((CodeGeneratorDescriptor) element).getId()) || 
-//							JavaGenerator.ID.equalsIgnoreCase(((CodeGeneratorDescriptor) element).getId())) {
+				if (CplusplusGenerator.ID.equalsIgnoreCase(((CodeGeneratorDescriptor) element).getId())) {
+					//						PythonGenerator.ID.equalsIgnoreCase(((CodeGeneratorDescriptor) element).getId()) || 
+					//							JavaGenerator.ID.equalsIgnoreCase(((CodeGeneratorDescriptor) element).getId())) {
 					return true;
-				} 
+				}
 				return false;
 			}
 		};
 		this.viewerFilters[0] = viewerFilter;
-		
+
 	}
-	
+
 	@Override
 	public void createControl(Composite parent) {
 		super.createControl(parent);
@@ -55,13 +55,13 @@ public class FrontEndImplementationWizardPage extends ImplementationWizardPage {
 			handleProgLangSelection();
 		}
 	}
-	
+
 	// Complete if the page has been drawn.
 	@Override
 	public boolean isPageComplete() {
 		return pageViewed;
 	}
-	
+
 	@Override
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);

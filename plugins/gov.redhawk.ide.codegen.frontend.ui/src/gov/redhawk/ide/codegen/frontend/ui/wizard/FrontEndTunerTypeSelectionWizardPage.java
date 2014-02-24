@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * This file is protected by Copyright. 
+ * Please refer to the COPYRIGHT file distributed with this source distribution.
+ *
+ * This file is part of REDHAWK IDE.
+ *
+ * All rights reserved.  This program and the accompanying materials are made available under 
+ * the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at 
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************/
 package gov.redhawk.ide.codegen.frontend.ui.wizard;
 
 import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
@@ -41,8 +51,8 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 	private FeiDevice feiDevice;
 	private boolean apiCanFinish = true;
 	private boolean apiCanFlip = true;
-//	private Button deviceTypeTunerButton;
-//	private Button deviceTypeAntennaButton;
+	//	private Button deviceTypeTunerButton;
+	//	private Button deviceTypeAntennaButton;
 	private Button ingestGPSCheckbox;
 	private Button outputGPSCheckbox;
 	private Button receiveOnlyTunerButton;
@@ -51,7 +61,7 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 	private DataBindingContext ctx;
 	private Group tunerTypeGroup;
 	private FrontEndProjectValidator validator;
-	
+
 	public FrontEndTunerTypeSelectionWizardPage(FeiDevice feiDevice) {
 		super("");
 		this.feiDevice = feiDevice;
@@ -63,8 +73,8 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 		createUIElements(client);
 		createBindings();
 		this.receiveOnlyTunerButton.setSelection(true);
-//		this.deviceTypeTunerButton.setSelection(true);
-		this.feiDevice.eAdapters().add(new AdapterImpl(){
+		//		this.deviceTypeTunerButton.setSelection(true);
+		this.feiDevice.eAdapters().add(new AdapterImpl() {
 			@Override
 			public void notifyChanged(Notification msg) {
 				super.notifyChanged(msg);
@@ -78,10 +88,10 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 		// create new Context
 		this.ctx = new DataBindingContext();
 
-//		
-//		// Binding for the antenna only option
-//		this.ctx.bindValue(SWTObservables.observeSelection(this.deviceTypeAntennaButton),
-//			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__ANTENNA), new UpdateValueStrategy(), new UpdateValueStrategy());
+		//		
+		//		// Binding for the antenna only option
+		//		this.ctx.bindValue(SWTObservables.observeSelection(this.deviceTypeAntennaButton),
+		//			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__ANTENNA), new UpdateValueStrategy(), new UpdateValueStrategy());
 
 		// Binding for GPS ingest & output
 		this.ctx.bindValue(SWTObservables.observeSelection(this.ingestGPSCheckbox),
@@ -93,35 +103,35 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 		// Need custom update value strat for the group binding since false -> true and true -> false
 		UpdateValueStrategy tunerTypeGroupUVS = new UpdateValueStrategy();
 		tunerTypeGroupUVS.setConverter(new IConverter() {
-			
+
 			@Override
 			public Object getToType() {
 				return Boolean.class;
 			}
-			
+
 			@Override
 			public Object getFromType() {
 				return Boolean.class;
 			}
-			
+
 			@Override
 			public Object convert(Object fromObject) {
-				return !((Boolean)fromObject).booleanValue();
+				return !((Boolean) fromObject).booleanValue();
 			}
 		});
-		
-		this.ctx.bindValue(SWTObservables.observeEnabled(this.tunerTypeGroup), 
+
+		this.ctx.bindValue(SWTObservables.observeEnabled(this.tunerTypeGroup),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__ANTENNA), new UpdateValueStrategy(), tunerTypeGroupUVS);
-		
-		this.ctx.bindValue(SWTObservables.observeEnabled(this.receiveOnlyTunerButton), 
+
+		this.ctx.bindValue(SWTObservables.observeEnabled(this.receiveOnlyTunerButton),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__ANTENNA), new UpdateValueStrategy(), tunerTypeGroupUVS);
-		
-		this.ctx.bindValue(SWTObservables.observeEnabled(this.transmitOnlyTunerButton), 
+
+		this.ctx.bindValue(SWTObservables.observeEnabled(this.transmitOnlyTunerButton),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__ANTENNA), new UpdateValueStrategy(), tunerTypeGroupUVS);
-		
-		this.ctx.bindValue(SWTObservables.observeEnabled(this.bothRxTxButton), 
+
+		this.ctx.bindValue(SWTObservables.observeEnabled(this.bothRxTxButton),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__ANTENNA), new UpdateValueStrategy(), tunerTypeGroupUVS);
-		
+
 		// Bindings for the tuner type is difficult since it is a 3 way with the third option being both the 1st and 2nd so listeners are used.
 		this.bothRxTxButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -130,7 +140,7 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 				FrontEndTunerTypeSelectionWizardPage.this.feiDevice.setTxTuner(true);
 			}
 		});
-		
+
 		this.receiveOnlyTunerButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -138,7 +148,7 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 				FrontEndTunerTypeSelectionWizardPage.this.feiDevice.setTxTuner(false);
 			}
 		});
-		
+
 		this.transmitOnlyTunerButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -146,7 +156,6 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 				FrontEndTunerTypeSelectionWizardPage.this.feiDevice.setTxTuner(true);
 			}
 		});
-		
 
 		IWizardPage[] wizPages = this.getWizard().getPages();
 		ScaDeviceProjectPropertiesWizardPage propWizPage = null;
@@ -179,7 +188,7 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 		}
 
 	}
-	
+
 	protected void updateErrorMessage() {
 		IStatus status = (IStatus) this.validator.getValidationStatus().getValue();
 		if (status.isOK()) {
@@ -188,32 +197,32 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 			this.setErrorMessage(status.getMessage());
 		}
 	}
-	
+
 	private void createUIElements(Composite client) {
 		client.setLayout(new GridLayout(1, false));
 
 		this.setTitle("Front End Interfaces Device Type Selection");
-//		this.setDescription("Select the device type and if this device will ingest and/or output GPS data.  If the device is a tuner, select whether this device is receive only, can transmit, or both.");
+		//		this.setDescription("Select the device type and if this device will ingest and/or output GPS data.  If the device is a tuner, select whether this device is receive only, can transmit, or both.");
 		this.setDescription("Select if this tuner will ingest and/or output GPS data.  Select whether this device is receive only, can transmit, or both.");
-		
-/**  // Currently only allow the selection of a Tuner 
- * 
-		// Device Type Group
-		Group deviceTypeGroup = new Group(client, SWT.BORDER);
-		deviceTypeGroup.setText("Device Type");
-		deviceTypeGroup.setLayout(new GridLayout(2, false));
-		deviceTypeGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-		this.deviceTypeTunerButton = new Button(deviceTypeGroup, SWT.RADIO);
-		this.deviceTypeTunerButton.setText("Tuner (default)");
-		this.deviceTypeTunerButton.setLayoutData(GridDataFactory.fillDefaults().create());
-		this.deviceTypeTunerButton.setToolTipText("Frontend tuners includes RX and TX devices, digitizers, channelizers and analog receivers.");
+		/**  // Currently only allow the selection of a Tuner 
+		 * 
+				// Device Type Group
+				Group deviceTypeGroup = new Group(client, SWT.BORDER);
+				deviceTypeGroup.setText("Device Type");
+				deviceTypeGroup.setLayout(new GridLayout(2, false));
+				deviceTypeGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-		this.deviceTypeAntennaButton = new Button(deviceTypeGroup, SWT.RADIO);
-		this.deviceTypeAntennaButton.setText("Antenna Only");
-		this.deviceTypeAntennaButton.setLayoutData(GridDataFactory.fillDefaults().create());
-		this.deviceTypeAntennaButton.setToolTipText("Frontend antennas provide an RF Info Uses and RF Source Provides port.");
-*/
+				this.deviceTypeTunerButton = new Button(deviceTypeGroup, SWT.RADIO);
+				this.deviceTypeTunerButton.setText("Tuner (default)");
+				this.deviceTypeTunerButton.setLayoutData(GridDataFactory.fillDefaults().create());
+				this.deviceTypeTunerButton.setToolTipText("Frontend tuners includes RX and TX devices, digitizers, channelizers and analog receivers.");
+
+				this.deviceTypeAntennaButton = new Button(deviceTypeGroup, SWT.RADIO);
+				this.deviceTypeAntennaButton.setText("Antenna Only");
+				this.deviceTypeAntennaButton.setLayoutData(GridDataFactory.fillDefaults().create());
+				this.deviceTypeAntennaButton.setToolTipText("Frontend antennas provide an RF Info Uses and RF Source Provides port.");
+		*/
 		// GPS Usage Group
 		Group gpsUsageGroup = new Group(client, SWT.BORDER);
 		gpsUsageGroup.setLayout(new GridLayout(1, false));
@@ -274,7 +283,7 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 		// Page is complete as long as the validator is okay.
 		if (this.validator == null && this.apiCanFinish) {
 			return true;
-		} else if (((IStatus) this.validator.getValidationStatus().getValue()).isOK() && this.apiCanFinish ) {
+		} else if (((IStatus) this.validator.getValidationStatus().getValue()).isOK() && this.apiCanFinish) {
 			return super.isPageComplete();
 		} else {
 			return false;
@@ -290,12 +299,12 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 	public boolean canFlipToNextPage() {
 		return (super.canFlipToNextPage() && !this.feiDevice.isAntenna());
 	}
-	
+
 	@Override
 	public void setCanFinish(boolean canFinish) {
 		this.apiCanFinish = canFinish;
 	}
-	
+
 	public FeiDevice getFeiDevice() {
 		return this.feiDevice;
 	}

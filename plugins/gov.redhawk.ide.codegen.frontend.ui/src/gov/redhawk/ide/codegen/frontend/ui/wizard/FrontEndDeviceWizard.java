@@ -40,19 +40,19 @@ public class FrontEndDeviceWizard extends NewScaDeviceCreationProjectWizard impl
 	public FrontEndDeviceWizard() {
 		super();
 	}
-	
+
 	@Override
 	public void addPages() {
 		setResourcePropertiesPage(new FrontEndDeviceProjectPropertiesWizardPage("", "Device"));
 		addPage(getResourcePropertiesPage());
-		
+
 		setImplPage(new FrontEndImplementationWizardPage("", ICodeGeneratorDescriptor.COMPONENT_TYPE_DEVICE));
 		getImplPage().setDescription("Choose the initial settings for the new implementation.");
 		getImplPage().setImpl(this.getImplementation());
 		addPage(getImplPage());
-		
+
 		getImplList().add(new ImplementationAndSettings(getImplPage().getImplementation(), getImplPage().getImplSettings()));
-		
+
 		try {
 			final Field field = Wizard.class.getDeclaredField("pages");
 			field.getModifiers();
@@ -70,32 +70,32 @@ public class FrontEndDeviceWizard extends NewScaDeviceCreationProjectWizard impl
 			// PASS
 		}
 	}
-	
+
 	@Override
 	public void generatorChanged(final Implementation impl, final ICodeGeneratorDescriptor codeGeneratorDescriptor, final String previousImplId) {
 		if (codeGeneratorDescriptor == null || "".equals(codeGeneratorDescriptor.getName())) {
 			return;
 		}
-		
+
 		// There should only be one implementation
 		ImplementationSettings settings = this.getImplList().get(0).getImplementationSettings();
-		
+
 		if (codeGeneratorDescriptor.getId().equals(previousImplId)) {
 			return;
-		} else if (this.getWizPages().size() > 2){ 
+		} else if (this.getWizPages().size() > 2) {
 			// We need to remove the pages previously added.
 			ICodeGeneratorPageRegistry codegenTemplateRegistry = RedhawkCodegenUiActivator.getCodeGeneratorsTemplateRegistry();
-			
+
 			List<ICodegenDisplayFactory> codegenDisplayFactories = ((ICodeGeneratorPageRegistry2) codegenTemplateRegistry).findCodegenDisplayFactoriesByGeneratorId("redhawk.codegen.jinja.cpp.component.frontend");
-			
+
 			for (ICodegenDisplayFactory factory : codegenDisplayFactories) {
 				if (factory instanceof FrontEndGeneratorTemplateDisplayFactory) {
 					this.removeTemplatePages(getImplPage(), ((FrontEndGeneratorTemplateDisplayFactory) factory).createPages());
 				}
 			}
-			
+
 		}
-		
+
 		if ("C++".equals(impl.getProgrammingLanguage().getName())) {
 			settings.setTemplate("redhawk.codegen.jinja.cpp.component.frontend");
 		} else if ("Java".equals(impl.getProgrammingLanguage().getName())) {
@@ -103,21 +103,21 @@ public class FrontEndDeviceWizard extends NewScaDeviceCreationProjectWizard impl
 		} else if ("Python".equals(impl.getProgrammingLanguage().getName())) {
 			settings.setTemplate("redhawk.codegen.jinja.python.component.frontend");
 		}
-		
+
 		ICodeGeneratorPageRegistry codegenTemplateRegistry = RedhawkCodegenUiActivator.getCodeGeneratorsTemplateRegistry();
-		
+
 		List<ICodegenDisplayFactory> codegenDisplayFactories = ((ICodeGeneratorPageRegistry2) codegenTemplateRegistry).findCodegenDisplayFactoriesByGeneratorId(settings.getTemplate());
-		
+
 		for (ICodegenDisplayFactory factory : codegenDisplayFactories) {
 			if (factory instanceof FrontEndGeneratorTemplateDisplayFactory) {
 				this.addTemplatePages(getImplPage(), ((FrontEndGeneratorTemplateDisplayFactory) factory).createPages());
 			}
 		}
-		
+
 		settings.setOutputDir(CodegenFileHelper.createDefaultOutputDir(impl.getSoftPkg(), codeGeneratorDescriptor));
 		getImplPage().setPageComplete(true);
 	}
-	
+
 	@Override
 	protected void modifyResult(IProject project, IFile spdFile, SubMonitor newChild) throws CoreException {
 	}

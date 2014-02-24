@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * This file is protected by Copyright. 
+ * Please refer to the COPYRIGHT file distributed with this source distribution.
+ *
+ * This file is part of REDHAWK IDE.
+ *
+ * All rights reserved.  This program and the accompanying materials are made available under 
+ * the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at 
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************/
 package gov.redhawk.ide.codegen.frontend.ui.wizard;
 
 import gov.redhawk.eclipsecorba.idl.Definition;
@@ -54,8 +64,8 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 	private ImplementationSettings implSettings;
 	private FeiDevice feiDevice;
 	private Composite client;
-	DataBindingContext ctx;
-	Definition[] propertyTypes;
+	private DataBindingContext ctx;
+	private Definition[] propertyTypes;
 	private Composite parent;
 	private FrontEndProjectValidator validator;
 	private IBaseLabelProvider definitionComboViewerLabelProvider = new LabelProvider() {
@@ -256,10 +266,9 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		digitalInputCombo.setContentProvider(new ArrayContentProvider());
 		digitalInputCombo.setLabelProvider(definitionComboViewerLabelProvider);
 		digitalInputCombo.setInput(propertyTypes);
-		ctx.bindValue(
-			ViewersObservables.observeSingleSelection(digitalInputCombo),
+		ctx.bindValue(ViewersObservables.observeSingleSelection(digitalInputCombo),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__DIGITAL_INPUT_TYPE));
-		
+
 		ctx.bindValue(WidgetProperties.enabled().observe(digitalInputCombo.getCombo()),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__HAS_DIGITAL_INPUT));
 		return digitalIn;
@@ -341,9 +350,9 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 
 		ComboViewer digitalInputCombo = new ComboViewer(transmitterGroup, SWT.READ_ONLY);
 		digitalInputCombo.setContentProvider(new ArrayContentProvider());
-		digitalInputCombo.setLabelProvider(definitionComboViewerLabelProvider );
+		digitalInputCombo.setLabelProvider(definitionComboViewerLabelProvider);
 		digitalInputCombo.setInput(propertyTypes);
-		
+
 		ctx.bindValue(ViewersObservables.observeSingleSelection(digitalInputCombo),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__DIGITAL_INPUT_TYPE_FOR_TX));
 	} //End Transmitter Group
