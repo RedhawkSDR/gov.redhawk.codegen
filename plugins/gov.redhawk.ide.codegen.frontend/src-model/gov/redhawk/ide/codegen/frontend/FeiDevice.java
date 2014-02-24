@@ -21,7 +21,7 @@ import org.eclipse.emf.ecore.EObject;
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Fei Device</b></em>'.
  * <!-- end-user-doc -->
- *
+ * 
  * <p>
  * The following features are supported:
  * <ul>
@@ -43,7 +43,7 @@ import org.eclipse.emf.ecore.EObject;
  * <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#getTunerStatusStruct <em>Tuner Status Struct</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @see gov.redhawk.ide.codegen.frontend.FrontendPackage#getFeiDevice()
  * @model
  * @generated
@@ -131,6 +131,7 @@ public interface FeiDevice extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Rx Tuner</b></em>' attribute.
+	 * The default value is <code>"true"</code>.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Rx Tuner</em>' attribute isn't clear,
@@ -140,7 +141,7 @@ public interface FeiDevice extends EObject {
 	 * @return the value of the '<em>Rx Tuner</em>' attribute.
 	 * @see #setRxTuner(boolean)
 	 * @see gov.redhawk.ide.codegen.frontend.FrontendPackage#getFeiDevice_RxTuner()
-	 * @model unique="false"
+	 * @model default="true" unique="false"
 	 * @generated
 	 */
 	boolean isRxTuner();
@@ -184,6 +185,7 @@ public interface FeiDevice extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Has Digital Input</b></em>' attribute.
+	 * The default value is <code>"false"</code>.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Has Digital Input</em>' attribute isn't clear,
@@ -193,7 +195,7 @@ public interface FeiDevice extends EObject {
 	 * @return the value of the '<em>Has Digital Input</em>' attribute.
 	 * @see #setHasDigitalInput(boolean)
 	 * @see gov.redhawk.ide.codegen.frontend.FrontendPackage#getFeiDevice_HasDigitalInput()
-	 * @model unique="false"
+	 * @model default="false" unique="false"
 	 * @generated
 	 */
 	boolean isHasDigitalInput();
@@ -238,6 +240,7 @@ public interface FeiDevice extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Has Digital Output</b></em>' attribute.
+	 * The default value is <code>"true"</code>.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Has Digital Output</em>' attribute isn't clear,
@@ -247,7 +250,7 @@ public interface FeiDevice extends EObject {
 	 * @return the value of the '<em>Has Digital Output</em>' attribute.
 	 * @see #setHasDigitalOutput(boolean)
 	 * @see gov.redhawk.ide.codegen.frontend.FrontendPackage#getFeiDevice_HasDigitalOutput()
-	 * @model unique="false"
+	 * @model default="true" unique="false"
 	 * @generated
 	 */
 	boolean isHasDigitalOutput();
