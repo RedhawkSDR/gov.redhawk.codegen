@@ -31,7 +31,7 @@ public class FrontEndProp {
 	private void setProp(Simple prop) {
 		Simple oldProp = this.prop;
 		this.prop = prop;
-		firePropertyChange("prop", this.prop, oldProp);
+		firePropertyChange("prop", oldProp, this.prop);
 	}
 
 	public Simple getProp() {
@@ -52,8 +52,9 @@ public class FrontEndProp {
 	 * @param required True if required, false otherwise.
 	 */
 	protected void setRequired(boolean required) {
-		boolean oldRequired = required;
-		firePropertyChange("required", this.required, oldRequired);
+		boolean oldRequired = this.required;
+		this.required = required;
+		firePropertyChange("required", oldRequired, this.required);
 	}
 
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
