@@ -20,11 +20,11 @@ class FeiDevice {
 	
 	
 	// Specific props to Tuner
-	boolean RxTuner
+	boolean RxTuner = "true"
 	int numberOfAnalogInputs
-	boolean hasDigitalInput
+	boolean hasDigitalInput = "false"
 	IDLDef digitalInputType 
-	boolean hasDigitalOutput
+	boolean hasDigitalOutput = "true"
 	IDLDef digitalOutputType 
 	boolean MultiOut
 	

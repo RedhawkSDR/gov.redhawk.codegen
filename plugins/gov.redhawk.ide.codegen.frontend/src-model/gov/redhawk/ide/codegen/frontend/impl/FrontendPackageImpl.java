@@ -364,15 +364,15 @@ public class FrontendPackageImpl extends EPackageImpl implements FrontendPackage
 			IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getFeiDevice_OutputsGPS(), theEcorePackage.getEBoolean(), "outputsGPS", null, 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE,
 			IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getFeiDevice_RxTuner(), theEcorePackage.getEBoolean(), "RxTuner", null, 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE,
+		initEAttribute(getFeiDevice_RxTuner(), theEcorePackage.getEBoolean(), "RxTuner", "true", 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE,
 			IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getFeiDevice_NumberOfAnalogInputs(), theEcorePackage.getEInt(), "numberOfAnalogInputs", null, 0, 1, FeiDevice.class, !IS_TRANSIENT,
 			!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getFeiDevice_HasDigitalInput(), theEcorePackage.getEBoolean(), "hasDigitalInput", null, 0, 1, FeiDevice.class, !IS_TRANSIENT,
+		initEAttribute(getFeiDevice_HasDigitalInput(), theEcorePackage.getEBoolean(), "hasDigitalInput", "false", 0, 1, FeiDevice.class, !IS_TRANSIENT,
 			!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getFeiDevice_DigitalInputType(), this.getIDLDef(), "digitalInputType", null, 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE,
 			IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getFeiDevice_HasDigitalOutput(), theEcorePackage.getEBoolean(), "hasDigitalOutput", null, 0, 1, FeiDevice.class, !IS_TRANSIENT,
+		initEAttribute(getFeiDevice_HasDigitalOutput(), theEcorePackage.getEBoolean(), "hasDigitalOutput", "true", 0, 1, FeiDevice.class, !IS_TRANSIENT,
 			!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getFeiDevice_DigitalOutputType(), this.getIDLDef(), "digitalOutputType", null, 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE,
 			IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
