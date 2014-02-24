@@ -831,8 +831,11 @@ public class JavaJetGeneratorPropertiesWizardPage extends WizardPage implements 
 	
 
 	private void addCustomPages() {
-		ICodegenWizardPage[] codeGenTemplatePages = RedhawkCodegenUiActivator.getCodeGeneratorsTemplateRegistry().findPageByGeneratorId(this.currentTemplate);
-		((NewScaResourceWizard) this.getWizard()).addTemplatePages(this, codeGenTemplatePages);
+		if (this.getWizard() instanceof NewScaResourceWizard) {
+			ICodegenWizardPage[] codeGenTemplatePages = RedhawkCodegenUiActivator.getCodeGeneratorsTemplateRegistry().findPageByGeneratorId(this.currentTemplate);
+			((NewScaResourceWizard) this.getWizard()).addTemplatePages(this, codeGenTemplatePages);
+		}
+		// Otherwise assume the Wizard is taking care of this itself.
 	}
 	
 	private void removeCustomPages() {
