@@ -21,7 +21,7 @@ import org.eclipse.emf.ecore.EObject;
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Fei Device</b></em>'.
  * <!-- end-user-doc -->
- * 
+ *
  * <p>
  * The following features are supported:
  * <ul>
@@ -43,7 +43,7 @@ import org.eclipse.emf.ecore.EObject;
  * <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#getTunerStatusStruct <em>Tuner Status Struct</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @see gov.redhawk.ide.codegen.frontend.FrontendPackage#getFeiDevice()
  * @model
  * @generated
