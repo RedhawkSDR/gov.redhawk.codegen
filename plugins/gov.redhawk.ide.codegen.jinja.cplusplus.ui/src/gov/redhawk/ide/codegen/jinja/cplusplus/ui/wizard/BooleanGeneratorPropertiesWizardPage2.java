@@ -16,7 +16,7 @@ import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.ui.BooleanGeneratorPropertiesWizardPage;
 import gov.redhawk.ide.codegen.ui.ICodegenWizardPage;
 import gov.redhawk.ide.codegen.ui.RedhawkCodegenUiActivator;
-import gov.redhawk.ide.spd.ui.wizard.NewScaResourceWizard;
+import gov.redhawk.ide.spd.ui.wizard.ScaImplementationWizard2;
 import mil.jpeojtrs.sca.spd.Implementation;
 import mil.jpeojtrs.sca.spd.SoftPkg;
 
@@ -68,9 +68,9 @@ public class BooleanGeneratorPropertiesWizardPage2 extends BooleanGeneratorPrope
 	}
 	
 	private void addCustomPages() {
-		if (this.getWizard() instanceof NewScaResourceWizard) {
+		if (this.getWizard() instanceof ScaImplementationWizard2) {
 			ICodegenWizardPage[] codeGenTemplatePages = RedhawkCodegenUiActivator.getCodeGeneratorsTemplateRegistry().findPageByGeneratorId(this.template);
-			((NewScaResourceWizard) this.getWizard()).addTemplatePages(this, codeGenTemplatePages);
+			((ScaImplementationWizard2) this.getWizard()).addTemplatePages(this, codeGenTemplatePages);
 		}
 		// Otherwise assume the Wizard is taking care of this itself.
 	}
@@ -81,7 +81,7 @@ public class BooleanGeneratorPropertiesWizardPage2 extends BooleanGeneratorPrope
 		}
 		
 		ICodegenWizardPage[] codeGenTemplatePages = RedhawkCodegenUiActivator.getCodeGeneratorsTemplateRegistry().findPageByGeneratorId(this.template);
-		((NewScaResourceWizard) this.getWizard()).removeTemplatePages(this, codeGenTemplatePages);
+		((ScaImplementationWizard2) this.getWizard()).removeTemplatePages(this, codeGenTemplatePages);
 		
 	}
 	
