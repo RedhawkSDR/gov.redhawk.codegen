@@ -25,7 +25,7 @@ import gov.redhawk.ide.codegen.jet.java.JavaPackageNameValidator;
 import gov.redhawk.ide.codegen.ui.ICodegenWizardPage;
 import gov.redhawk.ide.codegen.ui.RedhawkCodegenUiActivator;
 import gov.redhawk.ide.codegen.util.CodegenFileHelper;
-import gov.redhawk.ide.spd.ui.wizard.NewScaResourceWizard;
+import gov.redhawk.ide.spd.ui.wizard.ScaImplementationWizard2;
 import gov.redhawk.ui.util.EMFEmptyStringToNullUpdateValueStrategy;
 
 import java.util.ArrayList;
@@ -831,9 +831,9 @@ public class JavaJetGeneratorPropertiesWizardPage extends WizardPage implements 
 	
 
 	private void addCustomPages() {
-		if (this.getWizard() instanceof NewScaResourceWizard) {
+		if (this.getWizard() instanceof ScaImplementationWizard2) {
 			ICodegenWizardPage[] codeGenTemplatePages = RedhawkCodegenUiActivator.getCodeGeneratorsTemplateRegistry().findPageByGeneratorId(this.currentTemplate);
-			((NewScaResourceWizard) this.getWizard()).addTemplatePages(this, codeGenTemplatePages);
+			((ScaImplementationWizard2) this.getWizard()).addTemplatePages(this, codeGenTemplatePages);
 		}
 		// Otherwise assume the Wizard is taking care of this itself.
 	}
@@ -844,7 +844,7 @@ public class JavaJetGeneratorPropertiesWizardPage extends WizardPage implements 
 		}
 		
 		ICodegenWizardPage[] codeGenTemplatePages = RedhawkCodegenUiActivator.getCodeGeneratorsTemplateRegistry().findPageByGeneratorId(this.currentTemplate);
-		((NewScaResourceWizard) this.getWizard()).removeTemplatePages(this, codeGenTemplatePages);
+		((ScaImplementationWizard2) this.getWizard()).removeTemplatePages(this, codeGenTemplatePages);
 		
 	}
 }

@@ -441,6 +441,10 @@ public class MFileSelectionWizardPage extends WizardPage implements ICodegenWiza
 	public ImplementationSettings getSettings() {
 		return this.implSettings;
 	}
+	
+	public Implementation getImpl() {
+		return this.impl;
+	}
 
 	@Override
 	public boolean canFinish() {

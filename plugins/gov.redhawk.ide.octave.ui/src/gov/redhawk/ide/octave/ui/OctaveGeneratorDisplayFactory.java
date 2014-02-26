@@ -13,7 +13,9 @@ package gov.redhawk.ide.octave.ui;
 import gov.redhawk.eclipsecorba.idl.IdlInterfaceDcl;
 import gov.redhawk.eclipsecorba.library.IdlLibrary;
 import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
+import gov.redhawk.ide.codegen.IScaComponentCodegen;
 import gov.redhawk.ide.codegen.ImplementationSettings;
+import gov.redhawk.ide.codegen.RedhawkCodegenActivator;
 import gov.redhawk.ide.codegen.ui.BooleanGeneratorPropertiesComposite;
 import gov.redhawk.ide.codegen.ui.ICodegenComposite;
 import gov.redhawk.ide.codegen.ui.ICodegenDisplayFactory2;
@@ -113,7 +115,23 @@ public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 		// We need to modify the local file variable since this dictates what is being deployed into the SDRROOT.
 		// In the octave case, we need the m-files which would normally be left behind since only the binary is deployed.
 		// This causes all of the source code to also be deployed as well which isn't really a bad thing.
-		Code codeVar = eSpd.getImplementation("cpp").getCode();
+		
+		// An assumption is made here that there is only a single Octave implementation.  This could potentially cause 
+		// an edge case if someone wants multiple octave implementations for their component.
+		Code codeVar = this.mFileSelectionWizardPage.getImpl().getCode();
+		final ICodeGeneratorDescriptor codeGenDesc = RedhawkCodegenActivator.getCodeGeneratorsRegistry().findCodegen(mFileSelectionWizardPage.getSettings().getGeneratorId());
+		
+		if (codeVar == null) {
+			IScaComponentCodegen generator;
+			try {
+				generator = codeGenDesc.getGenerator(); 
+				codeVar = generator.getInitialCodeSettings(eSpd, mFileSelectionWizardPage.getSettings(), mFileSelectionWizardPage.getImpl());
+				mFileSelectionWizardPage.getImpl().setCode(codeVar);
+			} catch (CoreException e) {
+				Activator.getDefault().getLog().log(e.getStatus());
+			}
+		}
+		
 		LocalFile entryPoint = codeVar.getLocalFile();
 		String[] tokens = entryPoint.getName().split("/");
 		
@@ -124,10 +142,11 @@ public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 			if (i != tokens.length - 2) {
 				builder.append("/");
 			}
+			
+			entryPoint.setName(builder.toString());
+			mFileSelectionWizardPage.getImpl().getCode().setLocalFile(entryPoint);
 		}
 		
-		entryPoint.setName(builder.toString());
-		eSpd.getImplementation("cpp").getCode().setLocalFile(entryPoint);
 		
 		// You must have a property of type exec param called __mFunction that has the a type of String
 		// and the value is the name of the m-function
