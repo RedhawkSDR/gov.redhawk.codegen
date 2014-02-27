@@ -93,9 +93,9 @@ class Port<%=PortHelper.idlToCamelPortClass(tempProvide.getRepID())%>In_i(<%=PRE
         try:
             self._detach_cb = getattr(parent, "detach")
             if not callable(self._detach_cb):
-                self._attach_cb = None
+                self._detach_cb = None
         except AttributeError:
-            self._detach_db = None
+            self._detach_cb = None
 
     def setBitSize(self, bitSize):
         self.stats.setBitSize(bitSize)
