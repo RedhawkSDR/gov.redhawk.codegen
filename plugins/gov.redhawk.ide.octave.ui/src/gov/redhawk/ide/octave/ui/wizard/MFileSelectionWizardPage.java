@@ -325,7 +325,7 @@ public class MFileSelectionWizardPage extends WizardPage implements ICodegenWiza
 
 			@Override
 			public IStatus validate(Object value) {
-				if (value == null || !((File) value).exists()) {
+				if (value == null || !((File) value).exists() || ((File) value).isDirectory()) {
 					return ValidationStatus.error("Primary M-File location must be provided");
 				}
 
