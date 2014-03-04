@@ -27,6 +27,8 @@ import gov.redhawk.sca.util.SubMonitor;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -341,6 +343,15 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		if (this.tunerStatusStructProps == null && this.frontEndTunerPropsWizardPage != null) {
 			this.tunerStatusStructProps = this.frontEndTunerPropsWizardPage.getSelectedProperties();
 		}
+		
+		
+		// Make things easier for the user by sorting the list here
+		List<FrontEndProp> sortedList = new ArrayList<FrontEndProp>(this.tunerStatusStructProps);
+		Collections.sort(sortedList, new Comparator<FrontEndProp>() {
+			public int compare(FrontEndProp fep1, FrontEndProp fep2) {
+                return fep1.getProp().getName().compareTo(fep2.getProp().getName());
+            }
+		});	
 
 		StructSequence structSeq = PrfFactory.eINSTANCE.createStructSequence();
 		structSeq.setId(FrontEndDeviceUIUtils.TUNER_STATUS_STRUCT_SEQ_ID);
@@ -356,7 +367,7 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		struct.setId(FrontEndDeviceUIUtils.TUNER_STATUS_STRUCT_ID);
 		struct.setName(FrontEndDeviceUIUtils.TUNER_STATUS_STRUCT_NAME);
 
-		for (FrontEndProp frontEndProp : this.tunerStatusStructProps) {
+		for (FrontEndProp frontEndProp : sortedList) {
 			Simple prop = frontEndProp.getProp();
 			if (prop != null) {
 				struct.getSimple().add(prop);
