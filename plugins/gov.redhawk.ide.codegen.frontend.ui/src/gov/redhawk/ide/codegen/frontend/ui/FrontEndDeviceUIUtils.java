@@ -198,68 +198,68 @@ public enum FrontEndDeviceUIUtils {
 		Enumerations enumList = PrfFactory.eINSTANCE.createEnumerations();
 
 		Enumeration sp = PrfFactory.eINSTANCE.createEnumeration();
-		sp.setLabel("SDDS_SP");
-		sp.setValue("SDDS_SP");
+		sp.setLabel("SP");
+		sp.setValue("SP");
 		enumList.getEnumeration().add(sp);
 
 		Enumeration sb = PrfFactory.eINSTANCE.createEnumeration();
-		sb.setLabel("SDDS_SB");
-		sb.setValue("SDDS_SB");
+		sb.setLabel("SB");
+		sb.setValue("SB");
 		enumList.getEnumeration().add(sb);
 
 		Enumeration si = PrfFactory.eINSTANCE.createEnumeration();
-		si.setLabel("SDDS_SI");
-		si.setValue("SDDS_SI");
+		si.setLabel("SI");
+		si.setValue("SI");
 		enumList.getEnumeration().add(si);
 
 		Enumeration sl = PrfFactory.eINSTANCE.createEnumeration();
-		sl.setLabel("SDDS_SL");
-		sl.setValue("SDDS_SL");
+		sl.setLabel("SL");
+		sl.setValue("SL");
 		enumList.getEnumeration().add(sl);
 
 		Enumeration sx = PrfFactory.eINSTANCE.createEnumeration();
-		sx.setLabel("SDDS_SX");
-		sx.setValue("SDDS_SX");
+		sx.setLabel("SX");
+		sx.setValue("SX");
 		enumList.getEnumeration().add(sx);
 
 		Enumeration sf = PrfFactory.eINSTANCE.createEnumeration();
-		sf.setLabel("SDDS_SF");
-		sf.setValue("SDDS_SF");
+		sf.setLabel("SF");
+		sf.setValue("SF");
 		enumList.getEnumeration().add(sf);
 
 		Enumeration sd = PrfFactory.eINSTANCE.createEnumeration();
-		sd.setLabel("SDDS_SD");
-		sd.setValue("SDDS_SD");
+		sd.setLabel("SD");
+		sd.setValue("SD");
 		enumList.getEnumeration().add(sd);
 
 		Enumeration cb = PrfFactory.eINSTANCE.createEnumeration();
-		cb.setLabel("SDDS_CB");
-		cb.setValue("SDDS_CB");
+		cb.setLabel("CB");
+		cb.setValue("CB");
 		enumList.getEnumeration().add(cb);
 
 		Enumeration ci = PrfFactory.eINSTANCE.createEnumeration();
-		ci.setLabel("SDDS_CI");
-		ci.setValue("SDDS_CI");
+		ci.setLabel("CI");
+		ci.setValue("CI");
 		enumList.getEnumeration().add(ci);
 
 		Enumeration cl = PrfFactory.eINSTANCE.createEnumeration();
-		cl.setLabel("SDDS_CL");
-		cl.setValue("SDDS_CL");
+		cl.setLabel("CL");
+		cl.setValue("CL");
 		enumList.getEnumeration().add(cl);
 
 		Enumeration cx = PrfFactory.eINSTANCE.createEnumeration();
-		cx.setLabel("SDDS_CX");
-		cx.setValue("SDDS_CX");
+		cx.setLabel("CX");
+		cx.setValue("CX");
 		enumList.getEnumeration().add(cx);
 
 		Enumeration cf = PrfFactory.eINSTANCE.createEnumeration();
-		cf.setLabel("SDDS_CF");
-		cf.setValue("SDDS_CF");
+		cf.setLabel("CF");
+		cf.setValue("CF");
 		enumList.getEnumeration().add(cf);
 
 		Enumeration cd = PrfFactory.eINSTANCE.createEnumeration();
-		cd.setLabel("SDDS_CD");
-		cd.setValue("SDDS_CD");
+		cd.setLabel("CD");
+		cd.setValue("CD");
 		enumList.getEnumeration().add(cd);
 
 		outputFormat.setEnumerations(enumList);
