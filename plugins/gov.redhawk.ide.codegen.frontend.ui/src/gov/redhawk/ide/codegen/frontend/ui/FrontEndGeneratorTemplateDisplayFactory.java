@@ -305,7 +305,7 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		struct.setId("connection_descriptor");
 
 		Simple connectionName = PrfFactory.eINSTANCE.createSimple();
-		connectionName.setId("connection_name");
+		connectionName.setId("connection_id");
 		connectionName.setType(PropertyValueType.STRING);
 
 		final Kind connectionNameKind = PrfFactory.eINSTANCE.createKind();
