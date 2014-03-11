@@ -296,6 +296,7 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 
 		StructSequence structSeq = PrfFactory.eINSTANCE.createStructSequence();
 		structSeq.setId("connectionTable");
+		structSeq.setName("connectionTable");
 
 		final ConfigurationKind structKind = PrfFactory.eINSTANCE.createConfigurationKind();
 		structKind.setType(StructPropertyConfigurationType.CONFIGURE);
@@ -303,9 +304,11 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 
 		Struct struct = PrfFactory.eINSTANCE.createStruct();
 		struct.setId("connection_descriptor");
+		struct.setName("connection_descriptor");
 
 		Simple connectionName = PrfFactory.eINSTANCE.createSimple();
-		connectionName.setId("connection_id");
+		connectionName.setName("connection_id");
+		connectionName.setId("connectionTable::connection_id");
 		connectionName.setType(PropertyValueType.STRING);
 
 		final Kind connectionNameKind = PrfFactory.eINSTANCE.createKind();
@@ -313,7 +316,8 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		connectionName.getKind().add(connectionNameKind);
 
 		Simple streamId = PrfFactory.eINSTANCE.createSimple();
-		streamId.setId("stream_id");
+		streamId.setName("stream_id");
+		streamId.setId("connectionTable::stream_id");
 		streamId.setType(PropertyValueType.STRING);
 
 		final Kind streamIdKind = PrfFactory.eINSTANCE.createKind();
@@ -321,7 +325,8 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		streamId.getKind().add(streamIdKind);
 
 		Simple portName = PrfFactory.eINSTANCE.createSimple();
-		portName.setId("port_name");
+		portName.setName("port_name");
+		portName.setId("connectionTable::port_name");
 		portName.setType(PropertyValueType.STRING);
 
 		final Kind portNameKind = PrfFactory.eINSTANCE.createKind();
