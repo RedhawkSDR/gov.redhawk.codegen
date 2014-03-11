@@ -22,6 +22,7 @@ import java.net.URL;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.jacorb.eclipse.JacorbEclipseActivator;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
@@ -45,6 +46,7 @@ public class SandboxTestsActivator implements BundleActivator {
 	@Override
 	public void start(final BundleContext bundleContext) throws Exception {
 		SandboxTestsActivator.context = bundleContext;
+		JacorbEclipseActivator.getDefault().init();
 	}
 
 	/*
@@ -58,22 +60,15 @@ public class SandboxTestsActivator implements BundleActivator {
 		SandboxTestsActivator.context = null;
 	}
 
-	public static SdrRoot initSdrRoot() throws IOException, URISyntaxException,
-			InterruptedException {
-		final URL url = FileLocator.find(Platform
-				.getBundle(SandboxTestsActivator.PLUGIN_ID), new Path("sdr"),
-				null);
+	public static SdrRoot initSdrRoot() throws IOException, URISyntaxException, InterruptedException {
+		final URL url = FileLocator.find(Platform.getBundle(SandboxTestsActivator.PLUGIN_ID), new Path("sdr"), null);
 		final SdrRoot root = SdrUiPlugin.getDefault().getTargetSdrRoot();
 		root.load(null);
 		final URL fileURL = FileLocator.toFileURL(url);
-		SdrUiPlugin
-				.getDefault()
-				.getPreferenceStore()
-				.setValue(
-						SdrUiPreferenceConstants.SCA_LOCAL_SDR_PATH_PREFERENCE,
-						new File(fileURL.toURI()).getAbsolutePath());
+		SdrUiPlugin.getDefault().getPreferenceStore().setValue(SdrUiPreferenceConstants.SCA_LOCAL_SDR_PATH_PREFERENCE,
+			new File(fileURL.toURI()).getAbsolutePath());
 		root.reload(null);
 		return root;
 	}
-	
+
 }
