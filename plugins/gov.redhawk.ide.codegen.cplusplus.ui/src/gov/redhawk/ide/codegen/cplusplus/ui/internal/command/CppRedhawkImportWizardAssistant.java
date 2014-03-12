@@ -32,7 +32,7 @@ public class CppRedhawkImportWizardAssistant implements IRedhawkImportProjectWiz
 	public boolean setTemplate(ProjectRecord record, ImplementationSettings settings, String lang, ITemplateDesc templateDesc) {
 		if ("C++".equals(lang)) {
 			if (record.getTemplate() != null) {
-				settings.setTemplate(record.getTemplate());
+				settings.setTemplate(record.getTemplate().get("cpp"));
 			} else {
 				settings.setTemplate("redhawk.codegen.jinja.cpp.component.pull");
 			}
@@ -63,7 +63,7 @@ public class CppRedhawkImportWizardAssistant implements IRedhawkImportProjectWiz
 	public boolean handlesImplId(String id) {
 		return "cpp".equalsIgnoreCase(id);
 	}
-	
+
 	@Override
 	public boolean handlesLanguage(String lang) {
 		return "C++".equalsIgnoreCase(lang);
@@ -77,7 +77,7 @@ public class CppRedhawkImportWizardAssistant implements IRedhawkImportProjectWiz
 	@Override
 	public void setupWaveDev(String projectName, ImplementationSettings settings) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
