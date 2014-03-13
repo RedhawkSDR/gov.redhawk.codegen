@@ -344,7 +344,8 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 
 	private void addTunerSpecificProps(SoftPkg eSpd) {
 
-		// Add the properties from the Wizard page.
+		// If the tunerStatusStructProps is null then we must have come through the Wizard otherwise, maybe someoneone
+		// set it and we should accept that.
 		if (this.tunerStatusStructProps == null && this.frontEndTunerPropsWizardPage != null) {
 			this.tunerStatusStructProps = this.frontEndTunerPropsWizardPage.getSelectedProperties();
 		}
@@ -384,6 +385,9 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		// Add the two other required properties
 		eSpd.getPropertyFile().getProperties().getStruct().add(FrontEndDeviceUIUtils.INSTANCE.getListenerAllocationStruct());
 		eSpd.getPropertyFile().getProperties().getStruct().add(FrontEndDeviceUIUtils.INSTANCE.getTunerAllocationStruct());
+		
+		// Have to remember to set this back to null since this is a singleton
+		this.tunerStatusStructProps = null;
 	}
 
 	private void addAntennaSpecificProps(SoftPkg eSpd) {
