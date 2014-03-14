@@ -31,7 +31,7 @@ public class CppRedhawkImportWizardAssistant implements IRedhawkImportProjectWiz
 	@Override
 	public boolean setTemplate(ProjectRecord record, ImplementationSettings settings, String lang, ITemplateDesc templateDesc) {
 		if ("C++".equals(lang)) {
-			if (record.getTemplate() != null) {
+			if (record.getTemplate() != null && !record.getTemplate().isEmpty()) {
 				settings.setTemplate(record.getTemplate().get("cpp"));
 			} else {
 				settings.setTemplate("redhawk.codegen.jinja.cpp.component.pull");

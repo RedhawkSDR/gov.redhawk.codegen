@@ -33,7 +33,7 @@ public class JavaRedhawkWizardAssistant implements IRedhawkImportProjectWizardAs
 	@Override
 	public boolean setTemplate(ProjectRecord record, ImplementationSettings settings, String lang, ITemplateDesc templateDesc) {
 		if ("Java".equals(lang)) {
-			if (record.getTemplate() != null) {
+			if (record.getTemplate() != null && !record.getTemplate().isEmpty()) {
 				settings.setTemplate(record.getTemplate().get("java"));
 			} else {
 				settings.setTemplate("redhawk.codegen.jinja.java.component.pull");
