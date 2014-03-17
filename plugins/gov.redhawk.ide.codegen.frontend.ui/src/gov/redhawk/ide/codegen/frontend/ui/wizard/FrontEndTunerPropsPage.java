@@ -66,6 +66,7 @@ public class FrontEndTunerPropsPage extends WizardPage implements ICodegenWizard
 	private ImplementationSettings implSettings;
 	private FeiDevice feiDevice;
 	private FrontEndProjectValidator validator;
+	private boolean viewed = false;
 
 	public FrontEndTunerPropsPage(FeiDevice feiDevice) {
 		super("");
@@ -90,6 +91,7 @@ public class FrontEndTunerPropsPage extends WizardPage implements ICodegenWizard
 
 	@Override
 	public void createControl(Composite parent) {
+		this.viewed  = true;
 		this.setTitle("Front End Interfaces Tuner Status Customization");
 		this.setDescription("Select set of tuner status properties for the tuner status struct.  Note that required properties may not be removed.");
 
@@ -250,6 +252,11 @@ public class FrontEndTunerPropsPage extends WizardPage implements ICodegenWizard
 
 	@Override
 	public boolean isPageComplete() {
+		// Make sure that this page has been viewed.  The user should see all pages in this wizard.
+		if (!viewed) {
+			return false;
+		}
+		
 		// Page is complete as long as the validator is okay.
 		if (this.validator == null) {
 			return true;
