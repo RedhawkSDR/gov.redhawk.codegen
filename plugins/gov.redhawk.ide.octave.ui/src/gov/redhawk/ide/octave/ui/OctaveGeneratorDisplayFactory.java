@@ -34,6 +34,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import mil.jpeojtrs.sca.prf.AccessType;
 import mil.jpeojtrs.sca.prf.Kind;
 import mil.jpeojtrs.sca.prf.PrfFactory;
 import mil.jpeojtrs.sca.prf.Properties;
@@ -71,12 +72,10 @@ import BULKIO.dataDoubleHelper;
 
 public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 
-	
-	
 	private OctaveProjectProperties octaveProjectProperties;
 	private MFileSelectionWizardPage mFileSelectionWizardPage;
 	private MFileVariableMapingWizardPage mFileVariableMapingWizardPage;
-	
+
 	@Override
 	public ICodegenWizardPage[] createPages() {
 		List<ICodegenWizardPage> pages = new ArrayList<ICodegenWizardPage>();
@@ -86,8 +85,7 @@ public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 		this.mFileSelectionWizardPage.setDescription("Select an M-File for this component."
 			+ " If the primary M-File depends on non-standard methods, select the dependent M-Files ");
 
-		this.mFileVariableMapingWizardPage = new MFileVariableMapingWizardPage(octaveProjectProperties, "",
-			ICodeGeneratorDescriptor.COMPONENT_TYPE_RESOURCE);
+		this.mFileVariableMapingWizardPage = new MFileVariableMapingWizardPage(octaveProjectProperties, "", ICodeGeneratorDescriptor.COMPONENT_TYPE_RESOURCE);
 
 		mFileVariableMapingWizardPage.setDescription("Create a mapping of octave input(s)/output(s) to a REDHAWK port or property. "
 			+ "\nPorts and properties may also be modified in the component editor.");
@@ -111,54 +109,62 @@ public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 
 		Assert.isTrue(spdFile.exists());
 		final SoftPkg eSpd = (SoftPkg) resourceSet.getEObject(spdUri, true);
-		
+
 		// We need to modify the local file variable since this dictates what is being deployed into the SDRROOT.
-		// In the octave case, we need the m-files which would normally be left behind since only the binary is deployed.
+		// In the octave case, we need the m-files which would normally be left behind since only the binary is
+		// deployed.
 		// This causes all of the source code to also be deployed as well which isn't really a bad thing.
-		
-		// An assumption is made here that there is only a single Octave implementation.  This could potentially cause 
+
+		// An assumption is made here that there is only a single Octave implementation. This could potentially cause
 		// an edge case if someone wants multiple octave implementations for their component.
 		Code codeVar = this.mFileSelectionWizardPage.getImpl().getCode();
-		final ICodeGeneratorDescriptor codeGenDesc = RedhawkCodegenActivator.getCodeGeneratorsRegistry().findCodegen(mFileSelectionWizardPage.getSettings().getGeneratorId());
-		
+		final ICodeGeneratorDescriptor codeGenDesc = RedhawkCodegenActivator.getCodeGeneratorsRegistry().findCodegen(
+			mFileSelectionWizardPage.getSettings().getGeneratorId());
+
 		if (codeVar == null) {
 			IScaComponentCodegen generator;
 			try {
-				generator = codeGenDesc.getGenerator(); 
+				generator = codeGenDesc.getGenerator();
 				codeVar = generator.getInitialCodeSettings(eSpd, mFileSelectionWizardPage.getSettings(), mFileSelectionWizardPage.getImpl());
 				mFileSelectionWizardPage.getImpl().setCode(codeVar);
 			} catch (CoreException e) {
 				Activator.getDefault().getLog().log(e.getStatus());
 			}
 		}
-		
+
 		LocalFile entryPoint = codeVar.getLocalFile();
 		String[] tokens = entryPoint.getName().split("/");
-		
+
 		StringBuilder builder = new StringBuilder();
-		
+
 		for (int i = 0; i < tokens.length - 1; i++) {
 			builder.append(tokens[i]);
 			if (i != tokens.length - 2) {
 				builder.append("/");
 			}
-			
+
 			entryPoint.setName(builder.toString());
 			mFileSelectionWizardPage.getImpl().getCode().setLocalFile(entryPoint);
 		}
+
+		// You must have the following properties
+		// __mFunction (string, read-only)
+		// bufferingEnabled (boolean, default "false")
+		// diaryEnabled (boolean, default "false")
+
+		// Create __mFunction
+		Simple mFunction = createSimple("__mFunction", "__mFunction", PropertyValueType.STRING, octaveProjectProperties.getFunctionName(),
+			PropertyConfigurationType.EXECPARAM, AccessType.READONLY);
+		eSpd.getPropertyFile().getProperties().getSimple().add(mFunction);
+
+		// Create sampleRate
+		Simple bufferingEnabled = createSimple("bufferingEnabled", "bufferingEnabled", PropertyValueType.BOOLEAN, "false",
+			PropertyConfigurationType.CONFIGURE, AccessType.READWRITE);
+		eSpd.getPropertyFile().getProperties().getSimple().add(bufferingEnabled);
 		
-		
-		// You must have a property of type exec param called __mFunction that has the a type of String
-		// and the value is the name of the m-function
-		Simple simple = PrfFactory.eINSTANCE.createSimple();
-		simple.setId("__mFunction");
-		simple.setName("__mFunction");
-		simple.setValue(octaveProjectProperties.getFunctionName());
-		simple.setType(PropertyValueType.STRING);
-		final Kind kind = PrfFactory.eINSTANCE.createKind();
-		kind.setType(PropertyConfigurationType.EXECPARAM);
-		simple.getKind().add(kind);
-		eSpd.getPropertyFile().getProperties().getSimple().add(simple);
+		Simple diaryEnabled = createSimple("diaryEnabled", "diaryEnabled", PropertyValueType.BOOLEAN, "false",
+			PropertyConfigurationType.CONFIGURE, AccessType.READWRITE);
+		eSpd.getPropertyFile().getProperties().getSimple().add(diaryEnabled);
 		
 		for (OctaveFunctionVariables var : octaveProjectProperties.getFunctionInputs()) {
 			switch (var.getMapping()) {
@@ -193,7 +199,7 @@ public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 		}
 
 		SoftwareComponent scd = eSpd.getDescriptor().getComponent();
-		
+
 		Properties props = eSpd.getPropertyFile().getProperties();
 
 		try {
@@ -206,7 +212,7 @@ public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 
 		// Each of the pages is passed the same settings object so we can grab it from any of them.
 		ImplementationSettings settings = this.mFileSelectionWizardPage.getSettings();
-		
+
 		if (settings != null) {
 			String outputDirStr = settings.getOutputDir();
 			IFolder outputDir = project.getFolder(new Path(outputDirStr));
@@ -216,7 +222,7 @@ public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 			List<File> files = new ArrayList<File>();
 			files.add(octaveProjectProperties.getPrimaryMFile());
 			files.addAll(octaveProjectProperties.getmFileDepsList());
-			
+
 			for (File f : files) {
 				IFile targetFile = outputDir.getFile(f.getName());
 				InputStream inputStream = null;
@@ -234,19 +240,33 @@ public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 						}
 					}
 				}
-				
+
 			}
 		}
 	}
 
-	
+	private Simple createSimple(String id, String name, PropertyValueType propType, String value, PropertyConfigurationType propConfigType, AccessType mode) {
+		// Create __mFunction
+		Simple simpProp = PrfFactory.eINSTANCE.createSimple();
+		simpProp.setId(id);
+		simpProp.setName(name);
+		simpProp.setType(propType);
+		simpProp.setValue(value);
+		final Kind kind = PrfFactory.eINSTANCE.createKind();
+		kind.setType(propConfigType);
+		simpProp.getKind().add(kind);
+		simpProp.setMode(mode);
+
+		return simpProp;
+	}
+
 	private void createProvidesPort(final SoftPkg eSpd, OctaveFunctionVariables var) {
 		Ports ports = createPorts(eSpd);
 		Provides providesPort = ScdFactory.eINSTANCE.createProvides();
 		initPort(providesPort, var, eSpd);
 		ports.getProvides().add(providesPort);
 	}
-	
+
 	private Ports createPorts(SoftPkg eSpd) {
 		SoftwareComponent scd = eSpd.getDescriptor().getComponent();
 		if (scd.getComponentFeatures() == null) {
@@ -257,13 +277,13 @@ public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 		}
 		return scd.getComponentFeatures().getPorts();
 	}
-	
+
 	private void initPort(AbstractPort port, OctaveFunctionVariables var, final SoftPkg eSpd) {
 		port.setName(var.getName());
 		port.setRepID(dataDoubleHelper.id());
 		addInterface(SdrUiPlugin.getDefault().getTargetSdrRoot().getIdlLibrary(), port.getRepID(), eSpd.getDescriptor().getComponent().getInterfaces());
 	}
-	
+
 	private void addInterface(final IdlLibrary library, final String repId, Interfaces interfaces) {
 		if (containsInterface(interfaces, repId)) {
 			return;
@@ -274,23 +294,23 @@ public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 		i.setRepid(repId);
 
 		final IdlInterfaceDcl idlInter = (IdlInterfaceDcl) library.find(repId);
-		//If the interface isn't present in the IdlLibrary, there's nothing to do
+		// If the interface isn't present in the IdlLibrary, there's nothing to do
 		if (idlInter != null) {
 			i.setName(idlInter.getName());
 
-			//Add all the inherited interfaces first.
+			// Add all the inherited interfaces first.
 			for (final IdlInterfaceDcl inherited : idlInter.getInheritedInterfaces()) {
 				final InheritsInterface iface = ScdFactory.eINSTANCE.createInheritsInterface();
 				iface.setRepid(inherited.getRepId());
 				i.getInheritsInterfaces().add(iface);
 
-				//If the inherited interface isn't already present, make a recursive call to add it.
+				// If the inherited interface isn't already present, make a recursive call to add it.
 				addInterface(library, inherited.getRepId(), interfaces);
 			}
 		}
 		interfaces.getInterface().add(i);
 	}
-	
+
 	private boolean containsInterface(Interfaces interfaces, String repId) {
 		for (Interface i : interfaces.getInterface()) {
 			if (i.getRepid().equals(repId)) {
@@ -299,14 +319,14 @@ public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 		}
 		return false;
 	}
-	
+
 	private void createUsesPort(final SoftPkg eSpd, OctaveFunctionVariables var) {
 		Ports ports = createPorts(eSpd);
 		Uses usesPort = ScdFactory.eINSTANCE.createUses();
 		initPort(usesPort, var, eSpd);
 		ports.getUses().add(usesPort);
 	}
-	
+
 	private void createSimpleProperty(final SoftPkg eSpd, OctaveFunctionVariables var) {
 		for (Simple s : eSpd.getPropertyFile().getProperties().getSimple()) {
 			if (s.getId().equals(var.getName())) {
@@ -330,7 +350,7 @@ public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 		}
 		eSpd.getPropertyFile().getProperties().getSimple().add(simple);
 	}
-	
+
 	private void createSequenceProperty(final SoftPkg eSpd, OctaveFunctionVariables var) {
 		for (SimpleSequence ss : eSpd.getPropertyFile().getProperties().getSimpleSequence()) {
 			if (ss.getId().equals(var.getName())) {
@@ -358,7 +378,7 @@ public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 	@Override
 	public ICodegenWizardPage createPage() {
 		ICodegenWizardPage[] pages = createPages();
-		
+
 		if (pages.length > 0) {
 			return pages[0];
 		} else {

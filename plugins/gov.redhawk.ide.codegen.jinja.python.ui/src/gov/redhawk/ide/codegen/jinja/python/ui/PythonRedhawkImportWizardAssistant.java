@@ -63,7 +63,14 @@ public class PythonRedhawkImportWizardAssistant implements IRedhawkImportProject
 
 	@Override
 	public boolean setTemplate(ProjectRecord record, ImplementationSettings settings, String lang, ITemplateDesc templateDesc) throws CoreException {
-		// TODO Auto-generated method stub
+		if ("Python".equals(lang)) {
+			if (record.getTemplate() != null && !record.getTemplate().isEmpty()) {
+				settings.setTemplate(record.getTemplate().get("python"));
+			} else {
+				settings.setTemplate("redhawk.codegen.jinja.python.component.pull");
+			}
+			return true;
+		}
 		return false;
 	}
 	

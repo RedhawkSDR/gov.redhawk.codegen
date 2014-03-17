@@ -15,6 +15,7 @@ import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndTunerPropsPage;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -35,6 +36,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jface.wizard.Wizard;
@@ -148,7 +150,17 @@ public class EditFrontEndInterfacesSettingsHandler extends AbstractHandler {
 				for (Simple simp : simplesToRemove) {
 					tunerStatusStruct.getSimple().remove(simp);
 				}
+				
+				// Try and sort the list.
+				ECollections.sort(tunerStatusStruct.getSimple(), new Comparator<Simple>() {
 
+					@Override
+					public int compare(Simple o1, Simple o2) {
+						return (o1).getId().compareTo(o2.getId());
+					}
+
+				});
+				
 				try {
 					eSpd.eResource().save(null);
 					currentProps.eResource().save(null);
