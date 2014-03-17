@@ -296,15 +296,14 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 
 		StructSequence structSeq = PrfFactory.eINSTANCE.createStructSequence();
 		structSeq.setId("connectionTable");
-		structSeq.setName("connectionTable");
 
 		final ConfigurationKind structKind = PrfFactory.eINSTANCE.createConfigurationKind();
 		structKind.setType(StructPropertyConfigurationType.CONFIGURE);
 		structSeq.getConfigurationKind().add(structKind);
 
 		Struct struct = PrfFactory.eINSTANCE.createStruct();
-		struct.setId("connection_descriptor");
 		struct.setName("connection_descriptor");
+		struct.setId("connectionTable::connection_descriptor");
 
 		Simple connectionName = PrfFactory.eINSTANCE.createSimple();
 		connectionName.setName("connection_id");
