@@ -173,6 +173,7 @@ public final class AutoConfigPydevInterpreterUtil {
 					info.libs.add(ossiePath + "/lib/python");
 				}
 				info.libs.add(ossiePath + "/lib");
+				info.addForcedLib("__name__");
 				info.addForcedLib("bulkio.bulkioInterfaces.BULKIO");
 				info.addForcedLib("bulkio.bulkioInterfaces.BULKIO__POA");
 				info.addForcedLib("ossie.cf.CF");
