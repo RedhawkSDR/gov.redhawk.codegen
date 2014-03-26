@@ -405,11 +405,11 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 	}
 
 	private void addGPSUsesPort(SoftPkg eSpd) {
-		addUsesDataPort(eSpd, "GPS_in", GPSHelper.id());
+		addUsesDataPort(eSpd, "GPS_out", GPSHelper.id());
 	}
 
 	private void addGPSProvidesPort(SoftPkg eSpd) {
-		addProvidesDataPort(eSpd, "GPS_out", GPSHelper.id());
+		addProvidesDataPort(eSpd, "GPS_in", GPSHelper.id());
 	}
 
 	private void addInterface(final IdlLibrary library, final String repId, Interfaces interfaces) {
