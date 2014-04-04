@@ -41,6 +41,9 @@ public class CppRedhawkImportWizardAssistant implements IRedhawkImportProjectWiz
 		return false;
 	}
 
+	/**
+	 * add the required nature for an archive import
+	 */
 	@Override
 	public void setupNatures(List<String> natures, IProject dotProject, IProgressMonitor monitor) {
 		if (natures.contains("cpp")) {
@@ -50,6 +53,9 @@ public class CppRedhawkImportWizardAssistant implements IRedhawkImportProjectWiz
 		}
 	}
 
+	/**
+	 * add the required nature for a file import
+	 */
 	@Override
 	public void setupNatures(File importSource, IProject project, IProgressMonitor monitor) {
 		if (new File(importSource + "/cpp").exists()) {
@@ -77,7 +83,6 @@ public class CppRedhawkImportWizardAssistant implements IRedhawkImportProjectWiz
 	@Override
 	public void setupWaveDev(String projectName, ImplementationSettings settings) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
