@@ -43,6 +43,9 @@ public class JavaRedhawkWizardAssistant implements IRedhawkImportProjectWizardAs
 		return false;
 	}
 
+	/**
+	 * add the required nature for an archive import
+	 */
 	@Override
 	public void setupNatures(List<String> natures, IProject dotProject, IProgressMonitor monitor) throws CoreException {
 		if (natures.contains("java")) {
@@ -50,6 +53,9 @@ public class JavaRedhawkWizardAssistant implements IRedhawkImportProjectWizardAs
 		}
 	}
 
+	/**
+	 * add the required nature for a file import
+	 */
 	@Override
 	public void setupNatures(File importSource, IProject project, IProgressMonitor monitor) throws CoreException {
 		if (new File(importSource + "/java").exists()) {

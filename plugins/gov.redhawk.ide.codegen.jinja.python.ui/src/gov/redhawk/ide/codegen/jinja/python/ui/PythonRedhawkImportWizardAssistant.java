@@ -27,8 +27,8 @@ import gov.redhawk.ide.ui.wizard.RedhawkImportWizardPage1.ProjectRecord;
  */
 public class PythonRedhawkImportWizardAssistant implements IRedhawkImportProjectWizardAssist {
 
-	/* (non-Javadoc)
-	 * @see gov.redhawk.ide.ui.wizard.IRedhawkImportProjectWizardAssist#setupNatures(java.util.List, org.eclipse.core.resources.IProject, org.eclipse.core.runtime.IProgressMonitor)
+	/**
+	 * add the required nature for an archive import
 	 */
 	@Override
 	public void setupNatures(List<String> natures, IProject dotProject, IProgressMonitor monitor) throws CoreException {
@@ -36,8 +36,8 @@ public class PythonRedhawkImportWizardAssistant implements IRedhawkImportProject
 
 	}
 
-	/* (non-Javadoc)
-	 * @see gov.redhawk.ide.ui.wizard.IRedhawkImportProjectWizardAssist#setupNatures(java.io.File, org.eclipse.core.resources.IProject, org.eclipse.core.runtime.IProgressMonitor)
+	/**
+	 * add the required nature for a file import
 	 */
 	@Override
 	public void setupNatures(File importSource, IProject project, IProgressMonitor monitor) throws CoreException {

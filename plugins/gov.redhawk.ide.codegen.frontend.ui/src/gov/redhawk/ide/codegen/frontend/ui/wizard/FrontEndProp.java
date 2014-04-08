@@ -10,8 +10,9 @@
  *******************************************************************************/
 package gov.redhawk.ide.codegen.frontend.ui.wizard;
 
+import gov.redhawk.sca.util.PropertyChangeSupport;
+
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 
 import mil.jpeojtrs.sca.prf.Simple;
 

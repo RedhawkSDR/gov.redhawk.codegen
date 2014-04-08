@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.osgi.util.NLS;
@@ -55,7 +56,7 @@ public class RHLocalConsoleFactory implements IConsoleFactory {
 			final IInterpreterInfo[] interpreters = interpreterManager.getInterpreterInfos();
 			if (interpreters.length == 0) {
 				StatusManager.getManager().handle(new Status(IStatus.ERROR, RHLocalConsolePlugin.PLUGIN_ID, Messages.RHLocalConsoleFactory_PY_ERROR, null),
-				        StatusManager.LOG | StatusManager.SHOW);
+					StatusManager.LOG | StatusManager.SHOW);
 				return;
 			}
 			final IInterpreterInfo interpreterInfo = interpreters[0];
@@ -65,14 +66,15 @@ public class RHLocalConsoleFactory implements IConsoleFactory {
 			PydevConsoleLaunchInfo info = processFactory.createLaunch(interpreterManager, interpreterInfo, pythonPath, nature, natures);
 
 			final PydevConsoleInterpreter interpreter = PydevConsoleFactory.createPydevInterpreter(info, processFactory.getNaturesUsed());
-			final String additionalInitialComands = NLS.bind(Messages.RHLocalConsoleFactory_PY_INIT, ScaDebugPlugin.getInstance().getSandbox());
+			String ideLocation = Platform.getInstallLocation().getURL().getPath();
+			final String additionalInitialComands = NLS.bind(Messages.RHLocalConsoleFactory_PY_INIT, ScaDebugPlugin.getInstance().getSandbox(), ideLocation);
 
 			// Do to a race condition in pyDev, we are starting this in a delayed job.
 			// PyDev starts up an XML-RPC server from a python script during interpreter creation.  
 			// The initial commands were getting sent before the server was up and we were receiving connection errors.
 			// Providing a 100 ms delay before sending the commands appears to fix the issue.
 			Job createConsoleJob = new Job("Opening Python Console") {
-				
+
 				@Override
 				public IStatus run(IProgressMonitor monitor) {
 					factory.createConsole(interpreter, additionalInitialComands);
@@ -80,10 +82,10 @@ public class RHLocalConsoleFactory implements IConsoleFactory {
 				}
 
 			};
-			
+
 			createConsoleJob.setSystem(true);
 			createConsoleJob.schedule(200);
-			
+
 			// TODO Clear the console after initial commands executed
 			//			console.addListener(new IScriptConsoleListener() {
 			//				private boolean clear = false;
@@ -110,7 +112,7 @@ public class RHLocalConsoleFactory implements IConsoleFactory {
 
 		} catch (final Exception e) { // SUPPRESS CHECKSTYLE Logged Catch all exception
 			StatusManager.getManager().handle(new Status(IStatus.ERROR, RHLocalConsolePlugin.PLUGIN_ID, Messages.RHLocalConsoleFactory_PY_ERROR, e),
-			        StatusManager.LOG | StatusManager.SHOW);
+				StatusManager.LOG | StatusManager.SHOW);
 		}
 
 	}
