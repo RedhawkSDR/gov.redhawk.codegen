@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.osgi.util.NLS;
@@ -65,7 +66,8 @@ public class RHLocalConsoleFactory implements IConsoleFactory {
 			PydevConsoleLaunchInfo info = processFactory.createLaunch(interpreterManager, interpreterInfo, pythonPath, nature, natures);
 
 			final PydevConsoleInterpreter interpreter = PydevConsoleFactory.createPydevInterpreter(info, processFactory.getNaturesUsed());
-			final String additionalInitialComands = NLS.bind(Messages.RHLocalConsoleFactory_PY_INIT, ScaDebugPlugin.getInstance().getSandbox());
+			String ideLocation = Platform.getInstallLocation().getURL().getPath();
+			final String additionalInitialComands = NLS.bind(Messages.RHLocalConsoleFactory_PY_INIT, ScaDebugPlugin.getInstance().getSandbox(), ideLocation);
 
 			// Do to a race condition in pyDev, we are starting this in a delayed job.
 			// PyDev starts up an XML-RPC server from a python script during interpreter creation.  
