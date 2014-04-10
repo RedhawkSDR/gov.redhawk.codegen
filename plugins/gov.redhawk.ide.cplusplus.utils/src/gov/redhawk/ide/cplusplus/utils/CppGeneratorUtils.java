@@ -86,18 +86,26 @@ public final class CppGeneratorUtils {
 	}
 
 	/**
+	 * @deprecated Use {@link #addManagedNature(IProject, SubMonitor, MultiStatus, String, PrintStream, Implementation)}
+	 */
+	@Deprecated
+	public static MultiStatus addManagedNature(final IProject project, final SubMonitor progress, final MultiStatus retStatus,
+		final String destinationDirectory, final PrintStream out, final boolean shouldGenerate, final Implementation impl) {
+		return addManagedNature(project, progress, retStatus, destinationDirectory, out, impl);
+	}
+
+	/**
 	 * @param project
 	 * @param progress
 	 * @param retStatus
 	 * @param destinationDirectory
 	 * @param out
-	 * @param shouldGenerate
 	 * @param impl
 	 * @return
-	 * @since 1.0
+	 * @since 1.1
 	 */
 	public static MultiStatus addManagedNature(final IProject project, final SubMonitor progress, final MultiStatus retStatus,
-	        final String destinationDirectory, final PrintStream out, final boolean shouldGenerate, final Implementation impl) {
+		final String destinationDirectory, final PrintStream out, final Implementation impl) {
 		progress.setWorkRemaining(CppGeneratorUtils.ADJUST_CONFIG_WORK + CppGeneratorUtils.GENERATE_CODE_WORK);
 
 		// Based on whether or not the managed C project nature has been added, we know whether or not the project has
@@ -111,42 +119,40 @@ public final class CppGeneratorUtils {
 			return retStatus;
 		}
 		if (hasManagedNature) {
-			if (shouldGenerate) {
-				progress.subTask("Adding to existing C++ project nature");
+			progress.subTask("Adding to existing C++ project nature");
 
-				if (out != null) {
-					out.println("Environment is configured correctly for C++ development...");
-				}
-
-				// Get the managed build info for the project
-				final IManagedBuildInfo info = ManagedBuildManager.getBuildInfo(project);
-				if (info == null) {
-					retStatus.add(new Status(IStatus.ERROR, CplusplusUtilsPlugin.PLUGIN_ID, IResourceStatus.BUILD_FAILED,
-					        "C/C++ manged build information was not available", null));
-					return retStatus;
-				}
-
-				// Ensure the configurations correctly target our implementation
-				final IConfiguration[] configArray = info.getManagedProject().getConfigurations();
-				for (final IConfiguration tempConfig : configArray) {
-					final IStatus status = CppGeneratorUtils.configureBuilder(destinationDirectory, tempConfig);
-					if (!status.isOK()) {
-						retStatus.add(status);
-						if (status.getSeverity() == IStatus.ERROR) {
-							return retStatus;
-						}
-					}
-					CppGeneratorUtils.configureSourceFolders(null, destinationDirectory, tempConfig);
-				}
-
-				// Add build environment variables
-				final ICConfigurationDescription[] configDescriptions = CoreModel.getDefault().getProjectDescription(project).getConfigurations();
-				for (final ICConfigurationDescription configDescription : configDescriptions) {
-					CppGeneratorUtils.addBuildEnvironVars(configDescription);
-				}
-
-				progress.worked(CppGeneratorUtils.ADJUST_CONFIG_WORK);
+			if (out != null) {
+				out.println("Environment is configured correctly for C++ development...");
 			}
+
+			// Get the managed build info for the project
+			final IManagedBuildInfo info = ManagedBuildManager.getBuildInfo(project);
+			if (info == null) {
+				retStatus.add(new Status(IStatus.ERROR, CplusplusUtilsPlugin.PLUGIN_ID, IResourceStatus.BUILD_FAILED,
+					"C/C++ manged build information was not available", null));
+				return retStatus;
+			}
+
+			// Ensure the configurations correctly target our implementation
+			final IConfiguration[] configArray = info.getManagedProject().getConfigurations();
+			for (final IConfiguration tempConfig : configArray) {
+				final IStatus status = CppGeneratorUtils.configureBuilder(destinationDirectory, tempConfig);
+				if (!status.isOK()) {
+					retStatus.add(status);
+					if (status.getSeverity() == IStatus.ERROR) {
+						return retStatus;
+					}
+				}
+				CppGeneratorUtils.configureSourceFolders(null, destinationDirectory, tempConfig);
+			}
+
+			// Add build environment variables
+			final ICConfigurationDescription[] configDescriptions = CoreModel.getDefault().getProjectDescription(project).getConfigurations();
+			for (final ICConfigurationDescription configDescription : configDescriptions) {
+				CppGeneratorUtils.addBuildEnvironVars(configDescription);
+			}
+
+			progress.worked(CppGeneratorUtils.ADJUST_CONFIG_WORK);
 		} else {
 			progress.subTask("Configuring new C++ project nature");
 
@@ -183,16 +189,14 @@ public final class CppGeneratorUtils {
 					config.setArtifactName((new Path(impl.getCode().getLocalFile().getName())).lastSegment());
 				}
 
-				if (shouldGenerate) {
-					final IStatus status = CppGeneratorUtils.configureBuilder(destinationDirectory, config);
-					if (!status.isOK()) {
-						retStatus.add(status);
-						if (status.getSeverity() == IStatus.ERROR) {
-							return retStatus;
-						}
+				final IStatus status = CppGeneratorUtils.configureBuilder(destinationDirectory, config);
+				if (!status.isOK()) {
+					retStatus.add(status);
+					if (status.getSeverity() == IStatus.ERROR) {
+						return retStatus;
 					}
-					CppGeneratorUtils.configureSourceFolders(null, destinationDirectory, config);
 				}
+				CppGeneratorUtils.configureSourceFolders(null, destinationDirectory, config);
 
 				// Create a configuration description from the configuration
 				ICConfigurationDescription configDesc;
