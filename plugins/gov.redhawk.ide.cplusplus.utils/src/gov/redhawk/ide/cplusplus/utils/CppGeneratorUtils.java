@@ -429,7 +429,7 @@ public final class CppGeneratorUtils {
 				sb.append("org.eclipse.cdt.codan.internal.checkers.RedeclarationProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
 				sb.append("org.eclipse.cdt.codan.internal.checkers.RedefinitionProblem=Error\n");
 				sb.append("org.eclipse.cdt.codan.internal.checkers.RedefinitionProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
-				sb.append("org.eclipse.cdt.codan.internal.checkers.ReturnStyleProblem=Warning\n");
+//				sb.append("org.eclipse.cdt.codan.internal.checkers.ReturnStyleProblem=Warning\n");
 				sb.append("org.eclipse.cdt.codan.internal.checkers.ReturnStyleProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
 				sb.append("org.eclipse.cdt.codan.internal.checkers.ScanfFormatStringSecurityProblem=Warning\n");
 				sb.append("org.eclipse.cdt.codan.internal.checkers.ScanfFormatStringSecurityProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
