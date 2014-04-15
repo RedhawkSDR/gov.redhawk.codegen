@@ -117,6 +117,8 @@ public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 
 		// An assumption is made here that there is only a single Octave implementation. This could potentially cause
 		// an edge case if someone wants multiple octave implementations for their component.
+		OctaveProjectNature.addNature(project, null, newChild);
+		
 		Code codeVar = this.mFileSelectionWizardPage.getImpl().getCode();
 		final ICodeGeneratorDescriptor codeGenDesc = RedhawkCodegenActivator.getCodeGeneratorsRegistry().findCodegen(
 			mFileSelectionWizardPage.getSettings().getGeneratorId());
@@ -128,7 +130,7 @@ public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 				codeVar = generator.getInitialCodeSettings(eSpd, mFileSelectionWizardPage.getSettings(), mFileSelectionWizardPage.getImpl());
 				mFileSelectionWizardPage.getImpl().setCode(codeVar);
 			} catch (CoreException e) {
-				Activator.getDefault().getLog().log(e.getStatus());
+				OctaveProjectPlugin.getDefault().getLog().log(e.getStatus());
 			}
 		}
 
@@ -207,7 +209,7 @@ public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 			scd.eResource().save(null);
 			props.eResource().save(null);
 		} catch (IOException e) {
-			throw new CoreException(new Status(Status.ERROR, Activator.PLUGIN_ID, "Failed to write Octave Settings to SCA resources.", e));
+			throw new CoreException(new Status(Status.ERROR, OctaveProjectPlugin.PLUGIN_ID, "Failed to write Octave Settings to SCA resources.", e));
 		}
 
 		// Each of the pages is passed the same settings object so we can grab it from any of them.
@@ -230,7 +232,7 @@ public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 					inputStream = new BufferedInputStream(new FileInputStream(f));
 					targetFile.create(inputStream, true, null);
 				} catch (FileNotFoundException e) {
-					throw new CoreException(new Status(Status.ERROR, Activator.PLUGIN_ID, "Failed to find M-File to copy into project.", e));
+					throw new CoreException(new Status(Status.ERROR, OctaveProjectPlugin.PLUGIN_ID, "Failed to find M-File to copy into project.", e));
 				} finally {
 					if (inputStream != null) {
 						try {

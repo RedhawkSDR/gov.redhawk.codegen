@@ -202,6 +202,15 @@ public final class CppGeneratorUtils {
 
 				// Add include paths to configuration description
 				CppGeneratorUtils.addIncludePaths(configDesc);
+				
+				try {
+					if (project.hasNature("gov.redhawk.ide.codgen.natures.octave")) {
+						addCustomIncludePaths(configDesc, OCTAVE_INCLUDE);
+					}
+				} catch (CoreException e) {
+					retStatus.add(new Status(IStatus.ERROR, CplusplusUtilsPlugin.PLUGIN_ID,
+						"Unable to access the project for the octave nature", e));
+				}
 
 				// Add build environment variables
 				CppGeneratorUtils.addBuildEnvironVars(configDesc);
@@ -265,6 +274,10 @@ public final class CppGeneratorUtils {
 	public static final String OSSIE_INCLUDE = "${OssieHome}/include";
 	public static final String OMNI_ORB_INCLUDE = "/usr/include/omniORB4";
 	public static final String OMNI_ORB_THREAD_INCLUDE = "/usr/include/omnithread";
+	/**
+	 * @since 1.1
+	 */
+	public static final String OCTAVE_INCLUDE = "/usr/include/octave-3.4.3";
 
 	/**
 	 * Some of the include paths that we add to a CDT project are intended only so CDT can resolve symbols when
@@ -305,6 +318,32 @@ public final class CppGeneratorUtils {
 		includePathSettings.add((ICLanguageSettingEntry) CDataUtil.createEntry(ICSettingEntry.INCLUDE_PATH, OMNI_ORB_INCLUDE, OMNI_ORB_INCLUDE, null, 0));
 		includePathSettings.add((ICLanguageSettingEntry) CDataUtil.createEntry(ICSettingEntry.INCLUDE_PATH, OMNI_ORB_THREAD_INCLUDE, OMNI_ORB_THREAD_INCLUDE,
 			null, 0));
+		
+		
+
+		lang.setSettingEntries(ICSettingEntry.INCLUDE_PATH, includePathSettings);
+	}
+	
+	/**
+	 * @since 1.1
+	 */
+	public static void addCustomIncludePaths(final ICConfigurationDescription configDescription, String path) {
+		final ICLanguageSetting[] languageSettings = configDescription.getRootFolderDescription().getLanguageSettings();
+		ICLanguageSetting lang = null;
+		for (final ICLanguageSetting set : languageSettings) {
+			if (set.getId().contains("cpp.compiler")) {
+				lang = set;
+				break;
+			}
+		}
+
+		if (lang == null) {
+			return;
+		}
+
+		final List<ICLanguageSettingEntry> includePathSettings = lang.getSettingEntriesList(ICSettingEntry.INCLUDE_PATH);
+
+		includePathSettings.add((ICLanguageSettingEntry) CDataUtil.createEntry(ICSettingEntry.INCLUDE_PATH, path, path, null, 0));
 		lang.setSettingEntries(ICSettingEntry.INCLUDE_PATH, includePathSettings);
 	}
 
