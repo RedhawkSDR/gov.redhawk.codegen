@@ -12,10 +12,10 @@ package gov.redhawk.ide.octave.ui;
 
 import gov.redhawk.eclipsecorba.idl.IdlInterfaceDcl;
 import gov.redhawk.eclipsecorba.library.IdlLibrary;
+import gov.redhawk.ide.codegen.CodegenUtil;
 import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
-import gov.redhawk.ide.codegen.IScaComponentCodegen;
 import gov.redhawk.ide.codegen.ImplementationSettings;
-import gov.redhawk.ide.codegen.RedhawkCodegenActivator;
+import gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusOctaveGenerator;
 import gov.redhawk.ide.codegen.ui.BooleanGeneratorPropertiesComposite;
 import gov.redhawk.ide.codegen.ui.ICodegenComposite;
 import gov.redhawk.ide.codegen.ui.ICodegenDisplayFactory2;
@@ -51,8 +51,7 @@ import mil.jpeojtrs.sca.scd.Provides;
 import mil.jpeojtrs.sca.scd.ScdFactory;
 import mil.jpeojtrs.sca.scd.SoftwareComponent;
 import mil.jpeojtrs.sca.scd.Uses;
-import mil.jpeojtrs.sca.spd.Code;
-import mil.jpeojtrs.sca.spd.LocalFile;
+import mil.jpeojtrs.sca.spd.Implementation;
 import mil.jpeojtrs.sca.spd.SoftPkg;
 import mil.jpeojtrs.sca.util.ScaResourceFactoryUtil;
 
@@ -118,37 +117,34 @@ public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 		// An assumption is made here that there is only a single Octave implementation. This could potentially cause
 		// an edge case if someone wants multiple octave implementations for their component.
 		OctaveProjectNature.addNature(project, null, newChild);
+		Implementation octaveImpl = null;
 		
-		Code codeVar = this.mFileSelectionWizardPage.getImpl().getCode();
-		final ICodeGeneratorDescriptor codeGenDesc = RedhawkCodegenActivator.getCodeGeneratorsRegistry().findCodegen(
-			mFileSelectionWizardPage.getSettings().getGeneratorId());
-
-		if (codeVar == null) {
-			IScaComponentCodegen generator;
-			try {
-				generator = codeGenDesc.getGenerator();
-				codeVar = generator.getInitialCodeSettings(eSpd, mFileSelectionWizardPage.getSettings(), mFileSelectionWizardPage.getImpl());
-				mFileSelectionWizardPage.getImpl().setCode(codeVar);
-			} catch (CoreException e) {
-				OctaveProjectPlugin.getDefault().getLog().log(e.getStatus());
+		for (Implementation impl : eSpd.getImplementation()) {
+			String implGeneratorId = CodegenUtil.getImplementationSettings(impl).getGeneratorId();
+			if (CplusplusOctaveGenerator.ID.equals(implGeneratorId)) {
+				octaveImpl = impl;
+				break;
 			}
 		}
-
-		LocalFile entryPoint = codeVar.getLocalFile();
-		String[] tokens = entryPoint.getName().split("/");
-
-		StringBuilder builder = new StringBuilder();
-
-		for (int i = 0; i < tokens.length - 1; i++) {
-			builder.append(tokens[i]);
-			if (i != tokens.length - 2) {
-				builder.append("/");
+		
+		if (octaveImpl == null) {
+			OctaveProjectPlugin.logError("Could not find Octave implementation, local file in SPD file may not be set.", null);
+		} else {
+			
+			String[] tokens = octaveImpl.getCode().getLocalFile().getName().split("/");
+	
+			StringBuilder builder = new StringBuilder();
+	
+			for (int i = 0; i < tokens.length - 1; i++) {
+				builder.append(tokens[i]);
+				if (i != tokens.length - 2) {
+					builder.append("/");
+				}
 			}
-
-			entryPoint.setName(builder.toString());
-			mFileSelectionWizardPage.getImpl().getCode().setLocalFile(entryPoint);
+	
+			octaveImpl.getCode().getLocalFile().setName(builder.toString());
 		}
-
+		
 		// You must have the following properties
 		// __mFunction (string, read-only)
 		// bufferingEnabled (boolean, default "false")
