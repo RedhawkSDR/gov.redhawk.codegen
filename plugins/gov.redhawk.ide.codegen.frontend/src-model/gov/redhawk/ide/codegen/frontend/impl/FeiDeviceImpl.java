@@ -53,7 +53,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * </li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDevice {
