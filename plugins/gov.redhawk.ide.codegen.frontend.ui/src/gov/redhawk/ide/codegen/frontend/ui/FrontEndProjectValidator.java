@@ -43,11 +43,11 @@ public class FrontEndProjectValidator extends ValidationStatusProvider {
 		this.page = page;
 
 		if (!"Device".equals(this.projectSettings.getDeviceType())) {
-			this.status.setValue(new Status(IStatus.ERROR, FrontEndDeviceWizardPlugin.PLUGIN_ID, "Front End Device must be of type: Device"));
+			this.status.setValue(new Status(IStatus.ERROR, FrontEndDeviceWizardPlugin.PLUGIN_ID, "FrontEnd Device must be of type: Device"));
 		}
 
 		if (this.projectSettings.isAggregate()) {
-			this.status.setValue(new Status(IStatus.ERROR, FrontEndDeviceWizardPlugin.PLUGIN_ID, "Front End Device may not be an Aggregtate Device"));
+			this.status.setValue(new Status(IStatus.ERROR, FrontEndDeviceWizardPlugin.PLUGIN_ID, "FrontEnd Device may not be an Aggregtate Device"));
 		}
 
 		updateWizardMessage();
@@ -58,9 +58,9 @@ public class FrontEndProjectValidator extends ValidationStatusProvider {
 			@Override
 			public void propertyChange(PropertyChangeEvent arg0) {
 				if (!"Device".equals(projectSettings.getDeviceType())) {
-					status.setValue(new Status(IStatus.ERROR, FrontEndDeviceWizardPlugin.PLUGIN_ID, "Front End Device must be of type: Device"));
+					status.setValue(new Status(IStatus.ERROR, FrontEndDeviceWizardPlugin.PLUGIN_ID, "FrontEnd Device must be of type: Device"));
 				} else if (projectSettings.isAggregate()) {
-					status.setValue(new Status(IStatus.ERROR, FrontEndDeviceWizardPlugin.PLUGIN_ID, "Front End Device may not be an Aggregtate Device"));
+					status.setValue(new Status(IStatus.ERROR, FrontEndDeviceWizardPlugin.PLUGIN_ID, "FrontEnd Device may not be an Aggregtate Device"));
 				} else {
 					status.setValue(new Status(IStatus.OK, FrontEndDeviceWizardPlugin.PLUGIN_ID, ""));
 				}

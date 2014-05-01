@@ -201,7 +201,7 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 	private void createUIElements(Composite client) {
 		client.setLayout(new GridLayout(1, false));
 
-		this.setTitle("Front End Interfaces Device Type Selection");
+		this.setTitle("FrontEnd Interfaces Device Type Selection");
 		//		this.setDescription("Select the device type and if this device will ingest and/or output GPS data.  If the device is a tuner, select whether this device is receive only, can transmit, or both.");
 		this.setDescription("Select if this tuner will ingest and/or output GPS data.  Select whether this device is receive only, can transmit, or both.");
 

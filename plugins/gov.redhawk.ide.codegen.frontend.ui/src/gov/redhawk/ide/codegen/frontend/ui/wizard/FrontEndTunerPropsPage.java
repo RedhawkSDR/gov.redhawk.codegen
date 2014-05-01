@@ -92,7 +92,7 @@ public class FrontEndTunerPropsPage extends WizardPage implements ICodegenWizard
 	@Override
 	public void createControl(Composite parent) {
 		this.viewed  = true;
-		this.setTitle("Front End Interfaces Tuner Status Customization");
+		this.setTitle("FrontEnd Interfaces Tuner Status Customization");
 		this.setDescription("Select set of tuner status properties for the tuner status struct.  Note that required properties may not be removed.");
 
 		final Composite client = new Composite(parent, SWT.NULL);

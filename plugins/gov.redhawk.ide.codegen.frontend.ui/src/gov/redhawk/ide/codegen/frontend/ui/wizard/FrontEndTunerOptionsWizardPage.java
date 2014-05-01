@@ -89,8 +89,8 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 
 	@Override
 	public void createControl(Composite parent) {
-		this.setTitle("Front End Interface Tuner Options");
-		this.setDescription("Select the input and output types for this Front End Interfaces Tuner Device");
+		this.setTitle("FrontEnd Interface Tuner Options");
+		this.setDescription("Select the input and output types for this FrontEnd Interfaces Tuner Device");
 		this.parent = parent;
 		client = new Composite(parent, SWT.NULL);
 		ctx = new DataBindingContext();
