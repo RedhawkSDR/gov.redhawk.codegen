@@ -22,7 +22,7 @@ import java.net.URL;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-import org.jacorb.eclipse.JacorbEclipseActivator;
+import org.jacorb.JacorbActivator;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
@@ -46,7 +46,7 @@ public class SandboxTestsActivator implements BundleActivator {
 	@Override
 	public void start(final BundleContext bundleContext) throws Exception {
 		SandboxTestsActivator.context = bundleContext;
-		JacorbEclipseActivator.getDefault().init();
+		JacorbActivator.getDefault().init();
 	}
 
 	/*
