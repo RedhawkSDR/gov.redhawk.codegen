@@ -14,7 +14,6 @@ import gov.redhawk.ide.RedhawkIdeActivator;
 import gov.redhawk.ide.idl.internal.RedhawkIdeIdlPlugin;
 
 import java.io.File;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -276,7 +275,6 @@ public class IdlJavaUtil extends AbstractIdlUtil {
 	 * @since 4.0
 	 */
 	public static List<Interface> interfacesFromFile(final IPath idlFile, List<IPath> includePaths) throws CoreException {
-		final StringWriter writer = new StringWriter();
 		List<Interface> idlFiles = new ArrayList<Interface>();
 
 		// Format include path string
@@ -290,7 +288,7 @@ public class IdlJavaUtil extends AbstractIdlUtil {
 		}
 
 		try {
-			parser.compile(new String[] { "-syntax", "-d", "/tmp/idl", paths, idlFile.toOSString() }, writer);
+			parser.compile(new String[] { "-syntax", "-d", "/tmp/idl", paths, idlFile.toOSString() });
 		} catch (Exception e) { // SUPPRESS CHECKSTYLE Logged Catch all exception
 			throw new CoreException(new Status(IStatus.ERROR, RedhawkIdeIdlPlugin.PLUGIN_ID, "Unable to parse " + idlFile, e));
 		}

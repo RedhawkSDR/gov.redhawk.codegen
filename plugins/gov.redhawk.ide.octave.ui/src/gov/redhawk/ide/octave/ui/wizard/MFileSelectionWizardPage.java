@@ -14,7 +14,7 @@ import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusOctaveGenerator;
 import gov.redhawk.ide.codegen.ui.ICodegenWizardPage;
-import gov.redhawk.ide.octave.ui.Activator;
+import gov.redhawk.ide.octave.ui.OctaveProjectPlugin;
 import gov.redhawk.ide.octave.ui.OctaveFunctionVariables;
 import gov.redhawk.ide.octave.ui.OctaveProjectProperties;
 import gov.redhawk.ide.octave.ui.OctaveVariableMappingEnum;
@@ -72,10 +72,10 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  */
 public class MFileSelectionWizardPage extends WizardPage implements ICodegenWizardPage {
 
-	private static final Debug DEBUG = new Debug(Activator.PLUGIN_ID, "MFileSelectionWizardPage");
+	private static final Debug DEBUG = new Debug(OctaveProjectPlugin.PLUGIN_ID, "MFileSelectionWizardPage");
 
 	/** The Constant TITLE_IMAGE. */
-	private static final ImageDescriptor TITLE_IMAGE = AbstractUIPlugin.imageDescriptorFromPlugin(Activator.PLUGIN_ID, "icons/octaveLogo.png");
+	private static final ImageDescriptor TITLE_IMAGE = AbstractUIPlugin.imageDescriptorFromPlugin(OctaveProjectPlugin.PLUGIN_ID, "icons/octaveLogo.png");
 	private static final int NUM_COLUMNS = 3;
 	private ListViewer depsListViewer = null;
 	private Text primaryMFileTextBox;

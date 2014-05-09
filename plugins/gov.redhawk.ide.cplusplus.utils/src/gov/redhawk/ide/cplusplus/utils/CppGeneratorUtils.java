@@ -81,9 +81,21 @@ public final class CppGeneratorUtils {
 		}
 		return retStatus;
 	}
-
+	
+	/**
+	 * @deprecated Use {@link #addManagedNature(IProject, SubMonitor, MultiStatus, String, PrintStream, Implementation)}
+	 */
+	@Deprecated
 	public static MultiStatus addManagedNature(final IProject project, final SubMonitor progress, final MultiStatus retStatus,
 		final String destinationDirectory, final PrintStream out, final boolean shouldGenerate, final Implementation impl) {
+		return addManagedNature(project, progress, retStatus, destinationDirectory, out, impl);
+	}
+
+	/**
+	 * @since 1.1
+	 */
+	public static MultiStatus addManagedNature(final IProject project, final SubMonitor progress, final MultiStatus retStatus,
+		final String destinationDirectory, final PrintStream out, final Implementation impl) {
 		progress.setWorkRemaining(CppGeneratorUtils.ADJUST_CONFIG_WORK + CppGeneratorUtils.GENERATE_CODE_WORK);
 
 		// Based on whether or not the managed C project nature has been added, we know whether or not the project has
@@ -97,42 +109,40 @@ public final class CppGeneratorUtils {
 			return retStatus;
 		}
 		if (hasManagedNature) {
-			if (shouldGenerate) {
-				progress.subTask("Adding to existing C++ project nature");
+			progress.subTask("Adding to existing C++ project nature");
 
-				if (out != null) {
-					out.println("Environment is configured correctly for C++ development...");
-				}
-
-				// Get the managed build info for the project
-				final IManagedBuildInfo info = ManagedBuildManager.getBuildInfo(project);
-				if (info == null) {
-					retStatus.add(new Status(IStatus.ERROR, CplusplusUtilsPlugin.PLUGIN_ID, IResourceStatus.BUILD_FAILED,
-						"C/C++ manged build information was not available", null));
-					return retStatus;
-				}
-
-				// Ensure the configurations correctly target our implementation
-				final IConfiguration[] configArray = info.getManagedProject().getConfigurations();
-				for (final IConfiguration tempConfig : configArray) {
-					final IStatus status = CppGeneratorUtils.configureBuilder(destinationDirectory, tempConfig);
-					if (!status.isOK()) {
-						retStatus.add(status);
-						if (status.getSeverity() == IStatus.ERROR) {
-							return retStatus;
-						}
-					}
-					CppGeneratorUtils.configureSourceFolders(null, destinationDirectory, tempConfig);
-				}
-
-				// Add build environment variables
-				final ICConfigurationDescription[] configDescriptions = CoreModel.getDefault().getProjectDescription(project).getConfigurations();
-				for (final ICConfigurationDescription configDescription : configDescriptions) {
-					CppGeneratorUtils.addBuildEnvironVars(configDescription);
-				}
-
-				progress.worked(CppGeneratorUtils.ADJUST_CONFIG_WORK);
+			if (out != null) {
+				out.println("Environment is configured correctly for C++ development...");
 			}
+
+			// Get the managed build info for the project
+			final IManagedBuildInfo info = ManagedBuildManager.getBuildInfo(project);
+			if (info == null) {
+				retStatus.add(new Status(IStatus.ERROR, CplusplusUtilsPlugin.PLUGIN_ID, IResourceStatus.BUILD_FAILED,
+					"C/C++ manged build information was not available", null));
+				return retStatus;
+			}
+
+			// Ensure the configurations correctly target our implementation
+			final IConfiguration[] configArray = info.getManagedProject().getConfigurations();
+			for (final IConfiguration tempConfig : configArray) {
+				final IStatus status = CppGeneratorUtils.configureBuilder(destinationDirectory, tempConfig);
+				if (!status.isOK()) {
+					retStatus.add(status);
+					if (status.getSeverity() == IStatus.ERROR) {
+						return retStatus;
+					}
+				}
+				CppGeneratorUtils.configureSourceFolders(null, destinationDirectory, tempConfig);
+			}
+
+			// Add build environment variables
+			final ICConfigurationDescription[] configDescriptions = CoreModel.getDefault().getProjectDescription(project).getConfigurations();
+			for (final ICConfigurationDescription configDescription : configDescriptions) {
+				CppGeneratorUtils.addBuildEnvironVars(configDescription);
+			}
+
+			progress.worked(CppGeneratorUtils.ADJUST_CONFIG_WORK);
 		} else {
 			progress.subTask("Configuring new C++ project nature");
 
@@ -169,16 +179,14 @@ public final class CppGeneratorUtils {
 					config.setArtifactName((new Path(impl.getCode().getLocalFile().getName())).lastSegment());
 				}
 
-				if (shouldGenerate) {
-					final IStatus status = CppGeneratorUtils.configureBuilder(destinationDirectory, config);
-					if (!status.isOK()) {
-						retStatus.add(status);
-						if (status.getSeverity() == IStatus.ERROR) {
-							return retStatus;
-						}
+				final IStatus status = CppGeneratorUtils.configureBuilder(destinationDirectory, config);
+				if (!status.isOK()) {
+					retStatus.add(status);
+					if (status.getSeverity() == IStatus.ERROR) {
+						return retStatus;
 					}
-					CppGeneratorUtils.configureSourceFolders(null, destinationDirectory, config);
 				}
+				CppGeneratorUtils.configureSourceFolders(null, destinationDirectory, config);
 
 				// Create a configuration description from the configuration
 				ICConfigurationDescription configDesc;
@@ -194,6 +202,15 @@ public final class CppGeneratorUtils {
 
 				// Add include paths to configuration description
 				CppGeneratorUtils.addIncludePaths(configDesc);
+				
+				try {
+					if (project.hasNature("gov.redhawk.ide.codgen.natures.octave")) {
+						addCustomIncludePaths(configDesc, OCTAVE_INCLUDE);
+					}
+				} catch (CoreException e) {
+					retStatus.add(new Status(IStatus.ERROR, CplusplusUtilsPlugin.PLUGIN_ID,
+						"Unable to access the project for the octave nature", e));
+				}
 
 				// Add build environment variables
 				CppGeneratorUtils.addBuildEnvironVars(configDesc);
@@ -257,6 +274,10 @@ public final class CppGeneratorUtils {
 	public static final String OSSIE_INCLUDE = "${OssieHome}/include";
 	public static final String OMNI_ORB_INCLUDE = "/usr/include/omniORB4";
 	public static final String OMNI_ORB_THREAD_INCLUDE = "/usr/include/omnithread";
+	/**
+	 * @since 1.1
+	 */
+	public static final String OCTAVE_INCLUDE = "/usr/include/octave-3.4.3";
 
 	/**
 	 * Some of the include paths that we add to a CDT project are intended only so CDT can resolve symbols when
@@ -297,6 +318,32 @@ public final class CppGeneratorUtils {
 		includePathSettings.add((ICLanguageSettingEntry) CDataUtil.createEntry(ICSettingEntry.INCLUDE_PATH, OMNI_ORB_INCLUDE, OMNI_ORB_INCLUDE, null, 0));
 		includePathSettings.add((ICLanguageSettingEntry) CDataUtil.createEntry(ICSettingEntry.INCLUDE_PATH, OMNI_ORB_THREAD_INCLUDE, OMNI_ORB_THREAD_INCLUDE,
 			null, 0));
+		
+		
+
+		lang.setSettingEntries(ICSettingEntry.INCLUDE_PATH, includePathSettings);
+	}
+	
+	/**
+	 * @since 1.1
+	 */
+	public static void addCustomIncludePaths(final ICConfigurationDescription configDescription, String path) {
+		final ICLanguageSetting[] languageSettings = configDescription.getRootFolderDescription().getLanguageSettings();
+		ICLanguageSetting lang = null;
+		for (final ICLanguageSetting set : languageSettings) {
+			if (set.getId().contains("cpp.compiler")) {
+				lang = set;
+				break;
+			}
+		}
+
+		if (lang == null) {
+			return;
+		}
+
+		final List<ICLanguageSettingEntry> includePathSettings = lang.getSettingEntriesList(ICSettingEntry.INCLUDE_PATH);
+
+		includePathSettings.add((ICLanguageSettingEntry) CDataUtil.createEntry(ICSettingEntry.INCLUDE_PATH, path, path, null, 0));
 		lang.setSettingEntries(ICSettingEntry.INCLUDE_PATH, includePathSettings);
 	}
 
@@ -421,8 +468,8 @@ public final class CppGeneratorUtils {
 				sb.append("org.eclipse.cdt.codan.internal.checkers.RedeclarationProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
 				sb.append("org.eclipse.cdt.codan.internal.checkers.RedefinitionProblem=Error\n");
 				sb.append("org.eclipse.cdt.codan.internal.checkers.RedefinitionProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
-				sb.append("org.eclipse.cdt.codan.internal.checkers.ReturnStyleProblem=Warning\n");
-				sb.append("org.eclipse.cdt.codan.internal.checkers.ReturnStyleProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
+//				sb.append("org.eclipse.cdt.codan.internal.checkers.ReturnStyleProblem=Warning\n");
+//				sb.append("org.eclipse.cdt.codan.internal.checkers.ReturnStyleProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
 				sb.append("org.eclipse.cdt.codan.internal.checkers.ScanfFormatStringSecurityProblem=Warning\n");
 				sb.append("org.eclipse.cdt.codan.internal.checkers.ScanfFormatStringSecurityProblem.params={launchModes\\=>{RUN_ON_FULL_BUILD\\=>true,RUN_ON_INC_BUILD\\=>true,RUN_ON_FILE_OPEN\\=>false,RUN_ON_FILE_SAVE\\=>false,RUN_AS_YOU_TYPE\\=>true,RUN_ON_DEMAND\\=>true}}\n");
 				sb.append("org.eclipse.cdt.codan.internal.checkers.StatementHasNoEffectProblem=Warning\n");

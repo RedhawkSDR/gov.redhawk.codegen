@@ -13,7 +13,7 @@ package gov.redhawk.ide.octave.ui.wizard;
 import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.ui.ICodegenWizardPage;
-import gov.redhawk.ide.octave.ui.Activator;
+import gov.redhawk.ide.octave.ui.OctaveProjectPlugin;
 import gov.redhawk.ide.octave.ui.OctaveFunctionVariables;
 import gov.redhawk.ide.octave.ui.OctaveMFileTableLabelProvider;
 import gov.redhawk.ide.octave.ui.OctaveMFileTableMappingEditingSupport;
@@ -65,7 +65,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  */
 public class MFileVariableMapingWizardPage extends WizardPage implements ICodegenWizardPage {
 
-	private static final ImageDescriptor TITLE_IMAGE = AbstractUIPlugin.imageDescriptorFromPlugin(Activator.PLUGIN_ID, "icons/octaveLogo.png");
+	private static final ImageDescriptor TITLE_IMAGE = AbstractUIPlugin.imageDescriptorFromPlugin(OctaveProjectPlugin.PLUGIN_ID, "icons/octaveLogo.png");
 	private static final int NUM_COLUMNS = 1;
 	private OctaveProjectProperties octaveProjProps;
 	private DataBindingContext dataBindingContext = new DataBindingContext();
@@ -97,7 +97,7 @@ public class MFileVariableMapingWizardPage extends WizardPage implements ICodege
 			if (builder.length() == 0) {
 				mStatus = Status.OK_STATUS;
 			} else {
-				mStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, builder.toString(), null);
+				mStatus = new Status(IStatus.ERROR, OctaveProjectPlugin.PLUGIN_ID, builder.toString(), null);
 			}
 			validationValue.setValue(mStatus);
 			return mStatus;

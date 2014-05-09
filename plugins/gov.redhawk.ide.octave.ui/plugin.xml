@@ -30,5 +30,14 @@
          </codegenId>
       </codegenPage>
    </extension>
+   <extension
+         id="gov.redhawk.ide.codgen.natures.octave"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="gov.redhawk.ide.octave.ui.OctaveProjectNature">
+         </run>
+      </runtime>
+   </extension>
 
 </plugin>
