@@ -71,8 +71,8 @@ public class JavaPackageNameConventionEnforcer extends AbstractModelConstraint i
 				if (status == null) {
 					retVal = new EnhancedConstraintStatus((ConstraintStatus) ctx.createFailureStatus("Invalid Package"),
 					        CodegenPackage.Literals.IMPLEMENTATION_SETTINGS__PROPERTIES);
-				} else if (status.getSeverity() > IStatus.OK && 
-						status.getSeverity() < IStatus.ERROR) {
+				} else if (status.getSeverity() > IStatus.OK 
+						&& status.getSeverity() < IStatus.ERROR) {
 					retVal = new EnhancedConstraintStatus((ConstraintStatus) ctx.createFailureStatus(status.getMessage()),
 					        CodegenPackage.Literals.IMPLEMENTATION_SETTINGS__PROPERTIES);
 				}
