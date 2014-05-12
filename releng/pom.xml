@@ -205,6 +205,11 @@
                       <artifactId>org.jacorb</artifactId>
                       <version>0.0.0</version>
                   </dependency>
+                  <dependency>
+                      <type>eclipse-feature</type>
+                      <artifactId>gov.redhawk.core</artifactId>
+                      <version>0.0.0</version>
+                  </dependency>
               </dependencies>
           </configuration>
       </plugin>
