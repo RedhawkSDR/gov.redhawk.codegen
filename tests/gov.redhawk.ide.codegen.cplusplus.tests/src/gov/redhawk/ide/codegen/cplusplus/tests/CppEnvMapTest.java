@@ -36,8 +36,8 @@ public class CppEnvMapTest {
 	public void testCreatePath() throws CoreException, URISyntaxException, IOException {
 		SdrRoot sdr = SdrPluginLoader.getSdrRoot(CppEnvMapTest.PLUGIN_ID, CppEnvMapTest.DEFAULT_SDR_PATH);
 		SoftPkg spd = sdr.getComponentsContainer().getSoftPkg("DCE:38279be0-4650-40c4-9084-352e6ebeedeb");
-		Assert.assertNotNull(spd.eResource());
 		Assert.assertNotNull(spd);
+		Assert.assertNotNull(spd.eResource());
 		URI uri = spd.eResource().getURI();
 		Assert.assertNotNull(uri);
 		CppEnvMap map = new CppEnvMap();
