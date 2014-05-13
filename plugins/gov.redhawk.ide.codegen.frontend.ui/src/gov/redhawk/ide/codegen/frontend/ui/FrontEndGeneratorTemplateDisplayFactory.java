@@ -297,6 +297,8 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		StructSequence structSeq = PrfFactory.eINSTANCE.createStructSequence();
 		structSeq.setId("connectionTable");
 
+		structSeq.setMode(AccessType.READONLY);
+		
 		final ConfigurationKind structKind = PrfFactory.eINSTANCE.createConfigurationKind();
 		structKind.setType(StructPropertyConfigurationType.CONFIGURE);
 		structSeq.getConfigurationKind().add(structKind);
