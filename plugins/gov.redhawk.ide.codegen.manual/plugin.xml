@@ -37,6 +37,12 @@
          <componenttype
                type="service">
          </componenttype>
+         <componenttype
+               type="loadabledevice">
+         </componenttype>
+         <componenttype
+               type="executabledevice">
+         </componenttype>
       </codegen>
    </extension>
 
