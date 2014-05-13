@@ -92,5 +92,10 @@ public class FrontEndProjectValidator extends ValidationStatusProvider {
 	public IObservableList getModels() {
 		return this.models;
 	}
+	
+	public void setCustomValidationStatus(IStatus s) {
+		this.status.setValue(s);
+		updateWizardMessage();
+	}
 
 }

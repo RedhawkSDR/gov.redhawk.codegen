@@ -18,11 +18,13 @@ import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.frontend.FeiDevice;
 import gov.redhawk.ide.codegen.frontend.FrontendPackage;
+import gov.redhawk.ide.codegen.frontend.ui.FrontEndDeviceWizardPlugin;
 import gov.redhawk.ide.codegen.frontend.ui.FrontEndProjectValidator;
 import gov.redhawk.ide.codegen.ui.ICodegenWizardPage;
 import gov.redhawk.ide.dcd.ui.wizard.ScaDeviceProjectPropertiesWizardPage;
 import gov.redhawk.ui.RedhawkUiActivator;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,11 +37,16 @@ import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.ChangeEvent;
 import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
@@ -55,9 +62,11 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
+import org.eclipse.ui.statushandlers.StatusManager;
 
 public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodegenWizardPage {
 
@@ -82,9 +91,11 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		populatePropertyTypes();
 
 		// Initialize the model object
-		this.feiDevice.setDigitalInputTypeForTx(propertyTypes[0]);
-		this.feiDevice.setDigitalInputType(propertyTypes[0]);
-		this.feiDevice.setDigitalOutputType(propertyTypes[0]);
+		if (propertyTypes != null && propertyTypes.length > 0) {
+			this.feiDevice.setDigitalInputTypeForTx(propertyTypes[0]);
+			this.feiDevice.setDigitalInputType(propertyTypes[0]);
+			this.feiDevice.setDigitalOutputType(propertyTypes[0]);
+		} 
 	}
 
 	@Override
@@ -129,6 +140,9 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 			updateErrorMessage();
 		}
 
+		if (this.propertyTypes == null || this.propertyTypes.length == 0) {
+			this.validator.setCustomValidationStatus(new Status(Status.ERROR, FrontEndDeviceWizardPlugin.PLUGIN_ID, "Failed to Load IDL Library.", null));
+		}
 	}
 
 	protected void updateErrorMessage() {
@@ -141,10 +155,33 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 	}
 
 	private void populatePropertyTypes() {
-		IdlLibrary idlLibrary = RedhawkUiActivator.getDefault().getIdlLibraryService().getLibrary();
+		final IdlLibrary idlLibrary = RedhawkUiActivator.getDefault().getIdlLibraryService().getLibrary();
 		RepositoryModule bulkioIdl;
 		List<Definition> bulkioTypes = new ArrayList<Definition>();
 
+		IStatus loadStatus = idlLibrary.getLoadStatus();
+		
+		if (loadStatus == null || loadStatus.getSeverity() == IStatus.ERROR) {
+			try {
+				new ProgressMonitorDialog(Display.getCurrent().getActiveShell()).run(true, true, new IRunnableWithProgress() {
+					
+					@Override
+					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+						try {
+							idlLibrary.load(monitor);
+						} catch (CoreException e) {
+							throw new InvocationTargetException(e);
+						}
+						
+					}
+				});
+			} catch (InterruptedException e) {
+				// PASS
+			} catch (InvocationTargetException e) {
+				StatusManager.getManager().handle(new Status(Status.ERROR, FrontEndDeviceWizardPlugin.PLUGIN_ID, "Failed to Load IDL Library.", e), StatusManager.SHOW | StatusManager.LOG);
+			}
+		}
+		
 		// Grab array of available BULKIO types
 		for (Definition def : idlLibrary.getDefinitions()) {
 			if ("BULKIO".equals(def.getName())) {
