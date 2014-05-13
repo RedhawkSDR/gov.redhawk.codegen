@@ -376,7 +376,7 @@ public class FrontendPackageImpl extends EPackageImpl implements FrontendPackage
 			!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getFeiDevice_DigitalOutputType(), this.getIDLDef(), "digitalOutputType", null, 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE,
 			IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getFeiDevice_MultiOut(), theEcorePackage.getEBoolean(), "MultiOut", null, 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE,
+		initEAttribute(getFeiDevice_MultiOut(), theEcorePackage.getEBoolean(), "MultiOut", "true", 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE,
 			IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getFeiDevice_TxTuner(), theEcorePackage.getEBoolean(), "TxTuner", null, 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE,
 			IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

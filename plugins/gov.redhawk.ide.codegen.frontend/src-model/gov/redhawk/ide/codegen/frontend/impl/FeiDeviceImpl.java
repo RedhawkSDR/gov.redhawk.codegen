@@ -53,7 +53,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * </li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDevice {
@@ -245,7 +245,7 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
 	 * @generated
 	 * @ordered
 	 */
-	protected static final boolean MULTI_OUT_EDEFAULT = false;
+	protected static final boolean MULTI_OUT_EDEFAULT = true;
 
 	/**
 	 * The cached value of the '{@link #isMultiOut() <em>Multi Out</em>}' attribute.
