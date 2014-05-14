@@ -33,6 +33,12 @@
          <componenttype
                type="service">
          </componenttype>
+         <componenttype
+               type="loadabledevice">
+         </componenttype>
+         <componenttype
+               type="executabledevice">
+         </componenttype>
       </codegen>
    </extension>
    <extension
@@ -66,6 +72,12 @@ Generates a user-editable derived class and regeneratable base class.
                The package that the generated component should be named.
             </description>
          </property>
+         <componenttype
+               type="loadabledevice">
+         </componenttype>
+         <componenttype
+               type="executabledevice">
+         </componenttype>
       </template>
       <template
             class="gov.redhawk.ide.codegen.jinja.java.template.DefaultJavaTemplate"
@@ -128,6 +140,12 @@ This template will queue all data inside each input port. It is the developers r
                name="Use JNI interfaces for BULKIO"
                required="true">
          </property>
+         <componenttype
+               type="loadabledevice">
+         </componenttype>
+         <componenttype
+               type="executabledevice">
+         </componenttype>
       </template>
    </extension>
    <extension

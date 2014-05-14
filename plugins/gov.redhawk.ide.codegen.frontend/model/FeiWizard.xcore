@@ -26,7 +26,7 @@ class FeiDevice {
 	IDLDef digitalInputType 
 	boolean hasDigitalOutput = "true"
 	IDLDef digitalOutputType 
-	boolean MultiOut
+	boolean MultiOut = "true"
 	
 	// Transmit props 
 	boolean TxTuner

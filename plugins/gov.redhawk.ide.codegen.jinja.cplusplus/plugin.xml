@@ -34,10 +34,16 @@
                type="resource">
          </componenttype>
          <componenttype
+               type="service">
+         </componenttype>
+         <componenttype
                type="device">
          </componenttype>
          <componenttype
-               type="service">
+               type="loadabledevice">
+         </componenttype>
+         <componenttype
+               type="executabledevice">
          </componenttype>
       </codegen>
       <codegen
@@ -92,6 +98,12 @@
          </componenttype>
          <componenttype
                type="device">
+         </componenttype>
+         <componenttype
+               type="loadabledevice">
+         </componenttype>
+         <componenttype
+               type="executabledevice">
          </componenttype>
       </template>
       <template

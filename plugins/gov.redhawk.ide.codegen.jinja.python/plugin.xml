@@ -31,6 +31,12 @@
          <componenttype
                type="service">
          </componenttype>
+         <componenttype
+               type="loadabledevice">
+         </componenttype>
+         <componenttype
+               type="executabledevice">
+         </componenttype>
       </codegen>
    </extension>
    <extension
@@ -52,6 +58,12 @@
          </componenttype>
          <componenttype
                type="device">
+         </componenttype>
+         <componenttype
+               type="loadabledevice">
+         </componenttype>
+         <componenttype
+               type="executabledevice">
          </componenttype>
       </template>
       <template
