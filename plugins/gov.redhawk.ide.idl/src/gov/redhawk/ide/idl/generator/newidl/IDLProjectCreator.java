@@ -45,8 +45,7 @@ public class IDLProjectCreator extends ProjectCreator {
 	}
 
 	/**
-	 * Creates a new SCA idl project without any files. Should be invoked in the context of a
-	 * {@link org.eclipse.ui.actions.WorkspaceModifyOperation WorkspaceModifyOperation}.
+	 * Creates a new SCA idl project without any files.
 	 * 
 	 * @param projectName The project name
 	 * @param projectLocation the location on disk to create the project
@@ -62,8 +61,7 @@ public class IDLProjectCreator extends ProjectCreator {
 	}
 
 	/**
-	 * Creates the basic files for an IDL in an empty SCA component project. Should be invoked in the context of a
-	 * {@link org.eclipse.ui.actions.WorkspaceModifyOperation WorkspaceModifyOperation}.
+	 * Creates the basic files for an IDL in an empty SCA component project.
 	 * 
 	 * @param project The project to generate files in
 	 * @param monitor the progress monitor to use for reporting progress to the user. It is the caller's responsibility
