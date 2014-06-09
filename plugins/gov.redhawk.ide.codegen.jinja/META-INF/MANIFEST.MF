@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: REDHAWK Code Generator
 Bundle-SymbolicName: gov.redhawk.ide.codegen.jinja;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.1.0.qualifier
 Bundle-Activator: gov.redhawk.ide.codegen.jinja.JinjaGeneratorPlugin
 Bundle-Vendor: REDHAWK
 Require-Bundle: org.eclipse.core.variables;bundle-version="3.2.600",

@@ -12,6 +12,7 @@ package gov.redhawk.ide.codegen.jinja.java;
 
 import gov.redhawk.ide.codegen.FileStatus;
 import gov.redhawk.ide.codegen.FileToCRCMap;
+import gov.redhawk.ide.codegen.IScaComponentCodegenSetup;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.java.AbstractJavaCodeGenerator;
 import gov.redhawk.ide.codegen.jinja.JinjaGenerator;
@@ -37,7 +38,7 @@ import org.eclipse.core.runtime.IStatus;
 /**
  * @since 1.1
  */
-public class JavaGenerator extends AbstractJavaCodeGenerator {
+public class JavaGenerator extends AbstractJavaCodeGenerator implements IScaComponentCodegenSetup {
 	public static final String ID = "gov.redhawk.ide.codegen.jinja.java.JavaGenerator";
 	private final JinjaGenerator generator = new JinjaGenerator();
 
@@ -84,6 +85,11 @@ public class JavaGenerator extends AbstractJavaCodeGenerator {
 	@Override
 	public Set<FileStatus> getGeneratedFilesStatus(ImplementationSettings implSettings, SoftPkg softpkg) throws CoreException {
 		return this.generator.list(implSettings, softpkg);
+	}
+
+	@Override
+	public void checkSystem(IProgressMonitor monitor, String templateId) throws CoreException {
+		this.generator.checkSystem(monitor, ID, templateId);
 	}
 
 }
