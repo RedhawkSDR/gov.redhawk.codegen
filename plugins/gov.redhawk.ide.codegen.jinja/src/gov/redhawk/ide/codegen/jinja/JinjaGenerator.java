@@ -445,10 +445,9 @@ public class JinjaGenerator {
 				while (true) {
 					try {
 						Integer retVal = future.get(500, TimeUnit.MILLISECONDS);
-//						if (retVal != 0 && retVal != 1) {
-							if (retVal != 0 ) {
-							throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, commandStr + " returned with error code " + retVal
-								+ "\n\n" + new String(outBuffer.toByteArray()) + "\n" + new String(errBuffer.toByteArray()), null));
+						if (retVal != 0) {
+							throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, commandStr + " returned with error code (" + retVal
+								+ ")\n\n" + new String(outBuffer.toByteArray()) + "\n" + new String(errBuffer.toByteArray()), null));
 						}
 						break;
 					} catch (InterruptedException e) {
