@@ -88,7 +88,10 @@ public abstract class AbstractCplusplusCodeGenerator extends AbstractCodeGenerat
 
 		CppGeneratorUtils.addCandCPPNatures(project, progress.newChild(ADD_NATURE_WORK), retStatus);
 		//disable codan parser that has a bug
-		CppGeneratorUtils.generateCodanPrefs(project, progress.newChild(ADD_NATURE_WORK), retStatus);
+		//refs #1979: CDT bug apparently fixed, this step not necessary anymore
+		// IDE-757: instead of generating project CDT (codan prefs) settings, it is now a workspace
+		//          level settings for the IDE product.
+		// CppGeneratorUtils.generateCodanPrefs(project, progress.newChild(ADD_NATURE_WORK), retStatus);
 		CppGeneratorUtils.addManagedNature(project, progress.newChild(ADD_NATURE_WORK), retStatus, destinationDirectory, out, shouldGenerate, impl);
 
 		// Add our auto-inclusion builder
