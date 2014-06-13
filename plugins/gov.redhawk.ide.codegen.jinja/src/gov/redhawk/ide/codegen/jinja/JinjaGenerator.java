@@ -49,6 +49,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
@@ -182,10 +183,10 @@ public class JinjaGenerator {
 		outThread.start();
 		errThread.start();
 
-		Future< ? > future = EXECUTOR_POOL.submit(new Runnable() {
+		Future< Integer > future = EXECUTOR_POOL.submit(new Callable<Integer>() {
 
 			@Override
-			public void run() {
+			public Integer call() throws Exception {
 				try {
 					outThread.join();
 				} catch (final InterruptedException e) {
@@ -198,12 +199,17 @@ public class JinjaGenerator {
 					// This is highly unlikely to occur, but log it just in case.
 					JinjaGeneratorPlugin.logError("Interrupted waiting for standard error", e);
 				}
+				return process.waitFor();
 			}
 		});
 		try {
 			while (true) {
 				try {
-					future.get(2, TimeUnit.SECONDS);
+					int retValue = future.get(2, TimeUnit.SECONDS);
+					if (retValue != 0) {
+						throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, command[0] + " returned with error code " + retValue
+							+ "\n\nSee console output for details.", null));
+					}
 					break;
 				} catch (InterruptedException e) {
 					// PASS
@@ -215,18 +221,6 @@ public class JinjaGenerator {
 						process.destroy();
 						throw new OperationCanceledException();
 					}
-				}
-			}
-			while (true) {
-				try {
-					int retValue = process.exitValue();
-					if (retValue != 0) {
-						throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, command[0] + " returned with error code " + retValue
-							+ "\n\nSee console output for details.", null));
-					}
-					break;
-				} catch (IllegalThreadStateException e) {
-					// PASS
 				}
 			}
 		} finally {
@@ -431,14 +425,7 @@ public class JinjaGenerator {
 						// This is highly unlikely to occur, but log it just in case.
 						JinjaGeneratorPlugin.logError("Interrupted waiting for standard error", e);
 					}
-					while (true) {
-						try {
-							int retValue = process.exitValue();
-							return retValue;
-						} catch (IllegalThreadStateException e) {
-							Thread.sleep(500);
-						}
-					}
+					return process.waitFor();
 				}
 			});
 			try {
@@ -446,8 +433,12 @@ public class JinjaGenerator {
 					try {
 						Integer retVal = future.get(500, TimeUnit.MILLISECONDS);
 						if (retVal != 0) {
-							throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, commandStr + " returned with error code (" + retVal
-								+ ")\n\n" + new String(outBuffer.toByteArray()) + "\n" + new String(errBuffer.toByteArray()), null));
+							String stdout = new String(outBuffer.toByteArray());
+							String stderr = new String(errBuffer.toByteArray());
+							MultiStatus status = new MultiStatus(JinjaGeneratorPlugin.PLUGIN_ID, Status.WARNING, stdout, null);
+							status.add(new Status(Status.WARNING, JinjaGeneratorPlugin.PLUGIN_ID, commandStr + " returned with error code (" + retVal
+								+ ")\n\nstdout: " + stdout + "\n\nstderr: " + stderr, null));
+							throw new CoreException(status);
 						}
 						break;
 					} catch (InterruptedException e) {
