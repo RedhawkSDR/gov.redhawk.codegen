@@ -12,6 +12,7 @@ package gov.redhawk.ide.codegen.jinja.cplusplus;
 
 import gov.redhawk.ide.codegen.FileStatus;
 import gov.redhawk.ide.codegen.FileToCRCMap;
+import gov.redhawk.ide.codegen.IScaComponentCodegenSetup;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.cplusplus.AbstractCplusplusCodeGenerator;
 import gov.redhawk.ide.codegen.jinja.JinjaGenerator;
@@ -37,7 +38,7 @@ import org.eclipse.core.runtime.IStatus;
 /**
  * @since 1.1
  */
-public class CplusplusOctaveGenerator extends AbstractCplusplusCodeGenerator {
+public class CplusplusOctaveGenerator extends AbstractCplusplusCodeGenerator implements IScaComponentCodegenSetup {
 	
 	public static final String ID = "gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusOctaveGenerator";
 	public static final String TEMPLATE = "redhawk.codegen.jinja.cpp.component.octave";
@@ -96,5 +97,10 @@ public class CplusplusOctaveGenerator extends AbstractCplusplusCodeGenerator {
 	@Override
 	public Set<FileStatus> getGeneratedFilesStatus(ImplementationSettings implSettings, SoftPkg softpkg) throws CoreException {
 		return this.generator.list(implSettings, softpkg);
+	}
+	
+	@Override
+	public void checkSystem(IProgressMonitor monitor, String templateId) throws CoreException {
+		this.generator.checkSystem(monitor, ID, templateId);
 	}
 }

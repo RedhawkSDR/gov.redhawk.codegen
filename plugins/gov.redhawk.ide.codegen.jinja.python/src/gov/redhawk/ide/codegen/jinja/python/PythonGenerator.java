@@ -12,6 +12,7 @@ package gov.redhawk.ide.codegen.jinja.python;
 
 import gov.redhawk.ide.codegen.FileStatus;
 import gov.redhawk.ide.codegen.FileToCRCMap;
+import gov.redhawk.ide.codegen.IScaComponentCodegenSetup;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.jinja.JinjaGenerator;
 import gov.redhawk.ide.codegen.python.AbstractPythonGenerator;
@@ -38,7 +39,7 @@ import org.eclipse.core.runtime.MultiStatus;
 /**
  * @since 1.1
  */
-public class PythonGenerator extends AbstractPythonGenerator {
+public class PythonGenerator extends AbstractPythonGenerator implements IScaComponentCodegenSetup {
 	public static final String ID = "gov.redhawk.ide.codegen.jinja.python.PythonGenerator";
 	private final JinjaGenerator generator = new JinjaGenerator();
 
@@ -89,6 +90,11 @@ public class PythonGenerator extends AbstractPythonGenerator {
 	@Override
 	public Set<FileStatus> getGeneratedFilesStatus(ImplementationSettings implSettings, SoftPkg softpkg) throws CoreException {
 		return this.generator.list(implSettings, softpkg);
+	}
+	
+	@Override
+	public void checkSystem(IProgressMonitor monitor, String templateId) throws CoreException {
+		this.generator.checkSystem(monitor, ID, templateId);
 	}
 
 }
