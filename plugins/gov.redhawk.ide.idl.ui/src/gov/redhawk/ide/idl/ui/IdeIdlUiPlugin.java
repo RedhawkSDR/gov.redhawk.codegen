@@ -82,7 +82,7 @@ public class IdeIdlUiPlugin extends AbstractUIPlugin {
 		}
 		IStatus status = null;
 		if (e instanceof CoreException) {
-			status = ((CoreException) e).getStatus();
+			status = new Status(((CoreException) e).getStatus().getSeverity(), IdeIdlUiPlugin.PLUGIN_ID, e.getLocalizedMessage(), e);
 		} else {
 			if (message == null) {
 				message = e.getMessage();

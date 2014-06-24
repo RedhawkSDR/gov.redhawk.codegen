@@ -74,19 +74,19 @@ public class ManualGenerator extends AbstractCodeGenerator {
 			try {
 				jproject = JavaGeneratorUtils.addJavaProjectNature(project, progress.newChild(1));
 			} catch (CoreException e) {
-				return e.getStatus();
+				return new Status(e.getStatus().getSeverity(), ManualGeneratorPlugin.PLUGIN_ID, "Failed to add java nature.", e);
 			}
 			try {
 				JavaGeneratorUtils.addRedhawkJavaClassPaths(jproject,  progress.newChild(1));
 			} catch (CoreException e) {
-			    return e.getStatus();
+				return new Status(e.getStatus().getSeverity(), ManualGeneratorPlugin.PLUGIN_ID, "Failed to add REDHAWK class paths.", e);
 			}
 		} else if (language.equals("python")) {
 			progress.setWorkRemaining(1);
 			try {
 				PythonGeneratorUtils.addPythonProjectNature(project, progress.newChild(1));
 			} catch (CoreException e) {
-				return e.getStatus();
+				return new Status(e.getStatus().getSeverity(), ManualGeneratorPlugin.PLUGIN_ID, "Failed to add python nature.", e);
 			}
 		} else if (language.equals("c++")) {
 			progress.setWorkRemaining(2);

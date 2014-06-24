@@ -185,7 +185,7 @@ public abstract class AbstractIdlUtil {
 				cachedIdlInterfaces.putAll(idlInterfaces);
 				retInterfaces.putAll(idlInterfaces);
 			} catch (CoreException e) {
-				localStatus.add(e.getStatus());
+				localStatus.add(new Status(e.getStatus().getSeverity(), RedhawkIdeIdlPlugin.PLUGIN_ID, "Failed to get interfaces from file " + idlFile, e));
 			}
 		}
 		
