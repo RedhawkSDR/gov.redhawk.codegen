@@ -49,7 +49,7 @@ public class PythonLaunchConfigurationFactory extends AbstractWorkspaceLaunchCon
 		retVal.setAttribute(IExternalToolConstants.ATTR_LOCATION, getLocation(impl, resource));
 		retVal.setAttribute(IExternalToolConstants.ATTR_WORKING_DIRECTORY, getWorkingDirectory(impl, resource));
 
-		Map map = retVal.getAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES, Collections.emptyMap());
+		Map map = retVal.getAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES, (Map<String, String>) Collections.EMPTY_MAP);
 		Map<String, String> newEnv = new HashMap<String, String>(map);
 		newEnv.remove("PYTHONPATH");
 		retVal.setAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES, newEnv);
