@@ -52,7 +52,7 @@ public class SandboxImplTest {
 
 	@Before
 	public void setUp() throws Exception {
-		this.sandbox = ScaDebugPlugin.getInstance().getSandbox();
+		this.sandbox = ScaDebugPlugin.getInstance().getSandbox(null);
 	}
 
 	@After

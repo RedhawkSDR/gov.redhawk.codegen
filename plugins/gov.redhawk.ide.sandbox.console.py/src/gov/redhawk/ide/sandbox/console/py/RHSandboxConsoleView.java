@@ -71,7 +71,7 @@ public class RHSandboxConsoleView extends ViewPart implements IConsoleView, IPag
 			consoleArea.redraw();
 			this.console.addTerminateListener(this);
 		} catch (CoreException e) {
-			RHLocalConsolePlugin.getDefault().getLog().log(e.getStatus());
+			RHLocalConsolePlugin.getDefault().getLog().log(new Status(e.getStatus().getSeverity(), RHLocalConsolePlugin.PLUGIN_ID, "Failed to create Sandbox console" , e));
 			this.console = null;
 		}
 	}

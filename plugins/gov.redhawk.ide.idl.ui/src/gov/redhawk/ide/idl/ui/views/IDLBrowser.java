@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -41,19 +42,21 @@ public class IDLBrowser extends ViewPart {
 		Map<String, Interface> interfaces;
 		// get search paths from configuration
 		final List<IPath> search_paths = Arrays.asList(RedhawkIdeActivator.getDefault().getDefaultIdlIncludePath());
-		
+
 		// Obtain the interfaces from all IDLs in the search paths and sub-directories
 		MultiStatus status = new MultiStatus(IdeIdlUiPlugin.PLUGIN_ID, IStatus.OK, "Problems loading IDLs", null);
 		try {
-	        interfaces = IdlJavaUtil.getInstance().getInterfaces(search_paths, true, status);
-	        if (!status.isOK()) {
+			interfaces = IdlJavaUtil.getInstance().getInterfaces(search_paths, true, status);
+			if (!status.isOK()) {
 				StatusManager.getManager().handle(status, StatusManager.SHOW | StatusManager.LOG);
 			}
-        } catch (CoreException e) {
-        	// Show the exception, use an empty interface mapping 
-        	StatusManager.getManager().handle(e.getStatus(), StatusManager.SHOW | StatusManager.LOG);
-        	interfaces = new HashMap<String, Interface>();
-        }
+		} catch (CoreException e) {
+			// Show the exception, use an empty interface mapping
+			StatusManager.getManager().handle(
+				new Status(e.getStatus().getSeverity(), IdeIdlUiPlugin.PLUGIN_ID, "Failed to get interfaces from " + search_paths, e),
+				StatusManager.SHOW | StatusManager.LOG);
+			interfaces = new HashMap<String, Interface>();
+		}
 
 		final ArrayList<Interface> ifaces = new ArrayList<Interface>();
 		ifaces.addAll(interfaces.values());

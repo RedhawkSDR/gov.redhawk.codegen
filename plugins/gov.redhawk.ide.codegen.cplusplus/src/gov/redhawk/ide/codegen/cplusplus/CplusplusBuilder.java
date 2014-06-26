@@ -127,7 +127,7 @@ public class CplusplusBuilder extends IncrementalProjectBuilder {
 						CCorePlugin.getIndexManager().update(new ICElement[] { cProject }, IIndexManager.UPDATE_ALL | IIndexManager.UPDATE_EXTERNAL_FILES_FOR_PROJECT);
 					}
 				} catch (CoreException e) {
-					GccGeneratorPlugin.getDefault().getLog().log(e.getStatus());
+					GccGeneratorPlugin.getDefault().getLog().log(new Status(e.getStatus().getSeverity(), GccGeneratorPlugin.PLUGIN_ID, "Failed to build c project", e));
 				}
 			}
 		} finally {

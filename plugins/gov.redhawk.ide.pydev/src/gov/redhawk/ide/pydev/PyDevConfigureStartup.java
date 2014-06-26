@@ -29,6 +29,7 @@ public class PyDevConfigureStartup implements IStartup {
 
 	private class ConfigurePythonJob extends Job {
 		final boolean manualConfiguration;
+
 		/**
 		 * @param name
 		 */
@@ -45,8 +46,8 @@ public class PyDevConfigureStartup implements IStartup {
 			try {
 				AutoConfigPydevInterpreterUtil.configurePydev(monitor, manualConfiguration, "");
 			} catch (final CoreException e) {
-				final IStatus status = e.getStatus();
-				return new Status(IStatus.ERROR, RedhawkIdePyDevPlugin.PLUGIN_ID, status.getMessage(), status.getException());
+				final IStatus status = new Status(IStatus.ERROR, RedhawkIdePyDevPlugin.PLUGIN_ID, "Failed to configure PyDev.", e);
+				return status;
 			}
 			return Status.OK_STATUS;
 		}
@@ -59,39 +60,33 @@ public class PyDevConfigureStartup implements IStartup {
 		if (!runConfig) {
 			return;
 		}
-		
+
 		// If PyDev isn't configured at all, then prompt the user
 		if (PydevPlugin.getPythonInterpreterManager().isConfigured()) {
 			try {
-	            boolean configuredCorrectly = AutoConfigPydevInterpreterUtil.isPydevConfigured(new NullProgressMonitor(), null);
-	            if (!configuredCorrectly) {
-	            	PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+				boolean configuredCorrectly = AutoConfigPydevInterpreterUtil.isPydevConfigured(new NullProgressMonitor(), null);
+				if (!configuredCorrectly) {
+					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 
-	    				@Override
+						@Override
 						public void run() {
-	    					final String[] buttons = {
-	    					        "Ok", "Cancel"
-	    					};
-	    					final MessageDialog dialog = new MessageDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
-	    					        "Configure PyDev",
-	    					        null,
-	    					        "PyDev appears to be mis-configured for REDHAWK, would you like it to be re-configured?",
-	    					        MessageDialog.QUESTION,
-	    					        buttons,
-	    					        0);
-	    					dialog.open();
-	    					PyDevConfigureStartup.this.result = dialog.getReturnCode();
+							final String[] buttons = { "Ok", "Cancel" };
+							final MessageDialog dialog = new MessageDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Configure PyDev", null,
+								"PyDev appears to be mis-configured for REDHAWK, would you like it to be re-configured?", MessageDialog.QUESTION, buttons, 0);
+							dialog.open();
+							PyDevConfigureStartup.this.result = dialog.getReturnCode();
 
-	    					if (PyDevConfigureStartup.this.result < 1) {
-	    						new ConfigurePythonJob(false).schedule();
-	    					}
-	    				}
+							if (PyDevConfigureStartup.this.result < 1) {
+								new ConfigurePythonJob(false).schedule();
+							}
+						}
 
-	    			});
-	            }
-            } catch (CoreException e) {
-	            RedhawkIdePyDevPlugin.getDefault().getLog().log(e.getStatus());
-            }
+					});
+				}
+			} catch (CoreException e) {
+				RedhawkIdePyDevPlugin.getDefault().getLog().log(
+					new Status(e.getStatus().getSeverity(), RedhawkIdePyDevPlugin.PLUGIN_ID, "Failed to auto configure.", e));
+			}
 		} else {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 

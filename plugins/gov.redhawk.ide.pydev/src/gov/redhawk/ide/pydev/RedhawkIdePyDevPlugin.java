@@ -132,8 +132,7 @@ public class RedhawkIdePyDevPlugin extends AbstractUIPlugin {
 				}
 				monitor.done();
 			} catch (final CoreException e) {
-				final IStatus status = e.getStatus();
-				return new Status(IStatus.ERROR, RedhawkIdePyDevPlugin.PLUGIN_ID, status.getMessage(), status.getException());
+				return new Status(IStatus.ERROR, RedhawkIdePyDevPlugin.PLUGIN_ID, e.getLocalizedMessage(), e);
 			}
 			return Status.OK_STATUS;
 		}

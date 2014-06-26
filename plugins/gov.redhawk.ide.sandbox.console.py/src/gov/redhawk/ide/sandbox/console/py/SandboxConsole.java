@@ -61,7 +61,7 @@ public class SandboxConsole extends PydevConsole {
 
 	public static SandboxConsole create() throws CoreException {
 		try {
-			return create(createInterpreter(), ScaDebugPlugin.getInstance().getSandbox());
+			return create(createInterpreter(), ScaDebugPlugin.getInstance().getSandbox(null));
 		} catch (ServantNotActive e) {
 			throw new CoreException(new Status(IStatus.ERROR, RHLocalConsolePlugin.PLUGIN_ID, "Error creating sandbox console"));
 		} catch (WrongPolicy e) {
