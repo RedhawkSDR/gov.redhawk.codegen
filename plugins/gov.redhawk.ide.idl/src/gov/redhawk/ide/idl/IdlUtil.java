@@ -35,10 +35,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.python.core.PyObject;
 import org.python.core.PyString;
-import org.python.pydev.core.IInterpreterInfo;
-import org.python.pydev.core.IInterpreterManager;
-import org.python.pydev.core.MisconfigurationException;
-import org.python.pydev.plugin.PydevPlugin;
 import org.python.util.PythonInterpreter;
 
 public final class IdlUtil extends AbstractIdlUtil {
@@ -129,17 +125,6 @@ public final class IdlUtil extends AbstractIdlUtil {
 		}
 		paths = paths.substring(0, paths.length() - 1);
 
-		String command = null;
-		final IInterpreterManager pyman = PydevPlugin.getPythonInterpreterManager();
-		IInterpreterInfo info = null;
-		try {
-			if (pyman != null) {
-				info = pyman.getDefaultInterpreterInfo(true);
-				command = info.getExecutableOrJar();
-			}
-		} catch (final MisconfigurationException e) {
-			throw new CoreException(new Status(IStatus.ERROR, RedhawkIdeIdlPlugin.PLUGIN_ID, ERROR_MSG_PYDEV_MISCONFIGURATION));
-		}
 
 		String arg1 = RedhawkIdeIdlPlugin.getDefault().getPythonImportIdlScriptPath().toString();
 		if (arg1 == null) {
@@ -152,7 +137,7 @@ public final class IdlUtil extends AbstractIdlUtil {
 		final String arg5 = "-i";
 		final String arg6 = paths;
 
-		final ProcessBuilder builder = new ProcessBuilder(command, arg1, arg2, arg3, arg4, arg5, arg6);
+		final ProcessBuilder builder = new ProcessBuilder("python", arg1, arg2, arg3, arg4, arg5, arg6);
 		Process newprocess = null;
 		String parserOutput = null;
 		String errorOutput = null;
@@ -326,28 +311,6 @@ public final class IdlUtil extends AbstractIdlUtil {
 	 */
 	public static IStatus validate() {
 		// Check the Python interpreter manager
-		final IInterpreterManager interpreterManager = PydevPlugin.getPythonInterpreterManager();
-		if (!interpreterManager.isConfigured()) {
-			return new Status(IStatus.ERROR, RedhawkIdeIdlPlugin.PLUGIN_ID, "Pydev's Python interpreter has not been configured (" + PYDEV_PREFS_LOCATION + ")");
-		}
-
-		// Check the info for the default interpreter
-		IInterpreterInfo info;
-		try {
-			info = interpreterManager.getDefaultInterpreterInfo(true);
-		} catch (MisconfigurationException e) {
-			return new Status(IStatus.ERROR, RedhawkIdeIdlPlugin.PLUGIN_ID, ERROR_MSG_PYDEV_MISCONFIGURATION, e);
-		}
-
-		String command = info.getExecutableOrJar();
-		if (command == null) {
-			return new Status(IStatus.ERROR, RedhawkIdeIdlPlugin.PLUGIN_ID, ERROR_MSG_NO_PYTHON_INTERPRETER);
-		}
-		/* Unfortunately this check required Java 1.6 :(
-		File commandFile = new File(command);
-		if (!commandFile.exists()) {
-			return new Status(IStatus.ERROR, RedhawkIdeIdlPlugin.PLUGIN_ID, ERROR_MSG_PYTHON_INTERPRETER_DOES_NOT_EXIST);
-		}*/
 
 		// Ensure we can find importIDL.py on the Python path
 		IPath importIDLPath = RedhawkIdeIdlPlugin.getDefault().getPythonImportIdlScriptPath();
@@ -372,7 +335,7 @@ public final class IdlUtil extends AbstractIdlUtil {
 		}
 
 		// Check import of omniidl
-		final ProcessBuilder builder = new ProcessBuilder(command, "-c", "import omniidl");
+		final ProcessBuilder builder = new ProcessBuilder("python", "-c", "import omniidl");
 		try {
 			Process proc = builder.start();
 
