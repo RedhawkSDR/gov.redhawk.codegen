@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: REDHAWK Code Generator
+Bundle-Name: REDHAWK Jinja Code Generator Base
 Bundle-SymbolicName: gov.redhawk.ide.codegen.jinja;singleton:=true
 Bundle-Version: 1.1.0.qualifier
 Bundle-Activator: gov.redhawk.ide.codegen.jinja.JinjaGeneratorPlugin
