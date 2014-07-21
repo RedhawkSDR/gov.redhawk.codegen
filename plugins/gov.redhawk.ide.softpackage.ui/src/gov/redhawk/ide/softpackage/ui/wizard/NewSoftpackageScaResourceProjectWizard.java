@@ -13,8 +13,12 @@ package gov.redhawk.ide.softpackage.ui.wizard;
 
 import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
 import gov.redhawk.ide.codegen.util.ImplementationAndSettings;
+import gov.redhawk.ide.spd.ui.wizard.ImplementationWizardPage;
 import gov.redhawk.ide.spd.ui.wizard.NewScaResourceProjectWizard;
+import gov.redhawk.ide.ui.wizard.ScaProjectPropertiesWizardPage;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.List;
@@ -25,22 +29,47 @@ import org.eclipse.ui.IImportWizard;
 
 public class NewSoftpackageScaResourceProjectWizard extends NewScaResourceProjectWizard implements IImportWizard {
 
+	private SoftpackageProjectPropertiesWizardPage p1;
+	private SoftpackageImplementationWizardPage p2;
+	private SoftpackageTableWizardPage p3;
+	
+	private final SoftpackageTableWizardPage createNewLibraryPage = new SoftpackageTableWizardPage(true);
+	private final SoftpackageTableWizardPage useExistingLibraryPage = new SoftpackageTableWizardPage(false); 
+
 	public NewSoftpackageScaResourceProjectWizard() {
 		super();
+		p1 = new SoftpackageProjectPropertiesWizardPage("", "Softpackage");
+		p2 = new SoftpackageImplementationWizardPage("", ICodeGeneratorDescriptor.COMPONENT_TYPE_RESOURCE);		
+		p3 = createNewLibraryPage;
+		
+		// Updates wizard based on selection of "Create new library" or "Use existing library"
+		p2.addPropertyChangeListener(new PropertyChangeListener() {
+			
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				if (p2.getModel().isCreateNewLibrary()) {
+					p3 = createNewLibraryPage;
+				} else {
+					p3 = useExistingLibraryPage;
+				}
+				getContainer().updateButtons();
+			}
+		});
 	}
 
 	@Override
 	public void addPages() {
-		setResourcePropertiesPage(new SoftpackageProjectPropertiesWizardPage("", "Component"));
+		setResourcePropertiesPage((ScaProjectPropertiesWizardPage) p1);
 		addPage(getResourcePropertiesPage());
-		
-		setImplPage(new SoftpackageImplementationWizardPage("", ICodeGeneratorDescriptor.COMPONENT_TYPE_RESOURCE));
-		getImplPage().setDescription("Choose the initial settings for the new implementation.");
-		getImplPage().setImpl(this.getImplementation());
-		addPage(getImplPage());
 
+		setImplPage((ImplementationWizardPage) p2);
+		getImplPage().setImpl(this.getImplementation()); 
 		getImplList().add(new ImplementationAndSettings(getImplPage().getImplementation(), getImplPage().getImplSettings()));
+		addPage(p2);
 		
+		addPage(createNewLibraryPage);
+		addPage(useExistingLibraryPage); 
+
 		try {
 			final Field field = Wizard.class.getDeclaredField("pages");
 			field.getModifiers();
@@ -58,9 +87,27 @@ public class NewSoftpackageScaResourceProjectWizard extends NewScaResourceProjec
 			// PASS
 		}
 	}
-	
+
+	@Override
+	public IWizardPage getNextPage(IWizardPage currentPage) {
+		if (currentPage == p1) {
+			return p2;
+		}
+		if (currentPage == p2) { 
+			return p3;
+		}
+		return null;
+	}
+
+	@Override
+	public boolean canFinish() {
+		return p1.canFlipToNextPage() && p2.canFlipToNextPage() && p3.isPageComplete();
+	}
+
 	@Override
 	public boolean performFinish() {
-		return super.performFinish();
+		// TODO temporary output
+		System.out.println(p3.toString());
+		return true;
 	}
 }

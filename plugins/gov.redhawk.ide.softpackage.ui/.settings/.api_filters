@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<component id="gov.redhawk.ide.softpackage.ui" version="2">
+    <resource path="src/gov/redhawk/ide/softpackage/ui/wizard/SoftpackageTableWizardPage.java" type="gov.redhawk.ide.softpackage.ui.wizard.SoftpackageTableWizardPage$Model">
+        <filter id="643846161">
+            <message_arguments>
+                <message_argument value="SoftpackageModel"/>
+                <message_argument value="Model"/>
+                <message_argument value="add(SoftpackageModel)"/>
+            </message_arguments>
+        </filter>
+        <filter id="643846161">
+            <message_arguments>
+                <message_argument value="SoftpackageModel"/>
+                <message_argument value="Model"/>
+                <message_argument value="remove(SoftpackageModel)"/>
+            </message_arguments>
+        </filter>
+    </resource>
+</component>

@@ -4,6 +4,7 @@ Bundle-Name: Softpackage UI
 Bundle-SymbolicName: gov.redhawk.ide.softpackage.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: gov.redhawk.ide.softpackage.ui.SoftPackageUi
+Bundle-Vendor: REDHAWK
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.databinding.beans;bundle-version="1.2.200",
@@ -26,4 +27,4 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.forms
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Bundle-Vendor: REDHAWK
+Export-Package: gov.redhawk.ide.softpackage.ui.wizard
