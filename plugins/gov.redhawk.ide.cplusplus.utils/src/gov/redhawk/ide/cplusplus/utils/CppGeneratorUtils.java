@@ -11,6 +11,8 @@
 package gov.redhawk.ide.cplusplus.utils;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -58,6 +60,7 @@ public final class CppGeneratorUtils {
 	private static final int ADD_NATURE_WORK = 1;
 	private static final int ADJUST_CONFIG_WORK = 90;
 	private static final int GENERATE_CODE_WORK = 7;
+	private static final String OCTAVE_PATH_REGEX = ".*include/octave-3.[4-9].[0-9]$";
 
 	private CppGeneratorUtils() {
 
@@ -81,7 +84,7 @@ public final class CppGeneratorUtils {
 		}
 		return retStatus;
 	}
-	
+
 	/**
 	 * @deprecated Use {@link #addManagedNature(IProject, SubMonitor, MultiStatus, String, PrintStream, Implementation)}
 	 */
@@ -202,14 +205,18 @@ public final class CppGeneratorUtils {
 
 				// Add include paths to configuration description
 				CppGeneratorUtils.addIncludePaths(configDesc);
-				
+
 				try {
 					if (project.hasNature("gov.redhawk.ide.codgen.natures.octave")) {
-						addCustomIncludePaths(configDesc, OCTAVE_INCLUDE);
+						List<File> pathArray = locateOctaveIncludeDir();
+						for (File path : pathArray) {
+							addCustomIncludePaths(configDesc, path.toString());
+						}
 					}
 				} catch (CoreException e) {
-					retStatus.add(new Status(IStatus.ERROR, CplusplusUtilsPlugin.PLUGIN_ID,
-						"Unable to access the project for the octave nature", e));
+					retStatus.add(new Status(IStatus.ERROR, CplusplusUtilsPlugin.PLUGIN_ID, "Unable to access the project for the octave nature", e));
+				} catch (IOException io) {
+					retStatus.add(new Status(IStatus.ERROR, CplusplusUtilsPlugin.PLUGIN_ID, "Error while locating Octave Include folder", io));
 				}
 
 				// Add build environment variables
@@ -243,12 +250,24 @@ public final class CppGeneratorUtils {
 		return retStatus;
 	}
 
+	private static List<File> locateOctaveIncludeDir() throws IOException {
+		PathLocatorUtil fileLocator = new PathLocatorUtil();
+		fileLocator.setBreakOnFirstResult(true);
+		fileLocator.setExcludePathRegex(".*(bin|share|lib|lib64|games|etc|java).*");
+		fileLocator.setMatchRegex(OCTAVE_PATH_REGEX);
+		File startingDir = new File("/usr");
+		List<File> files = fileLocator.getFileListings(startingDir);
+		if (files == null || files.isEmpty()) {
+			throw new IOException("Octave path not found. Searching under: " + startingDir);
+		}
+		return files;
+	}
+
 	/**
-	 * Configures the build command and path for the specified
-	 * {@link IConfiguration}. Turns managed build off.
+	 * Configures the build command and path for the specified {@link IConfiguration}. Turns managed build off.
 	 * 
 	 * @param destinationDirectory The implementation directory (relative to
-	 *            project directory)
+	 * project directory)
 	 * @param config The {@link IConfiguration} to be modified
 	 * @return The status of the operation
 	 * @since 6.0
@@ -274,10 +293,6 @@ public final class CppGeneratorUtils {
 	public static final String OSSIE_INCLUDE = "${OssieHome}/include";
 	public static final String OMNI_ORB_INCLUDE = "/usr/include/omniORB4";
 	public static final String OMNI_ORB_THREAD_INCLUDE = "/usr/include/omnithread";
-	/**
-	 * @since 1.1
-	 */
-	public static final String OCTAVE_INCLUDE = "/usr/include/octave-3.4.3";
 
 	/**
 	 * Some of the include paths that we add to a CDT project are intended only so CDT can resolve symbols when
@@ -287,7 +302,7 @@ public final class CppGeneratorUtils {
 	 * @param path True if the path is intended for CDT's use only, and shouldn't be added on to a compile command
 	 */
 	public static boolean isPathForCDTOnly(String path) {
-		// TODO: How would we adapt if we stopped using one of these paths? Would we still check it here? 
+		// TODO: How would we adapt if we stopped using one of these paths? Would we still check it here?
 		return OSSIE_INCLUDE.equals(path) || OMNI_ORB_INCLUDE.equals(path) || OMNI_ORB_THREAD_INCLUDE.equals(path);
 	}
 
@@ -318,12 +333,10 @@ public final class CppGeneratorUtils {
 		includePathSettings.add((ICLanguageSettingEntry) CDataUtil.createEntry(ICSettingEntry.INCLUDE_PATH, OMNI_ORB_INCLUDE, OMNI_ORB_INCLUDE, null, 0));
 		includePathSettings.add((ICLanguageSettingEntry) CDataUtil.createEntry(ICSettingEntry.INCLUDE_PATH, OMNI_ORB_THREAD_INCLUDE, OMNI_ORB_THREAD_INCLUDE,
 			null, 0));
-		
-		
 
 		lang.setSettingEntries(ICSettingEntry.INCLUDE_PATH, includePathSettings);
 	}
-	
+
 	/**
 	 * @since 1.1
 	 */
@@ -367,7 +380,7 @@ public final class CppGeneratorUtils {
 	 * 
 	 * @param oldSource List of old source directories to remove from the source list
 	 * @param destinationDirectory The implementation directory (relative to
-	 *            project directory)
+	 * project directory)
 	 * @param config The {@link IConfiguration} to be modified
 	 * @since 6.0
 	 */
@@ -401,8 +414,8 @@ public final class CppGeneratorUtils {
 	}
 
 	/**
-	 * Generates codan prefs for new project.  Purpose of this is to specifically disable the abstract parser to prevent 
-	 * displaying an incorrect error regarding failure to implement a pure virtual function.  This problem is fixed
+	 * Generates codan prefs for new project. Purpose of this is to specifically disable the abstract parser to prevent
+	 * displaying an incorrect error regarding failure to implement a pure virtual function. This problem is fixed
 	 * in the Keplar release.
 	 * @param project
 	 * @param progress
