@@ -283,7 +283,7 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 		// Page is complete as long as the validator is okay.
 		if (this.validator == null && this.apiCanFinish) {
 			return true;
-		} else if (((IStatus) this.validator.getValidationStatus().getValue()).isOK() && this.apiCanFinish) {
+		} else if (this.validator != null && ((IStatus) this.validator.getValidationStatus().getValue()).isOK() && this.apiCanFinish) {
 			return super.isPageComplete();
 		} else {
 			return false;
