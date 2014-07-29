@@ -353,7 +353,12 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		
 		
 		// Make things easier for the user by sorting the list here
-		List<FrontEndProp> sortedList = new ArrayList<FrontEndProp>(this.tunerStatusStructProps);
+		final List<FrontEndProp> sortedList;
+		if (this.tunerStatusStructProps == null) {
+			sortedList = Collections.emptyList();
+		} else {
+			 sortedList = new ArrayList<FrontEndProp>(this.tunerStatusStructProps);
+		}
 		Collections.sort(sortedList, new Comparator<FrontEndProp>() {
 			public int compare(FrontEndProp fep1, FrontEndProp fep2) {
                 return fep1.getProp().getName().compareTo(fep2.getProp().getName());
