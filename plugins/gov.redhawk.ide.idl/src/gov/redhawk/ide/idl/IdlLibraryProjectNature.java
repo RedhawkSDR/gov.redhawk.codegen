@@ -127,10 +127,10 @@ public class IdlLibraryProjectNature implements IProjectNature {
 	 * reporting is not required.
 	 */
 	public static IdlLibraryProjectNature addNature(final IProject project, final Map<String, String> args, IProgressMonitor monitor) throws CoreException {
+		if (monitor == null) {
+			monitor = new NullProgressMonitor();
+		}
 		try {
-			if (monitor == null) {
-				monitor = new NullProgressMonitor();
-			}
 			final IProjectDescription description = project.getDescription();
 			final String[] prevNatures = description.getNatureIds();
 			for (final String prevNature : prevNatures) {
