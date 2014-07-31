@@ -94,15 +94,8 @@ public abstract class SoftpackageWizardPage extends WizardPage {
 		dbc.bindValue(SWTObservables.observeText(implText, SWT.Modify), BeansObservables.observeValue(model, SoftpackageModel.IMPL_NAME)); 
 
 		int initialIndex = typeCombo.indexOf(model.getTypeName());
-		typeCombo.select((initialIndex < 0) ? 0 : initialIndex);
-
-		specificCreateControl();
-	}
-
-	/**
-	 * Additional fields added based upon a specific implementation
-	 */
-	protected abstract void specificCreateControl();
+		typeCombo.select((initialIndex < 0) ? 0 : initialIndex); 
+	} 
 
 	/**
 	 * Binds enablement given control to the model's value regarding cpp options

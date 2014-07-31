@@ -38,6 +38,7 @@ public class NewSoftpackageScaResourceProjectWizard extends NewScaResourceProjec
 
 	public NewSoftpackageScaResourceProjectWizard() {
 		super();
+		setWindowTitle("New Softpackage Project");
 		p1 = new SoftpackageProjectPropertiesWizardPage("", "Softpackage");
 		p2 = new SoftpackageImplementationWizardPage("", ICodeGeneratorDescriptor.COMPONENT_TYPE_RESOURCE);		
 		p3 = createNewLibraryPage;

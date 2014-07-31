@@ -20,6 +20,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -34,8 +35,10 @@ public class SoftpackageCreateNewLibraryWizardPage extends SoftpackageWizardPage
 		super(model);
 	}
 	
-	@Override
-	protected void specificCreateControl() {
+	@Override 
+	public void createControl(Composite parent) {
+		super.createControl(parent);
+		
 		final Group optionalFlags = new Group(client, SWT.NONE);
 		optionalFlags.setLayout(new GridLayout(2, false));
 		optionalFlags.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));

@@ -15,6 +15,7 @@ import gov.redhawk.ide.softpackage.ui.wizard.models.SoftpackageModel;
 import java.util.Arrays;
 
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -165,7 +166,10 @@ public class SoftpackageUseExistingLibraryWizardPage extends SoftpackageWizardPa
 	}
 
 	@Override
-	protected void specificCreateControl() { 
+	public void createControl(Composite parent) {
+		super.createControl(parent);
+		((WizardDialog) this.getWizard().getContainer()).setMinimumPageSize(350, 460);
+		
 		// library file selection group
 		new SoftpackageWizardGroup(client, "Library(s)", model.getLibraries().toArray(new String[0])) {
 
