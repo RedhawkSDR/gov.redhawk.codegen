@@ -26,6 +26,8 @@ import gov.redhawk.ui.RedhawkUiActivator;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import mil.jpeojtrs.sca.spd.Implementation;
@@ -205,6 +207,14 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 				}
 			}
 		}
+		Collections.sort(bulkioTypes, new Comparator<Definition>() {
+
+			@Override
+			public int compare(Definition o1, Definition o2) {
+				return o1.getName().compareToIgnoreCase(o2.getName());
+			}
+			
+		});
 		propertyTypes = bulkioTypes.toArray(new Definition[0]);
 	}
 
