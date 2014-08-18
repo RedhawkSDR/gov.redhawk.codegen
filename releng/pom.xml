@@ -142,6 +142,7 @@
     <module>../plugins/gov.redhawk.ide.linuxtools.cdt.autotools.macros</module>
     <module>../plugins/gov.redhawk.ide.pydev</module>
     <module>../plugins/gov.redhawk.ide.sandbox.console.py</module>
+    <module>../plugins/gov.redhawk.ide.softpackage.ui</module>
 
     <module>../tests/gov.redhawk.ide.idl.tests</module>
     <module>../tests/gov.redhawk.ide.codegen.cplusplus.tests</module>
