@@ -21,10 +21,6 @@ import org.eclipse.emf.common.util.URI;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-@RunWith(Suite.class) // DEBUG CODE
-@Suite.SuiteClasses({
-        ImplementationSettingsTest.class, ImplIdToSettingsMapTest.class, PropertyTest.class, WaveDevSettingsTest.class
-})
 public class CodegenTestSuite {
 
 	public static URI getURI(final String filePath) throws IOException {
