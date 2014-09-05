@@ -72,6 +72,7 @@ public class SoftpackageModel {
 		this.libraryPaths = model.getLibraries();
 		this.headerPaths = model.getHeaders();
 		this.packageConfigurationPath = model.getPackageConfiguration();
+		this.linkerFlags = model.getLinkerFlags();
 	}
 
 	public String getImplName() {
