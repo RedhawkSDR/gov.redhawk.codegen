@@ -1,0 +1,30 @@
+{
+  "outputDir": "testOutput",
+  "impl": {
+    "variantName": "1.0.0",
+    "createNewLibrary": false,
+    "useExistingLibrary": true
+  },
+  "name": "existLib",
+  "library": {
+    "list": [
+      {
+        "enabledCppOptions": true,
+        "enabledCreateOptions": false,
+        "enabledUseExistingOptions": false,
+        "typeName": "cpp",
+        "implName": "impl1",
+        "packageConfigurationPath": "/var/redhawk/sdr/1.11/dom/deps/fftlib/cpp/lib/pkgconfig/fftlib.pc",
+        "libraryPaths": [
+          "/var/redhawk/sdr/1.11/dom/deps/fftlib/cpp/lib/libfftlib.so"
+        ],
+        "headerPaths": [
+          "/var/redhawk/sdr/1.11/dom/deps/fftlib/cpp/include/Autocorrelate.h",
+          "/var/redhawk/sdr/1.11/dom/deps/fftlib/cpp/include/fft.h",
+          "/var/redhawk/sdr/1.11/dom/deps/fftlib/cpp/include/fftw_allocator.h",
+          "/var/redhawk/sdr/1.11/dom/deps/fftlib/cpp/include/firfilter.h"
+        ]
+      }
+    ]
+  }
+}

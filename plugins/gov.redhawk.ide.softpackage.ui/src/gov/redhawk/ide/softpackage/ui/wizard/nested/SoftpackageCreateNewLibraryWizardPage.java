@@ -14,10 +14,9 @@ import gov.redhawk.ide.softpackage.ui.wizard.models.SoftpackageModel;
 
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -51,13 +50,6 @@ public class SoftpackageCreateNewLibraryWizardPage extends SoftpackageWizardPage
 		
 		final Text compilerFlags = new Text(optionalFlags, SWT.BORDER);
 		compilerFlags.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()); 
-		compilerFlags.addModifyListener(new ModifyListener() {
-
-			@Override
-			public void modifyText(ModifyEvent e) { 
-				dbc.updateModels();
-			}
-		});
 		bindEnablementToCppType(compilerFlags);
 		dbc.bindValue(SWTObservables.observeText(compilerFlags, SWT.Modify), BeansObservables.observeValue(model, SoftpackageModel.COMPILER_FLAGS));
 
@@ -67,15 +59,10 @@ public class SoftpackageCreateNewLibraryWizardPage extends SoftpackageWizardPage
 		
 		final Text linkerFlags = new Text(optionalFlags, SWT.BORDER);
 		linkerFlags.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()); 
-		linkerFlags.addModifyListener(new ModifyListener() {
-
-			@Override
-			public void modifyText(ModifyEvent e) { 
-				dbc.updateModels();
-			}
-		});
 		bindEnablementToCppType(linkerFlags);
 		dbc.bindValue(SWTObservables.observeText(linkerFlags, SWT.Modify), BeansObservables.observeValue(model, SoftpackageModel.LINKER_FLAGS));
+		
+		WizardPageSupport.create(this, dbc);
 	}
 
 }

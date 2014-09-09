@@ -16,6 +16,9 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.observable.list.WritableList;
+
 public class SoftpackageModel {
 	public static final String[] TYPES = {"cpp", "directory", "octave"};
 	public static final String[] HEADER_FILE_EXTENSION_FILTERS = {"*.h;*.hh", "*.*"};
@@ -26,29 +29,29 @@ public class SoftpackageModel {
 	public static final String TYPE_NAME = "typeName";
 	public static final String IMPL_NAME = "implName"; 
 	public static final String ENABLED_CPP_OPTIONS = "enabledCppOptions";
-	public static final String ENABLED_CREATE_OPTIONS = "enabledCreateOptions";
-	public static final String ENABLED_USE_EXISTING_OPTIONS = "enabledUseExistingOptions"; 
+	public static final String ENABLED_CREATE_OPTIONS = "enabledCreateLibraryOptions";
+	public static final String ENABLED_USE_EXISTING_OPTIONS = "enabledUseExistingLibraryOptions"; 
 	public static final String COMPILER_FLAGS = "compilerFlags";
 	public static final String LINKER_FLAGS = "linkerFlags"; 
-	public static final String LIBRARY_PATHS = "libraryPaths";
-	public static final String HEADER_PATHS = "headerPaths";
-	public static final String PACKAGE_CONFIGURATION_PATH = "packageConfigurationPath";
+	public static final String PACKAGE_CONFIGURATION_PATH = "packageConfiguration";
 
 
-	private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+	private final transient PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
 	private boolean enabledCppOptions;
 	private boolean enabledCreateOptions;
 	private boolean enabledUseExistingOptions;
 
-	private String typeName = "";
-	private String implName = "";
-	private String compilerFlags = "";
-	private String linkerFlags = "";
-	private String packageConfigurationPath = "";
+	private String typeName;
+	private String implName;
+	private String compilerFlags;
+	private String linkerFlags;
+	private String packageConfigurationPath;
 
-	private List<String> libraryPaths = new ArrayList<String>(); 
-	private List<String> headerPaths = new ArrayList<String>();
+	private final List<String> libraryPaths = new ArrayList<String>();
+	private final List<String> headerPaths = new ArrayList<String>();
+	private final transient WritableList headerPathsList = new WritableList(headerPaths, String.class);
+	private final transient WritableList libraryPathsList = new WritableList(libraryPaths, String.class);
 
 	public SoftpackageModel(boolean createNewLibrary) {
 		setEnabledCreateLibraryOptions(createNewLibrary);
@@ -56,6 +59,7 @@ public class SoftpackageModel {
 	}
 
 	public SoftpackageModel() { 
+		setTypeName("cpp");
 	}
 
 	/**
@@ -69,8 +73,8 @@ public class SoftpackageModel {
 		this.enabledCreateOptions = model.isEnabledCreateLibraryOptions();
 		this.enabledUseExistingOptions = model.isEnabledUseExistingLibraryOptions();
 		this.compilerFlags = model.getCompilerFlags();
-		this.libraryPaths = model.getLibraries();
-		this.headerPaths = model.getHeaders();
+		this.libraryPaths.addAll(model.getLibraries());
+		this.headerPaths.addAll(model.getHeaders());
 		this.packageConfigurationPath = model.getPackageConfiguration();
 		this.linkerFlags = model.getLinkerFlags();
 	}
@@ -162,22 +166,17 @@ public class SoftpackageModel {
 	public List<String> getLibraries() {
 		return libraryPaths;
 	}
-
-	public void setLibraries(List<String> newValue) {
-		final List<String> oldValue = libraryPaths;
-		this.libraryPaths = newValue;
-		this.pcs.firePropertyChange(new PropertyChangeEvent(this, LIBRARY_PATHS, oldValue, newValue));
-	} 
+	public IObservableList getLibrariesList() {
+		return libraryPathsList;
+	}
 
 	public List<String> getHeaders() {
 		return headerPaths;
 	}
-
-	public void setHeaders(List<String> newValue) {
-		final List<String> oldValue = headerPaths;
-		this.headerPaths = newValue;
-		this.pcs.firePropertyChange(new PropertyChangeEvent(this, HEADER_PATHS, oldValue, newValue));
-	} 
+	
+	public IObservableList getHeadersList() {
+		return headerPathsList;
+	}
 
 	public String getPackageConfiguration() {
 		return packageConfigurationPath;

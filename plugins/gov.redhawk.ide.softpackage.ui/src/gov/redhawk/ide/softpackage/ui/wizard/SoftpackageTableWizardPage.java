@@ -49,25 +49,25 @@ public class SoftpackageTableWizardPage extends WizardPage {
 	public static final String PAGE_DESCRIPTION = "Provide types and optional implementation identifiers.";
 
 	private final boolean isCreateNewLibrary; 
-	private final Model model;
+	private final SoftpackageTableWizardPageModel model;
 	private final DataBindingContext dbc;
 
 	private TableViewer tableViewer;
 	private Composite client;
 	
 	/**
-	 * {@link SoftpackageTableWizardPage.Model}
+	 * {@link SoftpackageTableWizardPage.SoftpackageTableWizardPageModel}
 	 * The Model for this page consists of a list of SoftpackageModel objects
 	 * as defined by the user. This list will be used for code generation.
 	 */
-	public class Model {
+	public class SoftpackageTableWizardPageModel {
 		public static final String LIST = "list";
 
 		private final List<SoftpackageModel> list = new ArrayList<SoftpackageModel>();
 
-		private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+		private final transient PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-		public Model() {
+		public SoftpackageTableWizardPageModel() {
 			
 		}
 
@@ -77,17 +77,15 @@ public class SoftpackageTableWizardPage extends WizardPage {
 
 		public void add(SoftpackageModel value) {
 			if (value != null) {
-				final List<SoftpackageModel> oldValue = this.list;
 				this.list.add(value);
-				this.pcs.firePropertyChange(new PropertyChangeEvent(this, LIST, oldValue, this.list));
+				this.pcs.firePropertyChange(new PropertyChangeEvent(this, LIST, null, this.list));
 			}
 		} 
 		
 		public void remove(SoftpackageModel value) {
 			if (value != null) {
-				final List<SoftpackageModel> oldValue = this.list;
 				this.list.remove(value);
-				this.pcs.firePropertyChange(new PropertyChangeEvent(this, LIST, oldValue, this.list));
+				this.pcs.firePropertyChange(new PropertyChangeEvent(this, LIST, null, this.list));
 			}
 		}
 
@@ -104,7 +102,7 @@ public class SoftpackageTableWizardPage extends WizardPage {
 		super((isCreateNewLibrary) ? CREATE_NEW_LIBRARY : USE_EXISTING_LIBRARY);
 		this.isCreateNewLibrary = isCreateNewLibrary;
 		this.setDescription(PAGE_DESCRIPTION);
-		this.model = new Model();
+		this.model = new SoftpackageTableWizardPageModel();
 		this.dbc = new DataBindingContext();
 		this.setPageComplete(false);
 	}  
@@ -261,10 +259,10 @@ public class SoftpackageTableWizardPage extends WizardPage {
 	}
 
 	/**
-	 * Returns {@link SoftpackageTableWizardPage.Model} of this instance
+	 * Returns {@link SoftpackageTableWizardPage.SoftpackageTableWizardPageModel} of this instance
 	 * @return model
 	 */
-	public Model getModel() {
+	public SoftpackageTableWizardPageModel getModel() {
 		return this.model;
 	}
 

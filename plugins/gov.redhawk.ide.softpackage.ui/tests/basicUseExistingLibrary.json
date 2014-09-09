@@ -1,0 +1,21 @@
+{
+  "outputDir": "testOutput",
+  "impl": {
+    "variantName": "1.0.0",
+    "createNewLibrary": false,
+    "useExistingLibrary": true
+  },
+  "name": "basicUseExistingLibrary",
+  "library": {
+    "list": [
+      {
+        "enabledCppOptions": true,
+        "enabledCreateOptions": false,
+        "enabledUseExistingOptions": false,
+        "typeName": "cpp",
+        "libraryPaths": [],
+        "headerPaths": []
+      }
+    ]
+  }
+}
