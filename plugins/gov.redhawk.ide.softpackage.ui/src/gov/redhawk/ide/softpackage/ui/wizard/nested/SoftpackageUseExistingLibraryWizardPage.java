@@ -37,6 +37,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.IViewerObservableList;
 import org.eclipse.jface.databinding.viewers.ViewerSupport;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
@@ -51,6 +52,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -115,10 +117,7 @@ public class SoftpackageUseExistingLibraryWizardPage extends SoftpackageWizardPa
 
 		private List<PathItem> fileList = new ArrayList<PathItem>();
 		private WritableList writeableList;
-		private Group group;
-		private Text fileText;
-		private Button browseButton;
-		private ListViewer fileListViewer;
+		private WritableValue enabled = new WritableValue(true, Boolean.class);
 
 		public SoftpackageWizardGroup(Composite parent, String title, IObservableList backingList) {
 			this(parent, title, null, null, backingList);
@@ -127,18 +126,20 @@ public class SoftpackageUseExistingLibraryWizardPage extends SoftpackageWizardPa
 		public SoftpackageWizardGroup(Composite parent, final String title, final String[] extensions, final String[] names, IObservableList backingList) {
 			super(parent, SWT.NONE);
 			setLayout(new GridLayout(1, false));
-			group = new Group(this, SWT.NONE);
+			Group group = new Group(this, SWT.NONE);
+			dbc.bindValue(WidgetProperties.enabled().observe(group), enabled);
 			group.setLayout(new GridLayout(3, false));
 			group.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 			group.setText(title);
 
-			fileText = new Text(group, SWT.BORDER);
+			
+			final Text fileText = new Text(group, SWT.BORDER);
+			dbc.bindValue(WidgetProperties.enabled().observe(fileText), enabled);
 			fileText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-			final IObservableValue typeObserver = BeansObservables.observeValue(model, SoftpackageModel.TYPE_NAME);
 			final ISWTObservableValue fileTextObserver = SWTObservables.observeText(fileText, SWT.Modify);
-
-			browseButton = new Button(group, SWT.NONE);
+			final Button browseButton = new Button(group, SWT.NONE);
+			dbc.bindValue(WidgetProperties.enabled().observe(browseButton), enabled);
 			browseButton.setText("Browse...");
 
 			final Button addButton = addButtonToGroup(group, "Add");
@@ -146,11 +147,12 @@ public class SoftpackageUseExistingLibraryWizardPage extends SoftpackageWizardPa
 
 				@Override
 				protected Object calculate() {
-					String typeText = (String) typeObserver.getValue();
 					String fileTextStr = (String) fileTextObserver.getValue();
 					boolean exists = new File(fileTextStr).exists();
+					
+					boolean textEnabled = (Boolean) enabled.getValue();
 
-					return "cpp".equals(typeText) && !fileTextStr.isEmpty() && exists;
+					return textEnabled && !fileTextStr.isEmpty() && exists;
 				}
 
 			};
@@ -172,8 +174,8 @@ public class SoftpackageUseExistingLibraryWizardPage extends SoftpackageWizardPa
 
 			dbc.bindValue(SWTObservables.observeEnabled(addButton), addButtonEnabled);
 
-			fileListViewer = new ListViewer(group, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
-
+			final ListViewer fileListViewer = new ListViewer(group, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
+			dbc.bindValue(WidgetProperties.enabled().observe(fileListViewer.getControl()), enabled);
 			fileListViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 2).create());
 
 			writeableList = new WritableList(this.fileList, PathItem.class);
@@ -186,8 +188,8 @@ public class SoftpackageUseExistingLibraryWizardPage extends SoftpackageWizardPa
 
 				@Override
 				protected Object calculate() {
-					String typeText = (String) typeObserver.getValue();
-					return "cpp".equals(typeText) && !selectionObserver.isEmpty();
+					boolean textEnabled = (Boolean) enabled.getValue();
+					return textEnabled && !selectionObserver.isEmpty();
 				}
 
 			};
@@ -308,10 +310,7 @@ public class SoftpackageUseExistingLibraryWizardPage extends SoftpackageWizardPa
 		headerGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
 		// header file group only available for cpp type
-		bindEnablementToCppType(headerGroup.group);
-		bindEnablementToCppType(headerGroup.fileText);
-		bindEnablementToCppType(headerGroup.browseButton);
-		bindEnablementToCppType(headerGroup.fileListViewer.getControl());
+		dbc.bindValue(headerGroup.enabled, BeansObservables.observeValue(model, SoftpackageModel.ENABLED_CPP_OPTIONS));
 
 		final Group packageConfigGroup = new Group(client, SWT.NONE);
 		packageConfigGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
@@ -417,5 +416,14 @@ public class SoftpackageUseExistingLibraryWizardPage extends SoftpackageWizardPa
 
 		WizardPageSupport.create(this, dbc);
 
+	}
+	
+
+	/**
+	 * Binds enablement given control to the model's value regarding cpp options
+	 * @param control
+	 */
+	private void bindEnablementToCppType(Control control) {
+		dbc.bindValue(SWTObservables.observeEnabled(control), BeansObservables.observeValue(model, SoftpackageModel.ENABLED_CPP_OPTIONS));
 	}
 }

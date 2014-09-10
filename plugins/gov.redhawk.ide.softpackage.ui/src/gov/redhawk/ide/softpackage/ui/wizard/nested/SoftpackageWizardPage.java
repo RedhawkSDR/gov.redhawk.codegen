@@ -28,7 +28,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
@@ -103,14 +102,6 @@ public abstract class SoftpackageWizardPage extends WizardPage {
 		}
 		
 		WizardPageSupport.create(this, dbc);
-	}
-
-	/**
-	 * Binds enablement given control to the model's value regarding cpp options
-	 * @param control
-	 */
-	protected void bindEnablementToCppType(Control control) {
-		dbc.bindValue(SWTObservables.observeEnabled(control), BeansObservables.observeValue(model, SoftpackageModel.ENABLED_CPP_OPTIONS));
 	}
 
 	/**
