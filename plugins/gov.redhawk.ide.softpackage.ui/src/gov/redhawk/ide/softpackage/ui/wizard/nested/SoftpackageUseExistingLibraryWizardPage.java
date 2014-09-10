@@ -336,7 +336,7 @@ public class SoftpackageUseExistingLibraryWizardPage extends SoftpackageWizardPa
 						File packageFile = new File(strValue);
 						if (packageFile.exists()) {
 							if (!packageFile.isFile() || !packageFile.getName().endsWith(".pc")) {
-								return ValidationStatus.error("Invalid package file (*.pc)");
+								return ValidationStatus.error("Invalid package configuration file (*.pc)");
 							} else {
 								return ValidationStatus.ok();
 							}
