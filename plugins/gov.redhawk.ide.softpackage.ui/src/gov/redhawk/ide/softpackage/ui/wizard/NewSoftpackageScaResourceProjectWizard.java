@@ -68,8 +68,8 @@ public class NewSoftpackageScaResourceProjectWizard extends NewScaResourceProjec
 	private final SoftpackageImplementationWizardPage p2 = new SoftpackageImplementationWizardPage("", ICodeGeneratorDescriptor.COMPONENT_TYPE_RESOURCE);
 	private SoftpackageTableWizardPage p3;
 
-	private final SoftpackageTableWizardPage createNewLibraryPage = new SoftpackageTableWizardPage(true);
-	private final SoftpackageTableWizardPage useExistingLibraryPage = new SoftpackageTableWizardPage(false);
+	private final SoftpackageTableWizardPage createNewLibraryPage = new SoftpackageTableWizardPage("tablePageNew", true);
+	private final SoftpackageTableWizardPage useExistingLibraryPage = new SoftpackageTableWizardPage("tablePageExisting", false);
 
 	public NewSoftpackageScaResourceProjectWizard() {
 		super();

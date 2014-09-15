@@ -287,12 +287,12 @@ public class SoftpackageUseExistingLibraryWizardPage extends SoftpackageWizardPa
 		}
 	}
 
-	public SoftpackageUseExistingLibraryWizardPage() {
-		super(new SoftpackageModel(false));
+	public SoftpackageUseExistingLibraryWizardPage(String pageName) {
+		super(pageName, new SoftpackageModel(false));
 	}
 
-	public SoftpackageUseExistingLibraryWizardPage(SoftpackageModel model) {
-		super(model);
+	public SoftpackageUseExistingLibraryWizardPage(String pageName, SoftpackageModel model) {
+		super(pageName, model);
 	}
 
 	@Override

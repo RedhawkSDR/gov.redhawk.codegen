@@ -25,9 +25,9 @@ public class SoftpackageTableWizard extends Wizard {
 
 	public SoftpackageTableWizard(boolean createNewLibrary, SoftpackageModel model) {
 		if (createNewLibrary) {
-			page = new SoftpackageCreateNewLibraryWizardPage(model);
+			page = new SoftpackageCreateNewLibraryWizardPage("implPage", model);
 		} else {
-			page = new SoftpackageUseExistingLibraryWizardPage(model);
+			page = new SoftpackageUseExistingLibraryWizardPage("implPage", model);
 		} 
 	}
 

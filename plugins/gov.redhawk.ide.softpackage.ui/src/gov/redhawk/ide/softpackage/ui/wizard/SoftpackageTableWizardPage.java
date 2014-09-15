@@ -44,9 +44,9 @@ import org.eclipse.swt.widgets.Table;
 
 public class SoftpackageTableWizardPage extends WizardPage {
 
-	public static final String CREATE_NEW_LIBRARY = "Create New Library";
-	public static final String USE_EXISTING_LIBRARY = "Use Existing Library";
-	public static final String PAGE_DESCRIPTION = "Provide types and optional implementation identifiers.";
+	private static final String CREATE_NEW_LIBRARY = "Create New Library";
+	private static final String USE_EXISTING_LIBRARY = "Use Existing Library";
+	private static final String PAGE_DESCRIPTION = "Provide types and optional implementation identifiers.";
 
 	private final boolean isCreateNewLibrary; 
 	private final SoftpackageTableWizardPageModel model;
@@ -98,8 +98,8 @@ public class SoftpackageTableWizardPage extends WizardPage {
 		}
 	}
 
-	public SoftpackageTableWizardPage(boolean isCreateNewLibrary) {
-		super((isCreateNewLibrary) ? CREATE_NEW_LIBRARY : USE_EXISTING_LIBRARY);
+	public SoftpackageTableWizardPage(String pageName, boolean isCreateNewLibrary) {
+		super(pageName, (isCreateNewLibrary) ? CREATE_NEW_LIBRARY : USE_EXISTING_LIBRARY, null);
 		this.isCreateNewLibrary = isCreateNewLibrary;
 		this.setDescription(PAGE_DESCRIPTION);
 		this.model = new SoftpackageTableWizardPageModel();

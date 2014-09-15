@@ -27,12 +27,13 @@ import org.eclipse.swt.widgets.Text;
 
 public class SoftpackageCreateNewLibraryWizardPage extends SoftpackageWizardPage {
 	
-	public SoftpackageCreateNewLibraryWizardPage() {
-		super(new SoftpackageModel(true));
+	public SoftpackageCreateNewLibraryWizardPage(String pagename) {
+		super(pagename, new SoftpackageModel(true));
 	}
 	
-	public SoftpackageCreateNewLibraryWizardPage(SoftpackageModel model) {
-		super(model);
+	public SoftpackageCreateNewLibraryWizardPage(String pagename, SoftpackageModel model) {
+		super(pagename, model);
+
 	}
 	
 	@Override 

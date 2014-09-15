@@ -32,23 +32,22 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 public abstract class SoftpackageWizardPage extends WizardPage {
-
-	public static final String PAGE_TITLE = "Add Softpackage"; // TODO
-	public static final String PAGE_DESCRIPTION = ""; // TODO
+	
+	private static final String PAGE_TITLE = "Add Softpackage Implementations"; // TODO
+	public static final String PAGE_DESCRIPTION = "Add implementations of the softpackage library.  For example this could include x86 and x86_64 versions etc."; // TODO
 
 	protected final SoftpackageModel model;
 	protected final DataBindingContext dbc;
 
 	protected Composite client;
 
-	public SoftpackageWizardPage() {
-		this(null);
+	public SoftpackageWizardPage(String pagenamme) {
+		this(pagenamme, null);
 	}
 
-	public SoftpackageWizardPage(SoftpackageModel model) {
-		super(PAGE_TITLE);
-		this.setTitle(PAGE_TITLE);
-		this.setDescription(PAGE_DESCRIPTION);
+	public SoftpackageWizardPage(String pagenamme, SoftpackageModel model) {
+		super(pagenamme, PAGE_TITLE, null);
+		setDescription(PAGE_DESCRIPTION);
 		this.model = (model == null) ? new SoftpackageModel() : model;
 		dbc = new DataBindingContext();
 	}
