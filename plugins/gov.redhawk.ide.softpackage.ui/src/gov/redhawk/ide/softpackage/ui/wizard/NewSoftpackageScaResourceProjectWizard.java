@@ -64,8 +64,8 @@ import com.google.gson.GsonBuilder;
 public class NewSoftpackageScaResourceProjectWizard extends NewScaResourceProjectWizard implements IImportWizard {
 	private static final Debug DEBUG = new Debug(SoftPackageUi.PLUGIN_ID, "wizard");
 
-	private final SoftpackageProjectPropertiesWizardPage p1 = new SoftpackageProjectPropertiesWizardPage("", "Softpackage");
-	private final SoftpackageImplementationWizardPage p2 = new SoftpackageImplementationWizardPage("", ICodeGeneratorDescriptor.COMPONENT_TYPE_RESOURCE);
+	private final SoftpackageProjectPropertiesWizardPage p1 = new SoftpackageProjectPropertiesWizardPage("projectPage", "Softpackage");
+	private final SoftpackageImplementationWizardPage p2 = new SoftpackageImplementationWizardPage("implePage", ICodeGeneratorDescriptor.COMPONENT_TYPE_RESOURCE);
 	private SoftpackageTableWizardPage p3;
 
 	private final SoftpackageTableWizardPage createNewLibraryPage = new SoftpackageTableWizardPage("tablePageNew", true);
