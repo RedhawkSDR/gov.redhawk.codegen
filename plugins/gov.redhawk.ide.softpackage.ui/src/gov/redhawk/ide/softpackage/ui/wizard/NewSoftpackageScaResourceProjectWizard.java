@@ -13,6 +13,9 @@ package gov.redhawk.ide.softpackage.ui.wizard;
 import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
 import gov.redhawk.ide.codegen.util.ImplementationAndSettings;
 import gov.redhawk.ide.softpackage.ui.SoftPackageUi;
+import gov.redhawk.ide.softpackage.ui.wizard.nested.SoftpackageCreateNewLibraryWizardPage;
+import gov.redhawk.ide.softpackage.ui.wizard.nested.SoftpackageUseExistingLibraryWizardPage;
+import gov.redhawk.ide.softpackage.ui.wizard.nested.SoftpackageWizardPage;
 import gov.redhawk.ide.spd.ui.ComponentUiPlugin;
 import gov.redhawk.ide.spd.ui.wizard.ImplementationWizardPage;
 import gov.redhawk.ide.spd.ui.wizard.NewScaResourceProjectWizard;
@@ -66,10 +69,10 @@ public class NewSoftpackageScaResourceProjectWizard extends NewScaResourceProjec
 
 	private final SoftpackageProjectPropertiesWizardPage p1 = new SoftpackageProjectPropertiesWizardPage("projectPage", "Softpackage");
 	private final SoftpackageImplementationWizardPage p2 = new SoftpackageImplementationWizardPage("implePage", ICodeGeneratorDescriptor.COMPONENT_TYPE_RESOURCE);
-	private SoftpackageTableWizardPage p3;
+	private SoftpackageWizardPage p3;
 
-	private final SoftpackageTableWizardPage createNewLibraryPage = new SoftpackageTableWizardPage("tablePageNew", true);
-	private final SoftpackageTableWizardPage useExistingLibraryPage = new SoftpackageTableWizardPage("tablePageExisting", false);
+	private final SoftpackageCreateNewLibraryWizardPage createNewLibraryPage = new SoftpackageCreateNewLibraryWizardPage("tablePageNew");
+	private final SoftpackageUseExistingLibraryWizardPage useExistingLibraryPage = new SoftpackageUseExistingLibraryWizardPage("tablePageExisting");
 
 	public NewSoftpackageScaResourceProjectWizard() {
 		super();

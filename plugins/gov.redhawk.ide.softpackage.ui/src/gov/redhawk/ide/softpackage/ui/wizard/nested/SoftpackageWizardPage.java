@@ -33,8 +33,8 @@ import org.eclipse.swt.widgets.Text;
 
 public abstract class SoftpackageWizardPage extends WizardPage {
 	
-	private static final String PAGE_TITLE = "Add Softpackage Implementations"; // TODO
-	public static final String PAGE_DESCRIPTION = "Add implementations of the softpackage library.  For example this could include x86 and x86_64 versions etc."; // TODO
+	private static final String PAGE_TITLE = "Define Softpackage Implementation"; // TODO
+	public static final String PAGE_DESCRIPTION = "Define an implementation of the softpackage library.  For example this could include x86 and x86_64 versions etc."; // TODO
 
 	protected final SoftpackageModel model;
 	protected final DataBindingContext dbc;
