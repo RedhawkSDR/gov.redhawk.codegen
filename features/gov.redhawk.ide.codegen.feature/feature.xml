@@ -12,7 +12,7 @@
 <feature
       id="gov.redhawk.ide.codegen"
       label="%featureName"
-      version="1.8.6.qualifier"
+      version="1.8.8.qualifier"
       provider-name="%providerName"
       plugin="gov.redhawk.ide.codegen.jet">
 
