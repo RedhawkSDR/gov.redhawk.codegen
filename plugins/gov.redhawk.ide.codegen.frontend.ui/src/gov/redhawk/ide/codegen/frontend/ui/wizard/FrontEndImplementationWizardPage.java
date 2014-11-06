@@ -12,6 +12,8 @@ package gov.redhawk.ide.codegen.frontend.ui.wizard;
 
 import gov.redhawk.ide.codegen.internal.CodeGeneratorDescriptor;
 import gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusGenerator;
+import gov.redhawk.ide.codegen.jinja.java.JavaGenerator;
+import gov.redhawk.ide.codegen.jinja.python.PythonGenerator;
 import gov.redhawk.ide.spd.ui.wizard.ImplementationWizardPage;
 
 import org.eclipse.jface.viewers.Viewer;
@@ -23,9 +25,6 @@ public class FrontEndImplementationWizardPage extends ImplementationWizardPage {
 	private ViewerFilter[] viewerFilters = new ViewerFilter[1];
 	private boolean pageViewed = false;
 
-	// First round we are only supporting C++, no java or python.
-	private String[] allowedLanguages = { "C++" };
-
 	public FrontEndImplementationWizardPage(String name, String componentTypeDevice) {
 		super(name, componentTypeDevice);
 		ViewerFilter viewerFilter = new ViewerFilter() {
@@ -33,9 +32,9 @@ public class FrontEndImplementationWizardPage extends ImplementationWizardPage {
 			@SuppressWarnings("restriction")
 			@Override
 			public boolean select(Viewer viewer, Object parentElement, Object element) {
-				if (CplusplusGenerator.ID.equalsIgnoreCase(((CodeGeneratorDescriptor) element).getId())) {
-					//						PythonGenerator.ID.equalsIgnoreCase(((CodeGeneratorDescriptor) element).getId()) || 
-					//							JavaGenerator.ID.equalsIgnoreCase(((CodeGeneratorDescriptor) element).getId())) {
+				if (CplusplusGenerator.ID.equalsIgnoreCase(((CodeGeneratorDescriptor) element).getId())
+											|| PythonGenerator.ID.equalsIgnoreCase(((CodeGeneratorDescriptor) element).getId()) 
+											||	JavaGenerator.ID.equalsIgnoreCase(((CodeGeneratorDescriptor) element).getId())) {
 					return true;
 				}
 				return false;
@@ -49,11 +48,6 @@ public class FrontEndImplementationWizardPage extends ImplementationWizardPage {
 	public void createControl(Composite parent) {
 		super.createControl(parent);
 		this.getCodeGeneratorEntryViewer().setFilters(this.viewerFilters);
-		this.getProgLangEntryViewer().setItems(allowedLanguages);
-		if (allowedLanguages.length == 1) {
-			this.getProgLangEntryViewer().select(0);
-			handleProgLangSelection();
-		}
 	}
 
 	// Complete if the page has been drawn.
