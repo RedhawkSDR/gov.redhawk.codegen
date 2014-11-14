@@ -157,6 +157,22 @@ This template will queue all data inside each input port. It is the developers r
                type="executabledevice">
          </componenttype>
       </template>
+      <template
+            class="gov.redhawk.ide.codegen.jinja.java.template.DefaultJavaTemplate"
+            codegenId="gov.redhawk.ide.codegen.jinja.java.JavaGenerator"
+            hasSettings="false"
+            id="redhawk.codegen.jinja.java.component.frontend"
+            name="Front End Device Template"
+            notDefaultable="true"
+            selectable="true"
+            usesPortTemplates="false">
+         <componenttype
+               type="device">
+         </componenttype>
+         <description>
+            A template to aid in development of a Front End Interfaces compliant device.
+         </description>
+      </template>
    </extension>
    <extension
          point="gov.redhawk.ide.debug.launchConfigurationFactories">
