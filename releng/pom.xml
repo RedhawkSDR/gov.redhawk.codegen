@@ -27,6 +27,7 @@
     <gov.redhawk.core.rcp>http://download.redhawksdr.org/gov.redhawk.core/rcp/releases/1.9</gov.redhawk.core.rcp>
     <gov.redhawk.ide>http://download.redhawksdr.org/gov.redhawk.ide/releases/1.9</gov.redhawk.ide>
     <jacorb>http://download.redhawksdr.org/jacorb/updates/stable</jacorb>
+    <logback>http://download.redhawksdr.org/logback/latest</logback>
     <pydev>http://pydev.org/updates/</pydev>
     <nebula>http://download.eclipse.org/technology/nebula/archives/Q32014/release</nebula>
   </properties>
@@ -96,6 +97,12 @@
       <id>org.omg.jacorb</id>
       <layout>p2</layout>
       <url>${jacorb}</url>
+    </repository>
+
+    <repository>
+      <id>logback</id>
+      <layout>p2</layout>
+      <url>${logback}</url>
     </repository>
 
     <repository>
