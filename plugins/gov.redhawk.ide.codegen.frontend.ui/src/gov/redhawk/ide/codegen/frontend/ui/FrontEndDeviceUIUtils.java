@@ -15,7 +15,9 @@ import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndPropLabelProvider;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import mil.jpeojtrs.sca.prf.ConfigurationKind;
 import mil.jpeojtrs.sca.prf.Enumeration;
@@ -43,6 +45,9 @@ import org.eclipse.swt.widgets.Table;
 
 import FRONTEND.FE_TUNER_DEVICE_KIND;
 
+/**
+ * @since 1.1
+ */
 public enum FrontEndDeviceUIUtils {
 	INSTANCE;
 
@@ -58,9 +63,22 @@ public enum FrontEndDeviceUIUtils {
 	public static final String TUNER_STATUS_STRUCT_SEQ_ID = "FRONTEND::tuner_status";
 	public static final String TUNER_STATUS_STRUCT_SEQ_DESCRIPTION = "Status of each tuner, including entries for both allocated and un-allocated tuners. Each entry represents a single tuner.";
 
+	public static final String TUNER_ALLOCATION = "FRONTEND::tuner_allocation";
+	public static final String TUNER_ALLOCATION_TUNER_TYPE_ID = TUNER_ALLOCATION + "::tuner_type";
+	public static final String TUNER_ALLOCATION_ALLOCATION_ID_ID = TUNER_ALLOCATION + "::allocation_id";
+	public static final String TUNER_ALLOCATION_CENTER_FREQUENCY_ID = TUNER_ALLOCATION + "::center_frequency";
+	public static final String TUNER_ALLOCATION_BANDWIDTH_ID = TUNER_ALLOCATION + "::bandwidth";
+	public static final String TUNER_ALLOCATION_BANDWIDTH_TOLERANCE_ID = TUNER_ALLOCATION + "::bandwidth_tolerance";
+	public static final String TUNER_ALLOCATION_SAMPLE_RATE_ID = TUNER_ALLOCATION + "::sample_rate";
+	public static final String TUNER_ALLOCATION_SAMPLE_RATE_TOLERANCE_ID = TUNER_ALLOCATION + "::sample_rate_tolerance";
+	public static final String TUNER_ALLOCATION_DEVICE_CONTROL_ID = TUNER_ALLOCATION + "::device_control";
+	public static final String TUNER_ALLOCATION_GROUP_ID_ID = TUNER_ALLOCATION + "::group_id";
+	public static final String TUNER_ALLOCATION_RF_FLOW_ID_ID = TUNER_ALLOCATION + "::rf_flow_id";
+	
 	private List<FrontEndProp> allFrontEndProps = null;
 	private List<FrontEndProp> optionalFrontEndProps = null;
 	private List<FrontEndProp> requiredFrontEndProps = null;
+	private Map<String, Simple> allTunerAllocationSimplesMap = null;
 
 	private FrontEndDeviceUIUtils() {
 		initFriProps();
@@ -71,6 +89,7 @@ public enum FrontEndDeviceUIUtils {
 		allFrontEndProps = new ArrayList<FrontEndProp>();
 		optionalFrontEndProps = new ArrayList<FrontEndProp>();
 		requiredFrontEndProps = new ArrayList<FrontEndProp>();
+		allTunerAllocationSimplesMap = new HashMap<String, Simple>();
 
 		// Required Props
 
@@ -288,6 +307,12 @@ public enum FrontEndDeviceUIUtils {
 				this.optionalFrontEndProps.add(prop);
 			}
 		}
+		
+		//add to map for easy searching
+		for (Simple simple: getTunerAllocationSimples()) {
+			allTunerAllocationSimplesMap.put(simple.getId(), simple);
+		}
+		
 	}
 
 	private Simple createSimple(String name, String id, PropertyValueType type, String description) {
@@ -306,6 +331,10 @@ public enum FrontEndDeviceUIUtils {
 	 */
 	public List<FrontEndProp> getAllFrontEndProps() {
 		return allFrontEndProps;
+	}
+	
+	public Map<String, Simple> getAllTunerAllocationSimplesMap() {
+		return allTunerAllocationSimplesMap;
 	}
 
 	public List<FrontEndProp> getRequiredFrontEndProps() {
@@ -478,26 +507,26 @@ public enum FrontEndDeviceUIUtils {
 	private Collection< ? extends Simple> getTunerAllocationSimples() {
 		List<Simple> tunerAllocSimpleList = new ArrayList<Simple>();
 
-		tunerAllocSimpleList.add(createSimple("tuner_type", "FRONTEND::tuner_allocation::tuner_type", PropertyValueType.STRING,
+		tunerAllocSimpleList.add(createSimple("tuner_type", TUNER_ALLOCATION_TUNER_TYPE_ID, PropertyValueType.STRING,
 				"Example Tuner Types: TX, RX, CHANNELIZER, DDC, RX_DIGITIZER, RX_DIGTIZIER_CHANNELIZER"));
 
-		tunerAllocSimpleList.add(createSimple("allocation_id", "FRONTEND::tuner_allocation::allocation_id", PropertyValueType.STRING,
+		tunerAllocSimpleList.add(createSimple("allocation_id", TUNER_ALLOCATION_ALLOCATION_ID_ID, PropertyValueType.STRING,
 				"The allocation_id set by the caller. Used by the caller to reference the device uniquely"));
 
-		Simple cFreq = createSimple("center_frequency", "FRONTEND::tuner_allocation::center_frequency", PropertyValueType.DOUBLE, "Requested center frequency.");
+		Simple cFreq = createSimple("center_frequency", TUNER_ALLOCATION_CENTER_FREQUENCY_ID, PropertyValueType.DOUBLE, "Requested center frequency.");
 
 		cFreq.setUnits("Hz");
 		cFreq.setValue("0.0");
 		tunerAllocSimpleList.add(cFreq);
 
-		Simple bandwidth = createSimple("bandwidth", "FRONTEND::tuner_allocation::bandwidth", PropertyValueType.DOUBLE, "Requested Bandwidth");
+		Simple bandwidth = createSimple("bandwidth", TUNER_ALLOCATION_BANDWIDTH_ID, PropertyValueType.DOUBLE, "Requested Bandwidth");
 
 		bandwidth.setUnits("Hz");
 		bandwidth.setValue("0.0");
 
 		tunerAllocSimpleList.add(bandwidth);
 
-		Simple bandwidthTol = createSimple("bandwidth_tolerance", "FRONTEND::tuner_allocation::bandwidth_tolerance", PropertyValueType.DOUBLE,
+		Simple bandwidthTol = createSimple("bandwidth_tolerance", TUNER_ALLOCATION_BANDWIDTH_TOLERANCE_ID, PropertyValueType.DOUBLE,
 				"Allowable Percent above requested bandwidth  (ie - 100 would be up to twice)");
 
 		bandwidthTol.setUnits("percent");
@@ -505,7 +534,7 @@ public enum FrontEndDeviceUIUtils {
 
 		tunerAllocSimpleList.add(bandwidthTol);
 
-		Simple sampleRate = createSimple("sample_rate", "FRONTEND::tuner_allocation::sample_rate", PropertyValueType.DOUBLE,
+		Simple sampleRate = createSimple("sample_rate", TUNER_ALLOCATION_SAMPLE_RATE_ID, PropertyValueType.DOUBLE,
 				"Requested sample rate. This can be ignored for such devices as analog tuners");
 
 		sampleRate.setUnits("sps");
@@ -513,7 +542,7 @@ public enum FrontEndDeviceUIUtils {
 
 		tunerAllocSimpleList.add(sampleRate);
 
-		Simple sampleRateTol = createSimple("sample_rate_tolerance", "FRONTEND::tuner_allocation::sample_rate_tolerance", PropertyValueType.DOUBLE,
+		Simple sampleRateTol = createSimple("sample_rate_tolerance", TUNER_ALLOCATION_SAMPLE_RATE_TOLERANCE_ID, PropertyValueType.DOUBLE,
 				"Allowable Percent above requested sample rate (ie - 100 would be up to twice)");
 
 		sampleRateTol.setUnits("percent");
@@ -523,7 +552,7 @@ public enum FrontEndDeviceUIUtils {
 
 		Simple deviceControl = createSimple(
 			"device_control",
-			"FRONTEND::tuner_allocation::device_control",
+			TUNER_ALLOCATION_DEVICE_CONTROL_ID,
 			PropertyValueType.BOOLEAN,
 				"True: Has control over the device to make changes\nFalse: Does not need control and can just attach to any currently tasked device that satisfies the parameters (essentually a listener)");
 
@@ -531,10 +560,10 @@ public enum FrontEndDeviceUIUtils {
 
 		tunerAllocSimpleList.add(deviceControl);
 
-		tunerAllocSimpleList.add(createSimple("group_id", "FRONTEND::tuner_allocation::group_id", PropertyValueType.STRING,
+		tunerAllocSimpleList.add(createSimple("group_id", TUNER_ALLOCATION_GROUP_ID_ID, PropertyValueType.STRING,
 				"Unique identifier that specifies a group of device. Must match group_id on the device"));
 
-		tunerAllocSimpleList.add(createSimple("rf_flow_id", "FRONTEND::tuner_allocation::rf_flow_id", PropertyValueType.STRING,
+		tunerAllocSimpleList.add(createSimple("rf_flow_id", TUNER_ALLOCATION_RF_FLOW_ID_ID, PropertyValueType.STRING,
 				"Optional. Specifies a certain RF flow to allocate against. If left empty, it will match all frontend devices."));
 
 		return tunerAllocSimpleList;

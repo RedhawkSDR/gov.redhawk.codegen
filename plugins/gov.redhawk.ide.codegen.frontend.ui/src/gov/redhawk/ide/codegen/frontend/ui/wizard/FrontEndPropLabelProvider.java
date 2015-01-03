@@ -14,6 +14,9 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
+/**
+ * @since 1.1
+ */
 public class FrontEndPropLabelProvider extends LabelProvider implements ITableLabelProvider {
 
 	@Override

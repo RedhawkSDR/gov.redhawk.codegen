@@ -12,6 +12,9 @@ package gov.redhawk.ide.codegen.frontend.ui;
 
 import org.eclipse.jface.wizard.Wizard;
 
+/**
+ * @since 1.1
+ */
 public class SimpleFrontEndWizard extends Wizard {
 
 	@Override

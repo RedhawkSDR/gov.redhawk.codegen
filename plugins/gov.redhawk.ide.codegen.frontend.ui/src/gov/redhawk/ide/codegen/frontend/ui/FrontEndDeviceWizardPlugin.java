@@ -18,6 +18,7 @@ import org.osgi.framework.BundleContext;
 
 /**
  * The activator class controls the plug-in life cycle
+ * @since 1.1
  */
 public class FrontEndDeviceWizardPlugin extends AbstractUIPlugin {
 

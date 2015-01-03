@@ -18,6 +18,9 @@ import mil.jpeojtrs.sca.prf.Simple;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
+/**
+ * @since 1.1
+ */
 public class FrontEndProp {
 	private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 

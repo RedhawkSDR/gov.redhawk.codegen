@@ -20,6 +20,9 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.widgets.Composite;
 
+/**
+ * @since 1.1
+ */
 public class FrontEndImplementationWizardPage extends ImplementationWizardPage {
 
 	private ViewerFilter[] viewerFilters = new ViewerFilter[1];

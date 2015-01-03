@@ -35,6 +35,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 
+/**
+ * @since 1.1
+ */
 public class FrontEndDeviceWizard extends NewScaDeviceCreationProjectWizard implements IImportWizard {
 
 	public FrontEndDeviceWizard() {
