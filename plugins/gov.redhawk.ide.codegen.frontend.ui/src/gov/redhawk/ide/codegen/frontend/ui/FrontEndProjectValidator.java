@@ -25,6 +25,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.WizardPage;
 
+/**
+ * @since 1.1
+ */
 public class FrontEndProjectValidator extends ValidationStatusProvider {
 
 	private final WritableValue status = new WritableValue();

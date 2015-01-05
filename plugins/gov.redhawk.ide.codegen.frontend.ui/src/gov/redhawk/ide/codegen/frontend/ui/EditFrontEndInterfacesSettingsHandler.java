@@ -46,6 +46,9 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.part.FileEditorInput;
 
+/**
+ * @since 1.1
+ */
 public class EditFrontEndInterfacesSettingsHandler extends AbstractHandler {
 
 	private FrontEndTunerPropsPage frontEndWizardPage;

@@ -27,6 +27,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
+/**
+ * @since 1.1
+ */
 public class SelectFrontEndTunerPropsDialog extends Dialog {
 
 	private static final int DIALOG_HORIZONTAL_HINT = 800;

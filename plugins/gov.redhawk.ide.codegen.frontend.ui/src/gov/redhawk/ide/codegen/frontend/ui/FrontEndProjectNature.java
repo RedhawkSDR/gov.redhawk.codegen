@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
 /**
- * @since 4.1
+ * @since 1.1
  */
 public class FrontEndProjectNature implements IProjectNature {
 
