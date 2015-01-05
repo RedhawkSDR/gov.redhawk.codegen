@@ -12,6 +12,7 @@ package gov.redhawk.ide.codegen.frontend.ui;
 
 import gov.redhawk.eclipsecorba.idl.IdlInterfaceDcl;
 import gov.redhawk.eclipsecorba.library.IdlLibrary;
+import gov.redhawk.frontend.util.TunerProperties;
 import gov.redhawk.ide.codegen.frontend.FeiDevice;
 import gov.redhawk.ide.codegen.frontend.FrontendFactory;
 import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndProp;
@@ -390,7 +391,7 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 
 		// Add the two other required properties
 		eSpd.getPropertyFile().getProperties().getStruct().add(FrontEndDeviceUIUtils.INSTANCE.getListenerAllocationStruct());
-		eSpd.getPropertyFile().getProperties().getStruct().add(FrontEndDeviceUIUtils.INSTANCE.getTunerAllocationStruct());
+		eSpd.getPropertyFile().getProperties().getStruct().add(TunerProperties.TunerAllocationProperty.INSTANCE.createStruct());
 		
 		// Have to remember to set this back to null since this is a singleton
 		this.tunerStatusStructProps = null;

@@ -10,12 +10,10 @@
  *******************************************************************************/
 package gov.redhawk.ide.codegen.frontend.ui;
 
-import gov.redhawk.frontend.util.TunerProperties;
 import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndProp;
 import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndPropLabelProvider;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import mil.jpeojtrs.sca.prf.ConfigurationKind;
@@ -461,57 +459,6 @@ public enum FrontEndDeviceUIUtils {
 			createSimple("listener_allocation_id", "FRONTEND::listener_allocation::listener_allocation_id", PropertyValueType.STRING, ""));
 
 		return listenerAllocationStruct;
-	}
-
-	public Struct getTunerAllocationStruct() {
-		Struct tunerAllocStruct = PrfFactory.eINSTANCE.createStruct();
-		tunerAllocStruct.setDescription("Frontend Interfaces v2.0 main allocation structure");
-		tunerAllocStruct.setId("FRONTEND::tuner_allocation");
-		tunerAllocStruct.setName("frontend_tuner_allocation");
-		final ConfigurationKind kind = PrfFactory.eINSTANCE.createConfigurationKind();
-		kind.setType(StructPropertyConfigurationType.ALLOCATION);
-		tunerAllocStruct.getConfigurationKind().add(kind);
-		tunerAllocStruct.getSimple().addAll(createTunerAllocationSimples());
-
-		return tunerAllocStruct;
-	}
-
-	private Collection< ? extends Simple> createTunerAllocationSimples() {
-		List<Simple> tunerAllocSimpleList = new ArrayList<Simple>();
-
-		tunerAllocSimpleList.add(TunerProperties.TunerAllocationProperties.TUNER_TYPE.createSimple());
-
-		tunerAllocSimpleList.add(TunerProperties.TunerAllocationProperties.ALLOCATION_ID.createSimple());
-
-		Simple cFreq = TunerProperties.TunerAllocationProperties.CENTER_FREQUENCY.createSimple();
-		cFreq.setValue("0.0");
-		tunerAllocSimpleList.add(cFreq);
-
-		Simple bandwidth = TunerProperties.TunerAllocationProperties.BANDWIDTH.createSimple();
-		bandwidth.setValue("0.0");
-		tunerAllocSimpleList.add(bandwidth);
-
-		Simple bandwidthTol = TunerProperties.TunerAllocationProperties.BANDWIDTH_TOLERANCE.createSimple();
-		bandwidthTol.setValue("10.0");
-		tunerAllocSimpleList.add(bandwidthTol);
-
-		Simple sampleRate = TunerProperties.TunerAllocationProperties.SAMPLE_RATE.createSimple();
-		sampleRate.setValue("0.0");
-		tunerAllocSimpleList.add(sampleRate);
-
-		Simple sampleRateTol = TunerProperties.TunerAllocationProperties.SAMPLE_RATE_TOLERANCE.createSimple();
-		sampleRateTol.setValue("10.0");
-		tunerAllocSimpleList.add(sampleRateTol);
-
-		Simple deviceControl = TunerProperties.TunerAllocationProperties.DEVICE_CONTROL.createSimple();
-		deviceControl.setValue("true");
-		tunerAllocSimpleList.add(deviceControl);
-
-		tunerAllocSimpleList.add(TunerProperties.TunerAllocationProperties.GROUP_ID.createSimple());
-
-		tunerAllocSimpleList.add(TunerProperties.TunerAllocationProperties.RF_FLOW_ID.createSimple());
-
-		return tunerAllocSimpleList;
 	}
 
 }
