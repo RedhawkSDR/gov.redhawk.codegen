@@ -13,9 +13,6 @@ package gov.redhawk.ide.codegen.frontend.ui.wizard;
 import gov.redhawk.ide.dcd.ui.wizard.ScaDeviceProjectPropertiesWizardPage;
 
 
-/**
- * @since 1.1
- */
 public class FrontEndDeviceProjectPropertiesWizardPage extends ScaDeviceProjectPropertiesWizardPage {
 
 	protected FrontEndDeviceProjectPropertiesWizardPage(String pageName, String type) {

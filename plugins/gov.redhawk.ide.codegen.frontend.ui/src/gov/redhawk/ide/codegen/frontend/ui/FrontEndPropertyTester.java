@@ -18,10 +18,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.resource.Resource;
 
-/**
- * @since 1.1
- * 
- */
 public class FrontEndPropertyTester extends PropertyTester {
 
 	/**

@@ -19,9 +19,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
-/**
- * @since 1.1
- */
 public class FrontEndProjectNature implements IProjectNature {
 
 	/** The ID of this project nature. */

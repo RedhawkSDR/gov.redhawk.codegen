@@ -26,9 +26,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
-/**
- * @since 1.1
- */
 public class FrontEndGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 
 	private BooleanGeneratorPropertiesWizardPage2 propertiesPage;

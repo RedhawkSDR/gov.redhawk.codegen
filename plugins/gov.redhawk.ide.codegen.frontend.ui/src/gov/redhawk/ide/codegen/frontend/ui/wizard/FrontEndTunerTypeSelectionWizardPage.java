@@ -42,9 +42,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 
-/**
- * @since 1.1
- */
 public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements ICodegenWizardPage {
 
 	private SoftPkg softpkg;
