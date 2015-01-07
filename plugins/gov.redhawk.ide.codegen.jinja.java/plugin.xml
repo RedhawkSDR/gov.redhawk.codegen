@@ -172,6 +172,15 @@ This template will queue all data inside each input port. It is the developers r
          <description>
             A template to aid in development of a Front End Interfaces compliant device.
          </description>
+         <property
+               default_value=""
+               key="java_package"
+               name="Name of the Java package"
+               required="true">
+            <description>
+               The package that the generated component should be named.
+            </description>
+         </property>
       </template>
    </extension>
    <extension

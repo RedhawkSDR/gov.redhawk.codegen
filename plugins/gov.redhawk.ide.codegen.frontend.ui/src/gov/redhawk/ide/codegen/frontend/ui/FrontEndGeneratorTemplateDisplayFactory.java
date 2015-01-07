@@ -103,11 +103,11 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 	public ICodegenWizardPage[] createPages() {
 		List<ICodegenWizardPage> pages = new ArrayList<ICodegenWizardPage>();
 
-		this.feiDevice = FrontendFactory.eINSTANCE.createFeiDevice();
+		setFeiDevice(FrontendFactory.eINSTANCE.createFeiDevice());
 
-		this.frontEndTunerTypeSelectionPage = new FrontEndTunerTypeSelectionWizardPage(feiDevice);
-		this.frontEndTunerOptionsWizardPage = new FrontEndTunerOptionsWizardPage(feiDevice);
-		this.frontEndTunerPropsWizardPage = new FrontEndTunerPropsPage(feiDevice);
+		this.frontEndTunerTypeSelectionPage = new FrontEndTunerTypeSelectionWizardPage(getFeiDevice());
+		this.frontEndTunerOptionsWizardPage = new FrontEndTunerOptionsWizardPage(getFeiDevice());
+		this.frontEndTunerPropsWizardPage = new FrontEndTunerPropsPage(getFeiDevice());
 
 		pages.add(this.frontEndTunerTypeSelectionPage);
 		pages.add(this.frontEndTunerOptionsWizardPage);
@@ -124,15 +124,15 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		final SoftPkg eSpd = (SoftPkg) resourceSet.getEObject(spdUri, true);
 		SoftwareComponent eScd = eSpd.getDescriptor().getComponent();
 
-		if (this.feiDevice.isIngestsGPS()) {
+		if (getFeiDevice().isIngestsGPS()) {
 			addGPSProvidesPort(eSpd);
 		}
 
-		if (this.feiDevice.isOutputsGPS()) {
+		if (getFeiDevice().isOutputsGPS()) {
 			addGPSUsesPort(eSpd);
 		}
 
-		if (this.feiDevice.isAntenna()) {
+		if (getFeiDevice().isAntenna()) {
 			setDeviceKindName(eSpd, FrontEndDeviceUIUtils.ANTENNA_DEVICE_KIND_NAME);
 			addAntennaSpecificPorts(eSpd);
 			addAntennaSpecificProps(eSpd);
@@ -142,14 +142,14 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 
 			addTunerSpecificProps(eSpd);
 			setDeviceKindName(eSpd, FrontEndDeviceUIUtils.TUNER_DEVICE_KIND_NAME);
-			if (this.feiDevice.isRxTuner()) {
-				if (!this.feiDevice.isHasDigitalInput()) { // Has analog input
-					addRFInfoProvidesPorts(eSpd, this.feiDevice.getNumberOfAnalogInputs());
+			if (getFeiDevice().isRxTuner()) {
+				if (!getFeiDevice().isHasDigitalInput()) { // Has analog input
+					addRFInfoProvidesPorts(eSpd, getFeiDevice().getNumberOfAnalogInputs());
 
-					if (this.feiDevice.isHasDigitalOutput()) { // Has digital output
+					if (getFeiDevice().isHasDigitalOutput()) { // Has digital output
 						addDigitalTunerPort(eSpd);
-						addUsesDataPort(eSpd, this.feiDevice.getDigitalOutputType().getName() + "_out", this.feiDevice.getDigitalOutputType().getRepId());
-						if (this.feiDevice.isMultiOut()) {
+						addUsesDataPort(eSpd, getFeiDevice().getDigitalOutputType().getName() + "_out", getFeiDevice().getDigitalOutputType().getRepId());
+						if (getFeiDevice().isMultiOut()) {
 							addMultiOutProperty(eSpd);
 						}
 					} else { // It has Analog Output
@@ -161,19 +161,19 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 				} else { // Has Digital Input
 					// If it has Digital Input it must have Digital Output
 					addDigitalTunerPort(eSpd);
-					addProvidesDataPort(eSpd, this.feiDevice.getDigitalInputType().getName() + "_in", this.feiDevice.getDigitalInputType().getRepId());
-					addUsesDataPort(eSpd, this.feiDevice.getDigitalOutputType().getName() + "_out", this.feiDevice.getDigitalOutputType().getRepId());
-					if (this.feiDevice.isMultiOut()) {
+					addProvidesDataPort(eSpd, getFeiDevice().getDigitalInputType().getName() + "_in", getFeiDevice().getDigitalInputType().getRepId());
+					addUsesDataPort(eSpd, getFeiDevice().getDigitalOutputType().getName() + "_out", getFeiDevice().getDigitalOutputType().getRepId());
+					if (getFeiDevice().isMultiOut()) {
 						addMultiOutProperty(eSpd);
 					}
 				}
 			}
 
-			if (this.feiDevice.isTxTuner()) {
+			if (getFeiDevice().isTxTuner()) {
 				addDigitalTunerPort(eSpd);
-				addRFInfoUsesTXPorts(eSpd, this.feiDevice.getNumberOfDigitalInputsForTx());
-				addProvidesDataPorts(eSpd, this.feiDevice.getDigitalInputTypeForTx().getName() + "TX_in", this.feiDevice.getDigitalInputTypeForTx().getRepId(),
-					this.feiDevice.getNumberOfDigitalInputsForTx());
+				addRFInfoUsesTXPorts(eSpd, getFeiDevice().getNumberOfDigitalInputsForTx());
+				addProvidesDataPorts(eSpd, getFeiDevice().getDigitalInputTypeForTx().getName() + "TX_in", getFeiDevice().getDigitalInputTypeForTx().getRepId(),
+					getFeiDevice().getNumberOfDigitalInputsForTx());
 			}
 		}
 
@@ -465,6 +465,14 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 
 	public void setTunerStatusStructProps(Set<FrontEndProp> tunerStatusStructProps) {
 		this.tunerStatusStructProps = tunerStatusStructProps;
+	}
+
+	protected FeiDevice getFeiDevice() {
+		return feiDevice;
+	}
+
+	protected void setFeiDevice(FeiDevice feiDevice) {
+		this.feiDevice = feiDevice;
 	}
 
 }

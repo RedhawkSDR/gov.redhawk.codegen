@@ -37,6 +37,7 @@ Require-Bundle: org.eclipse.ui,
  gov.redhawk.ui,
  mil.jpeojtrs.sca.prf,
  gov.redhawk.sca.model;bundle-version="19.0.0",
- gov.redhawk.frontend
+ gov.redhawk.frontend,
+ gov.redhawk.ide.codegen.jet.java.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy

@@ -50,10 +50,15 @@
                targetCodegenTemplateId="redhawk.codegen.jinja.cpp.component.frontend">
          </codegenTemplateId>
          <codegenTemplateId
-               targetCodegenTemplateId="redhawk.codegen.jinja.java.component.frontend">
-         </codegenTemplateId>
-         <codegenTemplateId
                targetCodegenTemplateId="redhawk.codegen.jinja.python.component.frontend">
+         </codegenTemplateId>
+      </codegenTemplatePage>
+      <codegenTemplatePage
+            id="gov.redhawk.ide.codegen.ui.FrontEndJavaGeneratorDisplayFactory"
+            name="Front End Java Generator Wizard Pages"
+            wizardClass="gov.redhawk.ide.codegen.frontend.ui.FrontEndJavaGeneratorTemplateDisplayFactory">
+         <codegenTemplateId
+               targetCodegenTemplateId="redhawk.codegen.jinja.java.component.frontend">
          </codegenTemplateId>
       </codegenTemplatePage>
    </extension>

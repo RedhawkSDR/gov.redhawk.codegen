@@ -16,6 +16,7 @@ import gov.redhawk.ide.codegen.frontend.ui.FrontEndGeneratorTemplateDisplayFacto
 import gov.redhawk.ide.codegen.ui.ICodeGeneratorPageRegistry;
 import gov.redhawk.ide.codegen.ui.ICodeGeneratorPageRegistry2;
 import gov.redhawk.ide.codegen.ui.ICodegenDisplayFactory;
+import gov.redhawk.ide.codegen.ui.ICodegenWizardPage;
 import gov.redhawk.ide.codegen.ui.RedhawkCodegenUiActivator;
 import gov.redhawk.ide.codegen.util.CodegenFileHelper;
 import gov.redhawk.ide.codegen.util.ImplementationAndSettings;
@@ -110,7 +111,11 @@ public class FrontEndDeviceWizard extends NewScaDeviceCreationProjectWizard impl
 
 		for (ICodegenDisplayFactory factory : codegenDisplayFactories) {
 			if (factory instanceof FrontEndGeneratorTemplateDisplayFactory) {
-				this.addTemplatePages(getImplPage(), ((FrontEndGeneratorTemplateDisplayFactory) factory).createPages());
+				ICodegenWizardPage[] pages = ((FrontEndGeneratorTemplateDisplayFactory) factory).createPages();
+				for (ICodegenWizardPage page : pages) {
+					page.configure(getSoftPkg(), impl, codeGeneratorDescriptor, settings, getComponentType());
+				}
+				this.addTemplatePages(getImplPage(), pages);
 			}
 		}
 
