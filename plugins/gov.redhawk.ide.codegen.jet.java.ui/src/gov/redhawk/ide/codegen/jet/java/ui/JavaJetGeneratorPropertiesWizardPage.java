@@ -830,6 +830,9 @@ public class JavaJetGeneratorPropertiesWizardPage extends WizardPage implements 
 	}
 	
 
+	/**
+	 * @since 8.2
+	 */
 	protected void addCustomPages() {
 		if (this.getWizard() instanceof ScaImplementationWizard2) {
 			ICodegenWizardPage[] codeGenTemplatePages = RedhawkCodegenUiActivator.getCodeGeneratorsTemplateRegistry().findPageByGeneratorId(this.currentTemplate);
@@ -838,6 +841,9 @@ public class JavaJetGeneratorPropertiesWizardPage extends WizardPage implements 
 		// Otherwise assume the Wizard is taking care of this itself.
 	}
 	
+	/**
+	 * @since 8.2
+	 */
 	protected void removeCustomPages() {
 		if (this.currentTemplate == null || "".equals(this.currentTemplate)) {
 			return;
@@ -848,6 +854,9 @@ public class JavaJetGeneratorPropertiesWizardPage extends WizardPage implements 
 		
 	}
 
+	/**
+	 * @since 8.2
+	 */
 	protected ComboViewer getTemplateViewer() {
 		return templateViewer;
 	}
