@@ -22,9 +22,6 @@ import java.util.List;
 
 
 public class FrontEndJavaGeneratorTemplateDisplayFactory extends FrontEndGeneratorTemplateDisplayFactory {
-	private FrontEndTunerPropsPage frontEndTunerPropsWizardPage;
-	private FrontEndTunerTypeSelectionWizardPage frontEndTunerTypeSelectionPage;
-	private FrontEndTunerOptionsWizardPage frontEndTunerOptionsWizardPage;
 	private FrontEndJavaGeneratorPropertiesWizardPage frontEndJavaGeneratorPropertiesWizardPage;
 	
 	@Override
@@ -35,14 +32,15 @@ public class FrontEndJavaGeneratorTemplateDisplayFactory extends FrontEndGenerat
 
 		this.frontEndJavaGeneratorPropertiesWizardPage = new FrontEndJavaGeneratorPropertiesWizardPage();
 		this.frontEndJavaGeneratorPropertiesWizardPage.setCanFlipToNextPage(true);
-		this.frontEndTunerTypeSelectionPage = new FrontEndTunerTypeSelectionWizardPage(getFeiDevice());
-		this.frontEndTunerOptionsWizardPage = new FrontEndTunerOptionsWizardPage(getFeiDevice());
-		this.frontEndTunerPropsWizardPage = new FrontEndTunerPropsPage(getFeiDevice());
+		
+		setFrontEndTunerTypeSelectionPage(new FrontEndTunerTypeSelectionWizardPage(getFeiDevice()));
+		setFrontEndTunerOptionsWizardPage(new FrontEndTunerOptionsWizardPage(getFeiDevice()));
+		setFrontEndTunerPropsWizardPage(new FrontEndTunerPropsPage(getFeiDevice()));
 		
 		pages.add(this.frontEndJavaGeneratorPropertiesWizardPage);
-		pages.add(this.frontEndTunerTypeSelectionPage);
-		pages.add(this.frontEndTunerOptionsWizardPage);
-		pages.add(this.frontEndTunerPropsWizardPage);
+		pages.add(getFrontEndTunerTypeSelectionPage());
+		pages.add(getFrontEndTunerOptionsWizardPage());
+		pages.add(getFrontEndTunerPropsWizardPage());
 
 		return pages.toArray(new ICodegenWizardPage[pages.size()]);
 	}

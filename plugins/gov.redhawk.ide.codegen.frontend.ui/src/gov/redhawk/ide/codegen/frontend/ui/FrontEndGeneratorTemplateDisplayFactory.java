@@ -105,13 +105,13 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 
 		setFeiDevice(FrontendFactory.eINSTANCE.createFeiDevice());
 
-		this.frontEndTunerTypeSelectionPage = new FrontEndTunerTypeSelectionWizardPage(getFeiDevice());
-		this.frontEndTunerOptionsWizardPage = new FrontEndTunerOptionsWizardPage(getFeiDevice());
-		this.frontEndTunerPropsWizardPage = new FrontEndTunerPropsPage(getFeiDevice());
+		this.setFrontEndTunerTypeSelectionPage(new FrontEndTunerTypeSelectionWizardPage(getFeiDevice()));
+		this.setFrontEndTunerOptionsWizardPage(new FrontEndTunerOptionsWizardPage(getFeiDevice()));
+		this.setFrontEndTunerPropsWizardPage(new FrontEndTunerPropsPage(getFeiDevice()));
 
-		pages.add(this.frontEndTunerTypeSelectionPage);
-		pages.add(this.frontEndTunerOptionsWizardPage);
-		pages.add(this.frontEndTunerPropsWizardPage);
+		pages.add(this.getFrontEndTunerTypeSelectionPage());
+		pages.add(this.getFrontEndTunerOptionsWizardPage());
+		pages.add(this.getFrontEndTunerPropsWizardPage());
 
 		return pages.toArray(new ICodegenWizardPage[pages.size()]);
 	}
@@ -348,8 +348,8 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 
 		// If the tunerStatusStructProps is null then we must have come through the Wizard otherwise, maybe someoneone
 		// set it and we should accept that.
-		if (this.tunerStatusStructProps == null && this.frontEndTunerPropsWizardPage != null) {
-			this.tunerStatusStructProps = this.frontEndTunerPropsWizardPage.getSelectedProperties();
+		if (this.tunerStatusStructProps == null && this.getFrontEndTunerPropsWizardPage() != null) {
+			this.tunerStatusStructProps = this.getFrontEndTunerPropsWizardPage().getSelectedProperties();
 		}
 		
 		
@@ -473,6 +473,30 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 
 	protected void setFeiDevice(FeiDevice feiDevice) {
 		this.feiDevice = feiDevice;
+	}
+
+	protected FrontEndTunerPropsPage getFrontEndTunerPropsWizardPage() {
+		return frontEndTunerPropsWizardPage;
+	}
+
+	protected void setFrontEndTunerPropsWizardPage(FrontEndTunerPropsPage frontEndTunerPropsWizardPage) {
+		this.frontEndTunerPropsWizardPage = frontEndTunerPropsWizardPage;
+	}
+
+	protected FrontEndTunerTypeSelectionWizardPage getFrontEndTunerTypeSelectionPage() {
+		return frontEndTunerTypeSelectionPage;
+	}
+
+	protected void setFrontEndTunerTypeSelectionPage(FrontEndTunerTypeSelectionWizardPage frontEndTunerTypeSelectionPage) {
+		this.frontEndTunerTypeSelectionPage = frontEndTunerTypeSelectionPage;
+	}
+
+	protected FrontEndTunerOptionsWizardPage getFrontEndTunerOptionsWizardPage() {
+		return frontEndTunerOptionsWizardPage;
+	}
+
+	protected void setFrontEndTunerOptionsWizardPage(FrontEndTunerOptionsWizardPage frontEndTunerOptionsWizardPage) {
+		this.frontEndTunerOptionsWizardPage = frontEndTunerOptionsWizardPage;
 	}
 
 }
