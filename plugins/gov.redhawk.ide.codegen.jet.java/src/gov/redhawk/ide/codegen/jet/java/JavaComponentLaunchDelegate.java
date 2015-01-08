@@ -47,7 +47,6 @@ public class JavaComponentLaunchDelegate extends JavaLaunchDelegate {
 		final SoftPkg spd = SpdLauncherUtil.getSpd(configuration);
 		final String args = SpdLauncherUtil.insertProgramArguments(spd, arguments, launch, configuration);
 		copy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, args);
-		copy.setAttribute(SpdLauncherUtil.LAUNCH_ATT_PROGRAM_ARGUMENT_MAP, SpdLauncherUtil.createMap(args));
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
 		try {
 			super.launch(copy, mode, launch, subMonitor.newChild(90));
