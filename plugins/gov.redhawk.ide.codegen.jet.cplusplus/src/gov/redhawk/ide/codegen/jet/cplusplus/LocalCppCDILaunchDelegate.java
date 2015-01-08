@@ -72,7 +72,6 @@ public class LocalCppCDILaunchDelegate extends LocalCDILaunchDelegate implements
 
 		final String newArgs = SpdLauncherUtil.insertProgramArguments(spd, args, launch, configuration);
 		configuration.setAttribute(ICDTLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, newArgs);
-		configuration.setAttribute(SpdLauncherUtil.LAUNCH_ATT_PROGRAM_ARGUMENT_MAP, SpdLauncherUtil.createMap(newArgs));
 	}
 
 	public String getDefaultDebugger(final ILaunchConfiguration config) throws CoreException {
