@@ -80,33 +80,33 @@ public class JavaGeneratorUtils {
 	};
 
 	public static String getJavaType(final String type) {
-		if (type.equals("string")) {
+		if ("string".equals(type)) {
 			return "String";
-		} else if (type.equals("wstring")) {
+		} else if ("wstring".equals(type)) {
 			return "String";
-		} else if (type.equals("boolean")) {
+		} else if ("boolean".equals(type)) {
 			return "Boolean";
-		} else if (type.equals("char")) {
+		} else if ("char".equals(type)) {
 			return "Character";
-		} else if (type.equals("wchar")) {
+		} else if ("wchar".equals(type)) {
 			return "Character";
-		} else if (type.equals("double")) {
+		} else if ("double".equals(type)) {
 			return "Double";
-		} else if (type.equals("float")) {
+		} else if ("float".equals(type)) {
 			return "Float";
-		} else if (type.equals("short")) {
+		} else if ("short".equals(type)) {
 			return "Short";
-		} else if (type.equals("long")) {
+		} else if ("long".equals(type)) {
 			return "Integer";
-		} else if (type.equals("longlong")) {
+		} else if ("longlong".equals(type)) {
 			return "Long";
-		} else if (type.equals("ulong")) {
+		} else if ("ulong".equals(type)) {
 			return "Long";
-		} else if (type.equals("ushort")) {
+		} else if ("ushort".equals(type)) {
 			return "Integer";
-		} else if (type.equals("objref")) {
+		} else if ("objref".equals(type)) {
 			return "String";
-		} else if (type.equals("octet")) {
+		} else if ("octet".equals(type)) {
 			return "Byte";
 		} else {
 			return "Object";
@@ -117,33 +117,33 @@ public class JavaGeneratorUtils {
 		try {
 			if (value == null) {
 				return "null";
-			} else if (type.equals("string")) {
+			} else if ("string".equals(type)) {
 				return "\"" + JavaGeneratorUtils.escapeString(value) + "\"";
-			} else if (type.equals("wstring")) {
+			} else if ("wstring".equals(type)) {
 				return "\"" + JavaGeneratorUtils.escapeString(value) + "\"";
-			} else if (type.equals("boolean")) {
+			} else if ("boolean".equals(type)) {
 				return Boolean.valueOf(value).toString();
-			} else if (type.equals("char")) {
+			} else if ("char".equals(type)) {
 				return "\'" + JavaGeneratorUtils.escapeChar(value.charAt(0)) + "\'";
-			} else if (type.equals("wchar")) {
+			} else if ("wchar".equals(type)) {
 				return "\'" + JavaGeneratorUtils.escapeChar(value.charAt(0)) + "\'";
-			} else if (type.equals("double")) {
+			} else if ("double".equals(type)) {
 				return Double.valueOf(value).toString();
-			} else if (type.equals("float")) {
+			} else if ("float".equals(type)) {
 				return Float.valueOf(value).toString() + "F";
-			} else if (type.equals("short")) {
+			} else if ("short".equals(type)) {
 				return "(short)" + Short.valueOf(value).toString();
-			} else if (type.equals("long")) {
+			} else if ("long".equals(type)) {
 				return Integer.valueOf(value).toString();
-			} else if (type.equals("longlong")) {
+			} else if ("longlong".equals(type)) {
 				return Long.valueOf(value).toString() + "L";
-			} else if (type.equals("ulong")) {
+			} else if ("ulong".equals(type)) {
 				return Long.valueOf(value).toString() + "L";
-			} else if (type.equals("ushort")) {
+			} else if ("ushort".equals(type)) {
 				return Integer.valueOf(value).toString();
-			} else if (type.equals("objref")) {
+			} else if ("objref".equals(type)) {
 				return "\"" + value + "\"";
-			} else if (type.equals("octet")) {
+			} else if ("octet".equals(type)) {
 				return "(byte)" + Byte.valueOf(value.getBytes()[0]).toString();
 			} else {
 				return "Object";
@@ -501,7 +501,7 @@ public class JavaGeneratorUtils {
 	}
 
 	/**
-	 * @deprecated The code in addRedhawkJavaClassPaths will correctly include all of the .jar files
+	 * @deprecated The code in {@link #addRedhawkJavaClassPaths} will correctly include all of the .jar files
 	 * @param jproject
 	 * @param ports
 	 * @param monitor
