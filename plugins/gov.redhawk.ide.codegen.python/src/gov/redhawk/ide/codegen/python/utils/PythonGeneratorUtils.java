@@ -196,13 +196,13 @@ public class PythonGeneratorUtils {
 		final List<String> parts = new ArrayList<String>(Arrays.asList(repIdParts));
 
 		String module = null;
-		if (parts.get(0).equals("CF")) {
+		if ("CF".equals(parts.get(0))) {
 			// CF special case
 			module = "ossie.cf";
-		} else if (parts.get(0).equals("BULKIO")) {
+		} else if ("BULKIO".equals(parts.get(0))) {
 			// BULKIO special case
 			module = "bulkio.bulkioInterfaces";
-		} else if (parts.get(0).equals("omg.org")) { // from the #pragma in the omniORB idl's
+		} else if ("omg.org".equals(parts.get(0))) { // from the #pragma in the omniORB idl's
 			parts.remove(0);
 		} else {
 			// normal case
