@@ -102,7 +102,7 @@ public class PropertyToPython {
 		case OBJREF:
 			return "\"" + value + "\"";
 		case BOOLEAN:
-			if (value.equalsIgnoreCase("true")) {
+			if ("true".equalsIgnoreCase(value)) {
 				return "True";
 			} else {
 				return "False";

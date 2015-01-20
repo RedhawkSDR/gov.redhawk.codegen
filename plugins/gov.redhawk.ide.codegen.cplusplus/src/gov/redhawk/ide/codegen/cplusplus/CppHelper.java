@@ -37,24 +37,24 @@ public class CppHelper {
 	};
 
 	public int convertType(final String value) {
-		if (value.equals("short")) {
+		if ("short".equals(value)) {
 			return TCKind._tk_short;
-		} else if (value.equals("long")) {
+		} else if ("long".equals(value)) {
 			return TCKind._tk_long;
-		} else if (value.equals("unsigned short")) {
+		} else if ("unsigned short".equals(value)) {
 			return TCKind._tk_ushort;
-		} else if (value.equals("unsigned long")) {
+		} else if ("unsigned long".equals(value)) {
 			return TCKind._tk_ulong;
-		} else if (value.equals("float")) {
+		} else if ("float".equals(value)) {
 			return TCKind._tk_float;
-		} else if (value.equals("double")) {
+		} else if ("double".equals(value)) {
 			return TCKind._tk_double;
-		} else if (value.equals("char")) {
+		} else if ("char".equals(value)) {
 			// TODO Not really correct for OmniORB
 			return TCKind._tk_char;
-		} else if (value.equals("unsigned char")) {
+		} else if ("unsigned char".equals(value)) {
 			return TCKind._tk_octet;
-		} else if (value.equals("string")) {
+		} else if ("string".equals(value)) {
 			return TCKind._tk_string;
 		}
 		return TCKind._tk_null;
@@ -63,12 +63,12 @@ public class CppHelper {
 	public String getBasicMapping(final String value) {
 		final String CORBA_NS = "CORBA::"; // SUPPRESS CHECKSTYLE LocalFinalVariableName
 
-		if (value.equals("char*")) {
+		if ("char*".equals(value)) {
 			return "std::string";
 		}
 
 		String lastValue = value.substring(value.length() - 1);
-		if (lastValue.equals("&")) {
+		if ("&".equals(lastValue)) {
 			lastValue = "&";
 		} else {
 			lastValue = "";
@@ -76,28 +76,28 @@ public class CppHelper {
 
 		if (value.startsWith(CORBA_NS)) {
 			final String subType = value.substring(CORBA_NS.length());
-			if (subType.equals("Short")) {
+			if ("Short".equals(subType)) {
 				return "short" + lastValue;
-			} else if (subType.equals("Float")) {
+			} else if ("Float".equals(subType)) {
 				return "float" + lastValue;
-			} else if (subType.equals("Double")) {
+			} else if ("Double".equals(subType)) {
 				return "double" + lastValue;
-			} else if (subType.equals("Long")) {
+			} else if ("Long".equals(subType)) {
 				return "long" + lastValue;
-			} else if (subType.equals("ULong")) {
+			} else if ("ULong".equals(subType)) {
 				return "unsigned long" + lastValue;
-			} else if (subType.equals("UShort")) {
+			} else if ("UShort".equals(subType)) {
 				return "unsigned short" + lastValue;
-			} else if (subType.equals("WString")) {
+			} else if ("WString".equals(subType)) {
 				return "const char *";
-			} else if (subType.equals("Char")) {
+			} else if ("Char".equals(subType)) {
 				// TODO OmniORB maps chars to unsigned chars for some reason. This may have to change if switching ORB's
 				return "unsigned char" + lastValue;
-			} else if (subType.equals("Boolean")) {
+			} else if ("Boolean".equals(subType)) {
 				return "bool" + lastValue;
-			} else if (subType.equals("WChar")) {
+			} else if ("WChar".equals(subType)) {
 				return "unsigned char" + lastValue;
-			} else if (subType.equals("Octet")) {
+			} else if ("Octet".equals(subType)) {
 				return "unsigned char" + lastValue;
 			} else {
 				return value;
@@ -114,13 +114,13 @@ public class CppHelper {
 		final String SEQ = "Sequence"; // SUPPRESS CHECKSTYLE LocalFinalVariableName
 		if (cxxType.endsWith(SEQ)) {
 			return "*";
-		} else if (returnType.equals("struct")) {
+		} else if ("struct".equals(returnType)) {
 			if (cxxTypeVariableLength) {
 				return "*";
 			} else {
 				return "";
 			}
-		} else if (returnType.equals("sequence")) {
+		} else if ("sequence".equals(returnType)) {
 			return "*";
 		}
 
@@ -134,9 +134,9 @@ public class CppHelper {
 		final String SEQ = "Sequence"; // SUPPRESS CHECKSTYLE LocalFinalVariableName
 		if (cxxType.endsWith(SEQ)) {
 			return "_var";
-		} else if (returnType.equals("struct")) {
+		} else if ("struct".equals(returnType)) {
 			return "_var";
-		} else if (returnType.equals("sequence")) {
+		} else if ("sequence".equals(returnType)) {
 			return "_var";
 		}
 
@@ -150,32 +150,32 @@ public class CppHelper {
 
 		if (value.startsWith("const PortTypes::") && value.endsWith(SEQ_REFERENCE)) {
 			final String subType = value.substring(CF_PORTTYPES.length(), value.length() - SEQ_REFERENCE.length());
-			if (subType.equals("Short")) {
+			if ("Short".equals(subType)) {
 				return "std::vector<CORBA::Short>& ";
-			} else if (subType.equals("Float")) {
+			} else if ("Float".equals(subType)) {
 				return "std::vector<CORBA::Float>& ";
-			} else if (subType.equals("Double")) {
+			} else if ("Double".equals(subType)) {
 				return "std::vector<CORBA::Double>& ";
-			} else if (subType.equals("Long")) {
+			} else if ("Long".equals(subType)) {
 				return "std::vector<CORBA::Long>& ";
-			} else if (subType.equals("LongLong")) {
+			} else if ("LongLong".equals(subType)) {
 				return "std::vector<CORBA::LongLong>& ";
-			} else if (subType.equals("Ulong")) {
+			} else if ("Ulong".equals(subType)) {
 				return "std::vector<CORBA::ULong>& ";
-			} else if (subType.equals("UlongLong")) {
+			} else if ("UlongLong".equals(subType)) {
 				return "std::vector<CORBA::ULongLong>& ";
-			} else if (subType.equals("Ushort")) {
+			} else if ("Ushort".equals(subType)) {
 				return "std::vector<CORBA::UShort>& ";
-			} else if (subType.equals("Wstring")) {
+			} else if ("Wstring".equals(subType)) {
 				return "std::vector<string>& ";
-			} else if (subType.equals("Char")) {
+			} else if ("Char".equals(subType)) {
 				// TODO OmniORB maps chars to unsigned chars for some reason. This may have to change if switching ORB's
 				return "std::vector<unsigned char>& ";
-			} else if (subType.equals("Boolean")) {
+			} else if ("Boolean".equals(subType)) {
 				return "std::vector<bool>& ";
-			} else if (subType.equals("Wchar")) {
+			} else if ("Wchar".equals(subType)) {
 				return "std::vector<unsigned char>& ";
-			} else if (subType.equals("String")) {
+			} else if ("String".equals(subType)) {
 				return "std::vector<string>& ";
 			} else {
 				return getBasicMapping(value);
@@ -183,7 +183,7 @@ public class CppHelper {
 		} else {
 			if (value.startsWith(CF_TYPES) && value.endsWith(SEQ_REFERENCE)) {
 				final String subType = value.substring(CF_TYPES.length(), value.length() - SEQ_REFERENCE.length());
-				if (subType.equals("Octet")) {
+				if ("Octet".equals(subType)) {
 					return "std::vector<unsigned char>& ";
 				}
 			}
@@ -198,32 +198,32 @@ public class CppHelper {
 
 		if (value.startsWith("const PortTypes::") && value.endsWith(SEQ_REFERENCE)) {
 			final String subType = value.substring(CF_PORTTYPES.length(), value.length() - SEQ_REFERENCE.length());
-			if (subType.equals("Short")) {
+			if ("Short".equals(subType)) {
 				return "std::vector<CORBA::Short>";
-			} else if (subType.equals("Float")) {
+			} else if ("Float".equals(subType)) {
 				return "std::vector<CORBA::Float>";
-			} else if (subType.equals("Double")) {
+			} else if ("Double".equals(subType)) {
 				return "std::vector<CORBA::Double>";
-			} else if (subType.equals("Long")) {
+			} else if ("Long".equals(subType)) {
 				return "std::vector<CORBA::Long>";
-			} else if (subType.equals("LongLong")) {
+			} else if ("LongLong".equals(subType)) {
 				return "std::vector<CORBA::LongLong>";
-			} else if (subType.equals("Ulong")) {
+			} else if ("Ulong".equals(subType)) {
 				return "std::vector<CORBA::ULong>";
-			} else if (subType.equals("UlongLong")) {
+			} else if ("UlongLong".equals(subType)) {
 				return "std::vector<CORBA::ULongLong>";
-			} else if (subType.equals("Ushort")) {
+			} else if ("Ushort".equals(subType)) {
 				return "std::vector<CORBA::UShort>";
-			} else if (subType.equals("Wstring")) {
+			} else if ("Wstring".equals(subType)) {
 				return "std::vector<string>";
-			} else if (subType.equals("Char")) {
+			} else if ("Char".equals(subType)) {
 				// TODO OmniORB maps chars to unsigned chars for some reason. This may have to change if switching ORB's
 				return "std::vector<unsigned char>";
-			} else if (subType.equals("Boolean")) {
+			} else if ("Boolean".equals(subType)) {
 				return "std::vector<bool>";
-			} else if (subType.equals("Wchar")) {
+			} else if ("Wchar".equals(subType)) {
 				return "std::vector<unsigned char>";
-			} else if (subType.equals("String")) {
+			} else if ("String".equals(subType)) {
 				return "std::vector<string>";
 			} else {
 				return getBasicMapping(value);
@@ -231,7 +231,7 @@ public class CppHelper {
 		} else {
 			if (value.startsWith(CF_TYPES) && value.endsWith(SEQ_REFERENCE)) {
 				final String subType = value.substring(CF_TYPES.length(), value.length() - SEQ_REFERENCE.length());
-				if (subType.equals("Octet")) {
+				if ("Octet".equals(subType)) {
 					return "std::vector<unsigned char>";
 				}
 			}
@@ -247,7 +247,7 @@ public class CppHelper {
 
 		if (ptr) {
 			return "NULL";
-		} else if (cxxType.equals("CORBA::Object_ptr")) {
+		} else if ("CORBA::Object_ptr".equals(cxxType)) {
 			return "CORBA::Object::_nil()";
 		} else if ("char*".equals(cxxType)) {
 			return "\"\"";
