@@ -139,7 +139,7 @@ public class JavaJetGeneratorPropertiesWizardPage extends WizardPage implements 
 		@Override
 		public void notifyChanged(final Notification msg) {
 			super.notifyChanged(msg);
-			switch(msg.getFeatureID(ImplementationSettings.class)) {
+			switch (msg.getFeatureID(ImplementationSettings.class)) {
 			case CodegenPackage.IMPLEMENTATION_SETTINGS__TEMPLATE:
 				if (msg.getNotifier() instanceof ImplementationSettings) {
 					ImplementationSettings newSettings = (ImplementationSettings) msg.getNotifier();
