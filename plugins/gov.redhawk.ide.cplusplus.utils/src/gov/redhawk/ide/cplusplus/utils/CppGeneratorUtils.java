@@ -63,6 +63,13 @@ public final class CppGeneratorUtils {
 
 	}
 
+	/**
+	 * @param project
+	 * @param progress
+	 * @param retStatus
+	 * @return
+	 * @since 1.0
+	 */
 	public static MultiStatus addCandCPPNatures(final IProject project, final SubMonitor progress, final MultiStatus retStatus) {
 		// Add C and CC natures to the project if they're not already there
 		progress.subTask("Checking project natures");
@@ -82,6 +89,17 @@ public final class CppGeneratorUtils {
 		return retStatus;
 	}
 
+	/**
+	 * @param project
+	 * @param progress
+	 * @param retStatus
+	 * @param destinationDirectory
+	 * @param out
+	 * @param shouldGenerate
+	 * @param impl
+	 * @return
+	 * @since 1.0
+	 */
 	public static MultiStatus addManagedNature(final IProject project, final SubMonitor progress, final MultiStatus retStatus,
 		final String destinationDirectory, final PrintStream out, final boolean shouldGenerate, final Implementation impl) {
 		progress.setWorkRemaining(CppGeneratorUtils.ADJUST_CONFIG_WORK + CppGeneratorUtils.GENERATE_CODE_WORK);
@@ -234,7 +252,7 @@ public final class CppGeneratorUtils {
 	 *            project directory)
 	 * @param config The {@link IConfiguration} to be modified
 	 * @return The status of the operation
-	 * @since 6.0
+	 * @since 1.0
 	 */
 	public static IStatus configureBuilder(final String destinationDirectory, final IConfiguration config) {
 		try {
@@ -264,6 +282,7 @@ public final class CppGeneratorUtils {
 	 * this method to see if a path is a CDT-only include path.
 	 * 
 	 * @param path True if the path is intended for CDT's use only, and shouldn't be added on to a compile command
+	 * @since 1.0
 	 */
 	public static boolean isPathForCDTOnly(String path) {
 		// TODO: How would we adapt if we stopped using one of these paths? Would we still check it here? 
@@ -275,7 +294,7 @@ public final class CppGeneratorUtils {
 	 * references to REDHAWK code, omniORB, etc.
 	 * 
 	 * @param configDescription A project configuration description
-	 * @since 6.0
+	 * @since 1.0
 	 */
 	public static void addIncludePaths(final ICConfigurationDescription configDescription) {
 		final ICLanguageSetting[] languageSettings = configDescription.getRootFolderDescription().getLanguageSettings();
@@ -305,7 +324,7 @@ public final class CppGeneratorUtils {
 	 * build command is invoked in.
 	 * 
 	 * @param configDescription A project configuration description
-	 * @since 6.0
+	 * @since 1.0
 	 */
 	public static void addBuildEnvironVars(final ICConfigurationDescription configDescription) {
 		final IContributedEnvironment env = CCorePlugin.getDefault().getBuildEnvironmentManager().getContributedEnvironment();
@@ -322,7 +341,7 @@ public final class CppGeneratorUtils {
 	 * @param destinationDirectory The implementation directory (relative to
 	 *            project directory)
 	 * @param config The {@link IConfiguration} to be modified
-	 * @since 6.0
+	 * @since 1.0
 	 */
 	public static void configureSourceFolders(final List<String> oldSource, final String outputDir, final IConfiguration config) {
 		final ArrayList<ICSourceEntry> entries = new ArrayList<ICSourceEntry>(Arrays.asList(config.getSourceEntries()));
