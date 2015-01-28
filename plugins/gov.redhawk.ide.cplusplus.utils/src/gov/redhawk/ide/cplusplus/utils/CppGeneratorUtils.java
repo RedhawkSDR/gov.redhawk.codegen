@@ -274,19 +274,16 @@ public final class CppGeneratorUtils {
 	/**
 	 * Configures the build command and path for the specified {@link IConfiguration}. Turns managed build off.
 	 * 
-	 * @param destinationDirectory The implementation directory (relative to
-	 * project directory)
 	 * @param config The {@link IConfiguration} to be modified
 	 * @return The status of the operation
-	 * @since 1.0
+	 * @since 1.2
 	 */
-	public static IStatus configureBuilder(final String destinationDirectory, final IConfiguration config) {
+	public static IStatus configureBuilder(final IConfiguration config) {
 		try {
 			final IBuilder bld = config.getEditableBuilder();
 
 			if (bld != null) {
 				IPath buildPath = new Path("${ProjDirPath}");
-				buildPath = buildPath.append(destinationDirectory);
 				bld.setBuildPath(buildPath.toOSString());
 				buildPath = buildPath.append("build.sh");
 				bld.setCommand(buildPath.toOSString());
@@ -296,6 +293,15 @@ public final class CppGeneratorUtils {
 			return new Status(IStatus.WARNING, CplusplusUtilsPlugin.PLUGIN_ID, "Unable to configure C/C++ builder");
 		}
 		return new Status(IStatus.OK, CplusplusUtilsPlugin.PLUGIN_ID, "Builder configuration ok");
+	}
+
+	/**
+	 * @deprecated Use {@link #configureBuilder(IConfiguration)} instead. The destinationDirectory is not used.
+	 * @since 1.0
+	 */
+	@Deprecated
+	public static IStatus configureBuilder(final String destinationDirectory, final IConfiguration config) {
+		return configureBuilder(config);
 	}
 
 	public static final String OSSIE_INCLUDE = "${OssieHome}/include";
