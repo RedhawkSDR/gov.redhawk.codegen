@@ -26,7 +26,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.ide,
  org.eclipse.ui.forms,
  org.apache.commons.io;bundle-version="2.0.1",
- com.google.gson;bundle-version="2.1.0"
+ com.google.gson;bundle-version="2.1.0",
+ org.eclipse.emf.databinding,
+ gov.redhawk.ide
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: gov.redhawk.ide.softpackage.ui.wizard

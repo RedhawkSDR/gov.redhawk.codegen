@@ -15,8 +15,7 @@ def _createDirectoryPackageDependency(
         libraryLocation,
         implementation,
         outputDir,
-        sharedLibraries=[],
-        variant=""):
+        sharedLibraries=[]):
     '''
     Instantiate a package class instance for a directory package dependency.
 
@@ -26,8 +25,7 @@ def _createDirectoryPackageDependency(
         implementation=implementation,
         outputDir=outputDir,
         libraryLocation=libraryLocation,
-        sharedLibraries=sharedLibraries,
-        variant=variant)
+        sharedLibraries=sharedLibraries)
 
     return myDirectoryDependency
 
@@ -35,15 +33,13 @@ def _createCppPackageDependency(
         type,
         name,
         implementation,
-        outputDir,
-        variant=""):
+        outputDir):
 
     myCppDependency = CppPackageDependency(
         type=type,
         name=name,
         implementation=implementation,
-        outputDir=outputDir,
-        variant=variant,
+        outputDir=outputDir
         )
 
     return myCppDependency
@@ -53,14 +49,12 @@ def _createExistingPackageDependency(
         name,
         implementation,
         outputDir,
-        pkgConfig,
-        variant=""):
+        pkgConfig):
     myExistingDependency = ExistingPackageDependency(
         type=type,
         name=name,
         implementation=implementation,
         outputDir=outputDir,
-        variant=variant,
         pkgConfig=pkgConfig
         )
 
@@ -70,8 +64,6 @@ def processJsonInput(inputObject):
     libName = inputObject['name']
     outputDir = inputObject['outputDir']
     implObj = inputObject['impl']
-    
-    variant = implObj['variantName']
     
     for x in inputObject['library'].get('list', []):    
         type = x.get('typeName', None)
@@ -94,8 +86,7 @@ def processJsonInput(inputObject):
                     type=type,
                     name=name,
                     implementation=implementation,
-                    outputDir=outputDir,
-                    variant=variant)
+                    outputDir=outputDir)
             elif type == "directory":
                 if not implementation:
                     implementation = "noarch"
@@ -104,8 +95,7 @@ def processJsonInput(inputObject):
                     name=name,
                     libraryLocation=[],
                     implementation=implementation,
-                    outputDir=outputDir,
-                    variant=variant)
+                    outputDir=outputDir)
             else:
                 raise ValueError("Create New Library does not support type %s"%type)
         elif implObj['useExistingLibrary']:
@@ -122,8 +112,7 @@ def processJsonInput(inputObject):
                     name=name,
                     implementation=implementation,
                     outputDir=outputDir,
-                    pkgConfig=pkgConfig,
-                    variant=variant)
+                    pkgConfig=pkgConfig)
                 
             elif type == "directory":
                 if not implementation:
@@ -134,16 +123,14 @@ def processJsonInput(inputObject):
                     libraryLocation=headerPaths,
                     implementation=implementation,
                     outputDir=outputDir,
-                    sharedLibraries=sharedLibraries,
-                    variant=variant)
+                    sharedLibraries=sharedLibraries)
             else:
                 raise ValueError("Use existing Library does not support type %s"%type)
         
         package.writeXML()
     
         package.callCodegen(
-            force=force,
-            variant=variant)
+            force=force)
 
 if __name__ == "__main__":
     print "Started script..."

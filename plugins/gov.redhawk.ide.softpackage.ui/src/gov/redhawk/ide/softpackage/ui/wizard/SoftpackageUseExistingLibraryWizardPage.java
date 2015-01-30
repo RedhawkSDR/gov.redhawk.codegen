@@ -8,7 +8,7 @@
  * the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at 
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package gov.redhawk.ide.softpackage.ui.wizard.nested;
+package gov.redhawk.ide.softpackage.ui.wizard;
 
 import gov.redhawk.ide.softpackage.ui.wizard.models.SoftpackageModel;
 
@@ -96,18 +96,24 @@ public class SoftpackageUseExistingLibraryWizardPage extends SoftpackageWizardPa
 
 		@Override
 		public boolean equals(Object obj) {
-			if (this == obj)
+			if (this == obj) {
 				return true;
-			if (obj == null)
+			}
+			if (obj == null) {
 				return false;
-			if (getClass() != obj.getClass())
+			}
+			if (getClass() != obj.getClass()) {
 				return false;
+			}
+
 			PathItem other = (PathItem) obj;
 			if (value == null) {
-				if (other.value != null)
+				if (other.value != null) {
 					return false;
-			} else if (!value.equals(other.value))
+				}
+			} else if (!value.equals(other.value)) {
 				return false;
+			}
 			return true;
 		}
 
@@ -132,7 +138,6 @@ public class SoftpackageUseExistingLibraryWizardPage extends SoftpackageWizardPa
 			group.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 			group.setText(title);
 
-			
 			final Text fileText = new Text(group, SWT.BORDER);
 			dbc.bindValue(WidgetProperties.enabled().observe(fileText), enabled);
 			fileText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
@@ -149,7 +154,7 @@ public class SoftpackageUseExistingLibraryWizardPage extends SoftpackageWizardPa
 				protected Object calculate() {
 					String fileTextStr = (String) fileTextObserver.getValue();
 					boolean exists = new File(fileTextStr).exists();
-					
+
 					boolean textEnabled = (Boolean) enabled.getValue();
 
 					return textEnabled && !fileTextStr.isEmpty() && exists;
@@ -287,12 +292,8 @@ public class SoftpackageUseExistingLibraryWizardPage extends SoftpackageWizardPa
 		}
 	}
 
-	public SoftpackageUseExistingLibraryWizardPage(String pageName) {
-		super(pageName, new SoftpackageModel(false));
-	}
-
-	public SoftpackageUseExistingLibraryWizardPage(String pageName, SoftpackageModel model) {
-		super(pageName, model);
+	public SoftpackageUseExistingLibraryWizardPage(String pageName, String componentType) {
+		super(pageName, new SoftpackageModel(false), componentType);
 	}
 
 	@Override
@@ -417,7 +418,6 @@ public class SoftpackageUseExistingLibraryWizardPage extends SoftpackageWizardPa
 		WizardPageSupport.create(this, dbc);
 
 	}
-	
 
 	/**
 	 * Binds enablement given control to the model's value regarding cpp options

@@ -8,7 +8,7 @@
  * the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at 
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package gov.redhawk.ide.softpackage.ui.wizard.nested;
+package gov.redhawk.ide.softpackage.ui.wizard;
 
 import gov.redhawk.ide.softpackage.ui.wizard.models.SoftpackageModel;
 
@@ -27,13 +27,8 @@ import org.eclipse.swt.widgets.Text;
 
 public class SoftpackageCreateNewLibraryWizardPage extends SoftpackageWizardPage {
 	
-	public SoftpackageCreateNewLibraryWizardPage(String pagename) {
-		super(pagename, new SoftpackageModel(true));
-	}
-	
-	public SoftpackageCreateNewLibraryWizardPage(String pagename, SoftpackageModel model) {
-		super(pagename, model);
-
+	public SoftpackageCreateNewLibraryWizardPage(String pagename, String componentType) {
+		super(pagename, new SoftpackageModel(true), componentType);
 	}
 	
 	@Override 
@@ -66,7 +61,6 @@ public class SoftpackageCreateNewLibraryWizardPage extends SoftpackageWizardPage
 		
 		WizardPageSupport.create(this, dbc);
 	}
-	
 
 	/**
 	 * Binds enablement given control to the model's value regarding cpp options

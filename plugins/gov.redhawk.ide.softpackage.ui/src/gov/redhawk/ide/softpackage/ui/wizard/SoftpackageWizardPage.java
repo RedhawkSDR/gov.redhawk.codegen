@@ -8,9 +8,15 @@
  * the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at 
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package gov.redhawk.ide.softpackage.ui.wizard.nested;
+package gov.redhawk.ide.softpackage.ui.wizard;
 
+import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
+import gov.redhawk.ide.codegen.ImplementationSettings;
+import gov.redhawk.ide.codegen.RedhawkCodegenActivator;
 import gov.redhawk.ide.softpackage.ui.wizard.models.SoftpackageModel;
+import gov.redhawk.ide.spd.ui.wizard.ImplementationWizardPage;
+import mil.jpeojtrs.sca.spd.Implementation;
+import mil.jpeojtrs.sca.spd.SpdPackage;
 
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
@@ -19,34 +25,34 @@ import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-public abstract class SoftpackageWizardPage extends WizardPage {
-	
+public abstract class SoftpackageWizardPage extends ImplementationWizardPage {
+
 	private static final String PAGE_TITLE = "Define Softpackage Implementation"; // TODO
 	public static final String PAGE_DESCRIPTION = "Define an implementation of the softpackage library.  For example this could include x86 and x86_64 versions etc."; // TODO
 
 	protected final SoftpackageModel model;
 	protected final DataBindingContext dbc;
+	private Combo typeCombo;
+	private Text implText;
 
 	protected Composite client;
 
-	public SoftpackageWizardPage(String pagenamme) {
-		this(pagenamme, null);
-	}
-
-	public SoftpackageWizardPage(String pagenamme, SoftpackageModel model) {
-		super(pagenamme, PAGE_TITLE, null);
+	public SoftpackageWizardPage(String pagename, SoftpackageModel model, String componentType) {
+		super(pagename, componentType);
 		setDescription(PAGE_DESCRIPTION);
 		this.model = (model == null) ? new SoftpackageModel() : model;
 		dbc = new DataBindingContext();
@@ -65,17 +71,70 @@ public abstract class SoftpackageWizardPage extends WizardPage {
 
 		Label label = new Label(composite, SWT.NULL);
 		label.setText("Type:");
-		Combo typeCombo = new Combo(composite, SWT.BORDER | SWT.READ_ONLY);
+		typeCombo = new Combo(composite, SWT.BORDER | SWT.READ_ONLY);
 		typeCombo.setItems(SoftpackageModel.TYPES);
 		typeCombo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).create());
-		dbc.bindValue(SWTObservables.observeSelection(typeCombo), BeansObservables.observeValue(model, SoftpackageModel.TYPE_NAME));
-
-		label = new Label(composite, SWT.NULL); // a lil bit o' padding
+		typeCombo.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				handleTypeSelectionChanged();
+			}
+		});
 
 		label = new Label(composite, SWT.NULL);
 		label.setText("Implementation:");
-		Text implText = new Text(composite, SWT.BORDER);
+		implText = new Text(composite, SWT.BORDER);
 		implText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).create());
+
+		if (model.getTypeName() != null) {
+			int initialIndex = typeCombo.indexOf(model.getTypeName());
+			typeCombo.select((initialIndex < 0) ? 0 : initialIndex);
+		}
+
+		this.bind();
+
+		WizardPageSupport.create(this, dbc);
+	}
+
+	private void handleTypeSelectionChanged() {
+
+		// TODO: use the type to determine the code generator ID, hardcoding for now
+		String codeGenId = "gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusGenerator";
+
+		// Update impl and implSettings values to match selected type
+		ICodeGeneratorDescriptor tempCodeGen = RedhawkCodegenActivator.getCodeGeneratorsRegistry().findCodegen(codeGenId);
+		Implementation implementation = getImplementation();
+		ImplementationSettings settings = getImplSettings();
+
+		settings.setGeneratorId(tempCodeGen.getId());
+		implementation.setId(model.getTypeName());
+		implementation.getCompiler().setName(tempCodeGen.getCompiler());
+		implementation.getCompiler().setVersion(tempCodeGen.getCompilerVersion());
+		this.getProgLang().setName(tempCodeGen.getLanguage());
+	}
+
+	@Override
+	public boolean isPageComplete() {
+		return !typeCombo.getText().isEmpty();
+	}
+
+	/**
+	 * Creates the databindings that are used by this page
+	 */
+	private void bind() {
+		// Bind the impl programming language to the combo box selection
+		// Need null check - Multiple child classes, but one child class can have an implementation at a time
+		if (this.getImplementation() != null) {
+			dbc.bindValue(SWTObservables.observeText(typeCombo),
+				EMFObservables.observeValue(this.getProgLang(), SpdPackage.Literals.PROGRAMMING_LANGUAGE__NAME));
+		}
+
+		// TODO: Is this binding needed at this point? Seems redundant with other programming lanuage binding, may need
+		// to do one or the other
+		// Binds model type name with type combo
+		dbc.bindValue(SWTObservables.observeSelection(typeCombo), BeansObservables.observeValue(model, SoftpackageModel.TYPE_NAME));
+
+		// Binds model implementation name with implementation text box, and provides validation
 		Binding binding = dbc.bindValue(SWTObservables.observeText(implText, SWT.Modify), BeansObservables.observeValue(model, SoftpackageModel.IMPL_NAME),
 			new UpdateValueStrategy().setAfterConvertValidator(new IValidator() {
 
@@ -94,21 +153,9 @@ public abstract class SoftpackageWizardPage extends WizardPage {
 
 			}), null);
 		ControlDecorationSupport.create(binding, SWT.TOP | SWT.LEFT);
-
-		if (model.getTypeName() != null) {
-			int initialIndex = typeCombo.indexOf(model.getTypeName());
-			typeCombo.select((initialIndex < 0) ? 0 : initialIndex);
-		}
-		
-		WizardPageSupport.create(this, dbc);
 	}
 
-	/**
-	 * Returns this instance's {@link SoftpackageModel}
-	 * @return
-	 */
 	public SoftpackageModel getModel() {
 		return model;
 	}
-
 }

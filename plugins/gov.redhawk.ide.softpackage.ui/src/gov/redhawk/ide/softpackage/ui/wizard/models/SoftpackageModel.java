@@ -21,8 +21,8 @@ import org.eclipse.core.databinding.observable.list.WritableList;
 
 public class SoftpackageModel {
 	public static final String[] TYPES = {"cpp", "directory", "octave"};
-	public static final String[] HEADER_FILE_EXTENSION_FILTERS = {"*.h;*.hh", "*.*"};
-	public static final String[] HEADER_FILE_EXTENSION_FILTER_NAMES = {"Header Files (*.h, *.hh)", "All Files"};
+	public static final String[] HEADER_FILE_EXTENSION_FILTERS = {"*.h;*.hh;*.hpp", "*.*"};
+	public static final String[] HEADER_FILE_EXTENSION_FILTER_NAMES = {"Header Files (*.h, *.hh, *.hpp)", "All Files"};
 	public static final String[] PACKAGE_CONFIGURATION_FILE_EXTENSION_FILTERS = {"*.pc", "*.*"};
 	public static final String[] PACKAGE_CONFIGURATION_FILE_EXTENSION_FILTER_NAMES = {"Package Configuration Files (*.pc)", "All Files"};
 	
