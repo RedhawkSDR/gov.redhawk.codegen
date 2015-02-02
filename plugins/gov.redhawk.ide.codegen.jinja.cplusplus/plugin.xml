@@ -88,6 +88,37 @@
                type="resource">
          </componenttype>
       </codegen>
+      <codegen
+            autoGenerate="false"
+            class="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusSoftpkgGenerator"
+            compiler="/usr/bin/gcc"
+            compilerVersion="4.1.2"
+            humanLanguage="EN"
+            id="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusSoftpkgGenerator"
+            language="C++"
+            languageVersion="0"
+            name="C++ Softpkg Code Generator"
+            notDefaultable="false"
+            priority="normal">
+         <description>
+            Integrated&apos;redhawk-codegen&apos; C++ code generator for soft package libraries.
+         </description>
+         <operatingSystem
+               default="true"
+               os="Linux">
+         </operatingSystem>
+         <processor
+               default="true"
+               proc_type="x86">
+         </processor>
+         <processor
+               default="true"
+               proc_type="x86_64">
+         </processor>
+         <componenttype
+               type="resource">
+         </componenttype>
+      </codegen>
    </extension>
    <extension
          point="gov.redhawk.ide.codegen.codegenTemplate">

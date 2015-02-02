@@ -16,7 +16,6 @@ import gov.redhawk.ide.codegen.RedhawkCodegenActivator;
 import gov.redhawk.ide.softpackage.ui.wizard.models.SoftpackageModel;
 import gov.redhawk.ide.spd.ui.wizard.ImplementationWizardPage;
 import mil.jpeojtrs.sca.spd.Implementation;
-import mil.jpeojtrs.sca.spd.SpdPackage;
 
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
@@ -25,7 +24,6 @@ import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
@@ -41,7 +39,6 @@ import org.eclipse.swt.widgets.Text;
 
 public abstract class SoftpackageWizardPage extends ImplementationWizardPage {
 
-	private static final String PAGE_TITLE = "Define Softpackage Implementation"; // TODO
 	public static final String PAGE_DESCRIPTION = "Define an implementation of the softpackage library.  For example this could include x86 and x86_64 versions etc."; // TODO
 
 	protected final SoftpackageModel model;
@@ -99,7 +96,7 @@ public abstract class SoftpackageWizardPage extends ImplementationWizardPage {
 	private void handleTypeSelectionChanged() {
 
 		// TODO: use the type to determine the code generator ID, hardcoding for now
-		String codeGenId = "gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusGenerator";
+		String codeGenId = "gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusSoftpkgGenerator";
 
 		// Update impl and implSettings values to match selected type
 		ICodeGeneratorDescriptor tempCodeGen = RedhawkCodegenActivator.getCodeGeneratorsRegistry().findCodegen(codeGenId);
@@ -111,6 +108,9 @@ public abstract class SoftpackageWizardPage extends ImplementationWizardPage {
 		implementation.getCompiler().setName(tempCodeGen.getCompiler());
 		implementation.getCompiler().setVersion(tempCodeGen.getCompilerVersion());
 		this.getProgLang().setName(tempCodeGen.getLanguage());
+
+		// TODO: If we don't do this we get an empty runtime tag in the spd.xml. Find out why...
+		implementation.setRuntime(null);
 	}
 
 	@Override
@@ -122,15 +122,6 @@ public abstract class SoftpackageWizardPage extends ImplementationWizardPage {
 	 * Creates the databindings that are used by this page
 	 */
 	private void bind() {
-		// Bind the impl programming language to the combo box selection
-		// Need null check - Multiple child classes, but one child class can have an implementation at a time
-		if (this.getImplementation() != null) {
-			dbc.bindValue(SWTObservables.observeText(typeCombo),
-				EMFObservables.observeValue(this.getProgLang(), SpdPackage.Literals.PROGRAMMING_LANGUAGE__NAME));
-		}
-
-		// TODO: Is this binding needed at this point? Seems redundant with other programming lanuage binding, may need
-		// to do one or the other
 		// Binds model type name with type combo
 		dbc.bindValue(SWTObservables.observeSelection(typeCombo), BeansObservables.observeValue(model, SoftpackageModel.TYPE_NAME));
 
