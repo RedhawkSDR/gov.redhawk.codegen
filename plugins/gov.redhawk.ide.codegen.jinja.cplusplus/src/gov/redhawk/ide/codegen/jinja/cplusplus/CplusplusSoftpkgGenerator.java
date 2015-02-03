@@ -42,6 +42,7 @@ import org.eclipse.core.runtime.IStatus;
 public class CplusplusSoftpkgGenerator extends AbstractCplusplusCodeGenerator implements IScaComponentCodegenSetup {
 
 	public static final String ID = "gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusSoftpkgGenerator";
+	public static final String TEMPLATE = "redhawk.codegen.jinja.cpp.component.softpkg";
 
 	private final JinjaGenerator generator = new JinjaGenerator();
 
@@ -81,9 +82,7 @@ public class CplusplusSoftpkgGenerator extends AbstractCplusplusCodeGenerator im
 	}
 
 	@Override
-	protected void generateCode(final Implementation impl, final ImplementationSettings implSettings, final IProject project, final String componentName, // SUPPRESS
-																																							// CHECKSTYLE
-																																							// Arguments
+	protected void generateCode(final Implementation impl, final ImplementationSettings implSettings, final IProject project, final String componentName, // SUPPRESS CHECKSTYLE Arguments
 		final PrintStream out, final PrintStream err, final IProgressMonitor monitor, final String[] generateFiles, final List<FileToCRCMap> crcMap)
 		throws CoreException {
 

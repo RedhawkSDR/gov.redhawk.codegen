@@ -104,6 +104,17 @@ public abstract class SoftpackageWizardPage extends ImplementationWizardPage {
 		ImplementationSettings settings = getImplSettings();
 
 		settings.setGeneratorId(tempCodeGen.getId());
+		// TODO: How should we determine ouput dir
+		if ("C++".equals(tempCodeGen.getLanguage())) {
+			settings.setOutputDir("cpp");
+		} else if ("Java".equals(tempCodeGen.getLanguage())) {
+			settings.setOutputDir("java");
+		} else if ("Python".equals(tempCodeGen.getLanguage())) {
+			settings.setOutputDir("python");
+		}
+		
+		// TODO: determine the template dynamically based on language
+		settings.setTemplate("redhawk.codegen.jinja.project.softPackageDependency.cpp");
 		implementation.setId(model.getTypeName());
 		implementation.getCompiler().setName(tempCodeGen.getCompiler());
 		implementation.getCompiler().setVersion(tempCodeGen.getCompilerVersion());
