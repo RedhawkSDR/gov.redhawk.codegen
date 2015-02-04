@@ -37,7 +37,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 
 /**
- * @since 1.1
+ * @since 1.2
  */
 public class CplusplusSoftpkgGenerator extends AbstractCplusplusCodeGenerator implements IScaComponentCodegenSetup {
 
