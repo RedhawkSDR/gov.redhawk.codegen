@@ -42,7 +42,7 @@ import org.eclipse.core.runtime.IStatus;
 public class CplusplusSoftpkgGenerator extends AbstractCplusplusCodeGenerator implements IScaComponentCodegenSetup {
 
 	public static final String ID = "gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusSoftpkgGenerator";
-	public static final String TEMPLATE = "redhawk.codegen.jinja.cpp.component.softpkg";
+	public static final String TEMPLATE = "redhawk.codegen.jinja.project.softPackageDependency.cpp";
 
 	private final JinjaGenerator generator = new JinjaGenerator();
 

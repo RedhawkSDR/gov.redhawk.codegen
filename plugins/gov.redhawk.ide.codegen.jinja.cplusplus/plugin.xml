@@ -195,22 +195,6 @@
             A template to aid in development of a Front End Interfaces compliant device.
          </description>
       </template>
-      <template
-            class="gov.redhawk.ide.codegen.jinja.cplusplus.template.DefaultCppTemplate"
-            codegenId="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusSoftpkgGenerator"
-            hasSettings="false"
-            id="redhawk.codegen.jinja.cpp.component.softpkg"
-            name="SoftPackage Template"
-            notDefaultable="false"
-            selectable="true"
-            usesPortTemplates="false">
-         <componenttype
-               type="resource">
-         </componenttype>
-         <description>
-            Softpackage Code Generator
-         </description>
-      </template>
    </extension>
    <extension
          point="gov.redhawk.ide.debug.launchConfigurationFactories">

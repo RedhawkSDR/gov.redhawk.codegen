@@ -17,147 +17,68 @@ import gov.redhawk.ide.softpackage.ui.wizard.models.SoftpackageModel;
 import gov.redhawk.ide.spd.ui.wizard.ImplementationWizardPage;
 import mil.jpeojtrs.sca.spd.Implementation;
 
-import org.eclipse.core.databinding.Binding;
-import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.beans.BeansObservables;
-import org.eclipse.core.databinding.validation.IValidator;
-import org.eclipse.core.databinding.validation.ValidationStatus;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
-import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.jface.databinding.wizard.WizardPageSupport;
-import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 
-public abstract class SoftpackageWizardPage extends ImplementationWizardPage {
+public class SoftpackageWizardPage extends ImplementationWizardPage {
 
-	public static final String PAGE_DESCRIPTION = "Define an implementation of the softpackage library.  For example this could include x86 and x86_64 versions etc."; // TODO
-
-	protected final SoftpackageModel model;
-	protected final DataBindingContext dbc;
-	private Combo typeCombo;
-	private Text implText;
-
-	protected Composite client;
+	private final SoftpackageModel model;
 
 	public SoftpackageWizardPage(String pagename, SoftpackageModel model, String componentType) {
 		super(pagename, componentType);
-		setDescription(PAGE_DESCRIPTION);
-		this.model = (model == null) ? new SoftpackageModel() : model;
-		dbc = new DataBindingContext();
+		this.model = model;
 	}
 
+	/* (non-Javadoc)
+	 * @see gov.redhawk.ide.spd.ui.wizard.ImplementationWizardPage#createControl(org.eclipse.swt.widgets.Composite)
+	 */
 	@Override
 	public void createControl(Composite parent) {
-		client = new Composite(parent, SWT.NULL);
+		final Composite client = new Composite(parent, SWT.NULL);
 		client.setLayout(new GridLayout(1, false));
-		client.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-		this.setControl(client);
-
-		Composite composite = new Composite(client, SWT.NULL);
-		composite.setLayout(new GridLayout(5, false));
-		composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-
-		Label label = new Label(composite, SWT.NULL);
-		label.setText("Type:");
-		typeCombo = new Combo(composite, SWT.BORDER | SWT.READ_ONLY);
-		typeCombo.setItems(SoftpackageModel.TYPES);
-		typeCombo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).create());
-		typeCombo.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				handleTypeSelectionChanged();
-			}
-		});
-
-		label = new Label(composite, SWT.NULL);
-		label.setText("Implementation:");
-		implText = new Text(composite, SWT.BORDER);
-		implText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).create());
-
-		if (model.getTypeName() != null) {
-			int initialIndex = typeCombo.indexOf(model.getTypeName());
-			typeCombo.select((initialIndex < 0) ? 0 : initialIndex);
-		}
-
-		this.bind();
-
-		WizardPageSupport.create(this, dbc);
+		setControl(client);
 	}
 
-	private void handleTypeSelectionChanged() {
+	// Update Implementation and Implementation Settings values to match selected type
+	public void handleTypeSelectionChanged() {
 
-		// TODO: use the type to determine the code generator ID, hardcoding for now
+		// Currently only supporting cpp & octave, which use the same generator -
+		// if we add new type, use model.getTypeName() to determine the code generator ID
 		String codeGenId = "gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusSoftpkgGenerator";
 
-		// Update impl and implSettings values to match selected type
 		ICodeGeneratorDescriptor tempCodeGen = RedhawkCodegenActivator.getCodeGeneratorsRegistry().findCodegen(codeGenId);
 		Implementation implementation = getImplementation();
 		ImplementationSettings settings = getImplSettings();
-
 		settings.setGeneratorId(tempCodeGen.getId());
-		// TODO: How should we determine ouput dir
-		if ("C++".equals(tempCodeGen.getLanguage())) {
+
+		if ("C++".equals(model.getTypeName())) {
+			implementation.setId("cpp");
 			settings.setOutputDir("cpp");
-		} else if ("Java".equals(tempCodeGen.getLanguage())) {
-			settings.setOutputDir("java");
-		} else if ("Python".equals(tempCodeGen.getLanguage())) {
-			settings.setOutputDir("python");
+			settings.setTemplate("redhawk.codegen.jinja.project.softPackageDependency.cpp");
+		} else if ("Octave".equals(model.getTypeName())) {
+			implementation.setId("octave");
+			settings.setOutputDir("cpp");
+			// TODO: need an octave template to set here
+			settings.setTemplate(null);
 		}
-		
-		// TODO: determine the template dynamically based on language
-		settings.setTemplate("redhawk.codegen.jinja.project.softPackageDependency.cpp");
-		implementation.setId(model.getTypeName());
+
 		implementation.getCompiler().setName(tempCodeGen.getCompiler());
 		implementation.getCompiler().setVersion(tempCodeGen.getCompilerVersion());
 		this.getProgLang().setName(tempCodeGen.getLanguage());
-
-		// TODO: If we don't do this we get an empty runtime tag in the spd.xml. Find out why...
-		implementation.setRuntime(null);
+		if (tempCodeGen.getRuntime() != null) {
+			implementation.getRuntime().setName(tempCodeGen.getRuntime());
+			implementation.getRuntime().setVersion(tempCodeGen.getRuntimeVersion());
+		} else {
+			implementation.setRuntime(null);
+		}
 	}
 
+	/* (non-Javadoc)
+	 * @see gov.redhawk.ide.spd.ui.wizard.ImplementationWizardPage#isPageComplete()
+	 */
 	@Override
 	public boolean isPageComplete() {
-		return !typeCombo.getText().isEmpty();
-	}
-
-	/**
-	 * Creates the databindings that are used by this page
-	 */
-	private void bind() {
-		// Binds model type name with type combo
-		dbc.bindValue(SWTObservables.observeSelection(typeCombo), BeansObservables.observeValue(model, SoftpackageModel.TYPE_NAME));
-
-		// Binds model implementation name with implementation text box, and provides validation
-		Binding binding = dbc.bindValue(SWTObservables.observeText(implText, SWT.Modify), BeansObservables.observeValue(model, SoftpackageModel.IMPL_NAME),
-			new UpdateValueStrategy().setAfterConvertValidator(new IValidator() {
-
-				@Override
-				public IStatus validate(Object value) {
-					String strValue = (String) value;
-					if (!strValue.isEmpty()) {
-						if (strValue.contains(" ")) {
-							return ValidationStatus.error("Implementation name must not include spaces.");
-						} else if (!strValue.matches("^[a-zA-Z0-9._-]+$")) {
-							return ValidationStatus.error("Implementation name must be filename safe.");
-						}
-					}
-					return ValidationStatus.ok();
-				}
-
-			}), null);
-		ControlDecorationSupport.create(binding, SWT.TOP | SWT.LEFT);
-	}
-
-	public SoftpackageModel getModel() {
-		return model;
-	}
+		return getImplementation() != null;
+	};
 }

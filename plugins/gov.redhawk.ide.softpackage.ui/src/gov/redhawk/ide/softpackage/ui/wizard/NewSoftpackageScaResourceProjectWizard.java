@@ -24,8 +24,6 @@ import gov.redhawk.ide.ui.wizard.ScaProjectPropertiesWizardPage;
 import gov.redhawk.model.sca.util.ModelUtil;
 import gov.redhawk.sca.util.SubMonitor;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -34,6 +32,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mil.jpeojtrs.sca.spd.Implementation;
+import mil.jpeojtrs.sca.spd.SoftPkg;
+import mil.jpeojtrs.sca.spd.SpdFactory;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -58,40 +58,23 @@ import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 public class NewSoftpackageScaResourceProjectWizard extends NewScaResourceProjectWizard implements IImportWizard {
 
 	private final SoftpackageProjectPropertiesWizardPage p1 = new SoftpackageProjectPropertiesWizardPage("projectPage", "Softpackage");
-	private SoftpackageWizardPage p2;
-
-	private final SoftpackageCreateNewLibraryWizardPage createNewLibraryPage = new SoftpackageCreateNewLibraryWizardPage("tablePageNew",
-		ICodeGeneratorDescriptor.COMPONENT_TYPE_RESOURCE);
-	private final SoftpackageUseExistingLibraryWizardPage useExistingLibraryPage = new SoftpackageUseExistingLibraryWizardPage("tablePageExisting",
-		ICodeGeneratorDescriptor.COMPONENT_TYPE_RESOURCE);
+	private SoftpackageWizardPage p2 = new SoftpackageWizardPage("tablePageNew", p1.getModel(), ICodeGeneratorDescriptor.COMPONENT_TYPE_RESOURCE);
 
 	public NewSoftpackageScaResourceProjectWizard() {
 		super();
 		setWindowTitle("New Softpackage Project");
-		p2 = createNewLibraryPage;
-
-		// Updates wizard based on selection of "Create new library" or "Use existing library"
-		p1.addPropertyChangeListener(new PropertyChangeListener() {
-			@Override
-			public void propertyChange(PropertyChangeEvent evt) {
-				if (p1.getModel().isCreateNewLibrary()) {
-					p2 = createNewLibraryPage;
-				} else {
-					p2 = useExistingLibraryPage;
-				}
-			}
-		});
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void addPages() {
+		// NOTE: Since Java doesn't allow multiple-inheritance, a second 'hidden' page is included
+		// to handle implementation page actions. This page is not meant to be exposed to users.
 		setResourcePropertiesPage((ScaProjectPropertiesWizardPage) p1);
 		addPage(getResourcePropertiesPage());
-		addPage(createNewLibraryPage);
-		addPage(useExistingLibraryPage);
 
 		setImplPage((ImplementationWizardPage) p2);
+		addPage(getImplPage());
 		getImplPage().setImpl(this.getImplementation());
 		getImplList().add(new ImplementationAndSettings(getImplPage().getImplementation(), getImplPage().getImplSettings()));
 
@@ -123,11 +106,17 @@ public class NewSoftpackageScaResourceProjectWizard extends NewScaResourceProjec
 
 	@Override
 	public boolean canFinish() {
-		return p1.canFlipToNextPage() && p2.isPageComplete();
+		return p1.isPageComplete();
 	}
 
 	@Override
 	public boolean performFinish() {
+		// Create a softpkg for this project
+		final SoftPkg newSoftPkg = SpdFactory.eINSTANCE.createSoftPkg();
+		newSoftPkg.setName(getResourcePropertiesPage().getProjectName());
+		newSoftPkg.setId(getID());
+		setSoftPkg(newSoftPkg);
+
 		final IWorkingSet[] workingSets = this.p1.getSelectedWorkingSets();
 		final java.net.URI locationURI;
 		if (this.p1.useDefaults()) {
@@ -158,11 +147,10 @@ public class NewSoftpackageScaResourceProjectWizard extends NewScaResourceProjec
 						}
 						BasicNewProjectResourceWizard.updatePerspective(getfConfig());
 
-						// TODO: Needs to be a new project vs. import project check here,
-						// see NewScaResourceWizard - 651
 						// Populate the softpackage spd.xml with base information and implementation
 						setOpenEditorOn(SoftPackageProjectCreator.createComponentFiles(project, projectName, getSoftPkg().getId(), null, progress.newChild(1)));
 						SoftPackageProjectCreator.addImplementation(project, projectName, pageImpl, settings, progress.newChild(1));
+						generateFiles(settings, pageImpl, progress.newChild(1));
 
 						project.refreshLocal(IResource.DEPTH_INFINITE, progress.newChild(1));
 
@@ -172,8 +160,6 @@ public class NewSoftpackageScaResourceProjectWizard extends NewScaResourceProjec
 						}
 						throw e;
 					}
-
-					generateFiles(settings, pageImpl, progress.newChild(1));
 
 				} catch (final CoreException e) {
 					throw e;
@@ -221,9 +207,10 @@ public class NewSoftpackageScaResourceProjectWizard extends NewScaResourceProjec
 	 * @param subMonitor
 	 * @param pageImpl
 	 * @param settings
+	 * @throws CoreException
 	 * 
 	 */
-	private void generateFiles(ImplementationSettings implSettings, Implementation impl, SubMonitor monitor) {
+	private void generateFiles(ImplementationSettings implSettings, Implementation impl, SubMonitor monitor) throws CoreException {
 		// TODO: CHECKSTYLE:OFF
 		// TODO: Pull this method up, possibly as an overloaded method in the JinjaGenerator class?
 		SubMonitor subMonitor = SubMonitor.convert(monitor, "Generating Softpkg Files...", 3);
@@ -262,6 +249,9 @@ public class NewSoftpackageScaResourceProjectWizard extends NewScaResourceProjec
 
 		final String[] command = args.toArray(new String[args.size()]);
 		for (final String arg : args) {
+			if (arg == null) {
+				throw new CoreException(new Status(IStatus.ERROR, SoftPackageUi.PLUGIN_ID, "Error found in code-generation command: \n" + args));
+			}
 			System.out.print(arg + " ");
 		}
 		System.out.println();

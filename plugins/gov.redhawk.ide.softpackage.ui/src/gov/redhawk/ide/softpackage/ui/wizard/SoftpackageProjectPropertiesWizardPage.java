@@ -10,98 +10,92 @@
  *******************************************************************************/
 package gov.redhawk.ide.softpackage.ui.wizard;
 
+import gov.redhawk.ide.softpackage.ui.wizard.models.SoftpackageModel;
 import gov.redhawk.ide.spd.ui.wizard.ScaResourceProjectPropertiesWizardPage;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.BeansObservables;
-import org.eclipse.jface.databinding.swt.WidgetProperties;
+import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 
 public class SoftpackageProjectPropertiesWizardPage extends ScaResourceProjectPropertiesWizardPage {
 
-	private String type;
-	private final SoftpackageImplementationWizardPageModel model;
+	private Combo typeCombo;
 	private final DataBindingContext dbc;
+	private final SoftpackageModel model;
 
 	public SoftpackageProjectPropertiesWizardPage(String pageName, String type) {
 		super(pageName, type);
 		setShowContentsGroup(false);
-		this.type = type;
+		this.model = new SoftpackageModel();
 		this.dbc = new DataBindingContext();
-		this.model = new SoftpackageImplementationWizardPageModel();
 	}
 
-	/**
-	 * The Model for this page.
-	 * Used to update page two of the wizard depending on if 'new' or 'existing' project is selected
-	 */
-	public class SoftpackageImplementationWizardPageModel {
-		public static final String CREATE_NEW_LIBRARY = "createNewLibrary";
-
-		private final transient PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-		private boolean createNewLibrary = true;
-
-		public boolean isCreateNewLibrary() {
-			return createNewLibrary;
-		}
-
-		public void setCreateNewLibrary(boolean newValue) {
-			final boolean oldValue = this.createNewLibrary;
-			this.createNewLibrary = newValue;
-			this.pcs.firePropertyChange(new PropertyChangeEvent(this, SoftpackageImplementationWizardPageModel.CREATE_NEW_LIBRARY, oldValue, newValue));
-		}
-
-		public void addPropertyChangeListener(final PropertyChangeListener listener) {
-			this.pcs.addPropertyChangeListener(listener);
-		}
-
-		public void removePropertyChangeListener(final PropertyChangeListener listener) {
-			this.pcs.removePropertyChangeListener(listener);
-		}
-
-	}
-
-	/* (non-Javadoc)
-	 * @see gov.redhawk.ide.spd.ui.wizard.ScaResourceProjectPropertiesWizardPage#createControl(org.eclipse.swt.widgets.Composite)
-	 */
 	@Override
-	public void createControl(Composite parent) {
-		super.createControl(parent);
-		Group spContentsGroup = new Group((Composite) getControl(), SWT.NONE);
-		spContentsGroup.setText("Contents");
-		spContentsGroup.setLayout(new GridLayout(1, true));
-		spContentsGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+	public void customCreateControl(Composite composite) {
+		Group contentsGroup = new Group((Composite) getControl(), SWT.NONE);
+		contentsGroup.setText("Contents");
+		contentsGroup.setLayout(new GridLayout(1, true));
+		contentsGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 
-		final Button createNewResourceButton = new Button(spContentsGroup, SWT.RADIO);
-		createNewResourceButton.setLayoutData(new GridLayout(1, true));
-		createNewResourceButton.setText("Create a new " + type.toLowerCase() + " library");
-		createNewResourceButton.setLayoutData(GridDataFactory.fillDefaults().create());
-		createNewResourceButton.setSelection(true);
-		dbc.bindValue(WidgetProperties.selection().observe(createNewResourceButton),
-			BeansObservables.observeValue(model, SoftpackageImplementationWizardPageModel.CREATE_NEW_LIBRARY));
+		Label label = new Label(contentsGroup, SWT.NULL);
+		label.setText("Type:");
 
-		Button useExistingButton = new Button(spContentsGroup, SWT.RADIO);
-		GridDataFactory.generate(useExistingButton, 1, 1);
-		useExistingButton.setText("Use existing library" + type.toLowerCase() + " library");
-		useExistingButton.setLayoutData(GridDataFactory.fillDefaults().create());
+		typeCombo = new Combo(contentsGroup, SWT.BORDER | SWT.READ_ONLY);
+		typeCombo.setItems(SoftpackageModel.TYPES);
+		typeCombo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).create());
+		typeCombo.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				SoftpackageWizardPage implPage = (SoftpackageWizardPage) getNextPage();
+				implPage.handleTypeSelectionChanged();
+				getWizard().getContainer().updateButtons();
+			}
+		});
+
+		bind();
 	}
 
-	public SoftpackageImplementationWizardPageModel getModel() {
-		return model;
+	private void bind() {
+		// Binds model type name with type combo
+		dbc.bindValue(SWTObservables.observeSelection(typeCombo), BeansObservables.observeValue(model, SoftpackageModel.TYPE_NAME));
 	}
 
 	public void addPropertyChangeListener(final PropertyChangeListener listener) {
 		this.model.addPropertyChangeListener(listener);
 	}
 
+	@Override
+	public boolean isPageComplete() {
+		if (typeCombo.getText().isEmpty()) {
+			return false;
+		}
+		
+		return super.isPageComplete();
+	}
+	
+	public SoftpackageModel getModel() {
+		return model;
+	}
+
+	/*
+	 * The next page is the implementation page, which we don't want users going to
+	 * The implementation page just exists since we want to take advantage of two super classes, 
+	 * and Java doesn't allow multiple-inheritance
+	 */
+	@Override
+	public boolean canFlipToNextPage() {
+		return false;
+	}
 }
