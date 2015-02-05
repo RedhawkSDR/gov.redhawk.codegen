@@ -15,7 +15,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 public class SoftpackageModel {
-	public static final String[] TYPES = { "C++", "Octave" };
+	public static final String[] TYPES = { "C++ Library", "Octave Library" };
 	public static final String TYPE_NAME = "typeName";
 
 	private final transient PropertyChangeSupport pcs = new PropertyChangeSupport(this);

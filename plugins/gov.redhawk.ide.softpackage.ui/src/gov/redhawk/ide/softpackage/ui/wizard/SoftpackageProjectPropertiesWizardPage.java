@@ -38,6 +38,7 @@ public class SoftpackageProjectPropertiesWizardPage extends ScaResourceProjectPr
 	public SoftpackageProjectPropertiesWizardPage(String pageName, String type) {
 		super(pageName, type);
 		setShowContentsGroup(false);
+		setShowComponentIDGroup(false);
 		this.model = new SoftpackageModel();
 		this.dbc = new DataBindingContext();
 	}
@@ -46,7 +47,7 @@ public class SoftpackageProjectPropertiesWizardPage extends ScaResourceProjectPr
 	public void customCreateControl(Composite composite) {
 		Group contentsGroup = new Group((Composite) getControl(), SWT.NONE);
 		contentsGroup.setText("Contents");
-		contentsGroup.setLayout(new GridLayout(1, true));
+		contentsGroup.setLayout(new GridLayout(2, false));
 		contentsGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 
 		Label label = new Label(contentsGroup, SWT.NULL);
