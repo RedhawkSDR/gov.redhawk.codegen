@@ -28,7 +28,7 @@ public class PyDevConfigureStartup implements IStartup {
 	private int result = 0;
 
 	private class ConfigurePythonJob extends Job {
-		final boolean manualConfiguration;
+		private final boolean manualConfiguration;
 
 		/**
 		 * @param name
@@ -60,6 +60,9 @@ public class PyDevConfigureStartup implements IStartup {
 		if (!runConfig) {
 			return;
 		}
+
+		// Don't show the PyDev pop-up
+		System.setProperty("pydev.funding.hide", "true");
 
 		// If PyDev isn't configured at all, then prompt the user
 		if (PydevPlugin.getPythonInterpreterManager().isConfigured()) {
