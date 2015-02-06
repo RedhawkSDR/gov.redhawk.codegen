@@ -52,11 +52,11 @@ public class SoftpackageWizardPage extends ImplementationWizardPage {
 		ImplementationSettings settings = getImplSettings();
 		settings.setGeneratorId(tempCodeGen.getId());
 
-		if ("C++".equals(model.getTypeName())) {
+		if ("C++ Library".equals(model.getTypeName())) {
 			implementation.setId("cpp");
 			settings.setOutputDir("cpp");
-			settings.setTemplate("redhawk.codegen.jinja.project.softPackageDependency.cpp");
-		} else if ("Octave".equals(model.getTypeName())) {
+			settings.setTemplate("redhawk.codegen.jinja.cpp.library");
+		} else if ("Octave Library".equals(model.getTypeName())) {
 			implementation.setId("octave");
 			settings.setOutputDir("cpp");
 			// TODO: need an octave template to set here
