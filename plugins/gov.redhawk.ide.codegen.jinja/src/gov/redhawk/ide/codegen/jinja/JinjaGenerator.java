@@ -379,8 +379,8 @@ public class JinjaGenerator {
 			// Provide template 
 			arguments.add("--template=" + templateId);
 
-			// Set base output directory to the project location.
-			arguments.add("--checkSupport");
+			// Check for template
+			arguments.add("--check-template");
 
 			final String[] command = arguments.toArray(new String[arguments.size()]);
 			
