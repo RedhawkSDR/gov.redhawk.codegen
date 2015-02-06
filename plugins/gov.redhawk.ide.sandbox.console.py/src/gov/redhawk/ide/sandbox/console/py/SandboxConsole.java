@@ -124,7 +124,7 @@ public class SandboxConsole extends PydevConsole {
 		final List<IPythonNature> natures = new ArrayList<IPythonNature>();
 		PydevConsoleLaunchInfo info = processFactory.createLaunch(interpreterManager, interpreterInfo, pythonPath, nature, natures);
 
-		final PydevConsoleInterpreter interpreter = PydevConsoleFactory.createPydevInterpreter(info, processFactory.getNaturesUsed());
+		final PydevConsoleInterpreter interpreter = PydevConsoleFactory.createPydevInterpreter(info, processFactory.getNaturesUsed(), "UTF-8");
 
 		return interpreter;
 	}

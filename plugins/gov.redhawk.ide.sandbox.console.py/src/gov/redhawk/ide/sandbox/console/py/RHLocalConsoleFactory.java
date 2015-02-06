@@ -65,7 +65,7 @@ public class RHLocalConsoleFactory implements IConsoleFactory {
 			final List<IPythonNature> natures = new ArrayList<IPythonNature>();
 			PydevConsoleLaunchInfo info = processFactory.createLaunch(interpreterManager, interpreterInfo, pythonPath, nature, natures);
 
-			final PydevConsoleInterpreter interpreter = PydevConsoleFactory.createPydevInterpreter(info, processFactory.getNaturesUsed());
+			final PydevConsoleInterpreter interpreter = PydevConsoleFactory.createPydevInterpreter(info, processFactory.getNaturesUsed(), "UTF-8");
 			String ideLocation = Platform.getInstallLocation().getURL().getPath();
 			final String additionalInitialComands = NLS.bind(Messages.RHLocalConsoleFactory_PY_INIT, ScaDebugPlugin.getInstance().getSandbox(), ideLocation);
 
