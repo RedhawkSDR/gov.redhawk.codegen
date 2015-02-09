@@ -12,6 +12,7 @@
 package gov.redhawk.ide.softpackage.ui.tests;
 
 import gov.redhawk.ide.swtbot.ProjectExplorerUtils;
+import gov.redhawk.ide.swtbot.SoftpackageUtils;
 import gov.redhawk.ide.swtbot.StandardTestActions;
 import gov.redhawk.ide.swtbot.UITest;
 
@@ -36,13 +37,13 @@ public class NewSoftpackageWizardTest extends UITest {
 	private String errorMessage;
 
 	// TODO: Test case for creating octave softpackage projects
-	
+
 	@BeforeClass
 	public static void beforeClassSetup() {
 		// PyDev needs to be configured before running New SCA Softpackage Project Wizards
 		StandardTestActions.configurePyDev();
 	}
-	
+
 	/**
 	 * IDE-1099
 	 */
@@ -99,6 +100,29 @@ public class NewSoftpackageWizardTest extends UITest {
 		ProjectExplorerUtils.selectNode(bot, projectName);
 	}
 
+	// TODO: Do we need to include Octave project type for this test?
+	@Test
+	public void softpackageGenerationTest() {
+		final String projectName = "SoftpackageTest";
+		final String projectType = "C++ Library";
+		final String[][] possiblePaths = new String[][] { { "cpp", "include", projectName + ".h" }, { "cpp", "src", projectName + ".cpp" },
+			{ "cpp", "build.sh" }, { "cpp", "configure.ac" }, { "cpp", projectName + ".pc.in" }, { "cpp", "Makefile.am" }, { "cpp", "Makefile.am.ide" },
+			{ "cpp", "reconf" }, { "tests", "test_" + projectName + ".py" }, { "build.sh" }, { projectName + ".spd.xml" }, { projectName + ".spec" } };
+
+		SoftpackageUtils.createSoftpackageProject(bot, projectName, projectType);
+
+		// Every possible path starts from the same root, in this case the projectName
+		for (String[] possiblePath : possiblePaths) {
+			final String[] path = new String[possiblePath.length + 1];
+			path[0] = projectName;
+			for (int i = 1; i < possiblePath.length + 1; i++) {
+				path[i] = possiblePath[i - 1];
+			}
+			ProjectExplorerUtils.selectNode(bot, path);
+		}
+
+	}
+
 	// Have to do some fancy dancing to get the dialog error message
 	private String getErrorMessage(final SWTBotShell shell) {
 		Display.getDefault().syncExec(new Runnable() {
@@ -116,12 +140,5 @@ public class NewSoftpackageWizardTest extends UITest {
 
 	private void setErrorMessage(String errorMessage) {
 		this.errorMessage = errorMessage;
-	}
-
-	@Test
-	public void softpackageGenerationTest() {
-		// TODO: use utility method to create a softpackage
-		// TODO: make sure all expected files are present in the project explorer
-		// TODO: repeat above steps for each supported type of softpackage
 	}
 }
