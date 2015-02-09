@@ -41,6 +41,7 @@ public class SoftpackageProjectPropertiesWizardPage extends ScaResourceProjectPr
 		setShowComponentIDGroup(false);
 		this.model = new SoftpackageModel();
 		this.dbc = new DataBindingContext();
+		this.setDescription("Create a new Softpackage library");
 	}
 
 	@Override
