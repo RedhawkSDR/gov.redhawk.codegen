@@ -62,6 +62,8 @@ import org.osgi.framework.Version;
 public class JinjaGenerator {
 	static final Pattern VERSION_REGEX = Pattern.compile("\\d+(\\.\\d+(\\.\\d+(\\.\\S+)?)?)?$");
 	static final String[] EMPTY_STRING_ARRAY = new String[0];
+	static final Version VERSION_THAT_GENERATES_GOOD_BUILD_SH = new Version(1, 10, 1);
+	static final Version VERSION_WITH_CHECK_TEMPLATE = new Version(1, 11, 0);
 
 	private static final Debug DEBUG = new Debug(JinjaGeneratorPlugin.PLUGIN_ID, "command");
 
@@ -176,7 +178,7 @@ public class JinjaGenerator {
 		final Process process;
 		try {
 			if (DEBUG.enabled) {
-				DEBUG.trace("Jinja Command:\n{0}", commandToString(command));
+				DEBUG.trace("Jinja Generate Command:\n  {0}", commandToString(command));
 			}
 			process = java.lang.Runtime.getRuntime().exec(command);
 		} catch (final IOException e) {
@@ -266,7 +268,7 @@ public class JinjaGenerator {
 		Process process = null;
 		try {
 			if (DEBUG.enabled) {
-				DEBUG.trace("Jinja List Command:\n{0}", commandToString(command));
+				DEBUG.trace("Jinja List Command:\n  {0}", commandToString(command));
 			}
 			process = java.lang.Runtime.getRuntime().exec(command);
 		} catch (final IOException e) {
@@ -368,7 +370,7 @@ public class JinjaGenerator {
 			return new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Code generator '" + redhawkCodegen.getPath() + "' not found");
 		} else if (!redhawkCodegen.canExecute()) {
 			return new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Code generator '" + redhawkCodegen.getPath() + "' not executable");
-		}		
+		}
 		return new Status(IStatus.OK, JinjaGeneratorPlugin.PLUGIN_ID, "Code generator '" + redhawkCodegen.getPath() + "' is installed");
 	}
 
@@ -380,16 +382,19 @@ public class JinjaGenerator {
 	 * @since 1.1
 	 */
 	public void checkSystem(IProgressMonitor monitor, String id, String templateId) throws CoreException {
+			getCodegenVersion();
 			SubMonitor subMonitor = SubMonitor.convert(monitor, "Checking system development support for " + id + ":" + templateId, IProgressMonitor.UNKNOWN);
 			final ArrayList<String> arguments = new ArrayList<String>();
 			final String redhawkCodegen = getCodegenFile().getPath();
 			arguments.add(redhawkCodegen);
 
-			// Provide template 
-			arguments.add("--template=" + templateId);
-
-			// Check for template
-			arguments.add("--check-template");
+			// Check if template is supported
+			if (VERSION_WITH_CHECK_TEMPLATE.compareTo(codegenVersion) <= 0) {
+				arguments.add("--check-template=" + templateId); // 1.11+ CF codegen option
+			} else {
+				arguments.add("--template=" + templateId); // provide template 1.9+ CF codegen option
+				arguments.add("--checkSupport"); // 1.10+ CF codegen option (fails against 1.9 CF codegen)
+			}
 
 			final String[] command = arguments.toArray(new String[arguments.size()]);
 			
@@ -400,7 +405,7 @@ public class JinjaGenerator {
 			String commandStr = commandToString(command);
 			try {
 				if (DEBUG.enabled) {
-					DEBUG.trace("Jinja Command:\n{0}", commandStr);
+					DEBUG.trace("Jinja Check Command:\n  {0}", commandStr);
 				}
 				process = java.lang.Runtime.getRuntime().exec(command);
 			} catch (final IOException e) {
@@ -487,7 +492,7 @@ public class JinjaGenerator {
 		Process process;
 		try {
 			if (DEBUG.enabled) {
-				DEBUG.trace("Jinja Command:\n  {0}", commandToString(processBuilder.command().toArray(EMPTY_STRING_ARRAY)));
+				DEBUG.trace("Jinja Version Command:\n  {0}", commandToString(processBuilder.command().toArray(EMPTY_STRING_ARRAY)));
 			}
 			process = processBuilder.start();
 		} catch (final IOException e) {
@@ -512,7 +517,7 @@ public class JinjaGenerator {
 
 			int exitCode = process.waitFor();
 			if (DEBUG.enabled) {
-				DEBUG.trace("parsed codegen version : {0}  exitCode={1}", version, exitCode);
+				DEBUG.trace("parsed version: {0}  exitCode={1}", version, exitCode);
 			}
 			if (exitCode != 0) { // failed to get codegen's version
 				version = Version.emptyVersion; // reset to empty version 0.0.0 for unknown version
