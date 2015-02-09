@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Tests
+Bundle-SymbolicName: gov.redhawk.ide.softpackage.ui.tests
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: gov.redhawk.ide.softpackage.ui.tests.SoftpackageTestsActivator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ gov.redhawk.ide.swtbot,
+ gov.redhawk.ide.softpackage.ui
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
