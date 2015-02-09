@@ -37,6 +37,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import mil.jpeojtrs.sca.spd.Implementation;
 import mil.jpeojtrs.sca.spd.SoftPkg;
@@ -54,12 +56,19 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.URI;
+import org.osgi.framework.Version;
 
+/** REDHAWK Core Framework (1.9+ Jinja based) Code Generator (i.e. redhawk-codegen). */
 public class JinjaGenerator {
-	
+	static final Pattern VERSION_REGEX = Pattern.compile("\\d+(\\.\\d+(\\.\\d+(\\.\\S+)?)?)?$");
+	static final String[] EMPTY_STRING_ARRAY = new String[0];
+
 	private static final Debug DEBUG = new Debug(JinjaGeneratorPlugin.PLUGIN_ID, "command");
 
 	private static final ExecutorService EXECUTOR_POOL = Executors.newSingleThreadExecutor(new NamedThreadFactory(JinjaGenerator.class.getName()));
+
+	/** current version of the REDHAWK (core framework) code generator */
+	private Version codegenVersion = null;
 
 	private List<String> settingsToOptions(final ImplementationSettings implSettings) {
 		final List<String> arguments = new ArrayList<String>();
@@ -115,7 +124,7 @@ public class JinjaGenerator {
 	private String commandToString(String [] command) {
 		StringBuilder builder = new StringBuilder();
 		for (String s : command) {
-			builder.append(s + " ");
+			builder.append(s).append(' ');
 		}
 		return builder.toString();
 	}
@@ -359,7 +368,7 @@ public class JinjaGenerator {
 			return new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Code generator '" + redhawkCodegen.getPath() + "' not found");
 		} else if (!redhawkCodegen.canExecute()) {
 			return new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Code generator '" + redhawkCodegen.getPath() + "' not executable");
-		}
+		}		
 		return new Status(IStatus.OK, JinjaGeneratorPlugin.PLUGIN_ID, "Code generator '" + redhawkCodegen.getPath() + "' is installed");
 	}
 
@@ -457,4 +466,80 @@ public class JinjaGenerator {
 				subMonitor.done();
 			}
 	}
+	
+	/**
+	 * Uses redhawk-codegen --version option from 1.11+ (prior versions [1.9 - 1.10] fails with non-zero exit code).
+	 * @return code generator's version, falls back to the empty version (0.0.0) if not able to determine it's version (i.e. unknown).
+	 * @since 1.2
+	 */
+	public Version getCodegenVersion() throws CoreException {
+		if (codegenVersion != null) { // if already got codegen's version
+			return codegenVersion;    // use cached version for this object's session
+		}
+
+		final String redhawkCodegen = getCodegenFile().getPath();
+		ProcessBuilder processBuilder = new ProcessBuilder(redhawkCodegen, "--version");
+		processBuilder.redirectErrorStream(true); // merge stderr with stdout to simply logic
+		
+		// Launch the code generator to get it's version
+		// NOTE: The process has implicitly exited (and been cleaned up by the JVM) when
+		//       standard out/error are closed, so there is no need to explicitly wait for it.
+		Process process;
+		try {
+			if (DEBUG.enabled) {
+				DEBUG.trace("Jinja Command:\n  {0}", commandToString(processBuilder.command().toArray(EMPTY_STRING_ARRAY)));
+			}
+			process = processBuilder.start();
+		} catch (final IOException e) {
+			throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Exception running '" + redhawkCodegen + "'", e));
+		}
+
+		Version version = null;
+		final InputStreamReader inStream = new InputStreamReader(process.getInputStream());
+		final BufferedReader reader = new BufferedReader(inStream);
+		try {
+			for (String line = reader.readLine(); line != null; line = reader.readLine()) {
+				Matcher matcher = VERSION_REGEX.matcher(line);
+				if (matcher.find()) { // found version string
+					try {
+						version = new Version(line.substring(matcher.start(), matcher.end()));
+						break; // found a valid version string and successfully converted to Version object
+					} catch (IllegalArgumentException ex) {
+						// PASS - continue to next line
+					}
+				}
+			} // end for loop for reading through stdout/stderr
+
+			int exitCode = process.waitFor();
+			if (DEBUG.enabled) {
+				DEBUG.trace("parsed codegen version : {0}  exitCode={1}", version, exitCode);
+			}
+			if (exitCode != 0) { // failed to get codegen's version
+				version = Version.emptyVersion; // reset to empty version 0.0.0 for unknown version
+			}
+
+		} catch (final IOException e) {
+			throw new CoreException(
+				new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Exception reading standard out from '" + redhawkCodegen + "' to get it's version", e));
+		} catch (InterruptedException e) {
+			// PASS - continue
+			throw new CoreException(
+				new Status(IStatus.WARNING, JinjaGeneratorPlugin.PLUGIN_ID, "Interrupted while reading standard out from '" + redhawkCodegen + "' to get it's version", e));
+		} finally {
+
+			try {
+				reader.close(); // this also closes the wrapped inStream
+			} catch (final IOException e) {
+				// This is highly unlikely to occur, but log it just in case.
+				JinjaGeneratorPlugin.logError("Exception closing standard out", e);
+			}
+		}
+		if (version == null) {
+			version = Version.emptyVersion;
+		}
+		codegenVersion = version;
+		DEBUG.exitingMethod(version);
+		return version;
+	}
+
 }
