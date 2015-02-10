@@ -7,6 +7,7 @@ Bundle-Activator: gov.redhawk.ide.softpackage.ui.tests.SoftpackageTestsActivator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  gov.redhawk.ide.swtbot,
- gov.redhawk.ide.softpackage.ui
+ gov.redhawk.ide.softpackage.ui,
+ org.eclipse.swtbot.eclipse.gef.finder
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
