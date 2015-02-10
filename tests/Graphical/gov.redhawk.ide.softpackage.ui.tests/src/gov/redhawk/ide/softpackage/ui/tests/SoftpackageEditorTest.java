@@ -19,7 +19,6 @@ import gov.redhawk.ide.swtbot.diagram.DiagramTestUtils;
 
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotLabel;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
