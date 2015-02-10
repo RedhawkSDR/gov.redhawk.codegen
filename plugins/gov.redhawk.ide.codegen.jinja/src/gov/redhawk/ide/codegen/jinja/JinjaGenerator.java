@@ -17,6 +17,7 @@ import gov.redhawk.ide.codegen.FileStatus.Type;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.Property;
 import gov.redhawk.ide.codegen.jinja.utils.InputRedirector;
+import gov.redhawk.ide.sdr.ui.export.ExportUtils;
 import gov.redhawk.model.sca.util.ModelUtil;
 import gov.redhawk.sca.util.Debug;
 
@@ -232,6 +233,14 @@ public class JinjaGenerator {
 						throw new OperationCanceledException();
 					}
 				}
+			}
+			Version cfCodegenVersion = getCodegenVersion();
+			if (cfCodegenVersion.compareTo(VERSION_1_10_1) >= 0) { // 1.10.1+ CF codegen is good for all implementation languages
+				String additionalRequiredFile = null;
+				if ("cpp".equals(implSettings.getId())) {
+					additionalRequiredFile = "build.sh";
+				}
+				ExportUtils.setUseBuildSH(project, generateFiles, additionalRequiredFile);
 			}
 		} finally {
 			out.println(""); // add newline to separate current output from next run's output in console
