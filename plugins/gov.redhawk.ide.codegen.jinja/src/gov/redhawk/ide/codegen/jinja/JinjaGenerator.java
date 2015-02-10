@@ -23,6 +23,7 @@ import gov.redhawk.sca.util.Debug;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
@@ -60,10 +61,10 @@ import org.osgi.framework.Version;
 
 /** REDHAWK Core Framework (1.9+ Jinja based) Code Generator (i.e. redhawk-codegen). */
 public class JinjaGenerator {
-	static final Pattern VERSION_REGEX = Pattern.compile("\\d+(\\.\\d+(\\.\\d+(\\.\\S+)?)?)?$");
 	static final String[] EMPTY_STRING_ARRAY = new String[0];
-	static final Version VERSION_THAT_GENERATES_GOOD_BUILD_SH = new Version(1, 10, 1);
-	static final Version VERSION_WITH_CHECK_TEMPLATE = new Version(1, 11, 0);
+	static final Pattern  VERSION_REGEX  = Pattern.compile("\\d+(\\.\\d+(\\.\\d+(\\.\\S+)?)?)?$");
+	static final Version  VERSION_1_10_1 = new Version(1, 10, 1);
+	static final Version  VERSION_1_11_0 = new Version(1, 11, 0);
 
 	private static final Debug DEBUG = new Debug(JinjaGeneratorPlugin.PLUGIN_ID, "command");
 
@@ -102,7 +103,6 @@ public class JinjaGenerator {
 			} catch (CoreException e) {
 				throw new IllegalArgumentException("Unknown uri " + uri, e);
 			}
-
 		}
 	}
 
@@ -123,9 +123,9 @@ public class JinjaGenerator {
 		}
 	}
 	
-	private String commandToString(String [] command) {
-		StringBuilder builder = new StringBuilder();
-		for (String s : command) {
+	private String listToString(List<String> list) {
+		StringBuilder builder = new StringBuilder(256);
+		for (String s : list) {
 			builder.append(s).append(' ');
 		}
 		return builder.toString();
@@ -164,23 +164,21 @@ public class JinjaGenerator {
 				arguments.add(prependPath(implSettings.getOutputDir(), fileName));
 			}
 		}
-		final String[] command = arguments.toArray(new String[arguments.size()]);
 
+		final String commandline = listToString(arguments);
 		// Print the command to the console.
-		for (final String arg : command) {
-			out.print(arg + " ");
-		}
-		out.println();
+		out.println(commandline + " ");
 
 		// Launch the code generator.
 		// NB: The process has implicitly exited (and been cleaned up by the JVM) when
 		//     standard out/error are closed, so there is no need to explicitly wait for it.
+		ProcessBuilder processBuilder = new ProcessBuilder(arguments);
 		final Process process;
 		try {
 			if (DEBUG.enabled) {
-				DEBUG.trace("Jinja Generate Command:\n  {0}", commandToString(command));
+				DEBUG.trace("Jinja Generate Command:\n  {0}", commandline);
 			}
-			process = java.lang.Runtime.getRuntime().exec(command);
+			process = processBuilder.start();
 		} catch (final IOException e) {
 			throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Exception running '" + redhawkCodegen + "'", e));
 		}
@@ -218,8 +216,9 @@ public class JinjaGenerator {
 				try {
 					int retValue = future.get(2, TimeUnit.SECONDS);
 					if (retValue != 0) {
-						throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, command[0] + " returned with error code " + retValue
-							+ "\n\nSee console output for details.", null));
+						out.println("exit code = " + retValue); // display non-zero exit to console
+						throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID,
+							redhawkCodegen + " returned with error code " + retValue + "\n\nSee console output for details.", null));
 					}
 					break;
 				} catch (InterruptedException e) {
@@ -235,6 +234,7 @@ public class JinjaGenerator {
 				}
 			}
 		} finally {
+			out.println(""); // add newline to separate current output from next run's output in console
 			subMonitor.done();
 		}
 	}
@@ -255,24 +255,19 @@ public class JinjaGenerator {
 		// The SPD file is the first positional argument.
 		arguments.add(getSpdFile(softpkg));
 
-		final String[] command = arguments.toArray(new String[arguments.size()]);
-		StringBuilder fullCommandList = new StringBuilder();
-		// Print the command to the console.
-		for (final String arg : command) {
-			fullCommandList.append(arg + " ");
-		}
-
 		// Launch the code generator.
 		// NB: The process has implicitly exited (and been cleaned up by the JVM) when
 		//     standard out/error are closed, so there is no need to explicitly wait for it.
+		ProcessBuilder processBuilder = new ProcessBuilder(arguments);
 		Process process = null;
 		try {
 			if (DEBUG.enabled) {
-				DEBUG.trace("Jinja List Command:\n  {0}", commandToString(command));
+				DEBUG.trace("Jinja List Command:\n  {0}", listToString(arguments));
 			}
-			process = java.lang.Runtime.getRuntime().exec(command);
+			process = processBuilder.start();
 		} catch (final IOException e) {
-			throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Exception running '" + redhawkCodegen + "'", e));
+			throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID,
+				"Exception running code generator list command\n  " + listToString(arguments), e));
 		}
 
 		final InputStreamReader instream = new InputStreamReader(process.getInputStream());
@@ -324,7 +319,7 @@ public class JinjaGenerator {
 					exitValue = process.exitValue();
 					break;
 				} catch (IllegalThreadStateException e) {
-					// PASS							
+					// PASS
 				}
 				try {
 					Thread.sleep(500);
@@ -339,14 +334,13 @@ public class JinjaGenerator {
 				final BufferedReader errBuffer = new BufferedReader(errStream);
 				try {
 					for (String errLine = errBuffer.readLine(); errLine != null; errLine = errBuffer.readLine()) {
-						log.append(errLine);
-						log.append("\n");
+						log.append(errLine).append('\n');
 					}
 				} finally {
 					errBuffer.close();
 				}
-				throw new CoreException(new Status(Status.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, command[0] + " returned with error code " + exitValue + "\n\n"
-					+ log, null));
+				throw new CoreException(new Status(Status.ERROR, JinjaGeneratorPlugin.PLUGIN_ID,
+					redhawkCodegen + " returned with error code " + exitValue + "\n\n" + log, null));
 			}
 
 		} catch (final IOException e) {
@@ -382,46 +376,41 @@ public class JinjaGenerator {
 	 * @since 1.1
 	 */
 	public void checkSystem(IProgressMonitor monitor, String id, String templateId) throws CoreException {
-			getCodegenVersion();
+			Version cfCodegenVersion = getCodegenVersion();
 			SubMonitor subMonitor = SubMonitor.convert(monitor, "Checking system development support for " + id + ":" + templateId, IProgressMonitor.UNKNOWN);
 			final ArrayList<String> arguments = new ArrayList<String>();
 			final String redhawkCodegen = getCodegenFile().getPath();
 			arguments.add(redhawkCodegen);
 
 			// Check if template is supported
-			if (VERSION_WITH_CHECK_TEMPLATE.compareTo(codegenVersion) <= 0) {
+			if (cfCodegenVersion.compareTo(VERSION_1_11_0) >= 0) {
 				arguments.add("--check-template=" + templateId); // 1.11+ CF codegen option
 			} else {
 				arguments.add("--template=" + templateId); // provide template 1.9+ CF codegen option
 				arguments.add("--checkSupport"); // 1.10+ CF codegen option (fails against 1.9 CF codegen) (deprecated in 1.11)
 			}
 
-			final String[] command = arguments.toArray(new String[arguments.size()]);
-			
 			// Launch the code generator.
 			// NB: The process has implicitly exited (and been cleaned up by the JVM) when
 			//     standard out/error are closed, so there is no need to explicitly wait for it.
+			ProcessBuilder processBuilder = new ProcessBuilder(arguments);
+			processBuilder.redirectErrorStream(true); // merge stderr with stdout to simplify logic
 			final Process process;
-			String commandStr = commandToString(command);
 			try {
 				if (DEBUG.enabled) {
-					DEBUG.trace("Jinja Check Command:\n  {0}", commandStr);
+					DEBUG.trace("Jinja Check Command:\n  {0}", listToString(arguments));
 				}
-				process = java.lang.Runtime.getRuntime().exec(command);
+				process = processBuilder.start();
 			} catch (final IOException e) {
-				throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Exception running '" + redhawkCodegen + "'\n" + commandStr, e));
+				throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID,
+					"Exception running code generator template check\n" + listToString(arguments), e));
 			}
 
-			// In order to poll both output (with the confusing name "getInputStream") and error,
-			// create a thread for each, redirecting to the respective PrintStream objects.
+			// poll output (with the confusing name "getInputStream") using a thread redirecting to a PrintStream
 			ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
-			ByteArrayOutputStream errBuffer = new ByteArrayOutputStream();
 			final Thread outThread = new Thread(new InputRedirector(process.getInputStream(), new PrintStream(outBuffer, true)));
-			final Thread errThread = new Thread(new InputRedirector(process.getErrorStream(), new PrintStream(errBuffer, true)));
 			outThread.setDaemon(true);
-			errThread.setDaemon(true);
 			outThread.start();
-			errThread.start();
 
 			Future< Integer > future = EXECUTOR_POOL.submit(new Callable<Integer>() {
 
@@ -431,13 +420,7 @@ public class JinjaGenerator {
 						outThread.join();
 					} catch (final InterruptedException e) {
 						// This is highly unlikely to occur, but log it just in case.
-						JinjaGeneratorPlugin.logError("Interrupted waiting for standard out", e);
-					}
-					try {
-						errThread.join();
-					} catch (final InterruptedException e) {
-						// This is highly unlikely to occur, but log it just in case.
-						JinjaGeneratorPlugin.logError("Interrupted waiting for standard error", e);
+						JinjaGeneratorPlugin.logError("Interrupted waiting for standard out during codegen template check", e);
 					}
 					return process.waitFor();
 				}
@@ -447,19 +430,18 @@ public class JinjaGenerator {
 					try {
 						Integer retVal = future.get(500, TimeUnit.MILLISECONDS);
 						if (retVal != 0) {
-							String stdout = new String(outBuffer.toByteArray());
-							String stderr = new String(errBuffer.toByteArray());
-							MultiStatus status = new MultiStatus(JinjaGeneratorPlugin.PLUGIN_ID, Status.WARNING, stdout, null);
-							status.add(new Status(Status.WARNING, JinjaGeneratorPlugin.PLUGIN_ID, commandStr + " returned with error code (" + retVal
-								+ ")\n\nstdout: " + stdout + "\n\nstderr: " + stderr, null));
+							String cmdOutput = new String(outBuffer.toByteArray());
+							MultiStatus status = new MultiStatus(JinjaGeneratorPlugin.PLUGIN_ID, Status.WARNING, cmdOutput, null);
+							status.add(new Status(Status.WARNING, JinjaGeneratorPlugin.PLUGIN_ID,
+								redhawkCodegen + " returned with error code (" + retVal + ")\nstdout/stderr:\n\n" + cmdOutput, null));
 							throw new CoreException(status);
 						}
 						break;
 					} catch (InterruptedException e) {
 						// PASS
 					} catch (ExecutionException e) {
-						throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Exception running '" + redhawkCodegen + "'",
-							e.getCause()));
+						throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID,
+							"Exception running '" + redhawkCodegen + "'", e.getCause()));
 					} catch (TimeoutException e) {
 						if (subMonitor.isCanceled()) {
 							process.destroy();
@@ -471,77 +453,128 @@ public class JinjaGenerator {
 				subMonitor.done();
 			}
 	}
-	
+
 	/**
-	 * Uses redhawk-codegen --version option from 1.11+ (prior versions [1.9 - 1.10] fails with non-zero exit code).
+	 * fall back mechanism to detect REDHAWK CF code generator version (e.g. for 1.9 and 1.10).
+	 * This method can be remove when IDE no longer supports running against a REDHAWK 1.9 or 1.10 framework.
+	 * @return null if unable to determine version
+	 */
+	private Version getCodegenVersionFromPythonEggInfoFile() {
+		Version version = null;
+		File parent = getCodegenFile().getParentFile(); // e.g. bin directory
+		if (parent != null) {
+			File ossiehome = parent.getParentFile();
+			if (ossiehome != null) {
+				final String FN_PREFIX = "redhawk_codegen-";
+				final String FN_SUFFIX = "-py2.6.egg-info";
+				File libPythonDir = new File(new File(ossiehome, "lib"), "python");
+				String[] foundFiles = libPythonDir.list(new FilenameFilter() {
+					@Override
+					public boolean accept(File dir, String name) {
+						if (name != null && name.startsWith(FN_PREFIX) && name.endsWith(FN_SUFFIX)) {
+							return true;
+						}
+						return false;
+					}
+					
+				});
+				if (foundFiles != null && foundFiles.length > 0) {
+					final int beginIndex = FN_PREFIX.length();
+					for (String filename : foundFiles) {
+						int endIndex = filename.lastIndexOf(FN_SUFFIX);
+						if (endIndex <= beginIndex) {
+							continue; // ignore since name it not what we expect
+						}
+						filename = filename.substring(beginIndex, endIndex); // strip off fn prefix and suffix (only version string should remain)
+						Matcher matcher = VERSION_REGEX.matcher(filename);
+						if (matcher.find()) { // found version string
+							try {
+								version = new Version(filename.substring(matcher.start(), matcher.end()));
+								break; // found a valid version string and successfully converted to Version object
+							} catch (IllegalArgumentException ex) {
+								// PASS - continue to next filename
+							}
+						}
+					} // end for loop
+				}
+			}
+		}
+		DEBUG.exitingMethod(version);
+		return version;
+	}
+
+	/**
+	 * Uses redhawk-codegen --version option from 1.11+.
+	 * Prior REDHAWK framework versions [1.9 - 1.10] fails with non-zero exit code so try to detect it's version using
+	 * {@link #getCodegenVersionFromPythonEggInfoFile()}.
+	 * This will never error out, even if the path to the code-generator is not found.
 	 * @return code generator's version, falls back to the empty version (0.0.0) if not able to determine it's version (i.e. unknown).
 	 * @since 1.2
 	 */
-	public Version getCodegenVersion() throws CoreException {
+	public Version getCodegenVersion() {
 		if (codegenVersion != null) { // if already got codegen's version
 			return codegenVersion;    // use cached version for this object's session
 		}
 
 		final String redhawkCodegen = getCodegenFile().getPath();
 		ProcessBuilder processBuilder = new ProcessBuilder(redhawkCodegen, "--version");
-		processBuilder.redirectErrorStream(true); // merge stderr with stdout to simply logic
+		processBuilder.redirectErrorStream(true); // merge stderr with stdout to simplify logic
 		
 		// Launch the code generator to get it's version
 		// NOTE: The process has implicitly exited (and been cleaned up by the JVM) when
 		//       standard out/error are closed, so there is no need to explicitly wait for it.
-		Process process;
-		try {
-			if (DEBUG.enabled) {
-				DEBUG.trace("Jinja Version Command:\n  {0}", commandToString(processBuilder.command().toArray(EMPTY_STRING_ARRAY)));
-			}
-			process = processBuilder.start();
-		} catch (final IOException e) {
-			throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Exception running '" + redhawkCodegen + "'", e));
-		}
-
 		Version version = null;
-		final InputStreamReader inStream = new InputStreamReader(process.getInputStream());
-		final BufferedReader reader = new BufferedReader(inStream);
 		try {
-			for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-				Matcher matcher = VERSION_REGEX.matcher(line);
-				if (matcher.find()) { // found version string
-					try {
-						version = new Version(line.substring(matcher.start(), matcher.end()));
-						break; // found a valid version string and successfully converted to Version object
-					} catch (IllegalArgumentException ex) {
-						// PASS - continue to next line
-					}
-				}
-			} // end for loop for reading through stdout/stderr
-
-			int exitCode = process.waitFor();
 			if (DEBUG.enabled) {
-				DEBUG.trace("parsed version: {0}  exitCode={1}", version, exitCode);
+				DEBUG.trace("Jinja Version Command:\n  {0}", listToString(processBuilder.command()));
 			}
-			if (exitCode != 0) { // failed to get codegen's version
-				version = Version.emptyVersion; // reset to empty version 0.0.0 for unknown version
-			}
+			Process process = processBuilder.start();
 
-		} catch (final IOException e) {
-			JinjaGeneratorPlugin.logWarn("Unable to get code generator version from " + redhawkCodegen, e);
-		} catch (InterruptedException e) {
-			JinjaGeneratorPlugin.logWarn("Interrupted while getting code generator version from " + redhawkCodegen, e);
-		} finally {
-
+			final InputStreamReader inStream = new InputStreamReader(process.getInputStream());
+			final BufferedReader reader = new BufferedReader(inStream);
 			try {
-				reader.close(); // this also closes the wrapped inStream
+				for (String line = reader.readLine(); line != null; line = reader.readLine()) {
+					Matcher matcher = VERSION_REGEX.matcher(line);
+					if (matcher.find()) { // found version string
+						try {
+							version = new Version(line.substring(matcher.start(), matcher.end()));
+							break; // found a valid version string and successfully converted to Version object
+						} catch (IllegalArgumentException ex) {
+							// PASS - continue to next line
+						}
+					}
+				} // end for loop for reading through stdout/stderr
+
+				int exitCode = process.waitFor();
+				if (DEBUG.enabled) {
+					DEBUG.trace("parsed version: {0}  exitCode={1}", version, exitCode);
+				}
+				if (exitCode != 0) { // failed to get codegen's version, try to use some smarts to detect it
+					version = getCodegenVersionFromPythonEggInfoFile();
+				}
+
 			} catch (final IOException e) {
-				// This is highly unlikely to occur, but log it just in case.
-				JinjaGeneratorPlugin.logError("Exception closing standard out", e);
+				JinjaGeneratorPlugin.logWarn("Unable to get code generator version from " + redhawkCodegen, e);
+			} catch (InterruptedException e) {
+				JinjaGeneratorPlugin.logWarn("Interrupted while getting code generator version from " + redhawkCodegen, e);
+			} finally {
+
+				try {
+					reader.close(); // this also closes the wrapped inStream
+				} catch (final IOException e) {
+					// This is highly unlikely to occur, but log it just in case.
+					JinjaGeneratorPlugin.logError("Exception closing standard out", e);
+				}
 			}
+		} catch (final IOException e) {
+			JinjaGeneratorPlugin.logWarn("Unable to run code generator to get version from " + redhawkCodegen, e);
 		}
+
 		if (version == null) {
-			version = Version.emptyVersion;
+			version = Version.emptyVersion; // reset to empty version 0.0.0 for unknown version
 		}
 		codegenVersion = version;
 		DEBUG.exitingMethod(version);
 		return version;
 	}
-
 }
