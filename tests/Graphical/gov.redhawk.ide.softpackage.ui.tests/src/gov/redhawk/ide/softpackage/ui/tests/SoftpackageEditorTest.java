@@ -32,10 +32,6 @@ public class SoftpackageEditorTest extends UITest {
 
 	SWTBotEditor editor;
 
-	// TODO: Test case for making sure .prf & .scd options do not appear in the Overview or Implementations tab
-	// also test to make sure the fields for Ports, Interfaces, Testing, and Launching are not present in the Overview
-	// tab
-
 	@BeforeClass
 	public static void beforeClassSetup() {
 		// PyDev needs to be configured before running New SCA Softpackage Project Wizards
