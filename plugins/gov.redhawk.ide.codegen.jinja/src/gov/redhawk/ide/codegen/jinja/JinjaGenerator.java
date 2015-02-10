@@ -393,7 +393,7 @@ public class JinjaGenerator {
 				arguments.add("--check-template=" + templateId); // 1.11+ CF codegen option
 			} else {
 				arguments.add("--template=" + templateId); // provide template 1.9+ CF codegen option
-				arguments.add("--checkSupport"); // 1.10+ CF codegen option (fails against 1.9 CF codegen)
+				arguments.add("--checkSupport"); // 1.10+ CF codegen option (fails against 1.9 CF codegen) (deprecated in 1.11)
 			}
 
 			final String[] command = arguments.toArray(new String[arguments.size()]);
@@ -524,12 +524,9 @@ public class JinjaGenerator {
 			}
 
 		} catch (final IOException e) {
-			throw new CoreException(
-				new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Exception reading standard out from '" + redhawkCodegen + "' to get it's version", e));
+			JinjaGeneratorPlugin.logWarn("Unable to get code generator version from " + redhawkCodegen, e);
 		} catch (InterruptedException e) {
-			// PASS - continue
-			throw new CoreException(
-				new Status(IStatus.WARNING, JinjaGeneratorPlugin.PLUGIN_ID, "Interrupted while reading standard out from '" + redhawkCodegen + "' to get it's version", e));
+			JinjaGeneratorPlugin.logWarn("Interrupted while getting code generator version from " + redhawkCodegen, e);
 		} finally {
 
 			try {

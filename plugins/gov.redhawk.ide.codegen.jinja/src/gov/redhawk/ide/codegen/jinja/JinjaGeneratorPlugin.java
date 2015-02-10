@@ -65,6 +65,10 @@ public class JinjaGeneratorPlugin extends Plugin {
 		JinjaGeneratorPlugin.getDefault().getLog().log(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, msg, e));
 	}
 
+	static final void logWarn(final String msg, final Throwable e) {
+		JinjaGeneratorPlugin.getDefault().getLog().log(new Status(IStatus.WARNING, JinjaGeneratorPlugin.PLUGIN_ID, msg, e));
+	}
+
 	public IPath getCodegenPath() {
 		String codegenPath = this.preferenceAccessor.getString(JinjaPreferenceConstants.CODEGEN_PATH_PREFERENCE).trim();
 		if (codegenPath.isEmpty()) {
