@@ -12,23 +12,19 @@ package gov.redhawk.ide.softpackage.ui.wizard;
 
 import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
 import gov.redhawk.ide.codegen.ImplementationSettings;
-import gov.redhawk.ide.codegen.Property;
-import gov.redhawk.ide.codegen.jinja.JinjaGeneratorPlugin;
 import gov.redhawk.ide.codegen.util.ImplementationAndSettings;
 import gov.redhawk.ide.softpackage.codegen.SoftPackageProjectCreator;
+import gov.redhawk.ide.softpackage.codegen.SoftpackageGenerator;
 import gov.redhawk.ide.softpackage.ui.SoftPackageUi;
 import gov.redhawk.ide.spd.ui.ComponentUiPlugin;
 import gov.redhawk.ide.spd.ui.wizard.ImplementationWizardPage;
 import gov.redhawk.ide.spd.ui.wizard.NewScaResourceProjectWizard;
 import gov.redhawk.ide.ui.wizard.ScaProjectPropertiesWizardPage;
-import gov.redhawk.model.sca.util.ModelUtil;
 import gov.redhawk.sca.util.SubMonitor;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
 import java.util.List;
 
 import mil.jpeojtrs.sca.spd.Implementation;
@@ -150,7 +146,7 @@ public class NewSoftpackageScaResourceProjectWizard extends NewScaResourceProjec
 						// Populate the softpackage spd.xml with base information and implementation
 						setOpenEditorOn(SoftPackageProjectCreator.createComponentFiles(project, projectName, getSoftPkg().getId(), null, progress.newChild(1)));
 						SoftPackageProjectCreator.addImplementation(project, projectName, pageImpl, settings, progress.newChild(1));
-						generateFiles(settings, pageImpl, progress.newChild(1));
+						SoftpackageGenerator.generateFiles(settings, pageImpl, progress.newChild(1), getOpenEditorOn().getLocation().toOSString());
 
 						project.refreshLocal(IResource.DEPTH_INFINITE, progress.newChild(1));
 
@@ -203,75 +199,5 @@ public class NewSoftpackageScaResourceProjectWizard extends NewScaResourceProjec
 		}
 	}
 
-	/**
-	 * @param subMonitor
-	 * @param pageImpl
-	 * @param settings
-	 * @throws CoreException
-	 * 
-	 */
-	private void generateFiles(ImplementationSettings implSettings, Implementation impl, SubMonitor monitor) throws CoreException {
-		// TODO: CHECKSTYLE:OFF
-		// TODO: Pull this method up, possibly as an overloaded method in the JinjaGenerator class?
-		SubMonitor subMonitor = SubMonitor.convert(monitor, "Generating Softpkg Files...", 3);
-		final IResource resource = ModelUtil.getResource(implSettings);
-		final IProject project = resource.getProject();
-
-		final ArrayList<String> args = new ArrayList<String>();
-		try {
-			final String redhawkCodegen = JinjaGeneratorPlugin.getDefault().getCodegenPath().toFile().getPath();
-			args.add(redhawkCodegen);
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-
-		// Force overwrite of existing files; we assume that the user has already signed off on this.
-		args.add("-f");
-
-		// Set base output directory to the project location
-		args.add("-C");
-		args.add(project.getLocation().toOSString());
-
-		// Turn the settings into command-line flags
-		// TODO: See seetingsToOptions in JinjaGenerator, maybe pull this out into it's own method?
-		args.add("--impl");
-		args.add(implSettings.getId());
-		args.add("--impldir");
-		args.add(implSettings.getOutputDir());
-		args.add("--template");
-		args.add(implSettings.getTemplate());
-		for (final Property property : implSettings.getProperties()) {
-			args.add("-B " + property.getId() + "=" + property.getValue());
-		}
-
-		// TODO: This adds the spdFile, need to pass the actual spdFile when we pull this method up
-		args.add(this.getOpenEditorOn().getLocation().toOSString());
-
-		final String[] command = args.toArray(new String[args.size()]);
-		for (final String arg : args) {
-			if (arg == null) {
-				throw new CoreException(new Status(IStatus.ERROR, SoftPackageUi.PLUGIN_ID, "Error found in code-generation command: \n" + args));
-			}
-			System.out.print(arg + " ");
-		}
-		System.out.println();
-		subMonitor.worked(1);
-
-		try {
-			Process process = java.lang.Runtime.getRuntime().exec(command);
-			process.waitFor();
-			project.refreshLocal(IResource.DEPTH_INFINITE, monitor.newChild(1));
-		} catch (final IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			subMonitor.done();
-		}
-	}
+	
 }
