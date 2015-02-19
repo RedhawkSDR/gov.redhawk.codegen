@@ -13,6 +13,7 @@ package gov.redhawk.ide.softpackage.ui.wizard;
 import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.RedhawkCodegenActivator;
+import gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusSoftpkgGenerator;
 import gov.redhawk.ide.softpackage.ui.wizard.models.SoftpackageModel;
 import gov.redhawk.ide.spd.ui.wizard.ImplementationWizardPage;
 import mil.jpeojtrs.sca.spd.Implementation;
@@ -55,7 +56,7 @@ public class SoftpackageWizardPage extends ImplementationWizardPage {
 		if ("C++ Library".equals(model.getTypeName())) {
 			implementation.setId("cpp");
 			settings.setOutputDir("cpp");
-			settings.setTemplate("redhawk.codegen.jinja.cpp.library");
+			settings.setTemplate(CplusplusSoftpkgGenerator.TEMPLATE);
 		} else if ("Octave Library".equals(model.getTypeName())) {
 			implementation.setId("octave");
 			settings.setOutputDir("cpp");
