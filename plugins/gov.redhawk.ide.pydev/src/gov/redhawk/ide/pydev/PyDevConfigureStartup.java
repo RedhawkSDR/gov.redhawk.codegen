@@ -25,8 +25,6 @@ import org.python.pydev.plugin.PydevPlugin;
 
 public class PyDevConfigureStartup implements IStartup {
 
-	private int result = 0;
-
 	private class ConfigurePythonJob extends Job {
 		private final boolean manualConfiguration;
 
@@ -76,10 +74,7 @@ public class PyDevConfigureStartup implements IStartup {
 							final String[] buttons = { "Ok", "Cancel" };
 							final MessageDialog dialog = new MessageDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Configure PyDev", null,
 								"PyDev appears to be mis-configured for REDHAWK, would you like it to be re-configured?", MessageDialog.QUESTION, buttons, 0);
-							dialog.open();
-							PyDevConfigureStartup.this.result = dialog.getReturnCode();
-
-							if (PyDevConfigureStartup.this.result < 1) {
+							if (dialog.open() == 0) {
 								new ConfigurePythonJob(false).schedule();
 							}
 						}
@@ -88,17 +83,10 @@ public class PyDevConfigureStartup implements IStartup {
 				}
 			} catch (CoreException e) {
 				RedhawkIdePyDevPlugin.getDefault().getLog().log(
-					new Status(e.getStatus().getSeverity(), RedhawkIdePyDevPlugin.PLUGIN_ID, "Failed to auto configure.", e));
+					new Status(e.getStatus().getSeverity(), RedhawkIdePyDevPlugin.PLUGIN_ID, "Failed to check PyDev configuration", e));
 			}
 		} else {
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-
-				@Override
-				public void run() {
-					new ConfigurePythonJob(false).schedule();
-				}
-
-			});
+			new ConfigurePythonJob(false).schedule();
 		}
 	}
 }
