@@ -32,100 +32,90 @@ import org.python.pydev.ui.pythonpathconf.InterpreterInfo;
 
 public final class AutoConfigPydevInterpreterUtil {
 
-	private AutoConfigPydevInterpreterUtil() {
+	private static final String IDE_ENV_VAR_REF = "IDE_REF=${IDE_REF}";
 
+	private AutoConfigPydevInterpreterUtil() {
 	}
 
 	/**
-	 * This checks if PyDev contains the required paths.
+	 * @param monitor
+	 * @param runtimePathLocation
+	 * @param attemptFixes This is now ignored
+	 * @deprecated Use {@link #isPydevConfigured(IProgressMonitor, String)}
+	 * @since 3.1
+	 */
+	@Deprecated
+	public static boolean checkPyDevConfiguration(final IProgressMonitor monitor, final String runtimePathLocation, final boolean attemptFixes)
+		throws CoreException {
+		return isPydevConfigured(monitor, runtimePathLocation);
+	}
+
+	/**
+	 * This checks if PyDev is properly configured for REDHAWK.
 	 * 
 	 * @param monitor the progress monitor for status
 	 * @param runtimePathLocation optional location of OSSIEHOME
-	 * @return true if the locations that we add are already included
+	 * @return true if the the PyDev configuration is correct for the runtimePathLocation
 	 * @throws CoreException
 	 * @since 3.1
 	 */
 	public static boolean isPydevConfigured(final IProgressMonitor monitor, final String runtimePathLocation) throws CoreException {
-		return AutoConfigPydevInterpreterUtil.checkPyDevConfiguration(monitor, runtimePathLocation, true);
-	}
+		final int WORK_STANDARD = 1;
+		final SubMonitor progress = SubMonitor.convert(monitor, "Checking PyDev configuration", WORK_STANDARD + WORK_STANDARD);
 
-	/**
-	 * This checks if PyDev is configured for REDHAWK.
-	 * 
-	 * @param monitor the progress monitor for status
-	 * @param runtimePathLocation optional location of OSSIEHOME
-	 * @param attemptFixes if true this function will attempt to fix the configure; if the fix is successful (without user interaction) true will be returned
-	 * @return true if the the pydev configuration is correct; if false the PyDev configuration will need to be restored
-	 * @throws CoreException
-	 * @since 3.1
-	 */
-	public static boolean checkPyDevConfiguration(final IProgressMonitor monitor, final String runtimePathLocation, final boolean attemptFixes)
-			throws CoreException {
-		final IInterpreterManager man = PydevPlugin.getPythonInterpreterManager(true);
-
-		// Obviously if nothing is configured, then the REDHAWK settings surely are not configured
-		if (!man.isConfigured()) {
-			return false;
-		}
-
-		boolean configured = false;
 		try {
-			monitor.beginTask("Checking Python Environment", 300); // SUPPRESS CHECKSTYLE MagicNumber
-			//			final SubMonitor submonitor = SubMonitor.convert(monitor);
+			final IInterpreterManager man = PydevPlugin.getPythonInterpreterManager(true);
+
+			// Obviously if nothing is configured, then the REDHAWK settings surely are not configured
+			if (!man.isConfigured()) {
+				return false;
+			}
 
 			InterpreterInfo info;
 			try {
-				info = (InterpreterInfo) man.getDefaultInterpreterInfo(true);
+				info = (InterpreterInfo) man.getDefaultInterpreterInfo(false);
 			} catch (final MisconfigurationException e) {
 				throw new CoreException(new Status(IStatus.ERROR, RedhawkIdePyDevPlugin.PLUGIN_ID, "Error with pydev configuration", e));
 			}
-
-			// Must skip the following steps in case of user selecting cancel from the Manual PyDev window
-			if (info != null) {
-				final String ossiePath;
-				if ((runtimePathLocation != null) && (runtimePathLocation.length() > 0) && !"${OSSIEHOME}".equals(runtimePathLocation)) {
-					ossiePath = runtimePathLocation;
-				} else {
-					ossiePath = System.getenv("OSSIEHOME");
-				}
-
-				if ((ossiePath == null) || (ossiePath.trim().length() == 0)) {
-					throw new CoreException(new Status(IStatus.ERROR, RedhawkIdePyDevPlugin.PLUGIN_ID,
-						"OSSIEHOME environment variable not defined, auto config failed.", null));
-				}
-
-				configured = info.libs.contains(ossiePath + "/lib/python" + info.getVersion() + "/site-packages") // Prefix-style
-						|| info.libs.contains(ossiePath + "/lib/python"); // Home-style
-
-				configured &= info.libs.contains(ossiePath + "/lib");
-				if (configured == false) {
-					RedhawkIdePyDevPlugin.getDefault().getLog().log(
-						new Status(IStatus.WARNING, RedhawkIdePyDevPlugin.PLUGIN_ID, "PyDev configuration has incorrect $OSSIEHOME Python paths"));
-				}
-
-				if (attemptFixes) {
-					if (info.getEnvVariables() == null) {
-						info.setEnvVariables(new String[] { "IDE_REF=${IDE_REF}" });
-					} else {
-						info.updateEnv(new String[] { "IDE_REF=${IDE_REF}" });
-					}
-					man.setInfos(new InterpreterInfo[] { info }, null, null);
-				} else {
-					if (info.getEnvVariables() == null || Arrays.asList(info.getEnvVariables()).contains("IDE_REF=${IDE_REF}")) {
-						RedhawkIdePyDevPlugin.getDefault().getLog().log(
-							new Status(IStatus.WARNING, RedhawkIdePyDevPlugin.PLUGIN_ID, "PyDev configuration lacks IDE_REF environment variable"));
-						configured &= false;
-					}
-				}
+			if (info == null) {
+				return false;
 			}
+			progress.worked(WORK_STANDARD);
+
+			// TODO: Use the proper Eclipse variable and resolve it
+			final String ossiePath;
+			if ((runtimePathLocation != null) && (runtimePathLocation.length() > 0) && !"${OSSIEHOME}".equals(runtimePathLocation)) {
+				ossiePath = runtimePathLocation;
+			} else {
+				ossiePath = System.getenv("OSSIEHOME");
+			}
+			if ((ossiePath == null) || (ossiePath.trim().length() == 0)) {
+				throw new CoreException(new Status(IStatus.ERROR, RedhawkIdePyDevPlugin.PLUGIN_ID,
+					"OSSIEHOME environment variable not defined, auto config failed.", null));
+			}
+
+			// Check for REDHAWK path(s) and environment in the current configuration
+			File prefixStylePath = getPrefixStylePath(ossiePath, info.getVersion());
+			File homeStylePath = getHomeStylePath(ossiePath);
+			if (prefixStylePath.exists() && !info.libs.contains(prefixStylePath.toString())) {
+				return false;
+			}
+			if (homeStylePath.exists() && !info.libs.contains(homeStylePath.toString())) {
+				return false;
+			}
+			if (info.getEnvVariables() == null || !Arrays.asList(info.getEnvVariables()).contains(IDE_ENV_VAR_REF)) {
+				return false;
+			}
+			progress.worked(WORK_STANDARD);
 		} finally {
-			monitor.done();
+			progress.done();
 		}
-		return configured;
+
+		return true;
 	}
 
 	/**
-	 * This configures the PyDev interpreter.
+	 * This configures the PyDev interpreter. <b>NOTE: This is a lengthy, blocking operation.</b>
 	 * 
 	 * @param monitor the IProgressMonitor for status reporting
 	 * @param manualConfigure true for user interaction
@@ -133,71 +123,86 @@ public final class AutoConfigPydevInterpreterUtil {
 	 * @since 3.0
 	 */
 	public static void configurePydev(final IProgressMonitor monitor, final boolean manualConfigure, final String runtimePathLocation) throws CoreException {
+		final int WORK_SMALL = 1;
+		final int WORK_EXEC_INFO_SCRIPT = 10;
+		final int WORK_SET_INFO = 100;
+		final SubMonitor submonitor = SubMonitor.convert(monitor, "Configuring Python environment", WORK_SMALL + WORK_EXEC_INFO_SCRIPT + WORK_SMALL
+			+ WORK_SMALL + WORK_SET_INFO);
+
 		try {
-			monitor.beginTask("Configuring Python Environment", 300); // SUPPRESS CHECKSTYLE MagicNumber
-			final SubMonitor submonitor = SubMonitor.convert(monitor);
 			final IInterpreterManager man = PydevPlugin.getPythonInterpreterManager(true);
 			man.clearCaches();
+			submonitor.worked(WORK_SMALL);
 
+			// Run script to get details of the Python environment
 			File script = PydevPlugin.getScriptWithinPySrc("interpreterInfo.py");
 			final Tuple<String, String> outTup = new SimplePythonRunner().runAndGetOutputWithInterpreter("python", script.getAbsolutePath(), null, null, null,
-				submonitor.newChild(50), null);
+				submonitor.newChild(WORK_EXEC_INFO_SCRIPT), null);
 
+			// Parse the output of the script. Ask the user for input via dialog if manualConfigure == true.
 			final InterpreterInfo info = InterpreterInfo.fromString(outTup.o1, manualConfigure);
+			submonitor.worked(WORK_SMALL);
 
-			// Must skip the following steps in case of user selecting cancel from the Manual PyDev window
-			if (info != null) {
-
-				info.libs.addAll(AutoConfigPydevInterpreterUtil.parseString(outTup.o1));
-				final String ossiePath;
-				if ((runtimePathLocation != null) && (runtimePathLocation.length() > 0) && !"${OSSIEHOME}".equals(runtimePathLocation)) {
-					ossiePath = runtimePathLocation;
-				} else {
-					ossiePath = System.getenv("OSSIEHOME");
-				}
-
-				if ((ossiePath == null) || (ossiePath.trim().length() == 0)) {
-					throw new CoreException(new Status(IStatus.ERROR, RedhawkIdePyDevPlugin.PLUGIN_ID,
-						"OSSIEHOME environment variable not defined, auto config failed.", null));
-				}
-				if (!new File(ossiePath).exists()) {
-					throw new CoreException(new Status(IStatus.ERROR, RedhawkIdePyDevPlugin.PLUGIN_ID, "OSSIEHOME=" + ossiePath
-						+ " does not exist, auto config failed.", null));
-				}
-				// Prefix-style
-				if (new File(ossiePath + "/lib/python" + info.getVersion() + "/site-packages").isDirectory()) {
-					info.libs.add(ossiePath + "/lib/python" + info.getVersion() + "/site-packages");
-				}
-				// Home-style
-				if (new File(ossiePath + "/lib/python").isDirectory()) {
-					info.libs.add(ossiePath + "/lib/python");
-				}
-				info.libs.add(ossiePath + "/lib");
-				info.addForcedLib("__name__");
-				info.addForcedLib("bulkio.bulkioInterfaces.BULKIO");
-				info.addForcedLib("bulkio.bulkioInterfaces.BULKIO__POA");
-				info.addForcedLib("ossie.cf.CF");
-				info.addForcedLib("ossie.cf.CF__POA");
-				info.addForcedLib("ossie.cf.ExtendedCF");
-				info.addForcedLib("ossie.cf.ExtendedCF__POA");
-				info.addForcedLib("ossie.cf.PortTypes");
-				info.addForcedLib("ossie.cf.PortTypes__POA");
-				info.addForcedLib("ossie.cf.StandardEvent");
-				info.addForcedLib("ossie.cf.StandardEvent__POA");
-				info.addForcedLib("redhawk.frontendInterfaces.FRONTEND");
-				info.addForcedLib("redhawk.frontendInterfaces.FRONTEND__POA");
-				info.restoreCompiledLibs(submonitor.newChild(50)); // SUPPRESS CHECKSTYLE MagicNumber
-				info.setName("Python");
-				if (info.getEnvVariables() == null) {
-					info.setEnvVariables(new String[] { "IDE_REF=${IDE_REF}" });
-				} else {
-					info.updateEnv(new String[] { "IDE_REF=${IDE_REF}" });
-				}
-				man.setInfos(new IInterpreterInfo[] { info }, null, null);
-				PydevPlugin.setPythonInterpreterManager(man);
+			// If info is null the user canceled in the dialog
+			if (info == null) {
+				return;
 			}
+
+			// TODO: Use the proper Eclipse variable and resolve it
+			info.libs.addAll(AutoConfigPydevInterpreterUtil.parseString(outTup.o1));
+			final String ossiePath;
+			if ((runtimePathLocation != null) && (runtimePathLocation.length() > 0) && !"${OSSIEHOME}".equals(runtimePathLocation)) {
+				ossiePath = runtimePathLocation;
+			} else {
+				ossiePath = System.getenv("OSSIEHOME");
+			}
+			if ((ossiePath == null) || (ossiePath.trim().length() == 0)) {
+				throw new CoreException(new Status(IStatus.ERROR, RedhawkIdePyDevPlugin.PLUGIN_ID,
+					"OSSIEHOME environment variable not defined, auto config failed.", null));
+			}
+			if (!new File(ossiePath).exists()) {
+				throw new CoreException(new Status(IStatus.ERROR, RedhawkIdePyDevPlugin.PLUGIN_ID, "OSSIEHOME=" + ossiePath
+					+ " does not exist, auto config failed.", null));
+			}
+
+			// Prefix-style
+			File prefixStylePath = getPrefixStylePath(ossiePath, info.getVersion());
+			if (prefixStylePath.isDirectory() && !info.libs.contains(prefixStylePath.toString())) {
+				info.libs.add(prefixStylePath.toString());
+			}
+
+			// Home-style
+			File homeStylePath = getHomeStylePath(ossiePath);
+			if (homeStylePath.isDirectory() && !info.libs.contains(homeStylePath.toString())) {
+				info.libs.add(prefixStylePath.toString());
+			}
+
+			info.addForcedLib("__name__");
+			info.addForcedLib("bulkio.bulkioInterfaces.BULKIO");
+			info.addForcedLib("bulkio.bulkioInterfaces.BULKIO__POA");
+			info.addForcedLib("ossie.cf.CF");
+			info.addForcedLib("ossie.cf.CF__POA");
+			info.addForcedLib("ossie.cf.ExtendedCF");
+			info.addForcedLib("ossie.cf.ExtendedCF__POA");
+			info.addForcedLib("ossie.cf.PortTypes");
+			info.addForcedLib("ossie.cf.PortTypes__POA");
+			info.addForcedLib("ossie.cf.StandardEvent");
+			info.addForcedLib("ossie.cf.StandardEvent__POA");
+			info.addForcedLib("redhawk.frontendInterfaces.FRONTEND");
+			info.addForcedLib("redhawk.frontendInterfaces.FRONTEND__POA");
+			info.restoreCompiledLibs(submonitor.newChild(WORK_SMALL));
+			info.setName("Python");
+			if (info.getEnvVariables() == null) {
+				info.setEnvVariables(new String[] { IDE_ENV_VAR_REF });
+			} else {
+				info.updateEnv(new String[] { IDE_ENV_VAR_REF });
+			}
+
+			man.setInfos(new IInterpreterInfo[] { info }, null, submonitor.newChild(WORK_SET_INFO));
+
+			PydevPlugin.setPythonInterpreterManager(man);
 		} finally {
-			monitor.done();
+			submonitor.done();
 		}
 	}
 
@@ -243,6 +248,26 @@ public final class AutoConfigPydevInterpreterUtil {
 	@Deprecated
 	public static void configurePydev(final IProgressMonitor monitor, final int i, final String pathLocation) throws CoreException {
 		AutoConfigPydevInterpreterUtil.configurePydev(monitor, i > 0, pathLocation);
+	}
 
+	/**
+	 * Generates a 'prefix-style' Python path
+	 *
+	 * @param ossiehome The location of REDHAWK
+	 * @param pythonVersion The Python version string, e.g. "2.6"
+	 * @return A File representing the python path
+	 */
+	private static File getPrefixStylePath(String ossiehome, String pythonVersion) {
+		return new File(ossiehome + "/lib/python" + pythonVersion + "/site-packages");
+	}
+
+	/**
+	 * Generates a 'home-style' Python path
+	 *
+	 * @param ossiehome The location of REDHAWK
+	 * @return A File representing the python path
+	 */
+	private static File getHomeStylePath(String ossiehome) {
+		return new File(ossiehome + "/lib/python");
 	}
 }
