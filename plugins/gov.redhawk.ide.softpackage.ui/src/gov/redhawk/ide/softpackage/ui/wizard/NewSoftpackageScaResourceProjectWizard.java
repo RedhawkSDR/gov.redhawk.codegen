@@ -14,7 +14,6 @@ import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.util.ImplementationAndSettings;
 import gov.redhawk.ide.softpackage.codegen.SoftPackageProjectCreator;
-import gov.redhawk.ide.softpackage.codegen.SoftpackageGenerator;
 import gov.redhawk.ide.softpackage.ui.SoftPackageUi;
 import gov.redhawk.ide.spd.ui.ComponentUiPlugin;
 import gov.redhawk.ide.spd.ui.wizard.ImplementationWizardPage;
@@ -128,7 +127,6 @@ public class NewSoftpackageScaResourceProjectWizard extends NewScaResourceProjec
 			protected void execute(IProgressMonitor monitor) throws CoreException, InvocationTargetException, InterruptedException {
 				try {
 					final SubMonitor progress = SubMonitor.convert(monitor, "Creating project...", 6);
-
 					// Create the implementation
 					final ImplementationWizardPage page = (ImplementationWizardPage) getWizPages().get(1);
 					Implementation pageImpl = page.getImplementation();
@@ -146,7 +144,6 @@ public class NewSoftpackageScaResourceProjectWizard extends NewScaResourceProjec
 						// Populate the softpackage spd.xml with base information and implementation
 						setOpenEditorOn(SoftPackageProjectCreator.createComponentFiles(project, projectName, getSoftPkg().getId(), null, progress.newChild(1)));
 						SoftPackageProjectCreator.addImplementation(project, projectName, pageImpl, settings, progress.newChild(1));
-						SoftpackageGenerator.generateFiles(settings, pageImpl, progress.newChild(1), getOpenEditorOn().getLocation().toOSString());
 
 						project.refreshLocal(IResource.DEPTH_INFINITE, progress.newChild(1));
 

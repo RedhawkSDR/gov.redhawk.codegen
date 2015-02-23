@@ -16,7 +16,7 @@ import gov.redhawk.ide.codegen.FileToCRCMap;
 import gov.redhawk.ide.codegen.IScaComponentCodegenSetup;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.cplusplus.AbstractCplusplusCodeGenerator;
-import gov.redhawk.ide.codegen.jinja.JinjaGenerator;
+import gov.redhawk.ide.codegen.jinja.SoftpackageJinjaGenerator;
 
 import java.io.PrintStream;
 import java.util.List;
@@ -43,7 +43,7 @@ public class CplusplusSoftpkgGenerator extends AbstractCplusplusCodeGenerator im
 	public static final String ID = "gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusSoftpkgGenerator";
 	public static final String TEMPLATE = "redhawk.codegen.jinja.cpp.library";
 
-	private final JinjaGenerator generator = new JinjaGenerator();
+	private final SoftpackageJinjaGenerator generator = new SoftpackageJinjaGenerator();
 
 	@Override
 	public Code getInitialCodeSettings(SoftPkg softPkg, ImplementationSettings settings, Implementation impl) {
@@ -85,13 +85,13 @@ public class CplusplusSoftpkgGenerator extends AbstractCplusplusCodeGenerator im
 		final PrintStream out, final PrintStream err, final IProgressMonitor monitor, final String[] generateFiles, final List<FileToCRCMap> crcMap)
 		throws CoreException {
 
-		this.generator.generate(implSettings, impl, out, err, monitor, generateFiles);
+		this.generator.generateFiles(implSettings, impl, monitor, generateFiles);
 		project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 	}
 
 	@Override
 	public Set<FileStatus> getGeneratedFilesStatus(ImplementationSettings implSettings, SoftPkg softpkg) throws CoreException {
-		return super.getGeneratedFilesStatus(implSettings, softpkg);
+		return this.generator.list(implSettings, softpkg);
 	}
 
 	@Override

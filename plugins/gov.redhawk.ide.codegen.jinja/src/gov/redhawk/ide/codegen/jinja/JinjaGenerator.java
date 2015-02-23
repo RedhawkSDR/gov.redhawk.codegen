@@ -74,7 +74,10 @@ public class JinjaGenerator {
 	/** current version of the REDHAWK (core framework) code generator */
 	private Version codegenVersion = null;
 
-	private List<String> settingsToOptions(final ImplementationSettings implSettings) {
+	/**
+	 * @since 1.2
+	 */
+	protected List<String> settingsToOptions(final ImplementationSettings implSettings) {
 		final List<String> arguments = new ArrayList<String>();
 		arguments.add("--impl");
 		arguments.add(implSettings.getId());
@@ -89,7 +92,10 @@ public class JinjaGenerator {
 		return arguments;
 	}
 
-	private String getSpdFile(final SoftPkg softpkg) {
+	/**
+	 * @since 1.2
+	 */
+	protected String getSpdFile(final SoftPkg softpkg) {
 		URI uri = softpkg.eResource().getURI();
 		if (uri.isPlatform()) {
 			final IResource resource = ModelUtil.getResource(softpkg);
@@ -116,7 +122,10 @@ public class JinjaGenerator {
 		}
 	}
 
-	private String prependPath(final String path, final String filename) {
+	/**
+	 * @since 1.2
+	 */
+	protected String prependPath(final String path, final String filename) {
 		if (filename.startsWith(".." + File.separator)) {
 			return filename.substring(3);
 		} else {

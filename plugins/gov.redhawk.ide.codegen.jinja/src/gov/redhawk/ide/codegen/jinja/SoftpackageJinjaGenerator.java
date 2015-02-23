@@ -9,12 +9,9 @@
  * http://www.eclipse.org/legal/epl-v10.html.
  *
  */
-package gov.redhawk.ide.softpackage.codegen;
+package gov.redhawk.ide.codegen.jinja;
 
 import gov.redhawk.ide.codegen.ImplementationSettings;
-import gov.redhawk.ide.codegen.Property;
-import gov.redhawk.ide.codegen.jinja.JinjaGeneratorPlugin;
-import gov.redhawk.ide.softpackage.ui.SoftPackageUi;
 import gov.redhawk.model.sca.util.ModelUtil;
 import gov.redhawk.sca.util.SubMonitor;
 
@@ -27,24 +24,17 @@ import mil.jpeojtrs.sca.spd.Implementation;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
-public class SoftpackageGenerator {
+/**
+ * @since 1.2
+ * Handles code generation for Shared Library Projects (previously called softpackages)
+ */
+public class SoftpackageJinjaGenerator extends JinjaGenerator {
 
-	private SoftpackageGenerator() {
-
-	}
-
-	/**
-	 * @param string
-	 * @param subMonitor
-	 * @param pageImpl
-	 * @param settings
-	 * @throws CoreException
-	 * 
-	 */
-	public static void generateFiles(ImplementationSettings implSettings, Implementation impl, SubMonitor monitor, String spdFileLocation) throws CoreException {
+	public void generateFiles(ImplementationSettings implSettings, Implementation impl, IProgressMonitor monitor, String[] generateFiles) throws CoreException {
 		SubMonitor subMonitor = SubMonitor.convert(monitor, "Generating Softpkg Files...", 3);
 		PrintStream out = System.out;
 		final IResource resource = ModelUtil.getResource(implSettings);
@@ -55,7 +45,7 @@ public class SoftpackageGenerator {
 			final String redhawkCodegen = JinjaGeneratorPlugin.getDefault().getCodegenPath().toFile().getPath();
 			args.add(redhawkCodegen);
 		} catch (Exception e) { // SUPPRESS CHECKSTYLE INLINE
-			new Status(IStatus.ERROR, SoftPackageUi.PLUGIN_ID, "Exception during code generation '", e);
+			new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Exception during code generation '", e);
 		}
 
 		// Force overwrite of existing files; we assume that the user has already signed off on this.
@@ -66,22 +56,25 @@ public class SoftpackageGenerator {
 		args.add(project.getLocation().toOSString());
 
 		// Turn the settings into command-line flags
-		// TODO: See seetingsToOptions in JinjaGenerator, maybe pull this out into it's own method?
-		args.add("--impl");
-		args.add(implSettings.getId());
-		args.add("--impldir");
-		args.add(implSettings.getOutputDir());
-		args.add("--template");
-		args.add(implSettings.getTemplate());
-		for (final Property property : implSettings.getProperties()) {
-			args.add("-B " + property.getId() + "=" + property.getValue());
+		args.addAll(settingsToOptions(implSettings));
+
+		args.add(getSpdFile(impl.getSoftPkg()));
+
+		// If a file list was specified, add it to the command arguments.
+		if (generateFiles != null) {
+			if (generateFiles.length == 0) {
+				// Don't inadvertently regenerate everything!
+				return;
+			}
+			for (final String fileName : generateFiles) {
+				args.add(prependPath(implSettings.getOutputDir(), fileName));
+			}
 		}
-		args.add(spdFileLocation);
 
 		final String[] command = args.toArray(new String[args.size()]);
 		for (final String arg : args) {
 			if (arg == null) {
-				throw new CoreException(new Status(IStatus.ERROR, SoftPackageUi.PLUGIN_ID, "Error found in code-generation command: \n" + args));
+				throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "Error found in code-generation command: \n" + args));
 			}
 			out.print(arg + " ");
 		}
@@ -91,13 +84,13 @@ public class SoftpackageGenerator {
 		try {
 			Process process = java.lang.Runtime.getRuntime().exec(command);
 			process.waitFor();
-			project.refreshLocal(IResource.DEPTH_INFINITE, monitor.newChild(1));
+			project.refreshLocal(IResource.DEPTH_INFINITE, subMonitor.newChild(1));
 		} catch (final IOException e) {
-			new Status(IStatus.ERROR, SoftPackageUi.PLUGIN_ID, "IOException during code generation '", e);
+			new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "IOException during code generation '", e);
 		} catch (CoreException e) {
-			new Status(IStatus.ERROR, SoftPackageUi.PLUGIN_ID, "CoreException during code generation '", e);
+			new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "CoreException during code generation '", e);
 		} catch (InterruptedException e) {
-			new Status(IStatus.ERROR, SoftPackageUi.PLUGIN_ID, "InterruptedException during code generation '", e);
+			new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID, "InterruptedException during code generation '", e);
 		} finally {
 			subMonitor.done();
 		}
