@@ -15,10 +15,14 @@ import gov.redhawk.ide.swtbot.ProjectExplorerUtils;
 import gov.redhawk.ide.swtbot.SoftpackageUtils;
 import gov.redhawk.ide.swtbot.StandardTestActions;
 import gov.redhawk.ide.swtbot.UITest;
+import gov.redhawk.ide.swtbot.WaitForEditorCondition;
+import gov.redhawk.ide.swtbot.diagram.DiagramTestUtils;
 
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
+import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
@@ -36,14 +40,13 @@ public class NewSoftpackageWizardTest extends UITest {
 
 	private String errorMessage;
 
-	// TODO: Test case for creating octave softpackage projects
-
 	@BeforeClass
 	public static void beforeClassSetup() {
 		// PyDev needs to be configured before running New SCA Softpackage Project Wizards
 		StandardTestActions.configurePyDev();
 	}
 
+	// TODO: Test case for creating octave softpackage projects
 	/**
 	 * IDE-1099
 	 */
@@ -51,7 +54,7 @@ public class NewSoftpackageWizardTest extends UITest {
 	public void softpackageWizardTest() {
 		final String defaultMessage = "Create a new Softpackage library";
 		final String defaultErrorMessage = "Invalid character present in project name.";
-		final String projectName = "SoftpackageTest";
+		final String projectName = "SharedLibraryTest";
 
 		// Open the new softpackage project wizard
 		SWTBotMenu fileMenu = bot.menu("File");
@@ -98,29 +101,6 @@ public class NewSoftpackageWizardTest extends UITest {
 
 		// Confirm project appears in the project explorer
 		ProjectExplorerUtils.selectNode(bot, projectName);
-	}
-
-	// TODO: Do we need to include Octave project type for this test?
-	@Test
-	public void softpackageGenerationTest() {
-		final String projectName = "SoftpackageTest";
-		final String projectType = "C++ Library";
-		final String[][] possiblePaths = new String[][] { { "cpp", "include", projectName + ".h" }, { "cpp", "src", projectName + ".cpp" },
-			{ "cpp", "build.sh" }, { "cpp", "configure.ac" }, { "cpp", projectName + ".pc.in" }, { "cpp", "Makefile.am" }, { "cpp", "Makefile.am.ide" },
-			{ "cpp", "reconf" }, { "tests", "test_" + projectName + ".py" }, { "build.sh" }, { projectName + ".spd.xml" }, { projectName + ".spec" } };
-
-		SoftpackageUtils.createSoftpackageProject(bot, projectName, projectType);
-
-		// Every possible path starts from the same root, in this case the projectName
-		for (String[] possiblePath : possiblePaths) {
-			final String[] path = new String[possiblePath.length + 1];
-			path[0] = projectName;
-			for (int i = 1; i < possiblePath.length + 1; i++) {
-				path[i] = possiblePath[i - 1];
-			}
-			ProjectExplorerUtils.selectNode(bot, path);
-		}
-
 	}
 
 	// Have to do some fancy dancing to get the dialog error message
