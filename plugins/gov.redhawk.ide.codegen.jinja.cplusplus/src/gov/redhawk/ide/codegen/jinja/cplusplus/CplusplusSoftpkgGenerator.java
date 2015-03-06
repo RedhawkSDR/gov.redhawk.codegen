@@ -16,7 +16,7 @@ import gov.redhawk.ide.codegen.FileToCRCMap;
 import gov.redhawk.ide.codegen.IScaComponentCodegenSetup;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.cplusplus.AbstractCplusplusCodeGenerator;
-import gov.redhawk.ide.codegen.jinja.SoftpackageJinjaGenerator;
+import gov.redhawk.ide.codegen.jinja.SharedLibraryJinjaGenerator;
 
 import java.io.PrintStream;
 import java.util.List;
@@ -43,7 +43,7 @@ public class CplusplusSoftpkgGenerator extends AbstractCplusplusCodeGenerator im
 	public static final String ID = "gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusSoftpkgGenerator";
 	public static final String TEMPLATE = "redhawk.codegen.jinja.cpp.library";
 
-	private final SoftpackageJinjaGenerator generator = new SoftpackageJinjaGenerator();
+	private final SharedLibraryJinjaGenerator generator = new SharedLibraryJinjaGenerator();
 
 	@Override
 	public Code getInitialCodeSettings(SoftPkg softPkg, ImplementationSettings settings, Implementation impl) {

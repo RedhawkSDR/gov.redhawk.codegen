@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Tests
+Bundle-SymbolicName: gov.redhawk.ide.sharedlibrary.ui.tests
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: gov.redhawk.ide.sharedlibrary.ui.tests.SharedLibraryTestsActivator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ gov.redhawk.ide.swtbot,
+ gov.redhawk.ide.sharedlibrary.ui,
+ org.eclipse.swtbot.eclipse.gef.finder
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy

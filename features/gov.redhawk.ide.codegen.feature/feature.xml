@@ -253,7 +253,7 @@
          unpack="false"/>
 
    <plugin
-         id="gov.redhawk.ide.softpackage.ui"
+         id="gov.redhawk.ide.sharedlibrary.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"
