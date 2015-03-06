@@ -38,9 +38,9 @@ import org.eclipse.core.runtime.IStatus;
 /**
  * @since 1.2
  */
-public class CplusplusSoftpkgGenerator extends AbstractCplusplusCodeGenerator implements IScaComponentCodegenSetup {
+public class CplusplusSharedLibraryGenerator extends AbstractCplusplusCodeGenerator implements IScaComponentCodegenSetup {
 
-	public static final String ID = "gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusSoftpkgGenerator";
+	public static final String ID = "gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusSharedLibraryGenerator";
 	public static final String TEMPLATE = "redhawk.codegen.jinja.cpp.library";
 
 	private final SharedLibraryJinjaGenerator generator = new SharedLibraryJinjaGenerator();

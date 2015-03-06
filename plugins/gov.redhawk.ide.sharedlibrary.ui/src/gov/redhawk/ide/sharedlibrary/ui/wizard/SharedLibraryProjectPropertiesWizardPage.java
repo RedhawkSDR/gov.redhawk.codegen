@@ -41,7 +41,7 @@ public class SharedLibraryProjectPropertiesWizardPage extends ScaResourceProject
 		setShowComponentIDGroup(false);
 		this.model = new SharedLibraryModel();
 		this.dbc = new DataBindingContext();
-		this.setDescription("Create a new Softpackage library");
+		this.setDescription("Create a new Shared Library");
 	}
 
 	@Override

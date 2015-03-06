@@ -52,12 +52,12 @@ import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 
 public class NewSharedLibraryScaResourceProjectWizard extends NewScaResourceProjectWizard implements IImportWizard {
 
-	private final SharedLibraryProjectPropertiesWizardPage p1 = new SharedLibraryProjectPropertiesWizardPage("projectPage", "Softpackage");
+	private final SharedLibraryProjectPropertiesWizardPage p1 = new SharedLibraryProjectPropertiesWizardPage("projectPage", "Shared Library");
 	private SharedLibraryWizardPage p2 = new SharedLibraryWizardPage("tablePageNew", p1.getModel(), ICodeGeneratorDescriptor.COMPONENT_TYPE_RESOURCE);
 
 	public NewSharedLibraryScaResourceProjectWizard() {
 		super();
-		setWindowTitle("New Softpackage Project");
+		setWindowTitle("New Shared Library Project");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -141,7 +141,7 @@ public class NewSharedLibraryScaResourceProjectWizard extends NewScaResourceProj
 						}
 						BasicNewProjectResourceWizard.updatePerspective(getfConfig());
 
-						// Populate the softpackage spd.xml with base information and implementation
+						// Populate the shared library spd.xml with base information and implementation
 						setOpenEditorOn(SharedLibraryProjectCreator.createComponentFiles(project, projectName, getSoftPkg().getId(), null, progress.newChild(1)));
 						SharedLibraryProjectCreator.addImplementation(project, projectName, pageImpl, settings, progress.newChild(1));
 
@@ -188,7 +188,7 @@ public class NewSharedLibraryScaResourceProjectWizard extends NewScaResourceProj
 
 			return true;
 		} catch (final InvocationTargetException e) {
-			StatusManager.getManager().handle(new Status(Status.ERROR, SharedLibraryUi.PLUGIN_ID, "Failed to create SoftPackage Project.", e.getCause()),
+			StatusManager.getManager().handle(new Status(Status.ERROR, SharedLibraryUi.PLUGIN_ID, "Failed to create Shared Library Project.", e.getCause()),
 				StatusManager.SHOW | StatusManager.LOG);
 			return false;
 		} catch (InterruptedException e) {

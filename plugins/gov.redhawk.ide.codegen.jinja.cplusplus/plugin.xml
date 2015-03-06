@@ -90,14 +90,14 @@
       </codegen>
       <codegen
             autoGenerate="false"
-            class="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusSoftpkgGenerator"
+            class="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusSharedLibraryGenerator"
             compiler="/usr/bin/gcc"
             compilerVersion="4.1.2"
             humanLanguage="EN"
-            id="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusSoftpkgGenerator"
+            id="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusSharedLibraryGenerator"
             language="C++"
             languageVersion="0"
-            name="C++ Softpkg Code Generator"
+            name="C++ Shared Library Code Generator"
             notDefaultable="false"
             priority="normal">
          <description>
@@ -197,7 +197,7 @@
       </template>
       <template
             class="gov.redhawk.ide.codegen.jinja.cplusplus.template.DefaultCppTemplate"
-            codegenId="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusSoftpkgGenerator"
+            codegenId="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusSharedLibraryGenerator"
             hasSettings="false"
             id="redhawk.codegen.jinja.cpp.library"
             name="Shared Library Template"

@@ -13,7 +13,7 @@ package gov.redhawk.ide.sharedlibrary.ui.wizard;
 import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.RedhawkCodegenActivator;
-import gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusSoftpkgGenerator;
+import gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusSharedLibraryGenerator;
 import gov.redhawk.ide.sharedlibrary.ui.wizard.models.SharedLibraryModel;
 import gov.redhawk.ide.spd.ui.wizard.ImplementationWizardPage;
 import mil.jpeojtrs.sca.spd.Implementation;
@@ -45,8 +45,8 @@ public class SharedLibraryWizardPage extends ImplementationWizardPage {
 	public void handleTypeSelectionChanged() {
 
 		// Currently only supporting cpp & octave, which use the same generator -
-		// if we add new type, use model.getTypeName() to determine the code generator ID
-		String codeGenId = "gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusSoftpkgGenerator";
+		// TODO: if we add new type, use model.getTypeName() to determine the code generator ID
+		String codeGenId = "gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusSharedLibraryGenerator";
 
 		ICodeGeneratorDescriptor tempCodeGen = RedhawkCodegenActivator.getCodeGeneratorsRegistry().findCodegen(codeGenId);
 		Implementation implementation = getImplementation();
@@ -56,7 +56,7 @@ public class SharedLibraryWizardPage extends ImplementationWizardPage {
 		if ("C++ Library".equals(model.getTypeName())) {
 			implementation.setId("cpp");
 			settings.setOutputDir("cpp");
-			settings.setTemplate(CplusplusSoftpkgGenerator.TEMPLATE);
+			settings.setTemplate(CplusplusSharedLibraryGenerator.TEMPLATE);
 		} else if ("Octave Library".equals(model.getTypeName())) {
 			implementation.setId("octave");
 			settings.setOutputDir("cpp");

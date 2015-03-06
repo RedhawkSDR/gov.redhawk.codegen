@@ -20,25 +20,13 @@
             descriptionImage="icons/etool16/newprj_wiz.gif"
             hasPages="true"
             icon="icons/etool16/newprj_wiz.gif"
-            id="gov.redhawk.ide.sharedlibrary.ui.wizards.newsoftpackage"
-            name="SCA Softpackage Project"
+            id="gov.redhawk.ide.sharedlibrary.ui.wizards.newsharedlibrary"
+            name="SCA Shared Library Project"
             project="true">
       </wizard>
       <primaryWizard
-            id="gov.redhawk.ide.sharedlibrary.ui.wizards.newsoftpackage">
+            id="gov.redhawk.ide.sharedlibrary.ui.wizards.newsharedlibrary">
       </primaryWizard>
-   </extension>
-   <extension
-         point="gov.redhawk.ide.codegen.ui.codegenPages">
-      <codegenPage
-            compositeClass="gov.redhawk.ide.octave.ui.SoftpackageGeneratorDisplayFactory"
-            id="gov.redhawk.ide.sharedlibrary.ui.SoftpackageGeneratorDisplayFactory"
-            name="Softpackage Generator Wizard Pages"
-            wizardClass="gov.redhawk.ide.octave.ui.SoftpackageGeneratorDisplayFactory">
-         <codegenId
-               targetCodegenId="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusSoftpackageGenerator">
-         </codegenId>
-      </codegenPage>
    </extension>
 
 </plugin>
