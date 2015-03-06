@@ -45,8 +45,9 @@ public class SoftPackageProjectCreator extends ComponentProjectCreator {
 		final IProgressMonitor monitor) throws CoreException {
 		final SubMonitor progress = SubMonitor.convert(monitor, "Creating SCA softpackage files", 2);
 
+		final String baseFilename = getBaseFileName(spdName);
 		// Make sure spdFile does not already exist
-		final IFile spdFile = project.getFile(spdName + SpdPackage.FILE_EXTENSION);
+		final IFile spdFile = project.getFile(baseFilename + SpdPackage.FILE_EXTENSION);
 		if (spdFile.exists()) {
 			throw new CoreException(new Status(IStatus.ERROR, IdeSpdPlugin.PLUGIN_ID, "File " + spdFile.getName() + " already exists.", null));
 		}

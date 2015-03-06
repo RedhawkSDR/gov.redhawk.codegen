@@ -246,7 +246,7 @@ public class CodegeneratorApplication implements IApplication {
 	private void create_project(final String project_path, final String lang, final String codegenId, final String templateId, String project_type,
 		final IProgressMonitor progressMonitor) throws CoreException {
 		final SubMonitor monitor = SubMonitor.convert(progressMonitor, 2);
-		final IPath projectPath = new Path(project_path);
+		final IPath projectPath = new Path(project_path.replace('.', File.separatorChar));
 
 		if (projectPath.toFile().exists()) {
 			throw new CoreException(new Status(IStatus.ERROR, CodegeneratorApplication.PLUGIN_ID, "Provided project path must not yet exist", null));
