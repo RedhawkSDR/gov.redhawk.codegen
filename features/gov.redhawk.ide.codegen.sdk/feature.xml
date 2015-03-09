@@ -12,20 +12,20 @@
 <feature
       id="gov.redhawk.ide.codegen.sdk"
       label="%featureName"
-      version="1.11.0.qualifier"
+      version="2.0.0.qualifier"
       provider-name="%providerName">
 
-  <description url="http://redhawksdr.org">
-  	%description
-  </description>
-  
-  <copyright url="http://redhawksdr.org">
-  	%copyright
-  </copyright>
-  
-  <license url="%licenseURL">
-  	%license
-  </license> 
+   <description url="http://redhawksdr.org">
+      %description
+   </description>
+
+   <copyright url="http://redhawksdr.org">
+      %copyright
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
 
    <includes
          id="gov.redhawk.ide.codegen"
