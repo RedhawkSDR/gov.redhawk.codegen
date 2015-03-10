@@ -12,17 +12,12 @@
 package gov.redhawk.ide.sharedlibrary.ui.tests;
 
 import gov.redhawk.ide.swtbot.ProjectExplorerUtils;
-import gov.redhawk.ide.swtbot.SoftpackageUtils;
 import gov.redhawk.ide.swtbot.StandardTestActions;
 import gov.redhawk.ide.swtbot.UITest;
-import gov.redhawk.ide.swtbot.WaitForEditorCondition;
-import gov.redhawk.ide.swtbot.diagram.DiagramTestUtils;
 
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
-import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
@@ -34,7 +29,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * Test the ability to create a new softpackage project using various types
+ * Test the ability to create a new shared library project using various types
  */
 public class NewSharedLibraryWizardTest extends UITest {
 
@@ -42,21 +37,21 @@ public class NewSharedLibraryWizardTest extends UITest {
 
 	@BeforeClass
 	public static void beforeClassSetup() {
-		// PyDev needs to be configured before running New SCA Softpackage Project Wizards
+		// PyDev needs to be configured before running New SCA Shared Libary Project Wizards
 		StandardTestActions.configurePyDev();
 	}
 
-	// TODO: Test case for creating octave softpackage projects
+	// TODO: Test case for creating octave shared library projects
 	/**
 	 * IDE-1099
 	 */
 	@Test
-	public void softpackageWizardTest() {
-		final String defaultMessage = "Create a new Softpackage library";
+	public void sharedLibraryWizardTest() {
+		final String defaultMessage = "Create a new Shared Library";
 		final String defaultErrorMessage = "Invalid character present in project name.";
 		final String projectName = "SharedLibraryTest";
 
-		// Open the new softpackage project wizard
+		// Open the new shared library project wizard
 		SWTBotMenu fileMenu = bot.menu("File");
 		SWTBotMenu newMenu = fileMenu.menu("New");
 		SWTBotMenu otherMenu = newMenu.menu("Other...");
@@ -64,7 +59,7 @@ public class NewSharedLibraryWizardTest extends UITest {
 		SWTBotShell wizardShell = bot.shell("New");
 		SWTBot wizardBot = wizardShell.bot();
 		wizardShell.activate();
-		wizardBot.tree().getTreeItem("SCA").expand().getNode("SCA Softpackage Project").select();
+		wizardBot.tree().getTreeItem("SCA").expand().getNode("SCA Shared Library Project").select();
 		wizardBot.button("Next >").click();
 
 		SWTBotButton finishButton = wizardBot.button("Finish");
@@ -86,7 +81,7 @@ public class NewSharedLibraryWizardTest extends UITest {
 		Assert.assertFalse("Finish Button should not be enabled", finishButton.isEnabled());
 		Assert.assertFalse("Next Button should not be enabled", nextButton.isEnabled());
 
-		nameText.selectAll().typeText("SoftpackageTest");
+		nameText.selectAll().typeText("SharedLibraryTest");
 		Assert.assertTrue("Default message not displayed as expected.  Expected: " + defaultMessage + ", Actual: " + getErrorMessage(wizardShell),
 			defaultMessage.equals(getErrorMessage(wizardShell)));
 		Assert.assertFalse("Finish Button should not be enabled", finishButton.isEnabled());
