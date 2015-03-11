@@ -44,9 +44,11 @@ public class SharedLibraryEditorTest extends UITest {
 	public void sharedLibraryEditorTest() {
 		final String projectName = "SharedLibraryTest";
 		final String projectType = "C++ Library";
+		// IDE-1111: adding namespace to make sure it works
+		final String namespacePrefix = "name.spaced.";
 
-		SharedLibraryUtils.createSharedLibraryProject(bot, projectName, projectType);
-		ProjectExplorerUtils.openProjectInEditor(bot, new String[] { projectName, projectName + ".spd.xml" });
+		SharedLibraryUtils.createSharedLibraryProject(bot, namespacePrefix + projectName, projectType);
+		ProjectExplorerUtils.openProjectInEditor(bot, new String[] { namespacePrefix + projectName, projectName + ".spd.xml" });
 
 		editor = bot.editorByTitle(projectName);
 		DiagramTestUtils.openTabInEditor(editor, DiagramTestUtils.OVERVIEW_TAB);
