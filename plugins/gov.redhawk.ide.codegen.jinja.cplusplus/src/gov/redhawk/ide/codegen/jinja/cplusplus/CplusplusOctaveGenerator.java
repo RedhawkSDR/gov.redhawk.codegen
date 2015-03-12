@@ -60,7 +60,8 @@ public class CplusplusOctaveGenerator extends AbstractCplusplusCodeGenerator imp
 			outputDir = outputDir.substring(1);
 		}
 
-		String entryPoint = softPkg.getName();
+		// IDE-1187 Eliminate namespace segments from entry point
+		String entryPoint = getDefaultEntryPoint(softPkg);
 		if (!outputDir.isEmpty()) {
 			entryPoint = outputDir + File.separator + entryPoint;
 		}

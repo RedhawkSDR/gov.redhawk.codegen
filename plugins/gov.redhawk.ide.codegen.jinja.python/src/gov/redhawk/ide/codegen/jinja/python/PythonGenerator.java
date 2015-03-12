@@ -54,7 +54,8 @@ public class PythonGenerator extends AbstractPythonGenerator implements IScaComp
 		}
 
 		final Code retVal = SpdFactory.eINSTANCE.createCode();
-		final String prefix = softPkg.getName();
+		// IDE-1178 Eliminating namespace segments from entry point
+		final String prefix = getDefaultEntryPoint(softPkg);
 		retVal.setEntryPoint(outputDir + "/" + prefix + ".py");
 
 		final LocalFile file = SpdFactory.eINSTANCE.createLocalFile();

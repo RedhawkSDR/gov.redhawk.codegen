@@ -55,7 +55,8 @@ public class CplusplusGenerator extends AbstractCplusplusCodeGenerator implement
 			outputDir = outputDir.substring(1);
 		}
 
-		String entryPoint = softPkg.getName();
+		// IDE-1178 Eliminate namespace segments from entry point
+		String entryPoint = getDefaultEntryPoint(softPkg);
 		if (!outputDir.isEmpty()) {
 			entryPoint = outputDir + File.separator + entryPoint;
 		}
