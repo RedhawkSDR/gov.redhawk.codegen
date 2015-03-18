@@ -13,6 +13,7 @@ package gov.redhawk.ide.sharedlibrary.ui.runtime.tests;
 
 import gov.redhawk.ide.swtbot.ProjectExplorerUtils;
 import gov.redhawk.ide.swtbot.SharedLibraryUtils;
+import gov.redhawk.ide.swtbot.StandardTestActions;
 import gov.redhawk.ide.swtbot.UIRuntimeTest;
 import gov.redhawk.ide.swtbot.scaExplorer.ScaExplorerTestUtils;
 
@@ -39,7 +40,7 @@ public class SharedLibraryExportTest extends UIRuntimeTest {
 		SharedLibraryUtils.createSharedLibraryProject(bot, projectName, projectType);
 		ProjectExplorerUtils.openProjectInEditor(bot, new String[] { projectName, projectName + ".spd.xml" });
 		SWTBotEditor editor = bot.editorByTitle(projectName);
-		SharedLibraryUtils.generateSharedLibraryProject(bot, editor);
+		StandardTestActions.generateProject(bot, editor);
 
 		// Export to SDR
 		SWTBotTreeItem projectNode = ProjectExplorerUtils.waitUntilNodeAppears(bot, projectName);

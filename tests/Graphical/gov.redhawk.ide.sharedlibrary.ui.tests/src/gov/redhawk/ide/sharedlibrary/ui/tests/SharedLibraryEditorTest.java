@@ -19,6 +19,9 @@ import gov.redhawk.ide.swtbot.diagram.DiagramTestUtils;
 
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -39,6 +42,7 @@ public class SharedLibraryEditorTest extends UITest {
 
 	/**
 	 * IDE-1102 - Hide unnecessary fields in Shared Library project editors
+	 * IDE-1142 - Update the dependency wizard when choosing a shared library
 	 */
 	@Test
 	public void sharedLibraryEditorTest() {
@@ -74,5 +78,22 @@ public class SharedLibraryEditorTest extends UITest {
 		} catch (WidgetNotFoundException e) {
 			// PASS - We expected the widget not to be found
 		}
+
+		// Check that the dependency wizard for SoftPkg reference was updated to show only Shared Libs
+		bot.button("Add...", 3).click();
+
+		SWTBotCombo kindCombo = bot.comboBoxWithLabel("Kind:");
+		kindCombo.setSelection("SoftPkg Reference");
+
+		SWTBotCombo typeCombo = bot.comboBoxWithLabel("Type:");
+		Assert.assertTrue("Only one type should be available for Kind: SoftPkg Reference", typeCombo.itemCount() == 1);
+		typeCombo.setSelection(0);
+		Assert.assertEquals("The only acceptable type for Kind: SoftPkg Reference is 'other'", "other", typeCombo.getText());
+
+		SWTBotTree referenceTree = bot.treeInGroup("SoftPkg Reference");
+		SWTBotTreeItem[] treeItems = referenceTree.getAllItems();
+		Assert.assertTrue("There should only be one container node in the Reference tree (Shared Libraries)", treeItems.length == 1);
+		Assert.assertEquals("Shared Libraries container should be in the Reference tree", "Shared Libraries", treeItems[0].getText());
+
 	}
 }
