@@ -83,16 +83,16 @@ public class SharedLibraryEditorTest extends UITest {
 		bot.button("Add...", 3).click();
 
 		SWTBotCombo kindCombo = bot.comboBoxWithLabel("Kind:");
-		kindCombo.setSelection("SoftPkg Reference");
+		kindCombo.setSelection("Shared Library (SoftPkg) Reference");
 
 		SWTBotCombo typeCombo = bot.comboBoxWithLabel("Type:");
-		Assert.assertTrue("Only one type should be available for Kind: SoftPkg Reference", typeCombo.itemCount() == 1);
+		Assert.assertTrue("Only one type should be available for Kind: Shared Library (SoftPkg) Reference", typeCombo.itemCount() == 1);
 		typeCombo.setSelection(0);
-		Assert.assertEquals("The only acceptable type for Kind: SoftPkg Reference is 'other'", "other", typeCombo.getText());
+		Assert.assertEquals("The only acceptable type for Kind: Shared Library (SoftPkg) Reference is 'other'", "other", typeCombo.getText());
 
-		SWTBotTree referenceTree = bot.treeInGroup("SoftPkg Reference");
+		SWTBotTree referenceTree = bot.treeInGroup("Shared Library (SoftPkg) Reference");
 		SWTBotTreeItem[] treeItems = referenceTree.getAllItems();
-		Assert.assertTrue("There should only be one container node in the Reference tree (Shared Libraries)", treeItems.length == 1);
+		Assert.assertTrue("There should only be the Shared Libraries container node in the reference tree", treeItems.length == 1);
 		Assert.assertEquals("Shared Libraries container should be in the Reference tree", "Shared Libraries", treeItems[0].getText());
 
 	}
