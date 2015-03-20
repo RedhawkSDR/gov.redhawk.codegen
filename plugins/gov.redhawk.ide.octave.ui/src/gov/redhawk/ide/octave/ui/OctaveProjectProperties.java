@@ -42,7 +42,9 @@ public class OctaveProjectProperties extends BeanModelObject {
 	 * @param primaryMFile The m-file for this project.
 	 */
 	public void setPrimaryMFile(File primaryMFile) {
-		firePropertyChange("primaryMFile", this.primaryMFile, this.primaryMFile = primaryMFile);
+		final File oldValue = this.primaryMFile;
+		this.primaryMFile = primaryMFile;
+		firePropertyChange("primaryMFile", oldValue, this.primaryMFile);
 	}
 
 	/**
@@ -59,7 +61,9 @@ public class OctaveProjectProperties extends BeanModelObject {
 	}
 
 	public void setHasDeps(boolean hasDeps) {
-		firePropertyChange("hasDeps", this.hasDeps, this.hasDeps = hasDeps);
+		final boolean oldValue = this.hasDeps;
+		this.hasDeps = hasDeps;
+		firePropertyChange("hasDeps", oldValue, this.hasDeps);
 		
 		if (!this.hasDeps) {
 			this.mFileDepsList.clear();
@@ -71,11 +75,15 @@ public class OctaveProjectProperties extends BeanModelObject {
 	}
 
 	public void setCurrentDepFile(File currentDepFile) {
-		firePropertyChange("currentDepFile", this.currentDepFile, this.currentDepFile = currentDepFile);
+		final File oldValue = this.currentDepFile;
+		this.currentDepFile = currentDepFile;
+		firePropertyChange("currentDepFile", oldValue, this.currentDepFile);
 	}
 	
 	public void setFunctionInputs(List<OctaveFunctionVariables> functionInputs) {
-		firePropertyChange("functionInputs", this.functionInputs, this.functionInputs = functionInputs);
+		final List<OctaveFunctionVariables> oldValue = this.functionInputs;
+		this.functionInputs = functionInputs;
+		firePropertyChange("functionInputs", oldValue, this.functionInputs);
 	}
 
 	public List<OctaveFunctionVariables> getFunctionInputs() {
@@ -83,7 +91,9 @@ public class OctaveProjectProperties extends BeanModelObject {
 	}
 	
 	public void setFunctionOutputs(List<OctaveFunctionVariables> functionOutputs) {
-		firePropertyChange("functionOutputs", this.functionOutputs, this.functionOutputs = functionOutputs);
+		final List<OctaveFunctionVariables> oldValue = this.functionOutputs;
+		this.functionOutputs = functionOutputs;
+		firePropertyChange("functionOutputs", oldValue, this.functionOutputs);
 	}
 
 	public List<OctaveFunctionVariables> getFunctionOutputs() {
@@ -95,7 +105,9 @@ public class OctaveProjectProperties extends BeanModelObject {
 	}
 
 	public void setFunctionName(String functionName) {
-		firePropertyChange("functionName", this.functionName, this.functionName = functionName);
+		final String oldValue = this.functionName;
+		this.functionName = functionName;
+		firePropertyChange("functionName", oldValue, this.functionName);
 	}
 
 }

@@ -38,6 +38,10 @@ import org.eclipse.jface.wizard.Wizard;
 
 public class FrontEndDeviceWizard extends NewScaDeviceCreationProjectWizard implements IImportWizard {
 
+	private static final String CODEGEN_FRONTEND_CPP_ID = "redhawk.codegen.jinja.cpp.component.frontend";
+	private static final String CODEGEN_FRONTEND_JAVA_ID = "redhawk.codegen.jinja.java.component.frontend";
+	private static final String CODEGEN_FRONTEND_PYTHON_ID = "redhawk.codegen.jinja.python.component.frontend";
+
 	public FrontEndDeviceWizard() {
 		super();
 	}
@@ -87,7 +91,7 @@ public class FrontEndDeviceWizard extends NewScaDeviceCreationProjectWizard impl
 			// We need to remove the pages previously added.
 			ICodeGeneratorPageRegistry codegenTemplateRegistry = RedhawkCodegenUiActivator.getCodeGeneratorsTemplateRegistry();
 
-			List<ICodegenDisplayFactory> codegenDisplayFactories = ((ICodeGeneratorPageRegistry2) codegenTemplateRegistry).findCodegenDisplayFactoriesByGeneratorId("redhawk.codegen.jinja.cpp.component.frontend");
+			List<ICodegenDisplayFactory> codegenDisplayFactories = ((ICodeGeneratorPageRegistry2) codegenTemplateRegistry).findCodegenDisplayFactoriesByGeneratorId(CODEGEN_FRONTEND_CPP_ID);
 
 			for (ICodegenDisplayFactory factory : codegenDisplayFactories) {
 				if (factory instanceof FrontEndGeneratorTemplateDisplayFactory) {
@@ -98,11 +102,11 @@ public class FrontEndDeviceWizard extends NewScaDeviceCreationProjectWizard impl
 		}
 
 		if ("C++".equals(impl.getProgrammingLanguage().getName())) {
-			settings.setTemplate("redhawk.codegen.jinja.cpp.component.frontend");
+			settings.setTemplate(CODEGEN_FRONTEND_CPP_ID);
 		} else if ("Java".equals(impl.getProgrammingLanguage().getName())) {
-			settings.setTemplate("redhawk.codegen.jinja.java.component.frontend");
+			settings.setTemplate(CODEGEN_FRONTEND_JAVA_ID);
 		} else if ("Python".equals(impl.getProgrammingLanguage().getName())) {
-			settings.setTemplate("redhawk.codegen.jinja.python.component.frontend");
+			settings.setTemplate(CODEGEN_FRONTEND_PYTHON_ID);
 		}
 
 		ICodeGeneratorPageRegistry codegenTemplateRegistry = RedhawkCodegenUiActivator.getCodeGeneratorsTemplateRegistry();

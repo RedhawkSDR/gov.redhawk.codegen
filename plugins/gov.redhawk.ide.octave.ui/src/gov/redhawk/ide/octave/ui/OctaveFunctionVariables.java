@@ -27,7 +27,9 @@ public class OctaveFunctionVariables extends BeanModelObject {
 	}
 
 	public void setName(String name) {
-		firePropertyChange("name", this.name, this.name = name);
+		final String oldValue = this.name;
+		this.name = name;
+		firePropertyChange("name", oldValue, this.name);
 	}
 
 	public OctaveVariableMappingEnum getMapping() {
@@ -35,7 +37,9 @@ public class OctaveFunctionVariables extends BeanModelObject {
 	}
 
 	public void setMapping(OctaveVariableMappingEnum mapping) {
-		firePropertyChange("mapping", this.mapping, this.mapping = mapping);
+		final OctaveVariableMappingEnum oldValue = this.mapping;
+		this.mapping = mapping;
+		firePropertyChange("mapping", oldValue, this.mapping);
 	}
 
 	public OctaveVariableTypeEnum getType() {
@@ -43,7 +47,9 @@ public class OctaveFunctionVariables extends BeanModelObject {
 	}
 
 	public void setType(OctaveVariableTypeEnum type) {
-		firePropertyChange("type", this.type, this.type = type);
+		final OctaveVariableTypeEnum oldValue = this.type;
+		this.type = type;
+		firePropertyChange("type", oldValue, this.type);
 	}
 
 	public boolean isInputVariable() {
