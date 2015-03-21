@@ -15,6 +15,8 @@ import gov.redhawk.ide.spd.ui.wizard.ScaResourceProjectPropertiesWizardPage;
 
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.util.List;
 
 import org.eclipse.core.databinding.Binding;
@@ -143,7 +145,7 @@ public class SharedLibraryProjectPropertiesWizardPage extends ScaResourceProject
 		mFileRemoveButton.setLayoutData(GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.BEGINNING).create());
 		mFileRemoveButton.setEnabled(false);
 
-		addButtonListeners(contentsGroup);
+		createButtonListeners(contentsGroup);
 	}
 
 	private void setMFileListViewerProviders() {
@@ -179,7 +181,7 @@ public class SharedLibraryProjectPropertiesWizardPage extends ScaResourceProject
 		mFileListViewer.setInput(this.model.getmFilesList());
 	}
 
-	private void addButtonListeners(final Group contentsGroup) {
+	private void createButtonListeners(final Group contentsGroup) {
 		this.mFileBrowseButton.addSelectionListener(new SelectionListener() {
 
 			@Override
@@ -215,6 +217,11 @@ public class SharedLibraryProjectPropertiesWizardPage extends ScaResourceProject
 				Object currentValidationStatus = SharedLibraryProjectPropertiesWizardPage.this.currentMFileBindValue.getValidationStatus().getValue();
 				File file = SharedLibraryProjectPropertiesWizardPage.this.model.getCurrentMFile();
 				if (((IStatus) currentValidationStatus).isOK() && file != null) {
+					// Don't allow directories
+					if (Files.isDirectory(file.toPath(), LinkOption.NOFOLLOW_LINKS)) {
+						return;
+					}
+
 					// If the file is not already in the list.
 					if (!SharedLibraryProjectPropertiesWizardPage.this.model.getmFilesList().contains(file)) {
 						SharedLibraryProjectPropertiesWizardPage.this.model.getmFilesList().add(file);

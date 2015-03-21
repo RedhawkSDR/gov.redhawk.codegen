@@ -11,6 +11,7 @@
  */
 package gov.redhawk.ide.sharedlibrary.ui.tests;
 
+import gov.redhawk.ide.sharedlibrary.ui.wizard.models.SharedLibraryModel;
 import gov.redhawk.ide.swtbot.ProjectExplorerUtils;
 import gov.redhawk.ide.swtbot.StandardTestActions;
 import gov.redhawk.ide.swtbot.UITest;
@@ -21,6 +22,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotList;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
@@ -41,15 +43,15 @@ public class NewSharedLibraryWizardTest extends UITest {
 		StandardTestActions.configurePyDev();
 	}
 
-	// TODO: Test case for creating octave shared library projects
 	/**
 	 * IDE-1099
+	 * Test case for creating cpp shared library projects
 	 */
 	@Test
-	public void sharedLibraryWizardTest() {
+	public void sharedLibraryCppWizardTest() {
 		final String defaultMessage = "Create a new Shared Library";
 		final String defaultErrorMessage = "Invalid character present in project name.";
-		final String projectName = "SharedLibraryTest";
+		final String projectName = "SharedLibraryCppTest";
 
 		// Open the new shared library project wizard
 		SWTBotMenu fileMenu = bot.menu("File");
@@ -81,16 +83,92 @@ public class NewSharedLibraryWizardTest extends UITest {
 		Assert.assertFalse("Finish Button should not be enabled", finishButton.isEnabled());
 		Assert.assertFalse("Next Button should not be enabled", nextButton.isEnabled());
 
-		nameText.selectAll().typeText("SharedLibraryTest");
+		nameText.selectAll().typeText(projectName);
 		Assert.assertTrue("Default message not displayed as expected.  Expected: " + defaultMessage + ", Actual: " + getErrorMessage(wizardShell),
 			defaultMessage.equals(getErrorMessage(wizardShell)));
 		Assert.assertFalse("Finish Button should not be enabled", finishButton.isEnabled());
 		Assert.assertFalse("Next Button should not be enabled", nextButton.isEnabled());
 
 		SWTBotCombo typeCombo = wizardBot.comboBoxWithLabel("Type:");
-		typeCombo.setSelection("C++ Library");
+		typeCombo.setSelection(SharedLibraryModel.CPP_TYPE);
 		Assert.assertTrue("Finish Button should be enabled", finishButton.isEnabled());
 		Assert.assertFalse("Next Button should not be enabled", nextButton.isEnabled());
+
+		finishButton.click();
+
+		// Confirm project appears in the project explorer
+		ProjectExplorerUtils.selectNode(bot, projectName);
+	}
+
+	/**
+	 * IDE-1009
+	 * Test case for creating octave shared library projects
+	 */
+	@Test
+	public void sharedLibraryOctaveWizardTest() {
+		final String projectName = "SharedLibraryOctaveTest";
+
+		// Open the new shared library project wizard
+		SWTBotMenu fileMenu = bot.menu("File");
+		SWTBotMenu newMenu = fileMenu.menu("New");
+		SWTBotMenu otherMenu = newMenu.menu("Other...");
+		otherMenu.click();
+		SWTBotShell wizardShell = bot.shell("New");
+		SWTBot wizardBot = wizardShell.bot();
+		wizardShell.activate();
+		wizardBot.tree().getTreeItem("SCA").expand().getNode("SCA Shared Library Project").select();
+		wizardBot.button("Next >").click();
+
+		// Get all widgets
+		SWTBotButton finishButton = wizardBot.button("Finish");
+		SWTBotButton nextButton = wizardBot.button("Next >");
+		SWTBotButton browseButton = wizardBot.button("Browse");
+		SWTBotButton addButton = wizardBot.button("Add");
+		SWTBotButton removeButton = wizardBot.button("Remove");
+		SWTBotText mFileText = wizardBot.textInGroup("Contents");
+		SWTBotList mFileList = wizardBot.listInGroup("Contents");
+
+		SWTBotText nameText = wizardBot.textWithLabel("Project name:");
+		nameText.selectAll().typeText(projectName);
+
+		// Validate that mFile widgets are only enabled for octave type
+		SWTBotCombo typeCombo = wizardBot.comboBoxWithLabel("Type:");
+		typeCombo.setSelection(SharedLibraryModel.CPP_TYPE);
+		Assert.assertFalse("M-File text box should not be enabled", mFileText.isEnabled());
+		Assert.assertFalse("Browse button should not be enabled", browseButton.isEnabled());
+		Assert.assertFalse("Add button should not be enabled", addButton.isEnabled());
+		Assert.assertFalse("Remove button should not be enabled", removeButton.isEnabled());
+
+		typeCombo.setSelection(SharedLibraryModel.OCTAVE_TYPE);
+		Assert.assertTrue("M-File text box should be enabled", mFileText.isEnabled());
+		Assert.assertTrue("Browse button should be enabled", browseButton.isEnabled());
+		Assert.assertTrue("Add button should be enabled", addButton.isEnabled());
+		Assert.assertTrue("Remove button should be enabled", removeButton.isEnabled());
+		Assert.assertFalse("Finish Button should not be enabled", finishButton.isEnabled());
+		Assert.assertFalse("Next Button should not be enabled", nextButton.isEnabled());
+
+		mFileText.selectAll().typeText("qwerty");
+		addButton.click();
+		Assert.assertEquals("User should not be able to add garbage paths", mFileList.itemCount(), 0);
+
+		mFileText.selectAll().typeText("/var/redhawk");
+		addButton.click();
+		Assert.assertEquals("User should not be able to add directories", mFileList.itemCount(), 0);
+
+		mFileText.selectAll().typeText("/var/redhawk/sdr/dom/components/SigGen/SigGen.spd.xml");
+		addButton.click();
+		Assert.assertEquals("File was not added to the list", mFileList.itemCount(), 1);
+		Assert.assertTrue("Finish Button should be enabled", finishButton.isEnabled());
+
+		mFileList.select(0);
+		removeButton.click();
+		Assert.assertEquals("File was not removed from the list", mFileList.itemCount(), 0);
+		Assert.assertFalse("Finish Button should not be enabled", finishButton.isEnabled());
+
+		mFileText.selectAll().typeText("/var/redhawk/sdr/dom/components/SigGen/SigGen.spd.xml");
+		addButton.click();
+		Assert.assertEquals("File was not added to the list", mFileList.itemCount(), 1);
+		Assert.assertTrue("Finish Button should be enabled", finishButton.isEnabled());
 
 		finishButton.click();
 
