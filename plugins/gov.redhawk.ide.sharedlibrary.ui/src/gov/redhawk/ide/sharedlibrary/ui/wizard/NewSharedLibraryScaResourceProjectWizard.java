@@ -12,6 +12,7 @@ package gov.redhawk.ide.sharedlibrary.ui.wizard;
 
 import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
 import gov.redhawk.ide.codegen.ImplementationSettings;
+import gov.redhawk.ide.codegen.jinja.cplusplus.OctaveSharedLibraryGenerator;
 import gov.redhawk.ide.codegen.util.ImplementationAndSettings;
 import gov.redhawk.ide.sharedlibrary.codegen.SharedLibraryProjectCreator;
 import gov.redhawk.ide.sharedlibrary.ui.SharedLibraryUi;
@@ -21,6 +22,12 @@ import gov.redhawk.ide.spd.ui.wizard.NewScaResourceProjectWizard;
 import gov.redhawk.ide.ui.wizard.ScaProjectPropertiesWizardPage;
 import gov.redhawk.sca.util.SubMonitor;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
@@ -31,12 +38,14 @@ import mil.jpeojtrs.sca.spd.SoftPkg;
 import mil.jpeojtrs.sca.spd.SpdFactory;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
@@ -154,6 +163,44 @@ public class NewSharedLibraryScaResourceProjectWizard extends NewScaResourceProj
 						throw e;
 					}
 
+					// If project is an Octave shared library, load the mfiles into their desired location
+					if (OctaveSharedLibraryGenerator.TEMPLATE.equals(settings.getTemplate())) {
+
+						String outputDirStr = settings.getOutputDir();
+						IFolder outputDir = project.getFolder(new Path(outputDirStr));
+						if (!outputDir.exists()) {
+							outputDir.create(true, true, null);
+						}
+
+						String sharedDirStr = outputDirStr + "/share";
+
+						IFolder sharedDir = project.getFolder(new Path(sharedDirStr));
+						if (!sharedDir.exists()) {
+							sharedDir.create(true, true, null);
+						}
+
+						for (File mFile : p1.getModel().getmFilesList()) {
+							IFile targetFile = sharedDir.getFile(mFile.getName());
+							InputStream inputStream = null;
+
+							try {
+								inputStream = new BufferedInputStream(new FileInputStream(mFile));
+								targetFile.create(inputStream, true, null);
+							} catch (FileNotFoundException e) {
+								throw new CoreException(new Status(Status.ERROR, SharedLibraryUi.PLUGIN_ID, "Failed to find M-File to copy into project.", e));
+							} finally {
+								if (inputStream != null) {
+									try {
+										inputStream.close();
+									} catch (IOException e) {
+										// PASS
+									}
+								}
+							}
+						}
+
+					}
+
 				} catch (final CoreException e) {
 					throw e;
 				} catch (InterruptedException e) {
@@ -196,5 +243,4 @@ public class NewSharedLibraryScaResourceProjectWizard extends NewScaResourceProj
 		}
 	}
 
-	
 }

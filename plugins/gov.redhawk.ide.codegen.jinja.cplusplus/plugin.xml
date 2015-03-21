@@ -119,6 +119,37 @@
                type="resource">
          </componenttype>
       </codegen>
+      <codegen
+            autoGenerate="false"
+            class="gov.redhawk.ide.codegen.jinja.cplusplus.OctaveSharedLibraryGenerator"
+            compiler="/usr/bin/gcc"
+            compilerVersion="4.1.2"
+            humanLanguage="EN"
+            id="gov.redhawk.ide.codegen.jinja.cplusplus.OctaveSharedLibraryGenerator"
+            language="C++"
+            languageVersion="0"
+            name="Octave Shared Library Code Generator"
+            notDefaultable="false"
+            priority="normal">
+         <description>
+            Integrated'redhawk-codegen' Octave code generator for soft package libraries.
+         </description>
+         <operatingSystem
+               default="true"
+               os="Linux">
+         </operatingSystem>
+         <processor
+               default="true"
+               proc_type="x86">
+         </processor>
+         <processor
+               default="true"
+               proc_type="x86_64">
+         </processor>
+         <componenttype
+               type="resource">
+         </componenttype>
+      </codegen>
    </extension>
    <extension
          point="gov.redhawk.ide.codegen.codegenTemplate">
@@ -200,7 +231,23 @@
             codegenId="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusSharedLibraryGenerator"
             hasSettings="false"
             id="redhawk.codegen.jinja.cpp.library"
-            name="Shared Library Template"
+            name="Shared Library CPP Template"
+            notDefaultable="false"
+            selectable="true"
+            usesPortTemplates="false">
+         <componenttype
+               type="resource">
+         </componenttype>
+         <description>
+            This template will queue all data inside each input port. It is the developers responsibility to pull the data from the port's queue for processing.
+         </description>
+      </template>
+      <template
+            class="gov.redhawk.ide.codegen.jinja.cplusplus.template.DefaultCppTemplate"
+            codegenId="gov.redhawk.ide.codegen.jinja.cplusplus.OctaveSharedLibraryGenerator"
+            hasSettings="false"
+            id="redhawk.codegen.jinja.project.softPackageDependency.directory"
+            name="Shared Library Octave Template"
             notDefaultable="false"
             selectable="true"
             usesPortTemplates="false">

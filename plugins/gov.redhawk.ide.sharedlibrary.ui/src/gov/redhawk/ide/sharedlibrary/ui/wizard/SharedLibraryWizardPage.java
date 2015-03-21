@@ -14,9 +14,11 @@ import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.RedhawkCodegenActivator;
 import gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusSharedLibraryGenerator;
+import gov.redhawk.ide.codegen.jinja.cplusplus.OctaveSharedLibraryGenerator;
 import gov.redhawk.ide.sharedlibrary.ui.wizard.models.SharedLibraryModel;
 import gov.redhawk.ide.spd.ui.wizard.ImplementationWizardPage;
 import mil.jpeojtrs.sca.spd.Implementation;
+import mil.jpeojtrs.sca.spd.SpdFactory;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
@@ -44,29 +46,36 @@ public class SharedLibraryWizardPage extends ImplementationWizardPage {
 	// Update Implementation and Implementation Settings values to match selected type
 	public void handleTypeSelectionChanged() {
 
-		// Currently only supporting cpp & octave, which use the same generator -
-		// TODO: if we add new type, use model.getTypeName() to determine the code generator ID
-		String codeGenId = "gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusSharedLibraryGenerator";
+		// Currently only supporting cpp & octave
+		String codeGenId = null;
+		if (SharedLibraryModel.CPP_TYPE.equals(model.getTypeName())) {
+			codeGenId = "gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusSharedLibraryGenerator";
+		} else if (SharedLibraryModel.OCTAVE_TYPE.equals(model.getTypeName())) {
+			codeGenId = "gov.redhawk.ide.codegen.jinja.cplusplus.OctaveSharedLibraryGenerator";
+		}
 
 		ICodeGeneratorDescriptor tempCodeGen = RedhawkCodegenActivator.getCodeGeneratorsRegistry().findCodegen(codeGenId);
 		Implementation implementation = getImplementation();
 		ImplementationSettings settings = getImplSettings();
 		settings.setGeneratorId(tempCodeGen.getId());
 
-		if ("C++ Library".equals(model.getTypeName())) {
+		if (SharedLibraryModel.CPP_TYPE.equals(model.getTypeName())) {
 			implementation.setId("cpp");
 			settings.setOutputDir("cpp");
 			settings.setTemplate(CplusplusSharedLibraryGenerator.TEMPLATE);
-		} else if ("Octave Library".equals(model.getTypeName())) {
+			if (implementation.getCompiler() == null) {
+				implementation.setCompiler(SpdFactory.eINSTANCE.createCompiler());
+			}
+			implementation.getCompiler().setName(tempCodeGen.getCompiler());
+			implementation.getCompiler().setVersion(tempCodeGen.getCompilerVersion());
+			this.getProgLang().setName(tempCodeGen.getLanguage());
+		} else if (SharedLibraryModel.OCTAVE_TYPE.equals(model.getTypeName())) {
 			implementation.setId("octave");
-			settings.setOutputDir("cpp");
-			// TODO: need an octave template to set here
-			settings.setTemplate(null);
+			settings.setOutputDir("noarch");
+			settings.setTemplate(OctaveSharedLibraryGenerator.TEMPLATE);
+			implementation.setCompiler(null);
 		}
 
-		implementation.getCompiler().setName(tempCodeGen.getCompiler());
-		implementation.getCompiler().setVersion(tempCodeGen.getCompilerVersion());
-		this.getProgLang().setName(tempCodeGen.getLanguage());
 		if (tempCodeGen.getRuntime() != null) {
 			implementation.getRuntime().setName(tempCodeGen.getRuntime());
 			implementation.getRuntime().setVersion(tempCodeGen.getRuntimeVersion());

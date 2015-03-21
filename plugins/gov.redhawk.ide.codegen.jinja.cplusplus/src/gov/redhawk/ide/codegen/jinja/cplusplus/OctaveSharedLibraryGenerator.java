@@ -11,12 +11,14 @@
  */
 package gov.redhawk.ide.codegen.jinja.cplusplus;
 
+import gov.redhawk.ide.codegen.AbstractCodeGenerator;
 import gov.redhawk.ide.codegen.FileStatus;
 import gov.redhawk.ide.codegen.FileToCRCMap;
 import gov.redhawk.ide.codegen.IScaComponentCodegenSetup;
 import gov.redhawk.ide.codegen.ImplementationSettings;
-import gov.redhawk.ide.codegen.cplusplus.AbstractCplusplusCodeGenerator;
+import gov.redhawk.ide.codegen.cplusplus.GccGeneratorPlugin;
 import gov.redhawk.ide.codegen.jinja.SharedLibraryJinjaGenerator;
+import gov.redhawk.model.sca.util.ModelUtil;
 
 import java.io.PrintStream;
 import java.util.List;
@@ -34,14 +36,17 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 
 /**
  * @since 1.2
  */
-public class CplusplusSharedLibraryGenerator extends AbstractCplusplusCodeGenerator implements IScaComponentCodegenSetup {
+public class OctaveSharedLibraryGenerator extends AbstractCodeGenerator implements IScaComponentCodegenSetup {
 
-	public static final String ID = "gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusSharedLibraryGenerator";
-	public static final String TEMPLATE = "redhawk.codegen.jinja.cpp.library";
+	public static final String ID = "gov.redhawk.ide.codegen.jinja.cplusplus.OctaveSharedLibraryGenerator";
+	public static final String TEMPLATE = "redhawk.codegen.jinja.project.softPackageDependency.directory";
 
 	private final SharedLibraryJinjaGenerator generator = new SharedLibraryJinjaGenerator();
 
@@ -81,7 +86,38 @@ public class CplusplusSharedLibraryGenerator extends AbstractCplusplusCodeGenera
 	}
 
 	@Override
-	protected void generateCode(final Implementation impl, final ImplementationSettings implSettings, final IProject project, final String componentName, // SUPPRESS CHECKSTYLE Arguments
+	public IStatus generate(ImplementationSettings implSettings, Implementation impl, PrintStream out, PrintStream err, IProgressMonitor monitor, // SUPPRESS CHECKSTYLE Arguments
+		String[] generateFiles, boolean shouldGenerate, List<FileToCRCMap> crcMap) { // SUPPRESS CHECKSTYLE Arguments
+		final int CLEANUP_WORK = 1, ADD_NATURE_WORK = 1, ADD_BUILDER_WORK = 1;
+		final int ADJUST_CONFIG_WORK = 90;
+		final int GENERATE_CODE_WORK = 7;
+		final SubMonitor progress = SubMonitor.convert(monitor, "Configuring project", CLEANUP_WORK + ADD_NATURE_WORK + ADD_NATURE_WORK + ADD_BUILDER_WORK
+				+ ADJUST_CONFIG_WORK + GENERATE_CODE_WORK);
+		
+		final IProject project = ModelUtil.getProject(implSettings);
+		if (project == null) {
+			return new Status(IStatus.ERROR, GccGeneratorPlugin.PLUGIN_ID, "Unable to determine project; cannot proceed with code generation", null);
+		}
+
+		final String componentName = implSettings.getName();
+		final String destinationDirectory = implSettings.getOutputDir();
+		final MultiStatus retStatus = new MultiStatus(GccGeneratorPlugin.PLUGIN_ID, IStatus.OK, "Octave Shared Library code generation problems", null);
+
+		if (shouldGenerate) {
+			out.println("Targeting location " + project.getLocation() + "/" + destinationDirectory + " for code generation...");
+			
+			try {
+				generateCode(impl, implSettings, project, componentName, out, err, progress.newChild(GENERATE_CODE_WORK), generateFiles, crcMap);
+			} catch (final CoreException e) {
+				retStatus.add(new Status(IStatus.ERROR, GccGeneratorPlugin.PLUGIN_ID, "Unable to generate code", e));
+				return retStatus;
+			}
+		}
+
+		return retStatus;
+	}
+
+	protected void generateCode(final Implementation impl, final ImplementationSettings implSettings, final IProject project, final String componentName, // SUPPRESS
 		final PrintStream out, final PrintStream err, final IProgressMonitor monitor, final String[] generateFiles, final List<FileToCRCMap> crcMap)
 		throws CoreException {
 
@@ -97,5 +133,14 @@ public class CplusplusSharedLibraryGenerator extends AbstractCplusplusCodeGenera
 	@Override
 	public void checkSystem(IProgressMonitor monitor, String templateId) throws CoreException {
 		this.generator.checkSystem(monitor, ID, templateId);
+	}
+
+	/* (non-Javadoc)
+	 * @see gov.redhawk.ide.codegen.AbstractCodeGenerator#cleanupSourceFolders(org.eclipse.core.resources.IProject, org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	@Override
+	public IStatus cleanupSourceFolders(IProject project, IProgressMonitor monitor) {
+		// PASS
+		return Status.OK_STATUS;
 	}
 }

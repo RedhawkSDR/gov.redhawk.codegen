@@ -34,9 +34,9 @@ import org.eclipse.core.runtime.Status;
  */
 public class SharedLibraryJinjaGenerator extends JinjaGenerator {
 
-	public void generateFiles(ImplementationSettings implSettings, Implementation impl, IProgressMonitor monitor, String[] generateFiles) throws CoreException {
+	public void generateFiles(ImplementationSettings implSettings, Implementation impl, IProgressMonitor monitor, String[] generateFiles, PrintStream out,
+		PrintStream err) throws CoreException {
 		SubMonitor subMonitor = SubMonitor.convert(monitor, "Generating Shared Library Files...", 3);
-		PrintStream out = System.out;
 		final IResource resource = ModelUtil.getResource(implSettings);
 		final IProject project = resource.getProject();
 
