@@ -203,11 +203,7 @@ public class NewSharedLibraryScaResourceProjectWizard extends NewScaResourceProj
 
 				} catch (final CoreException e) {
 					throw e;
-				} catch (InterruptedException e) {
-					throw e;
 				} catch (OperationCanceledException e) {
-					throw e;
-				} catch (InvocationTargetException e) {
 					throw e;
 				} catch (final Exception e) { // SUPPRESS CHECKSTYLE Logged Catch all exception
 					throw new CoreException(new Status(IStatus.ERROR, ComponentUiPlugin.PLUGIN_ID, "Error creating project", e));
