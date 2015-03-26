@@ -51,7 +51,7 @@ public class SoftPkgRefClasspathContainer implements IClasspathContainer {
 	public SoftPkgRefClasspathContainer(final IPath containerPath, final IJavaProject javaProject) throws CoreException {
 		this.containerPath = containerPath;
 		this.javaProject = javaProject;
-		IFile softPkgFile = this.javaProject.getProject().getFile(javaProject.getProject().getName() + SpdPackage.FILE_EXTENSION);
+		IFile softPkgFile = this.javaProject.getProject().getFile(getBasename() + SpdPackage.FILE_EXTENSION);
 
 		paths = new ArrayList<IClasspathEntry>();
 
@@ -121,6 +121,18 @@ public class SoftPkgRefClasspathContainer implements IClasspathContainer {
 	@Override
 	public IPath getPath() {
 		return containerPath;
+	}
+
+	/**
+	 * Returns the 'basename' of the project (the last segment after a dot)
+	 * @return the basename
+	 */
+	private String getBasename() {
+		final String name = javaProject.getProject().getName();
+		if (name.indexOf('.') == -1) {
+			return name;
+		}
+		return name.substring(name.lastIndexOf('.') + 1, name.length());
 	}
 
 }
