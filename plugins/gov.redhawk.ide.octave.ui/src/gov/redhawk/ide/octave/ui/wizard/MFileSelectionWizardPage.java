@@ -28,6 +28,8 @@ import gov.redhawk.sca.util.Debug;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -237,6 +239,10 @@ public class MFileSelectionWizardPage extends WizardPage implements ICodegenWiza
 				Object currentValidationStatus = MFileSelectionWizardPage.this.currentDepBindValue.getValidationStatus().getValue();
 				if (((IStatus) currentValidationStatus).isOK() && MFileSelectionWizardPage.this.octaveProjProps.getCurrentDepFile() != null) {
 					// If the file is not already in the list.
+					if (Files.isDirectory(MFileSelectionWizardPage.this.octaveProjProps.getCurrentDepFile().toPath(), LinkOption.NOFOLLOW_LINKS)) {
+						return;
+					}
+					
 					if (!MFileSelectionWizardPage.this.octaveProjProps.getmFileDepsList().contains(
 						MFileSelectionWizardPage.this.octaveProjProps.getCurrentDepFile())) {
 						MFileSelectionWizardPage.this.octaveProjProps.getmFileDepsList().add(MFileSelectionWizardPage.this.octaveProjProps.getCurrentDepFile());
