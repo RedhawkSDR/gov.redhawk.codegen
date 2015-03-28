@@ -18,6 +18,11 @@ public class DefaultCppTemplate extends JinjaTemplate {
 
 	@Override
     public String getDefaultFilename(SoftPkg softPkg, ImplementationSettings implSettings, String srcDir) {
-		return srcDir + softPkg.getName() + ".cpp";
+		String baseName = softPkg.getName();
+		int index = baseName.lastIndexOf('.');
+		if (index != -1) {
+			baseName = baseName.substring(index + 1);
+		}
+		return srcDir + baseName + ".cpp";
 	}
 }

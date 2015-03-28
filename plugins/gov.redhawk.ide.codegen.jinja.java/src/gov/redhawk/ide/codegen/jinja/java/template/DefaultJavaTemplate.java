@@ -20,9 +20,11 @@ import gov.redhawk.ide.codegen.jinja.template.JinjaTemplate;
 public class DefaultJavaTemplate extends JinjaTemplate {
 
 	@Override
-    public String getDefaultFilename(SoftPkg softPkg, ImplementationSettings implSettings, String srcDir) {
-		final String prefix = softPkg.getName();
+	public String getDefaultFilename(SoftPkg softPkg, ImplementationSettings implSettings, String srcDir) {
+		// Source directory
 		final String outputDir = srcDir + "src" + File.separator;
+
+		// Directories from the package name
 		String packagePath = "";
 		for (final Property property : implSettings.getProperties()) {
 			if ("java_package".equals(property.getId())) {
@@ -30,7 +32,15 @@ public class DefaultJavaTemplate extends JinjaTemplate {
 				break;
 			}
 		}
-		return outputDir + packagePath + prefix + ".java";
+
+		// The class name (from the basename)
+		String className = softPkg.getName();
+		int index = className.lastIndexOf('.');
+		if (index != -1) {
+			className = className.substring(index + 1);
+		}
+
+		return outputDir + packagePath + className + ".java";
 	}
 
 }

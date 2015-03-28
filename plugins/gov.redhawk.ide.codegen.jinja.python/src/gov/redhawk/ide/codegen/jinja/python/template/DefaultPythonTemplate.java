@@ -11,7 +11,6 @@
 package gov.redhawk.ide.codegen.jinja.python.template;
 
 import mil.jpeojtrs.sca.spd.SoftPkg;
-
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.jinja.template.JinjaTemplate;
 
@@ -19,8 +18,12 @@ public class DefaultPythonTemplate extends JinjaTemplate {
 
 	@Override
     public String getDefaultFilename(SoftPkg softPkg, ImplementationSettings implSettings, String srcDir) {
-		final String prefix = softPkg.getName();
-		return srcDir + prefix + ".py";
+		String baseName = softPkg.getName();
+		int index = baseName.lastIndexOf('.');
+		if (index != -1) {
+			baseName = baseName.substring(index + 1);
+		}
+		return srcDir + baseName + ".py";
     }
 
 }
