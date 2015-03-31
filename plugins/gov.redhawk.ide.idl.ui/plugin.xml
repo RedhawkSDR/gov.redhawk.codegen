@@ -27,16 +27,11 @@
             canFinishEarly="false"
             category="gov.redhawk.ide.ui.wizards.category.sca"
             class="gov.redhawk.ide.idl.ui.wizard.NewScaIDLProjectWizard"
-            finalPerspective="gov.redhawk.ide.ui.perspectives.sca"
             hasPages="true"
             icon="icons/etool16/newprj_wiz.gif"
             id="gov.redhawk.ide.ui.wizards.newidl"
             name="%wizard.name"
-            preferredPerspectives="gov.redhawk.ide.ui.wizards.category.sca, org.eclipse.cdt.ui.CPerspective, org.python.pydev.ui.PythonPerspective"
             project="true">
       </wizard>
-      <primaryWizard
-            id="gov.redhawk.ide.ui.wizards.newidl">
-      </primaryWizard>
    </extension>
 </plugin>

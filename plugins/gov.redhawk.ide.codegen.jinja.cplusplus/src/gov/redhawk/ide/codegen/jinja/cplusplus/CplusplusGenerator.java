@@ -34,6 +34,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.osgi.framework.Version;
 
 /**
  * @since 1.1
@@ -98,5 +99,13 @@ public class CplusplusGenerator extends AbstractCplusplusCodeGenerator implement
 	@Override
 	public void checkSystem(IProgressMonitor monitor, String templateId) throws CoreException {
 		this.generator.checkSystem(monitor, ID, templateId);
+	}
+
+	/**
+	 * @since 1.2
+	 */
+	@Override
+	public Version getCodegenVersion() {
+		return generator.getCodegenVersion();
 	}
 }

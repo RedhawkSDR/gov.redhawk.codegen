@@ -13,9 +13,7 @@ package gov.redhawk.ide.codegen.manual;
 import gov.redhawk.ide.codegen.AbstractCodeGenerator;
 import gov.redhawk.ide.codegen.FileStatus;
 import gov.redhawk.ide.codegen.FileToCRCMap;
-import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
 import gov.redhawk.ide.codegen.ImplementationSettings;
-import gov.redhawk.ide.codegen.RedhawkCodegenActivator;
 import gov.redhawk.ide.codegen.java.JavaGeneratorUtils;
 import gov.redhawk.ide.codegen.python.utils.PythonGeneratorUtils;
 import gov.redhawk.ide.cplusplus.utils.CppGeneratorUtils;
@@ -43,9 +41,9 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jdt.core.IJavaProject;
+import org.osgi.framework.Version;
 
 public class ManualGenerator extends AbstractCodeGenerator {
-	// CHECKSTYLE:OFF
 
 	@Override
 	public IStatus cleanupSourceFolders(final IProject project, final IProgressMonitor monitor) {
@@ -68,7 +66,7 @@ public class ManualGenerator extends AbstractCodeGenerator {
 		final IProject project = resource.getProject();
 		final String language = impl.getProgrammingLanguage().getName().toLowerCase().trim();
 		
-		if (language.equals("java")) {
+		if ("java".equals(language)) {
 			progress.setWorkRemaining(2);
 			IJavaProject jproject = null;
 			try {
@@ -81,14 +79,14 @@ public class ManualGenerator extends AbstractCodeGenerator {
 			} catch (CoreException e) {
 				return new Status(e.getStatus().getSeverity(), ManualGeneratorPlugin.PLUGIN_ID, "Failed to add REDHAWK class paths.", e);
 			}
-		} else if (language.equals("python")) {
+		} else if ("python".equals(language)) {
 			progress.setWorkRemaining(1);
 			try {
 				PythonGeneratorUtils.addPythonProjectNature(project, progress.newChild(1));
 			} catch (CoreException e) {
 				return new Status(e.getStatus().getSeverity(), ManualGeneratorPlugin.PLUGIN_ID, "Failed to add python nature.", e);
 			}
-		} else if (language.equals("c++")) {
+		} else if ("c++".equals(language)) {
 			progress.setWorkRemaining(2);
 			MultiStatus retStatus = new MultiStatus(ManualGeneratorPlugin.PLUGIN_ID, IStatus.OK, "", null);
 			CppGeneratorUtils.addCandCPPNatures(project, progress, retStatus);
@@ -121,7 +119,6 @@ public class ManualGenerator extends AbstractCodeGenerator {
 
 	@Override
 	public Code getInitialCodeSettings(final SoftPkg softPkg, final ImplementationSettings settings, final Implementation impl) {
-		final ICodeGeneratorDescriptor codeGenDesc = RedhawkCodegenActivator.getCodeGeneratorsRegistry().findCodegen(settings.getGeneratorId());
 		final Code retVal = SpdFactory.eINSTANCE.createCode();
 		retVal.setEntryPoint("");
 		final LocalFile file = SpdFactory.eINSTANCE.createLocalFile();
@@ -153,6 +150,14 @@ public class ManualGenerator extends AbstractCodeGenerator {
 	@Override
 	public IStatus validate() {
 		return new Status(IStatus.OK, ManualGeneratorPlugin.PLUGIN_ID, "Validation ok");
+	}
+
+	/**
+	 * @since 6.1
+	 */
+	@Override
+	public Version getCodegenVersion() {
+		return new Version("1.8"); 
 	}
 
 }

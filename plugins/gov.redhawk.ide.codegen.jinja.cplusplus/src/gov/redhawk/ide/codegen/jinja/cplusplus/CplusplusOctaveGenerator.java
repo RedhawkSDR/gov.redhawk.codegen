@@ -34,6 +34,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.osgi.framework.Version;
 
 /**
  * @since 1.1
@@ -44,7 +45,6 @@ public class CplusplusOctaveGenerator extends AbstractCplusplusCodeGenerator imp
 	public static final String TEMPLATE = "redhawk.codegen.jinja.cpp.component.octave";
 	
 	public CplusplusOctaveGenerator() {
-		// TODO Auto-generated constructor stub
 	}
 	
 	private final JinjaGenerator generator = new JinjaGenerator();
@@ -103,5 +103,13 @@ public class CplusplusOctaveGenerator extends AbstractCplusplusCodeGenerator imp
 	@Override
 	public void checkSystem(IProgressMonitor monitor, String templateId) throws CoreException {
 		this.generator.checkSystem(monitor, ID, templateId);
+	}
+
+	/**
+	 * @since 1.2
+	 */
+	@Override
+	public Version getCodegenVersion() {
+		return generator.getCodegenVersion();
 	}
 }

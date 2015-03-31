@@ -58,6 +58,7 @@ import org.eclipse.emf.codegen.merge.java.JControlModel;
 import org.eclipse.emf.codegen.merge.java.JMerger;
 import org.eclipse.emf.codegen.merge.java.facade.ast.ASTFacadeHelper;
 import org.eclipse.emf.common.util.EList;
+import org.osgi.framework.Version;
 
 public class JavaGenerator extends AbstractJavaCodeGenerator {
 	/**
@@ -339,6 +340,15 @@ public class JavaGenerator extends AbstractJavaCodeGenerator {
 	protected String getSourceDir(Implementation impl, ImplementationSettings implSettings) {
 		final String packagePath = getPackage(impl, implSettings).replace('.', File.separatorChar);
 		return super.getSourceDir(impl, implSettings) + "src" + File.separator + packagePath + File.separator;
+	}
+
+	/**
+	 * For all JET generators just return 1.8
+	 * @since 7.1
+	 */
+	@Override
+	public Version getCodegenVersion() {
+		return new Version("1.8");
 	}
 
 }

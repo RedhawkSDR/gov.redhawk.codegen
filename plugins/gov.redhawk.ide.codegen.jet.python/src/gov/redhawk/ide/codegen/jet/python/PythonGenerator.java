@@ -48,6 +48,7 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
+import org.osgi.framework.Version;
 
 public class PythonGenerator extends AbstractPythonGenerator {
 
@@ -171,6 +172,15 @@ public class PythonGenerator extends AbstractPythonGenerator {
 		status.add(super.validate());
 		status.add(IdlUtil.validate());
 		return status;
+	}
+
+	/**
+	 * For all JET generators just return 1.8
+	 * @since 9.1
+	 */
+	@Override
+	public Version getCodegenVersion() {
+		return new Version("1.8");
 	}
 
 }

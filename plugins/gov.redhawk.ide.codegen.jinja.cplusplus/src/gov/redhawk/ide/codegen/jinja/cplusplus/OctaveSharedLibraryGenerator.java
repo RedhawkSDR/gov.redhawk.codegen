@@ -39,6 +39,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
+import org.osgi.framework.Version;
 
 /**
  * @since 1.2
@@ -142,5 +143,10 @@ public class OctaveSharedLibraryGenerator extends AbstractCodeGenerator implemen
 	public IStatus cleanupSourceFolders(IProject project, IProgressMonitor monitor) {
 		// PASS
 		return Status.OK_STATUS;
+	}
+
+	@Override
+	public Version getCodegenVersion() {
+		return generator.getCodegenVersion();
 	}
 }

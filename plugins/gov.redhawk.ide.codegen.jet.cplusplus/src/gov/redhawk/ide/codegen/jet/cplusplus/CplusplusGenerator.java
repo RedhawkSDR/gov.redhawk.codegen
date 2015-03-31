@@ -45,6 +45,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
+import org.osgi.framework.Version;
 
 public class CplusplusGenerator extends AbstractCplusplusCodeGenerator {
 
@@ -173,6 +174,15 @@ public class CplusplusGenerator extends AbstractCplusplusCodeGenerator {
 	@Override
 	public IStatus validate() {
 		return IdlUtil.validate();
+	}
+
+	/**
+	 * For all JET generators just return 1.8
+	 * @since 10.1
+	 */
+	@Override
+	public Version getCodegenVersion() {
+		return new Version("1.8");
 	}
 
 }
