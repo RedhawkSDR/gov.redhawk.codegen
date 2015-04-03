@@ -99,6 +99,10 @@ public class SharedLibraryProjectPropertiesWizardPage extends ScaResourceProject
 		});
 		typeCombo.select(0);
 
+		// Initialize model map values to allow for default selection
+		model.setTypeName(SharedLibraryModel.CPP_TYPE);
+		((SharedLibraryWizardPage) getNextPage()).handleTypeSelectionChanged();
+
 		createMFileSection(contentsGroup);
 
 		bind();

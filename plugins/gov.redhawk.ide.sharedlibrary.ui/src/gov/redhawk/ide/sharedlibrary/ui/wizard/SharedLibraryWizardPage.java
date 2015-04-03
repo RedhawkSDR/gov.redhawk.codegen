@@ -49,9 +49,9 @@ public class SharedLibraryWizardPage extends ImplementationWizardPage {
 		// Currently only supporting cpp & octave
 		String codeGenId = null;
 		if (SharedLibraryModel.CPP_TYPE.equals(model.getTypeName())) {
-			codeGenId = "gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusSharedLibraryGenerator";
+			codeGenId = CplusplusSharedLibraryGenerator.ID;
 		} else if (SharedLibraryModel.OCTAVE_TYPE.equals(model.getTypeName())) {
-			codeGenId = "gov.redhawk.ide.codegen.jinja.cplusplus.OctaveSharedLibraryGenerator";
+			codeGenId = OctaveSharedLibraryGenerator.ID;
 		}
 
 		ICodeGeneratorDescriptor tempCodeGen = RedhawkCodegenActivator.getCodeGeneratorsRegistry().findCodegen(codeGenId);
