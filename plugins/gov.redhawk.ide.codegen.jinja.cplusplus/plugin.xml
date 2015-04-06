@@ -227,7 +227,7 @@
          </description>
       </template>
       <template
-            class="gov.redhawk.ide.codegen.jinja.cplusplus.template.DefaultCppTemplate"
+            class="gov.redhawk.ide.codegen.jinja.cplusplus.template.SharedLibCppTemplate"
             codegenId="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusSharedLibraryGenerator"
             hasSettings="false"
             id="redhawk.codegen.jinja.cpp.library"
