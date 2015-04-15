@@ -12,18 +12,6 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         point="gov.redhawk.ide.codegen.ui.codegenPages">
-      <codegenPage
-            compositeClass="gov.redhawk.ide.codegen.frontend.ui.FrontEndGeneratorDisplayFactory"
-            id="gov.redhawk.ide.codegen.ui.FrontEndGeneratorDisplayFactory"
-            name="Front End Generator Wizard Pages"
-            wizardClass="gov.redhawk.ide.codegen.frontend.ui.FrontEndGeneratorDisplayFactory">
-         <codegenId
-               targetCodegenId="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusGenerator">
-         </codegenId>
-      </codegenPage>
-   </extension>
-   <extension
          point="org.eclipse.ui.newWizards">
       <wizard
             canFinishEarly="false"

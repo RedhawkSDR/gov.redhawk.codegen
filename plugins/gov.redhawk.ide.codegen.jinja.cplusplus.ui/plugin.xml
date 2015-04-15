@@ -14,10 +14,10 @@
    <extension
          point="gov.redhawk.ide.codegen.ui.codegenPages">
       <codegenPage
-            compositeClass="gov.redhawk.ide.codegen.ui.BooleanGeneratorDisplayFactory"
+            compositeClass="gov.redhawk.ide.codegen.jinja.cplusplus.ui.factory.BooleanGeneratorDisplayFactory2"
             id="gov.redhawk.ide.codegen.ui.internal.DefaultGeneratorPropertiesWizardPage"
             name="Boolean Codegen Properties Page"
-            wizardClass="gov.redhawk.ide.codegen.ui.BooleanGeneratorDisplayFactory">
+            wizardClass="gov.redhawk.ide.codegen.jinja.cplusplus.ui.factory.BooleanGeneratorDisplayFactory2">
          <codegenId
                targetCodegenId="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusGenerator">
          </codegenId>
