@@ -17,6 +17,7 @@ import gov.redhawk.ide.swtbot.StandardTestActions;
 import gov.redhawk.ide.swtbot.UITest;
 import gov.redhawk.ide.swtbot.diagram.DiagramTestUtils;
 
+import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
@@ -37,7 +38,7 @@ public class SharedLibraryEditorTest extends UITest {
 	@BeforeClass
 	public static void beforeClassSetup() {
 		// PyDev needs to be configured before running New SCA Shared Library Project Wizards
-		StandardTestActions.configurePyDev();
+		StandardTestActions.configurePyDev(new SWTWorkbenchBot());
 	}
 
 	/**

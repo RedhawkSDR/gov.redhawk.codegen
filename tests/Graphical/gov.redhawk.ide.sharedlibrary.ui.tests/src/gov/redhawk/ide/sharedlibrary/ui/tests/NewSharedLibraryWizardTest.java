@@ -19,6 +19,7 @@ import gov.redhawk.ide.swtbot.UITest;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
@@ -40,7 +41,7 @@ public class NewSharedLibraryWizardTest extends UITest {
 	@BeforeClass
 	public static void beforeClassSetup() {
 		// PyDev needs to be configured before running New SCA Shared Libary Project Wizards
-		StandardTestActions.configurePyDev();
+		StandardTestActions.configurePyDev(new SWTWorkbenchBot());
 	}
 
 	/**
