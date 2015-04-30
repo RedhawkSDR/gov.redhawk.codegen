@@ -278,14 +278,15 @@ public class JinjaGenerator {
 		//     standard out/error are closed, so there is no need to explicitly wait for it.
 		ProcessBuilder processBuilder = new ProcessBuilder(arguments);
 		Process process = null;
+		final String commandline = listToString(arguments);
 		try {
 			if (DEBUG.enabled) {
-				DEBUG.trace("Jinja List Command:\n  {0}", listToString(arguments));
+				DEBUG.trace("Jinja List Command:\n  {0}", commandline);
 			}
 			process = processBuilder.start();
 		} catch (final IOException e) {
 			throw new CoreException(new Status(IStatus.ERROR, JinjaGeneratorPlugin.PLUGIN_ID,
-				"Exception running code generator list command\n  " + listToString(arguments), e));
+				"Exception running code generator list command\n  " + commandline, e));
 		}
 
 		final InputStreamReader instream = new InputStreamReader(process.getInputStream());
@@ -358,7 +359,7 @@ public class JinjaGenerator {
 					errBuffer.close();
 				}
 				throw new CoreException(new Status(Status.ERROR, JinjaGeneratorPlugin.PLUGIN_ID,
-					redhawkCodegen + " returned with error code " + exitValue + "\n\n" + log, null));
+					redhawkCodegen + " returned with error code " + exitValue + "\n\nCommand:\n " + commandline + "\n\n" + log, null));
 			}
 
 		} catch (final IOException e) {
