@@ -38,12 +38,6 @@ public class NewSharedLibraryWizardTest extends UITest {
 
 	private String errorMessage;
 
-	@BeforeClass
-	public static void beforeClassSetup() {
-		// PyDev needs to be configured before running New SCA Shared Libary Project Wizards
-		StandardTestActions.configurePyDev(new SWTWorkbenchBot());
-	}
-
 	/**
 	 * IDE-1099
 	 * Test case for creating cpp shared library projects

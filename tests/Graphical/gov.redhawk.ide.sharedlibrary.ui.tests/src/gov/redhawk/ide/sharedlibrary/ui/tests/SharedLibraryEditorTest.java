@@ -35,12 +35,6 @@ public class SharedLibraryEditorTest extends UITest {
 
 	SWTBotEditor editor;
 
-	@BeforeClass
-	public static void beforeClassSetup() {
-		// PyDev needs to be configured before running New SCA Shared Library Project Wizards
-		StandardTestActions.configurePyDev(new SWTWorkbenchBot());
-	}
-
 	/**
 	 * IDE-1102 - Hide unnecessary fields in Shared Library project editors
 	 * IDE-1142 - Update the dependency wizard when choosing a shared library
