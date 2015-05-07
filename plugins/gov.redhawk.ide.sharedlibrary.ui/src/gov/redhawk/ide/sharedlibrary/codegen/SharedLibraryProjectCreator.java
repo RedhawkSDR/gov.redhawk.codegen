@@ -53,7 +53,6 @@ public class SharedLibraryProjectCreator extends ComponentProjectCreator {
 		}
 
 		// Create the model object for the .spd.xml file
-		SpdPackage.eINSTANCE.eClass();
 		final ResourceSet resourceSet = ScaResourceFactoryUtil.createResourceSet();
 		final URI spdUri = URI.createPlatformResourceURI(spdFile.getFullPath().toString(), true);
 		final XMLResource resource = (XMLResource) resourceSet.createResource(spdUri, SpdPackage.eCONTENT_TYPE);
@@ -67,7 +66,7 @@ public class SharedLibraryProjectCreator extends ComponentProjectCreator {
 			author.getName().add(authorName);
 		}
 
-		// Write the .spd.xml file to disk
+		// Write the SPD file to disk, generate a change notification
 		try {
 			resource.save(null);
 			progress.worked(1);
