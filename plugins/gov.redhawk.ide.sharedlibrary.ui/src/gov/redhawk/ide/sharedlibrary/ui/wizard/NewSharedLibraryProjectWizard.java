@@ -59,12 +59,12 @@ import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 
-public class NewSharedLibraryScaResourceProjectWizard extends NewScaResourceProjectWizard implements IImportWizard {
+public class NewSharedLibraryProjectWizard extends NewScaResourceProjectWizard implements IImportWizard {
 
 	private final SharedLibraryProjectPropertiesWizardPage p1 = new SharedLibraryProjectPropertiesWizardPage("projectPage", "Shared Library");
 	private SharedLibraryWizardPage p2 = new SharedLibraryWizardPage("tablePageNew", p1.getModel(), ICodeGeneratorDescriptor.COMPONENT_TYPE_RESOURCE);
 
-	public NewSharedLibraryScaResourceProjectWizard() {
+	public NewSharedLibraryProjectWizard() {
 		super();
 		setWindowTitle("New Shared Library Project");
 	}

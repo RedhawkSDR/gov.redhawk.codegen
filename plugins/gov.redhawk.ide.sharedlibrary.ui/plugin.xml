@@ -16,7 +16,7 @@
       <wizard
             canFinishEarly="false"
             category="gov.redhawk.ide.ui.wizards.category.sca"
-            class="gov.redhawk.ide.sharedlibrary.ui.wizard.NewSharedLibraryScaResourceProjectWizard"
+            class="gov.redhawk.ide.sharedlibrary.ui.wizard.NewSharedLibraryProjectWizard"
             descriptionImage="icons/etool16/newprj_wiz.gif"
             hasPages="true"
             icon="icons/etool16/newprj_wiz.gif"
