@@ -245,11 +245,28 @@ public class JinjaGenerator {
 			}
 			Version cfCodegenVersion = getCodegenVersion();
 			if (cfCodegenVersion.compareTo(VERSION_1_10_1) >= 0) { // 1.10.1+ CF codegen is good for all implementation languages
-				String additionalRequiredFile = null;
-				if ("cpp".equals(implSettings.getId())) {
-					additionalRequiredFile = "build.sh";
+				// Look for build.sh top-level and in the impl directory
+				boolean foundTopLevelBuildSh = false;
+				boolean foundBuildSh = false;
+				for (String file : generateFiles) {
+					if ("../build.sh".equals(file)) {
+						foundTopLevelBuildSh = true;
+					} else if ("build.sh".equals(file)) {
+						foundBuildSh = true;
+					}
 				}
-				ExportUtils.setUseBuildSH(project, generateFiles, additionalRequiredFile);
+
+				// For C++, both files are required. For other languages, just the top-level is required.
+				if (foundTopLevelBuildSh) {
+					String progLang = (impl.getProgrammingLanguage() != null) ? impl.getProgrammingLanguage().getName() : null;
+					if ("C++".equals(progLang)) {
+						if (foundBuildSh) {
+							ExportUtils.setUseBuildSH(project);
+						}
+					} else {
+						ExportUtils.setUseBuildSH(project);
+					}
+				}
 			}
 		} finally {
 			out.println(""); // add newline to separate current output from next run's output in console

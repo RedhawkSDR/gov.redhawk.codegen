@@ -12,6 +12,7 @@
 package gov.redhawk.ide.codegen.jinja;
 
 import gov.redhawk.ide.codegen.ImplementationSettings;
+import gov.redhawk.ide.sdr.ui.export.ExportUtils;
 import gov.redhawk.model.sca.util.ModelUtil;
 import gov.redhawk.sca.util.SubMonitor;
 
@@ -80,6 +81,9 @@ public class SharedLibraryJinjaGenerator extends JinjaGenerator {
 		}
 		out.println();
 		subMonitor.worked(1);
+
+		// Ensure we use new-style project export ("build.sh install")
+		ExportUtils.setUseBuildSH(project);
 
 		try {
 			Process process = java.lang.Runtime.getRuntime().exec(command);
