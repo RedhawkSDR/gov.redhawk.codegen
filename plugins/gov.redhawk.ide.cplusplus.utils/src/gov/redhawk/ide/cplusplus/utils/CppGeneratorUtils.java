@@ -17,7 +17,9 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import mil.jpeojtrs.sca.spd.Implementation;
 
@@ -350,6 +352,13 @@ public final class CppGeneratorUtils {
 			null, 0));
 
 		lang.setSettingEntries(ICSettingEntry.INCLUDE_PATH, includePathSettings);
+		
+		// Adding the external settings provider which is responsible for adding the include paths of the 
+		// shared libraries as they are added to C++ projects dynamically.
+		final Set<String> externalSettingsProviders = new LinkedHashSet<String>(Arrays.asList(configDescription.getExternalSettingsProviderIds()));
+		externalSettingsProviders.add(ExternalSettingProvider.ID);
+		configDescription.setExternalSettingsProviderIds(externalSettingsProviders.toArray(new String[0]));
+		
 	}
 
 	/**

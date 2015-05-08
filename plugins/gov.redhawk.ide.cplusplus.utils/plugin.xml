@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         id="gov.redhawk.ide.cplusplus.utils.CppExternalSettingProvider"
+         name="CppExternalSettingProvider"
+         point="org.eclipse.cdt.core.externalSettingsProvider">
+      <provider
+            class="gov.redhawk.ide.cplusplus.utils.ExternalSettingProvider">
+      </provider>
+   </extension>
+
+</plugin>
