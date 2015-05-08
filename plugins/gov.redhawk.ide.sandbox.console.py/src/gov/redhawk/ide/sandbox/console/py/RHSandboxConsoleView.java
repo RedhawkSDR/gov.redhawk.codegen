@@ -19,8 +19,10 @@ import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchPage;
@@ -37,6 +39,7 @@ public class RHSandboxConsoleView extends ViewPart implements IConsoleView, IPag
 	private SandboxConsole console;
 	private Composite consoleArea;
 	private IPageBookViewPage page;
+	private boolean wordWrap = false;
 
 	public RHSandboxConsoleView() {
 	}
@@ -71,7 +74,8 @@ public class RHSandboxConsoleView extends ViewPart implements IConsoleView, IPag
 			consoleArea.redraw();
 			this.console.addTerminateListener(this);
 		} catch (CoreException e) {
-			RHLocalConsolePlugin.getDefault().getLog().log(new Status(e.getStatus().getSeverity(), RHLocalConsolePlugin.PLUGIN_ID, "Failed to create Sandbox console" , e));
+			RHLocalConsolePlugin.getDefault().getLog().log(
+				new Status(e.getStatus().getSeverity(), RHLocalConsolePlugin.PLUGIN_ID, "Failed to create Sandbox console", e));
 			this.console = null;
 		}
 	}
@@ -132,8 +136,7 @@ public class RHSandboxConsoleView extends ViewPart implements IConsoleView, IPag
 
 	@Override
 	public IConsole getConsole() {
-		// TODO Auto-generated method stub
-		return null;
+		return console;
 	}
 
 	@Override
@@ -144,13 +147,24 @@ public class RHSandboxConsoleView extends ViewPart implements IConsoleView, IPag
 
 	@Override
 	public void setScrollLock(final boolean scrollLock) {
-		// TODO Auto-generated method stub
-
+		// Not available with PyDev
 	}
 
 	@Override
 	public boolean getScrollLock() {
-		// TODO Auto-generated method stub
+		// Not available with PyDev
+		return false;
+	}
+
+	@Override
+	public void setAutoScrollLock(boolean scrollLock) {
+		// Not available with PyDev
+		return;
+	}
+
+	@Override
+	public boolean getAutoScrollLock() {
+		// Not available with PyDev
 		return false;
 	}
 
@@ -180,12 +194,12 @@ public class RHSandboxConsoleView extends ViewPart implements IConsoleView, IPag
 	}
 
 	@Override
-	public Object getService(@SuppressWarnings("rawtypes") final Class api) {
+	public <T> T getService(Class<T> api) {
 		return this.getSite().getService(api);
 	}
 
 	@Override
-	public boolean hasService(@SuppressWarnings("rawtypes") final Class api) {
+	public boolean hasService(Class<?> api) {
 		return this.getSite().hasService(api);
 	}
 
@@ -197,6 +211,20 @@ public class RHSandboxConsoleView extends ViewPart implements IConsoleView, IPag
 	@Override
 	public IActionBars getActionBars() {
 		return getViewSite().getActionBars();
+	}
+
+	@Override
+	public void setWordWrap(boolean wordWrap) {
+		this.wordWrap = wordWrap;
+		Control control = page.getControl();
+		if (control instanceof StyledText) {
+			((StyledText) control).setWordWrap(wordWrap);
+		}
+	}
+
+	@Override
+	public boolean getWordWrap() {
+		return wordWrap;
 	}
 
 }
