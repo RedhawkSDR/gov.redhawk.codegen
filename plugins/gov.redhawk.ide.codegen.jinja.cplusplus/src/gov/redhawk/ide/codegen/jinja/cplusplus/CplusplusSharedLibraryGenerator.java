@@ -18,6 +18,7 @@ import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.cplusplus.AbstractCplusplusCodeGenerator;
 import gov.redhawk.ide.codegen.jinja.SharedLibraryJinjaGenerator;
 
+import java.io.File;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Set;
@@ -59,7 +60,7 @@ public class CplusplusSharedLibraryGenerator extends AbstractCplusplusCodeGenera
 
 		String name = softPkg.getName();
 		if (!outputDir.isEmpty()) {
-			name = outputDir;
+			name = outputDir + File.separator + "lib";
 		}
 		final LocalFile file = SpdFactory.eINSTANCE.createLocalFile();
 		file.setName(name);
