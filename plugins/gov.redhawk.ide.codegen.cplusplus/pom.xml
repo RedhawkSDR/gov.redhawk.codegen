@@ -20,6 +20,6 @@
   </parent>
   <groupId>gov.redhawk.codegen</groupId>
   <artifactId>gov.redhawk.ide.codegen.cplusplus</artifactId>
-  <version>6.2.0-SNAPSHOT</version>
+  <version>6.3.0-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
 </project>
