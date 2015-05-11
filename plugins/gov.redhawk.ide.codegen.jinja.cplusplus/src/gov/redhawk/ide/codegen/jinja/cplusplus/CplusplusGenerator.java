@@ -56,8 +56,8 @@ public class CplusplusGenerator extends AbstractCplusplusCodeGenerator implement
 			outputDir = outputDir.substring(1);
 		}
 
-		// IDE-1178 Eliminate namespace segments from entry point
-		String entryPoint = getDefaultEntryPoint(softPkg);
+		// Entry point is the executable
+		String entryPoint = getSpdBaseName(softPkg);
 		if (!outputDir.isEmpty()) {
 			entryPoint = outputDir + File.separator + entryPoint;
 		}
