@@ -10,6 +10,8 @@
  *******************************************************************************/
 package gov.redhawk.ide.cplusplus.utils;
 
+import gov.redhawk.ide.cplusplus.utils.internal.ExternalSettingProvider;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;

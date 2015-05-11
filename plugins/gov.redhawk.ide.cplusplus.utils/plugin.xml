@@ -6,7 +6,7 @@
          name="CppExternalSettingProvider"
          point="org.eclipse.cdt.core.externalSettingsProvider">
       <provider
-            class="gov.redhawk.ide.cplusplus.utils.ExternalSettingProvider">
+            class="gov.redhawk.ide.cplusplus.utils.internal.ExternalSettingProvider">
       </provider>
    </extension>
 
