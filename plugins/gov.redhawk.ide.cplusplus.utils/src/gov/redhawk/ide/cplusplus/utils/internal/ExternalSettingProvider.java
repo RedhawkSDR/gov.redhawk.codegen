@@ -10,6 +10,9 @@
  *******************************************************************************/
 package gov.redhawk.ide.cplusplus.utils.internal;
 
+import gov.redhawk.ide.sdr.SdrPackage;
+import gov.redhawk.ide.sdr.SdrRoot;
+import gov.redhawk.ide.sdr.ui.SdrUiPlugin;
 import gov.redhawk.model.sca.commands.ScaModelCommand;
 import gov.redhawk.model.sca.util.ModelUtil;
 
@@ -39,8 +42,15 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.transaction.RunnableWithResult;
@@ -69,8 +79,46 @@ public class ExternalSettingProvider extends CExternalSettingProvider {
 		}
 	};
 
+	private Adapter sdrrootlistener = new AdapterImpl() {
+		@Override
+		public void notifyChanged(final Notification msg) {
+			switch (msg.getFeatureID(SdrPackage.class)) {
+			case SdrPackage.SDR_ROOT__LOAD_STATUS:
+				// The value is the changed load status which will go to null during loading
+				// once loading is finished the status will change to reflect that of the SDRROOT.
+				if (msg.getNewValue() != null) {
+					Job refreshExternalSettingProviderJob = new Job("Refresh External Settings Providers") {
+
+						@Override
+						protected IStatus run(IProgressMonitor monitor) {
+							CoreModel.getDefault().getProjectDescriptionManager().updateExternalSettingsProviders(new String[] { ExternalSettingProvider.ID },
+								monitor);
+							return Status.OK_STATUS;
+						}
+
+					};
+					refreshExternalSettingProviderJob.setSystem(true); // hide from progress monitor
+					refreshExternalSettingProviderJob.setUser(false);
+					refreshExternalSettingProviderJob.schedule(1000);
+				}
+				break;
+			default:
+				break;
+			}
+		}
+	};
+
+	
 	public ExternalSettingProvider() {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		SdrRoot sdrroot = SdrUiPlugin.getDefault().getTargetSdrRoot();
+		
+		// We add two listeners, one to the workspace and one to the SDRROOT.
+		// The workspace listener will be ignored if it already exists but we check for the sdrroot eAdapter
+		if (sdrroot != null && !sdrroot.eAdapters().contains(sdrrootlistener)) {
+			sdrroot.eAdapters().add(sdrrootlistener);
+		}
+		
 		workspace.addResourceChangeListener(listener, IResourceChangeEvent.POST_CHANGE);
 	}
 
@@ -78,7 +126,6 @@ public class ExternalSettingProvider extends CExternalSettingProvider {
 	public CExternalSetting[] getSettings(final IProject project, ICConfigurationDescription cfg) {
 		// Create empty settings entry
 		final List<ICSettingEntry> settingEntries = new ArrayList<ICSettingEntry>();
-
 		final SoftPkg spd = ModelUtil.getSoftPkg(project);
 		Set<IPath> incPaths;
 		try {
