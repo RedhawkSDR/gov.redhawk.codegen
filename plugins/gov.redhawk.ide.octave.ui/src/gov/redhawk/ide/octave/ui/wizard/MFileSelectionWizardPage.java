@@ -14,8 +14,8 @@ import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusOctaveGenerator;
 import gov.redhawk.ide.codegen.ui.ICodegenWizardPage;
-import gov.redhawk.ide.octave.ui.OctaveProjectPlugin;
 import gov.redhawk.ide.octave.ui.OctaveFunctionVariables;
+import gov.redhawk.ide.octave.ui.OctaveProjectPlugin;
 import gov.redhawk.ide.octave.ui.OctaveProjectProperties;
 import gov.redhawk.ide.octave.ui.OctaveVariableMappingEnum;
 import gov.redhawk.ide.octave.ui.OctaveVariableTypeEnum;
@@ -27,6 +27,7 @@ import gov.redhawk.sca.util.Debug;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
@@ -396,7 +397,7 @@ public class MFileSelectionWizardPage extends WizardPage implements ICodegenWiza
 	 * @throws ParseException If the M-File cannot be parsed the values are not set
 	 * @throws FileNotFoundException If the M-File cannot be found.
 	 */
-	private void parseFile(File file) throws IOException, ParseException {
+	private void parseFile(File file) throws FileNotFoundException, ParseException {
 		MFile mFile = MFileParser.parse(new FileInputStream(file), null);
 
 		List<OctaveFunctionVariables> inputs = new ArrayList<OctaveFunctionVariables>();
