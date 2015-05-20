@@ -24,6 +24,7 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.BeanProperties;
 import org.eclipse.core.databinding.beans.BeansObservables;
+import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
@@ -277,18 +278,7 @@ public class SharedLibraryProjectPropertiesWizardPage extends ScaResourceProject
 	}
 
 	private IConverter getStringToFileConverter() {
-		return new IConverter() {
-
-			@Override
-			public Object getToType() {
-				return File.class;
-			}
-
-			@Override
-			public Object getFromType() {
-				return String.class;
-			}
-
+		return new Converter(String.class, File.class) {
 			@Override
 			public Object convert(Object fromObject) {
 				if (fromObject == null || ((String) fromObject).equals("")) {
