@@ -30,7 +30,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.databinding.EMFObservables;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
@@ -94,10 +94,10 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 		//			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__ANTENNA), new UpdateValueStrategy(), new UpdateValueStrategy());
 
 		// Binding for GPS ingest & output
-		this.ctx.bindValue(SWTObservables.observeSelection(this.ingestGPSCheckbox),
+		this.ctx.bindValue(WidgetProperties.selection().observe(this.ingestGPSCheckbox),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__INGESTS_GPS), new UpdateValueStrategy(), new UpdateValueStrategy());
 
-		this.ctx.bindValue(SWTObservables.observeSelection(this.outputGPSCheckbox),
+		this.ctx.bindValue(WidgetProperties.selection().observe(this.outputGPSCheckbox),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__OUTPUTS_GPS), new UpdateValueStrategy(), new UpdateValueStrategy());
 
 		// Need custom update value strat for the group binding since false -> true and true -> false
@@ -109,16 +109,16 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 			}
 		});
 
-		this.ctx.bindValue(SWTObservables.observeEnabled(this.tunerTypeGroup),
+		this.ctx.bindValue(WidgetProperties.enabled().observe(this.tunerTypeGroup),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__ANTENNA), new UpdateValueStrategy(), tunerTypeGroupUVS);
 
-		this.ctx.bindValue(SWTObservables.observeEnabled(this.receiveOnlyTunerButton),
+		this.ctx.bindValue(WidgetProperties.enabled().observe(this.receiveOnlyTunerButton),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__ANTENNA), new UpdateValueStrategy(), tunerTypeGroupUVS);
 
-		this.ctx.bindValue(SWTObservables.observeEnabled(this.transmitOnlyTunerButton),
+		this.ctx.bindValue(WidgetProperties.enabled().observe(this.transmitOnlyTunerButton),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__ANTENNA), new UpdateValueStrategy(), tunerTypeGroupUVS);
 
-		this.ctx.bindValue(SWTObservables.observeEnabled(this.bothRxTxButton),
+		this.ctx.bindValue(WidgetProperties.enabled().observe(this.bothRxTxButton),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__ANTENNA), new UpdateValueStrategy(), tunerTypeGroupUVS);
 
 		// Bindings for the tuner type is difficult since it is a 3 way with the third option being both the 1st and 2nd so listeners are used.
