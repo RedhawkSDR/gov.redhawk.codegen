@@ -49,7 +49,7 @@ public class CppRedhawkImportWizardAssistant implements IRedhawkImportProjectWiz
 		if (natures.contains("cpp")) {
 			MultiStatus retStatus = new MultiStatus(ManualGeneratorPlugin.PLUGIN_ID, IStatus.OK, "", null);
 			CppGeneratorUtils.addCandCPPNatures(dotProject, SubMonitor.convert(monitor), retStatus);
-			CppGeneratorUtils.addManagedNature(dotProject, SubMonitor.convert(monitor), retStatus, "/", System.out, true, null);
+			CppGeneratorUtils.addManagedNature(dotProject, SubMonitor.convert(monitor), retStatus, "/", System.out, null);
 		}
 	}
 
@@ -61,7 +61,7 @@ public class CppRedhawkImportWizardAssistant implements IRedhawkImportProjectWiz
 		if (new File(importSource + "/cpp").exists()) {
 			MultiStatus retStatus = new MultiStatus(ManualGeneratorPlugin.PLUGIN_ID, IStatus.OK, "", null);
 			CppGeneratorUtils.addCandCPPNatures(project, SubMonitor.convert(monitor), retStatus);
-			CppGeneratorUtils.addManagedNature(project, SubMonitor.convert(monitor), retStatus, "/", System.out, true, null);
+			CppGeneratorUtils.addManagedNature(project, SubMonitor.convert(monitor), retStatus, "/", System.out, null);
 		}
 	}
 

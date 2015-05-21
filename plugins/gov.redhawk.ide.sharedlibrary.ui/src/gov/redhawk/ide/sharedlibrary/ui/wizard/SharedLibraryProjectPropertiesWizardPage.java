@@ -23,14 +23,12 @@ import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.BeanProperties;
-import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ISelection;
@@ -266,7 +264,7 @@ public class SharedLibraryProjectPropertiesWizardPage extends ScaResourceProject
 
 	private void bind() {
 		// Binds model type name with type combo
-		dbc.bindValue(SWTObservables.observeSelection(typeCombo), BeansObservables.observeValue(model, SharedLibraryModel.TYPE_NAME));
+		dbc.bindValue(WidgetProperties.selection().observe(typeCombo), BeanProperties.value(model.getClass(), SharedLibraryModel.TYPE_NAME).observe(model));
 
 		// Binds the mFile Text box for validation purposes
 		IObservableValue currentMFileModel = BeanProperties.value("currentMFile").observe(this.model);

@@ -49,7 +49,7 @@ import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.databinding.EMFUpdateValueStrategy;
 import org.eclipse.emf.ecore.util.EContentAdapter;
-import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -522,12 +522,12 @@ public class JavaJetGeneratorPropertiesWizardPage extends WizardPage implements 
 		        createTemplateTargetToModel(),
 		        createTemplateModelToTarget()));
 
-		this.bindings.add(this.context.bindValue(SWTObservables.observeText(this.outputDirText, SWT.Modify),
+		this.bindings.add(this.context.bindValue(WidgetProperties.text(SWT.Modify).observe(this.outputDirText),
 		        EMFObservables.observeValue(this.implSettings, CodegenPackage.Literals.IMPLEMENTATION_SETTINGS__OUTPUT_DIR),
 		        new UpdateValueStrategy().setAfterConvertValidator(new OutputDirectoryValidator(this.softPkg)),
 		        null));
 
-		this.bindings.add(this.context.bindValue(SWTObservables.observeText(this.packageNameText, SWT.Modify),
+		this.bindings.add(this.context.bindValue(WidgetProperties.text(SWT.Modify).observe(this.packageNameText),
 		        EMFObservables.observeValue(JavaJetGeneratorPropertiesWizardPage.this.packageName, CodegenPackage.Literals.PROPERTY__VALUE),
 		        new UpdateValueStrategy().setAfterConvertValidator(new JavaPackageNameValidator()),
 		        null));

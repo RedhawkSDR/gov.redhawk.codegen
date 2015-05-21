@@ -214,7 +214,6 @@ public class CodegeneratorApplication implements IApplication {
 		//		System.out.println("  Workspace: " + workspaceLocation.getURL());
 
 		final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		final IWorkspaceRoot root = workspace.getRoot();
 		final IWorkspaceDescription description = workspace.getDescription();
 
 		// Turn off auto building of the workspace
@@ -648,11 +647,8 @@ public class CodegeneratorApplication implements IApplication {
 	}
 
 	private IProject openProject(final IPath projectPath) throws CoreException {
-		final ResourceSet set = ScaResourceFactoryUtil.createResourceSet();
-		final IProgressMonitor progressMonitor = new NullProgressMonitor();
 		final IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		final IWorkspaceRoot root = workspace.getRoot();
-		final IWorkspaceDescription description = workspace.getDescription();
 		final File projectPathFile = projectPath.toFile();
 		final IPath projectDescriptionPath = projectPath.append(".project");
 
@@ -690,7 +686,7 @@ public class CodegeneratorApplication implements IApplication {
 				protected void execute(final IProgressMonitor monitor) throws CoreException, InvocationTargetException, InterruptedException {
 
 					final SubMonitor progressMonitor = SubMonitor.convert(monitor, 1);
-					System.out.println("Loading project " + projDesc.getName() + " " + projDesc.getLocation());
+					System.out.println("Loading project " + projDesc.getName() + " " + projDesc.getLocationURI());
 					project.create(projDesc, progressMonitor.newChild(1));
 				}
 			};

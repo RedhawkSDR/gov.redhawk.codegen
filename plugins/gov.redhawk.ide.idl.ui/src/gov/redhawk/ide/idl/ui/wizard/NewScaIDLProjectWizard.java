@@ -104,7 +104,7 @@ public class NewScaIDLProjectWizard extends Wizard implements INewWizard, IExecu
 
 						// Add the necessary natures to our project
 						CppGeneratorUtils.addCandCPPNatures(project, progress.newChild(1), multiStatus);
-						CppGeneratorUtils.addManagedNature(project, progress.newChild(1), multiStatus, "", null, true, null);
+						CppGeneratorUtils.addManagedNature(project, progress.newChild(1), multiStatus, "", null, null);
 						if (!project.hasNature(IdlLibraryProjectNature.ID)) {
 							Map<String, String> args = new HashMap<String, String>();
 							args.put(IdlProjectBuilder.MODULE_NAME_ARG, moduleName);

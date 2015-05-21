@@ -93,7 +93,7 @@ public class ManualGenerator extends AbstractCodeGenerator {
 			if (!retStatus.isOK()) {
 				return retStatus;
 			}
-			CppGeneratorUtils.addManagedNature(project, progress, retStatus, "/", out, shouldGenerate, impl);
+			CppGeneratorUtils.addManagedNature(project, progress, retStatus, "/", out, impl);
 			if (!retStatus.isOK()) {
 				return retStatus;
 			}

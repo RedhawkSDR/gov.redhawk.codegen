@@ -18,8 +18,6 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
 
 public class CodegenTestSuite {
 
