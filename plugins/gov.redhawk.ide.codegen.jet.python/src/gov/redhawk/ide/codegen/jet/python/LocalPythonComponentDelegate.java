@@ -33,13 +33,17 @@ public class LocalPythonComponentDelegate extends RegularLaunchConfigurationDele
 
 	@Override
 	public void launch(final ILaunchConfiguration conf, final String mode, final ILaunch launch, final IProgressMonitor monitor) throws CoreException {
+		final int WORK_LAUNCH = 10;
+		final int WORK_POST_LAUNCH = 100;
+		SubMonitor subMonitor = SubMonitor.convert(monitor, WORK_LAUNCH + WORK_POST_LAUNCH);
+
 		final ILaunchConfigurationWorkingCopy workingCopy = conf.getWorkingCopy();
 		final SoftPkg spd = SpdLauncherUtil.getSpd(conf);
 		insertProgramArguments(spd, launch, workingCopy);
-		SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
+
 		try {
-			super.launch(workingCopy, mode, launch, subMonitor.newChild(90));
-			SpdLauncherUtil.postLaunch(spd, workingCopy, mode, launch, subMonitor.newChild(10));
+			super.launch(workingCopy, mode, launch, subMonitor.newChild(WORK_LAUNCH));
+			SpdLauncherUtil.postLaunch(spd, workingCopy, mode, launch, subMonitor.newChild(WORK_POST_LAUNCH));
 		} finally {
 			if (monitor != null) {
 				monitor.done();

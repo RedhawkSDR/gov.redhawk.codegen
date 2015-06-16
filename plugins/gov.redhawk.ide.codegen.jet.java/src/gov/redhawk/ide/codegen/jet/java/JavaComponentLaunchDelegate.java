@@ -32,15 +32,19 @@ public class JavaComponentLaunchDelegate extends JavaLaunchDelegate {
 
 	@Override
 	public void launch(final ILaunchConfiguration configuration, final String mode, final ILaunch launch, final IProgressMonitor monitor) throws CoreException {
+		final int WORK_LAUNCH = 10;
+		final int WORK_POST_LAUNCH = 100;
+		SubMonitor subMonitor = SubMonitor.convert(monitor, WORK_LAUNCH + WORK_POST_LAUNCH);
+
 		final String arguments = configuration.getAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, ""); //$NON-NLS-1$
 		final ILaunchConfigurationWorkingCopy copy = configuration.getWorkingCopy();
 		final SoftPkg spd = SpdLauncherUtil.getSpd(configuration);
 		final String args = SpdLauncherUtil.insertProgramArguments(spd, arguments, launch, configuration);
 		copy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, args);
-		SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
+
 		try {
-			super.launch(copy, mode, launch, subMonitor.newChild(90));
-			SpdLauncherUtil.postLaunch(spd, copy, mode, launch, subMonitor.newChild(10));
+			super.launch(copy, mode, launch, subMonitor.newChild(WORK_LAUNCH));
+			SpdLauncherUtil.postLaunch(spd, copy, mode, launch, subMonitor.newChild(WORK_POST_LAUNCH));
 		} finally {
 			if (monitor != null) {
 				monitor.done();

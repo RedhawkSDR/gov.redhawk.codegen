@@ -44,16 +44,20 @@ public class LocalCppCDILaunchDelegate extends LocalCDILaunchDelegate implements
 
 	@Override
 	public void launch(final ILaunchConfiguration config, final String mode, final ILaunch launch, final IProgressMonitor monitor) throws CoreException {
+		final int WORK_LAUNCH = 10;
+		final int WORK_POST_LAUNCH = 100;
+		SubMonitor subMonitor = SubMonitor.convert(monitor, WORK_LAUNCH + WORK_POST_LAUNCH);
+
 		final ILaunchConfigurationWorkingCopy copy = config.getWorkingCopy();
 		if (copy.getAttribute(ICDTLaunchConfigurationConstants.ATTR_DEBUGGER_ID, (String) null) == null) {
 			copy.setAttribute(ICDTLaunchConfigurationConstants.ATTR_DEBUGGER_ID, getDefaultDebugger(config));
 		}
 		final SoftPkg spd = SpdLauncherUtil.getSpd(config);
 		insertProgramArguments(spd, launch, copy);
-		SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
+
 		try {
-			super.launch(copy, mode, launch, subMonitor.newChild(90));
-			SpdLauncherUtil.postLaunch(spd, copy, mode, launch, subMonitor.newChild(10));
+			super.launch(copy, mode, launch, subMonitor.newChild(WORK_LAUNCH));
+			SpdLauncherUtil.postLaunch(spd, copy, mode, launch, subMonitor.newChild(WORK_POST_LAUNCH));
 		} finally {
 			if (monitor != null) {
 				monitor.done();
