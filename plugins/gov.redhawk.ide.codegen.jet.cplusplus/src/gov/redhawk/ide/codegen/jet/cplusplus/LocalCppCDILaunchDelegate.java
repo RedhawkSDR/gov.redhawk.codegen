@@ -31,17 +31,14 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.model.ILaunchConfigurationDelegate;
 
 /**
+ * Used when a C++ component, device, etc. in the workspace is launched in the sandbox.
  * @since 9.0
- * 
  */
 @SuppressWarnings("restriction")
 public class LocalCppCDILaunchDelegate extends LocalCDILaunchDelegate implements ILaunchConfigurationDelegate {
 
 	public static final String ID = "gov.redhawk.ide.codegen.jet.cplusplus.launchComponentApplication";
 
-	/**
-	 * 
-	 */
 	public LocalCppCDILaunchDelegate() {
 	}
 

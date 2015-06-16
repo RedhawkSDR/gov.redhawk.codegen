@@ -23,22 +23,12 @@ import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.JavaLaunchDelegate;
 
 /**
+ * Used when a Java component, device, etc. in the workspace is launched in the sandbox.
  * @since 6.0
- * 
  */
 public class JavaComponentLaunchDelegate extends JavaLaunchDelegate {
 
 	public static final String ID_JAVA_COMPONENT = "gov.redhawk.ide.codegen.jet.java.launching.localJavaComponent";
-
-	//	@Override
-	//	public String getProgramArguments(final ILaunchConfiguration configuration) throws CoreException {
-	//		String retVal = super.getProgramArguments(configuration);
-	//		if (retVal == null) {
-	//			retVal = "";
-	//		}
-	//		final String args = ScaLauncherUtil.getProgramArguments(null, configuration);
-	//		return retVal + " " + args;
-	//	}
 
 	@Override
 	public void launch(final ILaunchConfiguration configuration, final String mode, final ILaunch launch, final IProgressMonitor monitor) throws CoreException {

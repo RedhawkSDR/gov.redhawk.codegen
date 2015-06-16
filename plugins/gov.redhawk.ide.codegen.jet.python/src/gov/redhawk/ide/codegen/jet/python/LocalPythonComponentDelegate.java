@@ -24,8 +24,8 @@ import org.eclipse.debug.core.model.ILaunchConfigurationDelegate;
 import org.python.pydev.debug.ui.launching.RegularLaunchConfigurationDelegate;
 
 /**
+ * Used when a Python component, device, etc. in the workspace is launched in the sandbox.
  * @since 8.0
- * 
  */
 public class LocalPythonComponentDelegate extends RegularLaunchConfigurationDelegate implements ILaunchConfigurationDelegate {
 
