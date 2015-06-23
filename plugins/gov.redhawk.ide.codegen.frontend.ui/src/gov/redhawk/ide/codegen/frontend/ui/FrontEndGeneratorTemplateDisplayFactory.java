@@ -294,14 +294,13 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 	}
 
 	private void addMultiOutProperty(SoftPkg eSpd) {
-
 		StructSequence structSeq = PrfFactory.eINSTANCE.createStructSequence();
 		structSeq.setId("connectionTable");
 
 		structSeq.setMode(AccessType.READONLY);
 		
 		final ConfigurationKind structKind = PrfFactory.eINSTANCE.createConfigurationKind();
-		structKind.setType(StructPropertyConfigurationType.CONFIGURE);
+		structKind.setType(StructPropertyConfigurationType.PROPERTY);
 		structSeq.getConfigurationKind().add(structKind);
 
 		Struct struct = PrfFactory.eINSTANCE.createStruct();
@@ -314,7 +313,7 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		connectionName.setType(PropertyValueType.STRING);
 
 		final Kind connectionNameKind = PrfFactory.eINSTANCE.createKind();
-		connectionNameKind.setType(PropertyConfigurationType.CONFIGURE);
+		connectionNameKind.setType(PropertyConfigurationType.PROPERTY);
 		connectionName.getKind().add(connectionNameKind);
 
 		Simple streamId = PrfFactory.eINSTANCE.createSimple();
@@ -323,7 +322,7 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		streamId.setType(PropertyValueType.STRING);
 
 		final Kind streamIdKind = PrfFactory.eINSTANCE.createKind();
-		streamIdKind.setType(PropertyConfigurationType.CONFIGURE);
+		streamIdKind.setType(PropertyConfigurationType.PROPERTY);
 		streamId.getKind().add(streamIdKind);
 
 		Simple portName = PrfFactory.eINSTANCE.createSimple();
@@ -332,7 +331,7 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		portName.setType(PropertyValueType.STRING);
 
 		final Kind portNameKind = PrfFactory.eINSTANCE.createKind();
-		portNameKind.setType(PropertyConfigurationType.CONFIGURE);
+		portNameKind.setType(PropertyConfigurationType.PROPERTY);
 		portName.getKind().add(portNameKind);
 
 		struct.getSimple().add(connectionName);
@@ -345,7 +344,6 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 	}
 
 	private void addTunerSpecificProps(SoftPkg eSpd) {
-
 		// If the tunerStatusStructProps is null then we must have come through the Wizard otherwise, maybe someoneone
 		// set it and we should accept that.
 		if (this.tunerStatusStructProps == null && this.getFrontEndTunerPropsWizardPage() != null) {
@@ -373,7 +371,7 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		structSeq.setMode(AccessType.READONLY);
 
 		final ConfigurationKind kind = PrfFactory.eINSTANCE.createConfigurationKind();
-		kind.setType(StructPropertyConfigurationType.CONFIGURE);
+		kind.setType(StructPropertyConfigurationType.PROPERTY);
 		structSeq.getConfigurationKind().add(kind);
 
 		Struct struct = PrfFactory.eINSTANCE.createStruct();
