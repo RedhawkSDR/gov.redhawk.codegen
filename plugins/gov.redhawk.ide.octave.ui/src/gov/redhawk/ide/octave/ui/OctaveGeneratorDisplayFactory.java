@@ -152,16 +152,16 @@ public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 
 		// Create __mFunction
 		Simple mFunction = createSimple("__mFunction", "__mFunction", PropertyValueType.STRING, octaveProjectProperties.getFunctionName(),
-			PropertyConfigurationType.EXECPARAM, AccessType.READONLY);
+			PropertyConfigurationType.PROPERTY, AccessType.READONLY);
 		eSpd.getPropertyFile().getProperties().getSimple().add(mFunction);
 
 		// Create sampleRate
 		Simple bufferingEnabled = createSimple("bufferingEnabled", "bufferingEnabled", PropertyValueType.BOOLEAN, "false",
-			PropertyConfigurationType.CONFIGURE, AccessType.READWRITE);
+			PropertyConfigurationType.PROPERTY, AccessType.READWRITE);
 		eSpd.getPropertyFile().getProperties().getSimple().add(bufferingEnabled);
 		
 		Simple diaryEnabled = createSimple("diaryEnabled", "diaryEnabled", PropertyValueType.BOOLEAN, "false",
-			PropertyConfigurationType.CONFIGURE, AccessType.READWRITE);
+			PropertyConfigurationType.PROPERTY, AccessType.READWRITE);
 		eSpd.getPropertyFile().getProperties().getSimple().add(diaryEnabled);
 		
 		for (OctaveFunctionVariables var : octaveProjectProperties.getFunctionInputs()) {
