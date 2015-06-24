@@ -94,10 +94,6 @@ public class CodegeneratorApplication implements IApplication {
 
 	private static final String PROP_EXIT_CODE = "eclipse.exitcode"; //$NON-NLS-1$
 
-	private static final String PROP_EXIT_DATA = "eclipse.exitdata"; //$NON-NLS-1$
-
-	private static final String CMD_DATA = "-data"; //$NON-NLS-1$
-
 	private static final String CMD_VMARGS = "-vmargs"; //$NON-NLS-1$
 
 	private static final String NEW_LINE = "\n"; //$NON-NLS-1$
@@ -200,7 +196,7 @@ public class CodegeneratorApplication implements IApplication {
 				System.out.println("Failed to build command_line");
 				return IApplication.EXIT_OK;
 			}
-			System.setProperty("eclipse.exitcode", Integer.toString(24));
+			System.setProperty(CodegeneratorApplication.PROP_EXIT_CODE, Integer.toString(24));
 			System.setProperty(IApplicationContext.EXIT_DATA_PROPERTY, command_line);
 			return IApplication.EXIT_RELAUNCH;
 		}
