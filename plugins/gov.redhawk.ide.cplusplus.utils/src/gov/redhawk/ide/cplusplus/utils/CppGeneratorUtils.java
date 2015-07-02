@@ -13,7 +13,9 @@ package gov.redhawk.ide.cplusplus.utils;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import mil.jpeojtrs.sca.spd.Implementation;
 
@@ -106,7 +108,7 @@ public final class CppGeneratorUtils {
 	 */
 	public static MultiStatus addManagedNature(final IProject project, final SubMonitor progress, final MultiStatus retStatus,
 		final String destinationDirectory, final PrintStream out, final Implementation impl) {
-		progress.setWorkRemaining(CppGeneratorUtils.ADJUST_CONFIG_WORK + CppGeneratorUtils.GENERATE_CODE_WORK);
+		progress.setWorkRemaining(1);
 
 		// Based on whether or not the managed C project nature has been added, we know whether or not the project has
 		// been previously configured for development
@@ -118,6 +120,8 @@ public final class CppGeneratorUtils {
 			        "Unable to deterine if the project has been configured with the managed C nature; cannot proceed with code generation", e));
 			return retStatus;
 		}
+
+		ICProjectDescription projectDesc;
 		if (hasManagedNature) {
 			progress.subTask("Adding to existing C++ project nature");
 
@@ -146,13 +150,8 @@ public final class CppGeneratorUtils {
 				CppGeneratorUtils.configureSourceFolders(null, destinationDirectory, tempConfig);
 			}
 
-			// Add build environment variables
-			final ICConfigurationDescription[] configDescriptions = CoreModel.getDefault().getProjectDescription(project).getConfigurations();
-			for (final ICConfigurationDescription configDescription : configDescriptions) {
-				CppGeneratorUtils.addBuildEnvironVars(configDescription);
-			}
-
-			progress.worked(CppGeneratorUtils.ADJUST_CONFIG_WORK);
+			// Get the existing project description
+			projectDesc = CoreModel.getDefault().getProjectDescription(project);
 		} else {
 			progress.subTask("Configuring new C++ project nature");
 
@@ -162,7 +161,6 @@ public final class CppGeneratorUtils {
 
 			// Create several of the CDT objects related to a C/C++ managed project
 			final CoreModel coreModel = CoreModel.getDefault();
-			ICProjectDescription projectDesc;
 			try {
 				projectDesc = coreModel.createProjectDescription(project, false);
 			} catch (final CoreException e) {
@@ -212,33 +210,24 @@ public final class CppGeneratorUtils {
 
 				// Add include paths to configuration description
 				CppGeneratorUtils.addIncludePaths(configDesc);
-
-				// Add build environment variables
-				CppGeneratorUtils.addBuildEnvironVars(configDesc);
-				
-				String[] parserIDs = configDesc.getBuildSetting().getErrorParserIDs();
-				List<String> newParserIDs = new ArrayList<String>();
-				newParserIDs.add("gov.redhawk.ide.codegen.cpp.reconfParser");
-				newParserIDs.addAll(Arrays.asList(parserIDs));
-				configDesc.getBuildSetting().setErrorParserIDs(newParserIDs.toArray(new String[newParserIDs.size()]));
-				
 			}
+		}
 
-			// Set project description - this makes it go into effect
-			try {
-				coreModel.setProjectDescription(project, projectDesc);
-			} catch (final CoreException e) {
-				retStatus.add(new Status(IStatus.ERROR, CplusplusUtilsPlugin.PLUGIN_ID, "Unable to set C++ project description", e));
-				return retStatus;
-			}
+		// Perform setup of each configuration in the project
+		for (final ICConfigurationDescription configDescription : projectDesc.getConfigurations()) {
+			CppGeneratorUtils.addBuildEnvironVars(configDescription);
+			CppGeneratorUtils.addErrorParsers(configDescription);
+		}
 
+		try {
+			CoreModel.getDefault().setProjectDescription(project, projectDesc, false, progress.newChild(1));
 			if (out != null) {
 				out.println("C++ environment is now configured for development");
 			}
-
-			progress.worked(CppGeneratorUtils.ADJUST_CONFIG_WORK);
+		} catch (CoreException e) {
+			retStatus.add(new Status(IStatus.ERROR, CplusplusUtilsPlugin.PLUGIN_ID, "Unable to set C++ project description", e));
+			return retStatus;
 		}
-		progress.setWorkRemaining(CppGeneratorUtils.GENERATE_CODE_WORK);
 
 		return retStatus;
 	}
@@ -310,10 +299,10 @@ public final class CppGeneratorUtils {
 		}
 
 		final List<ICLanguageSettingEntry> includePathSettings = lang.getSettingEntriesList(ICSettingEntry.INCLUDE_PATH);
-
 		includePathSettings.add((ICLanguageSettingEntry) CDataUtil.createEntry(ICSettingEntry.INCLUDE_PATH, OSSIE_INCLUDE, OSSIE_INCLUDE, null, 0));
 		includePathSettings.add((ICLanguageSettingEntry) CDataUtil.createEntry(ICSettingEntry.INCLUDE_PATH, OMNI_ORB_INCLUDE, OMNI_ORB_INCLUDE, null, 0));
-		includePathSettings.add((ICLanguageSettingEntry) CDataUtil.createEntry(ICSettingEntry.INCLUDE_PATH, OMNI_ORB_THREAD_INCLUDE, OMNI_ORB_THREAD_INCLUDE, null, 0));
+		includePathSettings.add(
+			(ICLanguageSettingEntry) CDataUtil.createEntry(ICSettingEntry.INCLUDE_PATH, OMNI_ORB_THREAD_INCLUDE, OMNI_ORB_THREAD_INCLUDE, null, 0));
 		lang.setSettingEntries(ICSettingEntry.INCLUDE_PATH, includePathSettings);
 	}
 
@@ -322,13 +311,25 @@ public final class CppGeneratorUtils {
 	 * build command is invoked in.
 	 * 
 	 * @param configDescription A project configuration description
-	 * @since 1.0
 	 */
-	public static void addBuildEnvironVars(final ICConfigurationDescription configDescription) {
+	private static void addBuildEnvironVars(final ICConfigurationDescription configDescription) {
 		final IContributedEnvironment env = CCorePlugin.getDefault().getBuildEnvironmentManager().getContributedEnvironment();
 		if (env.getVariable("OSSIEHOME", configDescription) == null) {
 			env.addVariable("OSSIEHOME", "${OssieHome}", IBuildEnvironmentVariable.ENVVAR_REPLACE, null, configDescription);
 		}
+	}
+
+	/**
+	 * Adds several error parsers to the CDT configuration (if not already present).
+	 * @param configDescription A project configuration description
+	 */
+	private static void addErrorParsers(final ICConfigurationDescription configDescription) {
+		// Order is important - we add the REDHAWK parser first which eliminates spurious errors from reconf
+		String[] parserIDs = configDescription.getBuildSetting().getErrorParserIDs();
+		Set<String> newParserIDs = new LinkedHashSet<String>();
+		newParserIDs.add("gov.redhawk.ide.codegen.cpp.reconfParser");
+		newParserIDs.addAll(Arrays.asList(parserIDs));
+		configDescription.getBuildSetting().setErrorParserIDs(newParserIDs.toArray(new String[newParserIDs.size()]));
 	}
 
 	/**
