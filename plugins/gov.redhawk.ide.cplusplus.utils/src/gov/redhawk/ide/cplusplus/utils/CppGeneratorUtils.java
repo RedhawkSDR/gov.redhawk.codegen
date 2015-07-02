@@ -10,8 +10,6 @@
  *******************************************************************************/
 package gov.redhawk.ide.cplusplus.utils;
 
-import gov.redhawk.ide.cplusplus.utils.internal.ExternalSettingProvider;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -22,8 +20,6 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
-import mil.jpeojtrs.sca.spd.Implementation;
 
 import org.eclipse.cdt.core.CCProjectNature;
 import org.eclipse.cdt.core.CCorePlugin;
@@ -58,6 +54,9 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
+
+import gov.redhawk.ide.cplusplus.utils.internal.ExternalSettingProvider;
+import mil.jpeojtrs.sca.spd.Implementation;
 
 public final class CppGeneratorUtils {
 
@@ -111,7 +110,7 @@ public final class CppGeneratorUtils {
 	 */
 	public static MultiStatus addManagedNature(final IProject project, final SubMonitor progress, final MultiStatus retStatus,
 		final String destinationDirectory, final PrintStream out, final Implementation impl) {
-		progress.setWorkRemaining(CppGeneratorUtils.ADJUST_CONFIG_WORK + CppGeneratorUtils.GENERATE_CODE_WORK);
+		progress.setWorkRemaining(1);
 
 		// Based on whether or not the managed C project nature has been added, we know whether or not the project has
 		// been previously configured for development
@@ -123,6 +122,8 @@ public final class CppGeneratorUtils {
 				"Unable to deterine if the project has been configured with the managed C nature; cannot proceed with code generation", e));
 			return retStatus;
 		}
+
+		ICProjectDescription projectDesc;
 		if (hasManagedNature) {
 			progress.subTask("Adding to existing C++ project nature");
 
@@ -151,13 +152,8 @@ public final class CppGeneratorUtils {
 				CppGeneratorUtils.configureSourceFolders(null, destinationDirectory, tempConfig);
 			}
 
-			// Add build environment variables
-			final ICConfigurationDescription[] configDescriptions = CoreModel.getDefault().getProjectDescription(project).getConfigurations();
-			for (final ICConfigurationDescription configDescription : configDescriptions) {
-				CppGeneratorUtils.addBuildEnvironVars(configDescription);
-			}
-
-			progress.worked(CppGeneratorUtils.ADJUST_CONFIG_WORK);
+			// Get the existing project description
+			projectDesc = CoreModel.getDefault().getProjectDescription(project);
 		} else {
 			progress.subTask("Configuring new C++ project nature");
 
@@ -167,7 +163,6 @@ public final class CppGeneratorUtils {
 
 			// Create several of the CDT objects related to a C/C++ managed project
 			final CoreModel coreModel = CoreModel.getDefault();
-			ICProjectDescription projectDesc;
 			try {
 				projectDesc = coreModel.createProjectDescription(project, false);
 			} catch (final CoreException e) {
@@ -230,34 +225,25 @@ public final class CppGeneratorUtils {
 				} catch (IOException io) {
 					retStatus.add(new Status(IStatus.ERROR, CplusplusUtilsPlugin.PLUGIN_ID, "Error while locating Octave Include folder", io));
 				}
-
-				// Add build environment variables
-				CppGeneratorUtils.addBuildEnvironVars(configDesc);
-
-				String[] parserIDs = configDesc.getBuildSetting().getErrorParserIDs();
-				List<String> newParserIDs = new ArrayList<String>();
-				newParserIDs.add("gov.redhawk.ide.codegen.cpp.reconfParser");
-				newParserIDs.add("org.eclipse.cdt.autotools.core.ErrorParser");
-				newParserIDs.addAll(Arrays.asList(parserIDs));
-				configDesc.getBuildSetting().setErrorParserIDs(newParserIDs.toArray(new String[newParserIDs.size()]));
-
 			}
+		}
 
-			// Set project description - this makes it go into effect
-			try {
-				coreModel.setProjectDescription(project, projectDesc);
-			} catch (final CoreException e) {
-				retStatus.add(new Status(IStatus.ERROR, CplusplusUtilsPlugin.PLUGIN_ID, "Unable to set C++ project description", e));
-				return retStatus;
-			}
+		// Perform setup of each configuration in the project
+		for (final ICConfigurationDescription configDescription : projectDesc.getConfigurations()) {
+			CppGeneratorUtils.addExternalSettingsProviders(configDescription);
+			CppGeneratorUtils.addBuildEnvironVars(configDescription);
+			CppGeneratorUtils.addErrorParsers(configDescription);
+		}
 
+		try {
+			CoreModel.getDefault().setProjectDescription(project, projectDesc, false, progress.newChild(1));
 			if (out != null) {
 				out.println("C++ environment is now configured for development");
 			}
-
-			progress.worked(CppGeneratorUtils.ADJUST_CONFIG_WORK);
+		} catch (CoreException e) {
+			retStatus.add(new Status(IStatus.ERROR, CplusplusUtilsPlugin.PLUGIN_ID, "Unable to set C++ project description", e));
+			return retStatus;
 		}
-		progress.setWorkRemaining(CppGeneratorUtils.GENERATE_CODE_WORK);
 
 		return retStatus;
 	}
@@ -354,13 +340,6 @@ public final class CppGeneratorUtils {
 			null, 0));
 
 		lang.setSettingEntries(ICSettingEntry.INCLUDE_PATH, includePathSettings);
-		
-		// Adding the external settings provider which is responsible for adding the include paths of the 
-		// shared libraries as they are added to C++ projects dynamically.
-		final Set<String> externalSettingsProviders = new LinkedHashSet<String>(Arrays.asList(configDescription.getExternalSettingsProviderIds()));
-		externalSettingsProviders.add(ExternalSettingProvider.ID);
-		configDescription.setExternalSettingsProviderIds(externalSettingsProviders.toArray(new String[0]));
-		
 	}
 
 	/**
@@ -391,13 +370,39 @@ public final class CppGeneratorUtils {
 	 * build command is invoked in.
 	 * 
 	 * @param configDescription A project configuration description
-	 * @since 1.0
 	 */
-	public static void addBuildEnvironVars(final ICConfigurationDescription configDescription) {
+	private static void addBuildEnvironVars(final ICConfigurationDescription configDescription) {
 		final IContributedEnvironment env = CCorePlugin.getDefault().getBuildEnvironmentManager().getContributedEnvironment();
 		if (env.getVariable("OSSIEHOME", configDescription) == null) {
 			env.addVariable("OSSIEHOME", "${OssieHome}", IBuildEnvironmentVariable.ENVVAR_REPLACE, null, configDescription);
 		}
+	}
+
+	/**
+	 * Add a REDHAWK external settings provider to the CDT configuration (if not already present).
+	 * <p/>
+	 * The settings provider ensures include paths for shared libraries are added to C++ projects dynamically.
+	 * @param configDescription A project configuration description
+	 */
+	private static void addExternalSettingsProviders(final ICConfigurationDescription configDescription) {
+		String[] providers = configDescription.getExternalSettingsProviderIds();
+		final Set<String> newProviders = new LinkedHashSet<String>(Arrays.asList(providers));
+		newProviders.add(ExternalSettingProvider.ID);
+		configDescription.setExternalSettingsProviderIds(newProviders.toArray(new String[newProviders.size()]));
+	}
+
+	/**
+	 * Adds several error parsers to the CDT configuration (if not already present).
+	 * @param configDescription A project configuration description
+	 */
+	private static void addErrorParsers(final ICConfigurationDescription configDescription) {
+		// Order is important - we add the REDHAWK parser first which eliminates spurious errors from reconf
+		String[] parserIDs = configDescription.getBuildSetting().getErrorParserIDs();
+		Set<String> newParserIDs = new LinkedHashSet<String>();
+		newParserIDs.add("gov.redhawk.ide.codegen.cpp.reconfParser");
+		newParserIDs.add("org.eclipse.cdt.autotools.core.ErrorParser");
+		newParserIDs.addAll(Arrays.asList(parserIDs));
+		configDescription.getBuildSetting().setErrorParserIDs(newParserIDs.toArray(new String[newParserIDs.size()]));
 	}
 
 	/**
