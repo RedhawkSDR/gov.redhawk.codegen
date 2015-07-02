@@ -132,7 +132,7 @@ public class SetPrimaryHandler extends AbstractHandler implements IHandler {
 							final IManagedBuildInfo info = ManagedBuildManager.getBuildInfo(project);
 							final IManagedProject managedProject = info.getManagedProject();
 							for (final IConfiguration config : managedProject.getConfigurations()) {
-								CppGeneratorUtils.configureBuilder(implSetting.getOutputDir(), config);
+								CppGeneratorUtils.configureBuilder(config);
 								CppGeneratorUtils.configureSourceFolders(oldSource, implSetting.getOutputDir(), config);
 							}
 						}

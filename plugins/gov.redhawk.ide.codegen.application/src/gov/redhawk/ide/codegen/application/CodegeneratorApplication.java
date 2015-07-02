@@ -10,25 +10,6 @@
  *******************************************************************************/
 package gov.redhawk.ide.codegen.application;
 
-import gov.redhawk.ide.codegen.CodegenFactory;
-import gov.redhawk.ide.codegen.CodegenUtil;
-import gov.redhawk.ide.codegen.FileStatus;
-import gov.redhawk.ide.codegen.FileToCRCMap;
-import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
-import gov.redhawk.ide.codegen.IPropertyDescriptor;
-import gov.redhawk.ide.codegen.IScaComponentCodegen;
-import gov.redhawk.ide.codegen.ITemplateDesc;
-import gov.redhawk.ide.codegen.ImplementationSettings;
-import gov.redhawk.ide.codegen.Property;
-import gov.redhawk.ide.codegen.RedhawkCodegenActivator;
-import gov.redhawk.ide.codegen.WaveDevSettings;
-import gov.redhawk.ide.codegen.util.CodegenFileHelper;
-import gov.redhawk.ide.codegen.util.ProjectCreator;
-import gov.redhawk.ide.dcd.generator.newdevice.DeviceProjectCreator;
-import gov.redhawk.ide.pydev.util.AutoConfigPydevInterpreterUtil;
-import gov.redhawk.ide.spd.generator.newcomponent.ComponentProjectCreator;
-import gov.redhawk.ide.util.ResourceUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -38,15 +19,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
-import mil.jpeojtrs.sca.spd.Compiler;
-import mil.jpeojtrs.sca.spd.HumanLanguage;
-import mil.jpeojtrs.sca.spd.Implementation;
-import mil.jpeojtrs.sca.spd.ProgrammingLanguage;
-import mil.jpeojtrs.sca.spd.SoftPkg;
-import mil.jpeojtrs.sca.spd.SpdFactory;
-import mil.jpeojtrs.sca.util.DceUuidUtil;
-import mil.jpeojtrs.sca.util.ScaResourceFactoryUtil;
 
 import org.eclipse.cdt.core.CCorePlugin;
 import org.eclipse.cdt.core.dom.IPDOMManager;
@@ -81,6 +53,33 @@ import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.osgi.service.datalocation.Location;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.osgi.service.prefs.BackingStoreException;
+
+import gov.redhawk.ide.codegen.CodegenFactory;
+import gov.redhawk.ide.codegen.CodegenUtil;
+import gov.redhawk.ide.codegen.FileStatus;
+import gov.redhawk.ide.codegen.FileToCRCMap;
+import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
+import gov.redhawk.ide.codegen.IPropertyDescriptor;
+import gov.redhawk.ide.codegen.IScaComponentCodegen;
+import gov.redhawk.ide.codegen.ITemplateDesc;
+import gov.redhawk.ide.codegen.ImplementationSettings;
+import gov.redhawk.ide.codegen.Property;
+import gov.redhawk.ide.codegen.RedhawkCodegenActivator;
+import gov.redhawk.ide.codegen.WaveDevSettings;
+import gov.redhawk.ide.codegen.util.CodegenFileHelper;
+import gov.redhawk.ide.codegen.util.ProjectCreator;
+import gov.redhawk.ide.dcd.generator.newdevice.DeviceProjectCreator;
+import gov.redhawk.ide.pydev.util.AutoConfigPydevInterpreterUtil;
+import gov.redhawk.ide.spd.generator.newcomponent.ComponentProjectCreator;
+import gov.redhawk.ide.util.ResourceUtils;
+import mil.jpeojtrs.sca.spd.Compiler;
+import mil.jpeojtrs.sca.spd.HumanLanguage;
+import mil.jpeojtrs.sca.spd.Implementation;
+import mil.jpeojtrs.sca.spd.ProgrammingLanguage;
+import mil.jpeojtrs.sca.spd.SoftPkg;
+import mil.jpeojtrs.sca.spd.SpdFactory;
+import mil.jpeojtrs.sca.util.DceUuidUtil;
+import mil.jpeojtrs.sca.util.ScaResourceFactoryUtil;
 
 // CHECKSTYLE:OFF Ignore Special File
 public class CodegeneratorApplication implements IApplication {
@@ -769,7 +768,7 @@ public class CodegeneratorApplication implements IApplication {
 	 * @param arguments to override or add
 	 * @return a string of command line options or null on error
 	 * 
-	 * @see OpenWorkspaceAction for place where this code was cloned from
+	 * @see {@link org.eclipse.ui.internal.ide.actions.OpenWorkspaceAction} for place where this code was cloned from
 	 */
 	private String buildCommandLine(final Map<String, String> overrides) {
 		String property = System.getProperty(CodegeneratorApplication.PROP_VM);

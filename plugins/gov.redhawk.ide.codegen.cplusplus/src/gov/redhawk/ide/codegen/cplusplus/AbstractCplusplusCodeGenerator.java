@@ -60,7 +60,6 @@ public abstract class AbstractCplusplusCodeGenerator extends AbstractCodeGenerat
 	 * @since 5.0
 	 */
 	@Override
-	@SuppressWarnings("deprecation")
 	public IStatus generate(final ImplementationSettings implSettings, final Implementation impl, final PrintStream out, final PrintStream err, // SUPPRESS CHECKSTYLE Arguments
 		final IProgressMonitor monitor, final String[] generateFiles, final boolean shouldGenerate, final List<FileToCRCMap> crcMap) { // SUPPRESS CHECKSTYLE Arguments
 		final int CLEANUP_WORK = 1, ADD_NATURE_WORK = 1, ADD_BUILDER_WORK = 1;
@@ -73,7 +72,7 @@ public abstract class AbstractCplusplusCodeGenerator extends AbstractCodeGenerat
 		if (project == null) {
 			return new Status(IStatus.ERROR, GccGeneratorPlugin.PLUGIN_ID, "Unable to determine project; cannot proceed with code generation", null);
 		}
-		final String componentName = implSettings.getName();
+		final String componentName = impl.getSoftPkg().getName();
 		final String destinationDirectory = implSettings.getOutputDir();
 		final MultiStatus retStatus = new MultiStatus(GccGeneratorPlugin.PLUGIN_ID, IStatus.OK, "C++ code generation problems", null);
 
@@ -88,12 +87,7 @@ public abstract class AbstractCplusplusCodeGenerator extends AbstractCodeGenerat
 		}
 
 		CppGeneratorUtils.addCandCPPNatures(project, progress.newChild(ADD_NATURE_WORK), retStatus);
-		//disable codan parser that has a bug
-		//refs #1979: CDT bug apparently fixed, this step not necessary anymore
-		// IDE-757: instead of generating project CDT (codan prefs) settings, it is now a workspace
-		//          level settings for the IDE product.
-		// CppGeneratorUtils.generateCodanPrefs(project, progress.newChild(ADD_NATURE_WORK), retStatus);
-		CppGeneratorUtils.addManagedNature(project, progress.newChild(ADD_NATURE_WORK), retStatus, destinationDirectory, out, shouldGenerate, impl);
+		CppGeneratorUtils.addManagedNature(project, progress.newChild(ADD_NATURE_WORK), retStatus, destinationDirectory, out, impl);
 
 		// Add our auto-inclusion builder
 		try {
