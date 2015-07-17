@@ -10,20 +10,14 @@
  *******************************************************************************/
 package gov.redhawk.ide.codegen.jinja.java.ui;
 
+import java.util.List;
+
 import gov.redhawk.ide.codegen.CodegenFactory;
 import gov.redhawk.ide.codegen.ITemplateDesc;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.Property;
-import gov.redhawk.ide.codegen.java.JavaGeneratorUtils;
 import gov.redhawk.ide.ui.wizard.IRedhawkImportProjectWizardAssist;
 import gov.redhawk.ide.ui.wizard.RedhawkImportWizardPage1.ProjectRecord;
-
-import java.io.File;
-import java.util.List;
-
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * 
@@ -41,26 +35,6 @@ public class JavaRedhawkWizardAssistant implements IRedhawkImportProjectWizardAs
 			return true;
 		}
 		return false;
-	}
-
-	/**
-	 * add the required nature for an archive import
-	 */
-	@Override
-	public void setupNatures(List<String> natures, IProject dotProject, IProgressMonitor monitor) throws CoreException {
-		if (natures.contains("java")) {
-			JavaGeneratorUtils.addJavaProjectNature(dotProject, monitor);
-		}
-	}
-
-	/**
-	 * add the required nature for a file import
-	 */
-	@Override
-	public void setupNatures(File importSource, IProject project, IProgressMonitor monitor) throws CoreException {
-		if (new File(importSource + "/java").exists()) {
-			JavaGeneratorUtils.addJavaProjectNature(project, monitor);
-		}
 	}
 
 	@Override
@@ -104,11 +78,6 @@ public class JavaRedhawkWizardAssistant implements IRedhawkImportProjectWizardAs
 			useJni.setValue("TRUE");
 			settings.getProperties().add(useJni);
 		}
-	}
-
-	@Override
-	public boolean handlesNature(String nature) {
-		return "java".equalsIgnoreCase(nature);
 	}
 
 }

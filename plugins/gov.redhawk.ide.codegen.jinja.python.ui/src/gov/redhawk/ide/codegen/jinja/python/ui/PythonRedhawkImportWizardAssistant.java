@@ -10,12 +10,7 @@
  *******************************************************************************/
 package gov.redhawk.ide.codegen.jinja.python.ui;
 
-import java.io.File;
-import java.util.List;
-
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 
 import gov.redhawk.ide.codegen.ITemplateDesc;
 import gov.redhawk.ide.codegen.ImplementationSettings;
@@ -26,24 +21,6 @@ import gov.redhawk.ide.ui.wizard.RedhawkImportWizardPage1.ProjectRecord;
  * 
  */
 public class PythonRedhawkImportWizardAssistant implements IRedhawkImportProjectWizardAssist {
-
-	/**
-	 * add the required nature for an archive import
-	 */
-	@Override
-	public void setupNatures(List<String> natures, IProject dotProject, IProgressMonitor monitor) throws CoreException {
-		// TODO Auto-generated method stub
-
-	}
-
-	/**
-	 * add the required nature for a file import
-	 */
-	@Override
-	public void setupNatures(File importSource, IProject project, IProgressMonitor monitor) throws CoreException {
-		// TODO Auto-generated method stub
-
-	}
 
 	/* (non-Javadoc)
 	 * @see gov.redhawk.ide.ui.wizard.IRedhawkImportProjectWizardAssist#handlesImplId(java.lang.String)
@@ -82,12 +59,6 @@ public class PythonRedhawkImportWizardAssistant implements IRedhawkImportProject
 	@Override
 	public void setupWaveDev(String projectName, ImplementationSettings settings) {
 		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean handlesNature(String nature) {
-		return "python".equalsIgnoreCase(nature);
 	}
 
 }

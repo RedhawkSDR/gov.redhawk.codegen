@@ -12,19 +12,8 @@ package gov.redhawk.ide.codegen.cplusplus.ui.internal.command;
 
 import gov.redhawk.ide.codegen.ITemplateDesc;
 import gov.redhawk.ide.codegen.ImplementationSettings;
-import gov.redhawk.ide.codegen.manual.ManualGeneratorPlugin;
-import gov.redhawk.ide.cplusplus.utils.CppGeneratorUtils;
 import gov.redhawk.ide.ui.wizard.IRedhawkImportProjectWizardAssist;
 import gov.redhawk.ide.ui.wizard.RedhawkImportWizardPage1.ProjectRecord;
-
-import java.io.File;
-import java.util.List;
-
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.SubMonitor;
 
 public class CppRedhawkImportWizardAssistant implements IRedhawkImportProjectWizardAssist {
 
@@ -39,30 +28,6 @@ public class CppRedhawkImportWizardAssistant implements IRedhawkImportProjectWiz
 			return true;
 		}
 		return false;
-	}
-
-	/**
-	 * add the required nature for an archive import
-	 */
-	@Override
-	public void setupNatures(List<String> natures, IProject dotProject, IProgressMonitor monitor) {
-		if (natures.contains("cpp")) {
-			MultiStatus retStatus = new MultiStatus(ManualGeneratorPlugin.PLUGIN_ID, IStatus.OK, "", null);
-			CppGeneratorUtils.addCandCPPNatures(dotProject, SubMonitor.convert(monitor), retStatus);
-			CppGeneratorUtils.addManagedNature(dotProject, SubMonitor.convert(monitor), retStatus, "/", System.out, null);
-		}
-	}
-
-	/**
-	 * add the required nature for a file import
-	 */
-	@Override
-	public void setupNatures(File importSource, IProject project, IProgressMonitor monitor) {
-		if (new File(importSource + "/cpp").exists()) {
-			MultiStatus retStatus = new MultiStatus(ManualGeneratorPlugin.PLUGIN_ID, IStatus.OK, "", null);
-			CppGeneratorUtils.addCandCPPNatures(project, SubMonitor.convert(monitor), retStatus);
-			CppGeneratorUtils.addManagedNature(project, SubMonitor.convert(monitor), retStatus, "/", System.out, null);
-		}
 	}
 
 	@Override
@@ -83,11 +48,6 @@ public class CppRedhawkImportWizardAssistant implements IRedhawkImportProjectWiz
 	@Override
 	public void setupWaveDev(String projectName, ImplementationSettings settings) {
 		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public boolean handlesNature(String nature) {
-		return "cpp".equalsIgnoreCase(nature);
 	}
 
 }
