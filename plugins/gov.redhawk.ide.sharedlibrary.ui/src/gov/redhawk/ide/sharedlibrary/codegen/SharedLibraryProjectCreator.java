@@ -35,8 +35,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.xmi.XMLResource;
 
 @SuppressWarnings("restriction")
 public class SharedLibraryProjectCreator extends ComponentProjectCreator {
@@ -55,7 +55,7 @@ public class SharedLibraryProjectCreator extends ComponentProjectCreator {
 		// Create the model object for the .spd.xml file
 		final ResourceSet resourceSet = ScaResourceFactoryUtil.createResourceSet();
 		final URI spdUri = URI.createPlatformResourceURI(spdFile.getFullPath().toString(), true);
-		final XMLResource resource = (XMLResource) resourceSet.createResource(spdUri, SpdPackage.eCONTENT_TYPE);
+		final Resource resource = resourceSet.createResource(spdUri, SpdPackage.eCONTENT_TYPE);
 		final SoftPkg spd = SpdFactory.eINSTANCE.createSoftPkg();
 		resource.getContents().add(spd);
 		spd.setId(spdId);
