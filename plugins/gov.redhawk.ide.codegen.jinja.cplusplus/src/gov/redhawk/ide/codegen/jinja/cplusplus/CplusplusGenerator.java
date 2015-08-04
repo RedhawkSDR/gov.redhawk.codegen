@@ -37,6 +37,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.osgi.framework.Version;
 
 /**
+ * The Jinja C++ code generator for REDHAWK 1.9+.
  * @since 1.1
  */
 public class CplusplusGenerator extends AbstractCplusplusCodeGenerator implements IScaComponentCodegenSetup {

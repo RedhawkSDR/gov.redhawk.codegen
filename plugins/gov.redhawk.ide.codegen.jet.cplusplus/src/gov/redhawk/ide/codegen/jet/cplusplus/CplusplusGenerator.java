@@ -47,6 +47,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.osgi.framework.Version;
 
+/**
+ * This is the legacy C++ code generator. It uses JET templates to produce code for the REDHAWK 1.8 series.
+ */
 public class CplusplusGenerator extends AbstractCplusplusCodeGenerator {
 
 	/**
