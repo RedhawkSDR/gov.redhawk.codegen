@@ -10,23 +10,11 @@
  *******************************************************************************/
 package gov.redhawk.ide.cplusplus.utils.internal;
 
-import gov.redhawk.ide.sdr.SdrPackage;
-import gov.redhawk.ide.sdr.SdrRoot;
-import gov.redhawk.ide.sdr.ui.SdrUiPlugin;
-import gov.redhawk.model.sca.commands.ScaModelCommand;
-import gov.redhawk.model.sca.util.ModelUtil;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import mil.jpeojtrs.sca.spd.Dependency;
-import mil.jpeojtrs.sca.spd.Implementation;
-import mil.jpeojtrs.sca.spd.SoftPkg;
-import mil.jpeojtrs.sca.spd.SoftPkgRef;
-import mil.jpeojtrs.sca.spd.impl.DependencyImpl;
 
 import org.eclipse.cdt.core.model.CoreModel;
 import org.eclipse.cdt.core.settings.model.CExternalSetting;
@@ -52,8 +40,18 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.transaction.RunnableWithResult;
+
+import gov.redhawk.ide.sdr.SdrPackage;
+import gov.redhawk.ide.sdr.SdrRoot;
+import gov.redhawk.ide.sdr.ui.SdrUiPlugin;
+import gov.redhawk.model.sca.commands.ScaModelCommand;
+import gov.redhawk.model.sca.util.ModelUtil;
+import mil.jpeojtrs.sca.spd.Dependency;
+import mil.jpeojtrs.sca.spd.Implementation;
+import mil.jpeojtrs.sca.spd.SoftPkg;
+import mil.jpeojtrs.sca.spd.SpdPackage;
+import mil.jpeojtrs.sca.util.ScaEcoreUtils;
 
 /**
  * @since 1.2
@@ -108,17 +106,16 @@ public class ExternalSettingProvider extends CExternalSettingProvider {
 		}
 	};
 
-	
 	public ExternalSettingProvider() {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		SdrRoot sdrroot = SdrUiPlugin.getDefault().getTargetSdrRoot();
-		
+
 		// We add two listeners, one to the workspace and one to the SDRROOT.
 		// The workspace listener will be ignored if it already exists but we check for the sdrroot eAdapter
 		if (sdrroot != null && !sdrroot.eAdapters().contains(sdrrootlistener)) {
 			sdrroot.eAdapters().add(sdrrootlistener);
 		}
-		
+
 		workspace.addResourceChangeListener(listener, IResourceChangeEvent.POST_CHANGE);
 	}
 
@@ -160,43 +157,32 @@ public class ExternalSettingProvider extends CExternalSettingProvider {
 		if (spd == null) {
 			return;
 		}
-		boolean diveDeeper = true;
 
 		// We need to check if the project contains any shared library dependencies for all the implementations
 		for (Implementation impl : spd.getImplementation()) {
 			EList<Dependency> deps = impl.getDependency();
 			for (Dependency dep : deps) {
-				if (dep instanceof DependencyImpl) {
-					DependencyImpl depImpl = (DependencyImpl) dep;
-					SoftPkgRef sharedLibraryRef = depImpl.getSoftPkgRef();
-
-					if (sharedLibraryRef != null) {
-						SoftPkg sharedLibSoftPackage = sharedLibraryRef.getSoftPkg();
-
-						URI libUri = sharedLibSoftPackage.eResource().getURI();
-						if ("sdrdom".equals(libUri.scheme())) {
-
-							// Form the path which is $SdrRoot/dom/<sharedLib>/include however we do it in two steps
-							// so we can strip off the spd.xml file name and append include
-							// This is also so that we remain platform agnostic and do not use any slash characters
-							IPath incdirPath = (new Path("${SdrRoot}")).append(new Path("dom")).append(libUri.path());
-							incdirPath = (new Path(incdirPath.toFile().getParent())).append(new Path("include"));
-
-							// This checks prevents us from getting into a circular loop in the case where there
-							// is a circular dependency within the shared library list.
-							if (incPaths.contains(incdirPath)) {
-								diveDeeper = false;
-							} else {
-								incPaths.add(incdirPath);
-							}
-						}
-
-						// It's possible the shared library soft package has shared libraries of its own
-						if (diveDeeper) {
-							populateIncludePaths(sharedLibSoftPackage, incPaths);
-						}
-					}
+				// Construct the include path based on the dependency local file name
+				String sharedLibraryPath = ScaEcoreUtils.getFeature(dep, SpdPackage.Literals.DEPENDENCY__SOFT_PKG_REF,
+					SpdPackage.Literals.SOFT_PKG_REF__LOCAL_FILE, SpdPackage.Literals.LOCAL_FILE__NAME);
+				if (sharedLibraryPath == null) {
+					continue;
 				}
+				IPath includeDirPath = new Path("${SdrRoot}").append("dom").append(sharedLibraryPath).removeLastSegments(1).append("include");
+
+				// This check prevents us from getting into a circular loop in the case where there
+				// is a circular dependency within the shared library list.
+				if (incPaths.contains(includeDirPath)) {
+					continue;
+				}
+
+				incPaths.add(includeDirPath);
+
+				// Retrieve the SoftPkg object for the shared library and recurse. May return null if the SPD file
+				// isn't present in the SDRROOT.
+				SoftPkg sharedLibrary = ScaEcoreUtils.getFeature(dep, SpdPackage.Literals.DEPENDENCY__SOFT_PKG_REF,
+					SpdPackage.Literals.SOFT_PKG_REF__SOFT_PKG);
+				populateIncludePaths(sharedLibrary, incPaths);
 			}
 		}
 	}
