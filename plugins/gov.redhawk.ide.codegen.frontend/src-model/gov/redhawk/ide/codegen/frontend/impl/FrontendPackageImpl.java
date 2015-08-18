@@ -56,8 +56,8 @@ public class FrontendPackageImpl extends EPackageImpl implements FrontendPackage
 	private EDataType idlDefEDataType = null;
 
 	/**
-	 * Creates an instance of the model <b>Package</b>, registered with {@link org.eclipse.emf.ecore.EPackage.Registry
-	 * EPackage.Registry} by the package
+	 * Creates an instance of the model <b>Package</b>, registered with
+	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
 	 * package URI value.
 	 * <p>Note: the correct way to create the package is via the static
 	 * factory method {@link #init init()}, which also performs
@@ -98,8 +98,8 @@ public class FrontendPackageImpl extends EPackageImpl implements FrontendPackage
 			return (FrontendPackage) EPackage.Registry.INSTANCE.getEPackage(FrontendPackage.eNS_URI);
 
 		// Obtain or create and register package
-		FrontendPackageImpl theFrontendPackage = (FrontendPackageImpl) (EPackage.Registry.INSTANCE.get(eNS_URI) instanceof FrontendPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI)
-			: new FrontendPackageImpl());
+		FrontendPackageImpl theFrontendPackage = (FrontendPackageImpl) (EPackage.Registry.INSTANCE.get(eNS_URI) instanceof FrontendPackageImpl
+			? EPackage.Registry.INSTANCE.get(eNS_URI) : new FrontendPackageImpl());
 
 		isInited = true;
 

@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  * <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isAntenna <em>Antenna</em>}</li>
  * <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isIngestsGPS <em>Ingests GPS</em>}</li>
@@ -42,7 +43,6 @@ import org.eclipse.emf.ecore.EObject;
  * </li>
  * <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#getTunerStatusStruct <em>Tuner Status Struct</em>}</li>
  * </ul>
- * </p>
  *
  * @see gov.redhawk.ide.codegen.frontend.FrontendPackage#getFeiDevice()
  * @model

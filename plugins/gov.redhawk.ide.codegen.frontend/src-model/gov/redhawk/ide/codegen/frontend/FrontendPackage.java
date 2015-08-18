@@ -357,8 +357,8 @@ public interface FrontendPackage extends EPackage {
 	EAttribute getFeiDevice_HasDigitalOutput();
 
 	/**
-	 * Returns the meta object for the attribute '
-	 * {@link gov.redhawk.ide.codegen.frontend.FeiDevice#getDigitalOutputType <em>Digital Output Type</em>}'.
+	 * Returns the meta object for the attribute '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#getDigitalOutputType
+	 * <em>Digital Output Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Digital Output Type</em>'.
@@ -418,8 +418,8 @@ public interface FrontendPackage extends EPackage {
 	EAttribute getFeiDevice_DigitalInputTypeForTx();
 
 	/**
-	 * Returns the meta object for the attribute '
-	 * {@link gov.redhawk.ide.codegen.frontend.FeiDevice#getTunerStatusStruct <em>Tuner Status Struct</em>}'.
+	 * Returns the meta object for the attribute '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#getTunerStatusStruct
+	 * <em>Tuner Status Struct</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Tuner Status Struct</em>'.

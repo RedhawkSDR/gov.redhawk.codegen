@@ -31,6 +31,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  * <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isAntenna <em>Antenna</em>}</li>
  * <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isIngestsGPS <em>Ingests GPS</em>}</li>
@@ -52,7 +53,6 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#getTunerStatusStruct <em>Tuner Status Struct</em>}
  * </li>
  * </ul>
- * </p>
  *
  * @generated
  */
