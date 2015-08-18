@@ -23,7 +23,7 @@
                eat-processed-line="true"
                file-expr="$1"
                line-expr="$2"
-               regex="(.*?):(\d+): installing `(.*)&apos;"
+               regex="(.*?):(\d+): installing (`|&apos;)(.*)&apos;"
                severity="Ignore">
          </pattern>
          <context
