@@ -387,6 +387,10 @@ public final class CppGeneratorUtils {
 		if (env.getVariable("OSSIEHOME", configDescription) == null) {
 			env.addVariable("OSSIEHOME", "${OssieHome}", IBuildEnvironmentVariable.ENVVAR_REPLACE, null, configDescription);
 		}
+		// Turn on verbosity (automake silencing rules). Important for auto-discovery of include paths.
+		if (env.getVariable("V", configDescription) == null) {
+			env.addVariable("V", "1", IBuildEnvironmentVariable.ENVVAR_REPLACE, null, configDescription);
+		}
 	}
 
 	/**
