@@ -89,11 +89,11 @@ public class ManualGenerator extends AbstractCodeGenerator {
 		} else if ("c++".equals(language)) {
 			progress.setWorkRemaining(2);
 			MultiStatus retStatus = new MultiStatus(ManualGeneratorPlugin.PLUGIN_ID, IStatus.OK, "", null);
-			CppGeneratorUtils.addCandCPPNatures(project, progress, retStatus);
+			CppGeneratorUtils.addCandCPPNatures(project, progress.newChild(1), retStatus);
 			if (!retStatus.isOK()) {
 				return retStatus;
 			}
-			CppGeneratorUtils.addManagedNature(project, progress, retStatus, "/", out, impl);
+			CppGeneratorUtils.addManagedNature(project, progress.newChild(1), retStatus, "/", out, impl);
 			if (!retStatus.isOK()) {
 				return retStatus;
 			}

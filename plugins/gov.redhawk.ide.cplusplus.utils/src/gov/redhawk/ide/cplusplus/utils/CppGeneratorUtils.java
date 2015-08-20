@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -56,47 +57,65 @@ import mil.jpeojtrs.sca.spd.Implementation;
 
 public final class CppGeneratorUtils {
 
-	private static final int ADD_NATURE_WORK = 1;
-	private static final int ADJUST_CONFIG_WORK = 90;
-	private static final int GENERATE_CODE_WORK = 7;
 	private static final String OCTAVE_PATH_REGEX = ".*include/octave-3.[4-9].[0-9]$";
 
-	private CppGeneratorUtils() {
+	/**
+	 * Standard include path for REDHAWK
+	 */
+	private static final String OSSIE_INCLUDE = "${OssieHome}/include";
+	/**
+	 * Standard include path for omniORB
+	 */
+	private static final String OMNI_ORB_INCLUDE = "/usr/include/omniORB4";
+	/**
+	 * Standard include path for omniORB thread
+	 */
+	private static final String OMNI_ORB_THREAD_INCLUDE = "/usr/include/omnithread";
 
+	private CppGeneratorUtils() {
 	}
 
 	/**
 	 * @param project
-	 * @param progress
+	 * @param monitor
 	 * @param retStatus
 	 * @return
 	 * @since 1.0
 	 */
-	public static MultiStatus addCandCPPNatures(final IProject project, final SubMonitor progress, final MultiStatus retStatus) {
+	public static MultiStatus addCandCPPNatures(final IProject project, final SubMonitor monitor, final MultiStatus retStatus) {
 		// Add C and CC natures to the project if they're not already there
-		progress.subTask("Checking project natures");
+		SubMonitor progress = SubMonitor.convert(monitor, "Checking project natures", 2);
 
 		try {
 			if (!project.hasNature(CProjectNature.C_NATURE_ID)) {
-				CProjectNature.addCNature(project, progress.newChild(CppGeneratorUtils.ADD_NATURE_WORK));
+				CProjectNature.addCNature(project, progress.newChild(1));
 			}
-			progress.setWorkRemaining(CppGeneratorUtils.ADD_NATURE_WORK + CppGeneratorUtils.ADJUST_CONFIG_WORK + CppGeneratorUtils.GENERATE_CODE_WORK);
+			progress.setWorkRemaining(1);
 			if (!project.hasNature(CCProjectNature.CC_NATURE_ID)) {
-				CCProjectNature.addCCNature(project, progress.newChild(CppGeneratorUtils.ADD_NATURE_WORK));
+				CCProjectNature.addCCNature(project, progress.newChild(1));
 			}
 		} catch (final CoreException e) {
 			retStatus.add(new Status(e.getStatus().getSeverity(), CplusplusUtilsPlugin.PLUGIN_ID, "Problems adding C/C++ natures for project", e));
 			return retStatus;
 		}
+
+		progress.done();
 		return retStatus;
 	}
 
 	/**
+	 * @param project
+	 * @param monitor
+	 * @param retStatus
+	 * @param destinationDirectory
+	 * @param out
+	 * @param impl
+	 * @return
 	 * @since 1.1
 	 */
-	public static MultiStatus addManagedNature(final IProject project, final SubMonitor progress, final MultiStatus retStatus,
+	public static MultiStatus addManagedNature(final IProject project, final SubMonitor monitor, final MultiStatus retStatus,
 		final String destinationDirectory, final PrintStream out, final Implementation impl) {
-		progress.setWorkRemaining(1);
+		SubMonitor progress = SubMonitor.convert(monitor, 2);
 
 		// Based on whether or not the managed C project nature has been added, we know whether or not the project has
 		// been previously configured for development
@@ -185,9 +204,8 @@ public final class CppGeneratorUtils {
 				CppGeneratorUtils.configureSourceFolders(null, destinationDirectory, config);
 
 				// Create a configuration description from the configuration
-				ICConfigurationDescription configDesc;
 				try {
-					configDesc = projectDesc.createConfiguration(ManagedBuildManager.CFG_DATA_PROVIDER_ID, config.getConfigurationData());
+					projectDesc.createConfiguration(ManagedBuildManager.CFG_DATA_PROVIDER_ID, config.getConfigurationData());
 				} catch (final WriteAccessException e) {
 					retStatus.add(new Status(IStatus.ERROR, CplusplusUtilsPlugin.PLUGIN_ID, "Internal error - unable to create configuration description", e));
 					return retStatus;
@@ -195,30 +213,28 @@ public final class CppGeneratorUtils {
 					retStatus.add(new Status(IStatus.ERROR, CplusplusUtilsPlugin.PLUGIN_ID, "Problem creating C++ configuratinon description", e));
 					return retStatus;
 				}
-
-				// Add include paths to configuration description
-				CppGeneratorUtils.addIncludePaths(configDesc);
-
-				try {
-					if (project.hasNature("gov.redhawk.ide.codgen.natures.octave")) {
-						List<File> pathArray = locateOctaveIncludeDir();
-						for (File path : pathArray) {
-							addCustomIncludePaths(configDesc, path.toString());
-						}
-					}
-				} catch (CoreException e) {
-					retStatus.add(new Status(IStatus.ERROR, CplusplusUtilsPlugin.PLUGIN_ID, "Unable to access the project for the octave nature", e));
-				} catch (IOException io) {
-					retStatus.add(new Status(IStatus.ERROR, CplusplusUtilsPlugin.PLUGIN_ID, "Error while locating Octave Include folder", io));
-				}
 			}
 		}
+		progress.worked(1);
 
 		// Perform setup of each configuration in the project
 		for (final ICConfigurationDescription configDescription : projectDesc.getConfigurations()) {
 			CppGeneratorUtils.addExternalSettingsProviders(configDescription);
+			CppGeneratorUtils.addIncludePaths(configDescription);
 			CppGeneratorUtils.addBuildEnvironVars(configDescription);
 			CppGeneratorUtils.addErrorParsers(configDescription);
+			try {
+				if (project.hasNature("gov.redhawk.ide.codgen.natures.octave")) {
+					List<File> pathArray = locateOctaveIncludeDir();
+					for (File path : pathArray) {
+						addCustomIncludePaths(configDescription, path.toString());
+					}
+				}
+			} catch (CoreException e) {
+				retStatus.add(new Status(IStatus.ERROR, CplusplusUtilsPlugin.PLUGIN_ID, "Unable to access the project for the octave nature", e));
+			} catch (IOException io) {
+				retStatus.add(new Status(IStatus.ERROR, CplusplusUtilsPlugin.PLUGIN_ID, "Error while locating Octave Include folder", io));
+			}
 		}
 
 		try {
@@ -231,6 +247,7 @@ public final class CppGeneratorUtils {
 			return retStatus;
 		}
 
+		progress.done();
 		return retStatus;
 	}
 
@@ -271,10 +288,6 @@ public final class CppGeneratorUtils {
 		return new Status(IStatus.OK, CplusplusUtilsPlugin.PLUGIN_ID, "Builder configuration ok");
 	}
 
-	public static final String OSSIE_INCLUDE = "${OssieHome}/include";
-	public static final String OMNI_ORB_INCLUDE = "/usr/include/omniORB4";
-	public static final String OMNI_ORB_THREAD_INCLUDE = "/usr/include/omnithread";
-
 	/**
 	 * Some of the include paths that we add to a CDT project are intended only so CDT can resolve symbols when
 	 * parsing. These paths aren't needed when compiling since autoconf / automake are already handling them. Call
@@ -292,9 +305,8 @@ public final class CppGeneratorUtils {
 	 * Adds include paths to the project so the CDT parser can resolve
 	 * references to REDHAWK code, omniORB, etc.
 	 * @param configDescription A project configuration description
-	 * @since 1.0
 	 */
-	public static void addIncludePaths(final ICConfigurationDescription configDescription) {
+	private static void addIncludePaths(final ICConfigurationDescription configDescription) {
 		final ICLanguageSetting[] languageSettings = configDescription.getRootFolderDescription().getLanguageSettings();
 		ICLanguageSetting lang = null;
 		for (final ICLanguageSetting set : languageSettings) {
@@ -308,14 +320,12 @@ public final class CppGeneratorUtils {
 			return;
 		}
 
-		final List<ICLanguageSettingEntry> includePathSettings = lang.getSettingEntriesList(ICSettingEntry.INCLUDE_PATH);
-
+		final Set<ICLanguageSettingEntry> includePathSettings = new HashSet<ICLanguageSettingEntry>(lang.getSettingEntriesList(ICSettingEntry.INCLUDE_PATH));
 		includePathSettings.add((ICLanguageSettingEntry) CDataUtil.createEntry(ICSettingEntry.INCLUDE_PATH, OSSIE_INCLUDE, OSSIE_INCLUDE, null, 0));
 		includePathSettings.add((ICLanguageSettingEntry) CDataUtil.createEntry(ICSettingEntry.INCLUDE_PATH, OMNI_ORB_INCLUDE, OMNI_ORB_INCLUDE, null, 0));
-		includePathSettings.add((ICLanguageSettingEntry) CDataUtil.createEntry(ICSettingEntry.INCLUDE_PATH, OMNI_ORB_THREAD_INCLUDE, OMNI_ORB_THREAD_INCLUDE,
-			null, 0));
-
-		lang.setSettingEntries(ICSettingEntry.INCLUDE_PATH, includePathSettings);
+		includePathSettings.add(
+			(ICLanguageSettingEntry) CDataUtil.createEntry(ICSettingEntry.INCLUDE_PATH, OMNI_ORB_THREAD_INCLUDE, OMNI_ORB_THREAD_INCLUDE, null, 0));
+		lang.setSettingEntries(ICSettingEntry.INCLUDE_PATH, new ArrayList<ICLanguageSettingEntry>(includePathSettings));
 	}
 
 	/**
@@ -353,6 +363,10 @@ public final class CppGeneratorUtils {
 		final IContributedEnvironment env = CCorePlugin.getDefault().getBuildEnvironmentManager().getContributedEnvironment();
 		if (env.getVariable("OSSIEHOME", configDescription) == null) {
 			env.addVariable("OSSIEHOME", "${OssieHome}", IBuildEnvironmentVariable.ENVVAR_REPLACE, null, configDescription);
+		}
+		// Turn on verbosity (automake silencing rules). Important for auto-discovery of include paths.
+		if (env.getVariable("V", configDescription) == null) {
+			env.addVariable("V", "1", IBuildEnvironmentVariable.ENVVAR_REPLACE, null, configDescription);
 		}
 	}
 
