@@ -13,6 +13,7 @@ package gov.redhawk.ide.cplusplus.utils;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -217,15 +218,13 @@ public final class CppGeneratorUtils {
 					retStatus.add(new Status(IStatus.ERROR, CplusplusUtilsPlugin.PLUGIN_ID, "Problem creating C++ configuratinon description", e));
 					return retStatus;
 				}
-
-				// Add include paths to configuration description
-				CppGeneratorUtils.addIncludePaths(configDesc);
 			}
 		}
 		progress.worked(1);
 
 		// Perform setup of each configuration in the project
 		for (final ICConfigurationDescription configDescription : projectDesc.getConfigurations()) {
+			CppGeneratorUtils.addIncludePaths(configDescription);
 			CppGeneratorUtils.addBuildEnvironVars(configDescription);
 			CppGeneratorUtils.addErrorParsers(configDescription);
 		}
@@ -290,9 +289,8 @@ public final class CppGeneratorUtils {
 	 * references to REDHAWK code, omniORB, etc.
 	 * 
 	 * @param configDescription A project configuration description
-	 * @since 1.0
 	 */
-	public static void addIncludePaths(final ICConfigurationDescription configDescription) {
+	private static void addIncludePaths(final ICConfigurationDescription configDescription) {
 		final ICLanguageSetting[] languageSettings = configDescription.getRootFolderDescription().getLanguageSettings();
 		ICLanguageSetting lang = null;
 		for (final ICLanguageSetting set : languageSettings) {
@@ -306,12 +304,12 @@ public final class CppGeneratorUtils {
 			return;
 		}
 
-		final List<ICLanguageSettingEntry> includePathSettings = lang.getSettingEntriesList(ICSettingEntry.INCLUDE_PATH);
+		final Set<ICLanguageSettingEntry> includePathSettings = new HashSet<ICLanguageSettingEntry>(lang.getSettingEntriesList(ICSettingEntry.INCLUDE_PATH));
 		includePathSettings.add((ICLanguageSettingEntry) CDataUtil.createEntry(ICSettingEntry.INCLUDE_PATH, OSSIE_INCLUDE, OSSIE_INCLUDE, null, 0));
 		includePathSettings.add((ICLanguageSettingEntry) CDataUtil.createEntry(ICSettingEntry.INCLUDE_PATH, OMNI_ORB_INCLUDE, OMNI_ORB_INCLUDE, null, 0));
 		includePathSettings.add(
 			(ICLanguageSettingEntry) CDataUtil.createEntry(ICSettingEntry.INCLUDE_PATH, OMNI_ORB_THREAD_INCLUDE, OMNI_ORB_THREAD_INCLUDE, null, 0));
-		lang.setSettingEntries(ICSettingEntry.INCLUDE_PATH, includePathSettings);
+		lang.setSettingEntries(ICSettingEntry.INCLUDE_PATH, new ArrayList<ICLanguageSettingEntry>(includePathSettings));
 	}
 
 	/**
