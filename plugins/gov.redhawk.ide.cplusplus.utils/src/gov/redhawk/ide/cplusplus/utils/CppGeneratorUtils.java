@@ -53,6 +53,19 @@ import org.eclipse.core.runtime.SubMonitor;
 
 public final class CppGeneratorUtils {
 
+	/**
+	 * Standard include path for REDHAWK
+	 */
+	private static final String OSSIE_INCLUDE = "${OssieHome}/include";
+	/**
+	 * Standard include path for omniORB
+	 */
+	private static final String OMNI_ORB_INCLUDE = "/usr/include/omniORB4";
+	/**
+	 * Standard include path for omniORB thread
+	 */
+	private static final String OMNI_ORB_THREAD_INCLUDE = "/usr/include/omnithread";
+
 	private CppGeneratorUtils() {
 	}
 
@@ -258,10 +271,6 @@ public final class CppGeneratorUtils {
 		}
 		return new Status(IStatus.OK, CplusplusUtilsPlugin.PLUGIN_ID, "Builder configuration ok");
 	}
-	
-	public static final String OSSIE_INCLUDE = "${OssieHome}/include";
-	public static final String OMNI_ORB_INCLUDE = "/usr/include/omniORB4";
-	public static final String OMNI_ORB_THREAD_INCLUDE = "/usr/include/omnithread";
 	
 	/**
 	 * Some of the include paths that we add to a CDT project are intended only so CDT can resolve symbols when
