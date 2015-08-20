@@ -59,9 +59,9 @@ public abstract class AbstractCplusplusGenerator extends AbstractCodeGenerator {
 	public IStatus generate(final ImplementationSettings implSettings, final Implementation impl, final PrintStream out, final PrintStream err, // SUPPRESS CHECKSTYLE NumParameters
 	        final IProgressMonitor monitor, final String[] generateFiles, final boolean shouldGenerate, final List<FileToCRCMap> crcMap) {
 		final int CLEANUP_WORK = 1, ADD_NATURE_WORK = 1;
-		final int ADJUST_CONFIG_WORK = 90;
-		final int GENERATE_CODE_WORK = 7;
-		final SubMonitor progress = SubMonitor.convert(monitor, "Configuring project", CLEANUP_WORK + ADD_NATURE_WORK + ADD_NATURE_WORK + ADJUST_CONFIG_WORK
+		final int ADD_MANAGED_NATURE_WORK = 90;
+		final int GENERATE_CODE_WORK = 8;
+		final SubMonitor progress = SubMonitor.convert(monitor, "Configuring project", CLEANUP_WORK + ADD_NATURE_WORK + ADD_MANAGED_NATURE_WORK
 		        + GENERATE_CODE_WORK);
 
 		final IProject project = ModelUtil.getProject(implSettings);
@@ -82,9 +82,8 @@ public abstract class AbstractCplusplusGenerator extends AbstractCodeGenerator {
 			}
 		}
 
-		CppGeneratorUtils.addCandCPPNatures(project, progress, retStatus);
-
-		CppGeneratorUtils.addManagedNature(project, progress, retStatus, destinationDirectory, out, shouldGenerate, impl);
+		CppGeneratorUtils.addCandCPPNatures(project, progress.newChild(ADD_NATURE_WORK), retStatus);
+		CppGeneratorUtils.addManagedNature(project, progress.newChild(ADD_MANAGED_NATURE_WORK), retStatus, destinationDirectory, out, shouldGenerate, impl);
 
 		if (shouldGenerate) {
 			out.println("Targeting location " + project.getLocation() + "/" + destinationDirectory + " for code generation...");

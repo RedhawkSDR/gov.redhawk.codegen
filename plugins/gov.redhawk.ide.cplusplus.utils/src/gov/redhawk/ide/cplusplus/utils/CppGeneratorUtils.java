@@ -53,37 +53,34 @@ import org.eclipse.core.runtime.SubMonitor;
 
 public final class CppGeneratorUtils {
 
-	private static final int ADD_NATURE_WORK = 1;
-	private static final int ADJUST_CONFIG_WORK = 90;
-	private static final int GENERATE_CODE_WORK = 7;
-
 	private CppGeneratorUtils() {
-
 	}
 
 	/**
 	 * @param project
-	 * @param progress
+	 * @param monitor
 	 * @param retStatus
 	 * @return
 	 * @since 1.0
 	 */
-	public static MultiStatus addCandCPPNatures(final IProject project, final SubMonitor progress, final MultiStatus retStatus) {
+	public static MultiStatus addCandCPPNatures(final IProject project, final SubMonitor monitor, final MultiStatus retStatus) {
 		// Add C and CC natures to the project if they're not already there
-		progress.subTask("Checking project natures");
+		SubMonitor progress = SubMonitor.convert(monitor, "Checking project natures", 2);
 
 		try {
 			if (!project.hasNature(CProjectNature.C_NATURE_ID)) {
-				CProjectNature.addCNature(project, progress.newChild(CppGeneratorUtils.ADD_NATURE_WORK));
+				CProjectNature.addCNature(project, progress.newChild(1));
 			}
-			progress.setWorkRemaining(CppGeneratorUtils.ADD_NATURE_WORK + CppGeneratorUtils.ADJUST_CONFIG_WORK + CppGeneratorUtils.GENERATE_CODE_WORK);
+			progress.setWorkRemaining(1);
 			if (!project.hasNature(CCProjectNature.CC_NATURE_ID)) {
-				CCProjectNature.addCCNature(project, progress.newChild(CppGeneratorUtils.ADD_NATURE_WORK));
+				CCProjectNature.addCCNature(project, progress.newChild(1));
 			}
 		} catch (final CoreException e) {
 			retStatus.add(new Status(e.getStatus().getSeverity(), CplusplusUtilsPlugin.PLUGIN_ID, "Problems adding C/C++ natures for project", e));
 			return retStatus;
 		}
+
+		progress.done();
 		return retStatus;
 	}
 
@@ -91,14 +88,14 @@ public final class CppGeneratorUtils {
 	 * @deprecated Use {@link #addManagedNature(IProject, SubMonitor, MultiStatus, String, PrintStream, Implementation)}
 	 */
 	@Deprecated
-	public static MultiStatus addManagedNature(final IProject project, final SubMonitor progress, final MultiStatus retStatus,
+	public static MultiStatus addManagedNature(final IProject project, final SubMonitor monitor, final MultiStatus retStatus,
 		final String destinationDirectory, final PrintStream out, final boolean shouldGenerate, final Implementation impl) {
-		return addManagedNature(project, progress, retStatus, destinationDirectory, out, impl);
+		return addManagedNature(project, monitor, retStatus, destinationDirectory, out, impl);
 	}
 
 	/**
 	 * @param project
-	 * @param progress
+	 * @param monitor
 	 * @param retStatus
 	 * @param destinationDirectory
 	 * @param out
@@ -106,9 +103,9 @@ public final class CppGeneratorUtils {
 	 * @return
 	 * @since 1.1
 	 */
-	public static MultiStatus addManagedNature(final IProject project, final SubMonitor progress, final MultiStatus retStatus,
+	public static MultiStatus addManagedNature(final IProject project, final SubMonitor monitor, final MultiStatus retStatus,
 		final String destinationDirectory, final PrintStream out, final Implementation impl) {
-		progress.setWorkRemaining(1);
+		SubMonitor progress = SubMonitor.convert(monitor, 2);
 
 		// Based on whether or not the managed C project nature has been added, we know whether or not the project has
 		// been previously configured for development
@@ -212,6 +209,7 @@ public final class CppGeneratorUtils {
 				CppGeneratorUtils.addIncludePaths(configDesc);
 			}
 		}
+		progress.worked(1);
 
 		// Perform setup of each configuration in the project
 		for (final ICConfigurationDescription configDescription : projectDesc.getConfigurations()) {
@@ -229,6 +227,7 @@ public final class CppGeneratorUtils {
 			return retStatus;
 		}
 
+		progress.done();
 		return retStatus;
 	}
 
