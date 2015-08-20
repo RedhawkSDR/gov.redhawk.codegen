@@ -208,9 +208,8 @@ public final class CppGeneratorUtils {
 				CppGeneratorUtils.configureSourceFolders(null, destinationDirectory, config);
 
 				// Create a configuration description from the configuration
-				ICConfigurationDescription configDesc;
 				try {
-					configDesc = projectDesc.createConfiguration(ManagedBuildManager.CFG_DATA_PROVIDER_ID, config.getConfigurationData());
+					projectDesc.createConfiguration(ManagedBuildManager.CFG_DATA_PROVIDER_ID, config.getConfigurationData());
 				} catch (final WriteAccessException e) {
 					retStatus.add(new Status(IStatus.ERROR, CplusplusUtilsPlugin.PLUGIN_ID, "Internal error - unable to create configuration description", e));
 					return retStatus;
