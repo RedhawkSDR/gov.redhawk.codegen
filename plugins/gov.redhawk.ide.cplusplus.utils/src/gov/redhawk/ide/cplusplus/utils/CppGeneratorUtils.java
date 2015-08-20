@@ -24,6 +24,9 @@ import org.eclipse.cdt.core.CCProjectNature;
 import org.eclipse.cdt.core.CCorePlugin;
 import org.eclipse.cdt.core.CProjectNature;
 import org.eclipse.cdt.core.envvar.IContributedEnvironment;
+import org.eclipse.cdt.core.language.settings.providers.ILanguageSettingsProvider;
+import org.eclipse.cdt.core.language.settings.providers.ILanguageSettingsProvidersKeeper;
+import org.eclipse.cdt.core.language.settings.providers.LanguageSettingsManager;
 import org.eclipse.cdt.core.model.CoreModel;
 import org.eclipse.cdt.core.settings.model.ICConfigurationDescription;
 import org.eclipse.cdt.core.settings.model.ICLanguageSetting;
@@ -42,6 +45,8 @@ import org.eclipse.cdt.managedbuilder.core.IProjectType;
 import org.eclipse.cdt.managedbuilder.core.ManagedBuildManager;
 import org.eclipse.cdt.managedbuilder.core.ManagedCProjectNature;
 import org.eclipse.cdt.managedbuilder.envvar.IBuildEnvironmentVariable;
+import org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractBuildCommandParser;
+import org.eclipse.cdt.managedbuilder.language.settings.providers.AbstractBuildCommandParser.ResourceScope;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceStatus;
 import org.eclipse.core.runtime.CoreException;
@@ -71,6 +76,12 @@ public final class CppGeneratorUtils {
 	 * Standard include path for omniORB thread
 	 */
 	private static final String OMNI_ORB_THREAD_INCLUDE = "/usr/include/omnithread";
+
+	/**
+	 * The ID of the {@link ILanguageSettingsProvider} that parses GCC build output to discover additional settings
+	 * to contribute to the project.
+	 */
+	private  static final String GCC_BUILD_PARSER_ID = "org.eclipse.cdt.managedbuilder.core.GCCBuildCommandParser";
 
 	private CppGeneratorUtils() {
 	}
@@ -223,6 +234,7 @@ public final class CppGeneratorUtils {
 			CppGeneratorUtils.addIncludePaths(configDescription);
 			CppGeneratorUtils.addBuildEnvironVars(configDescription);
 			CppGeneratorUtils.addErrorParsers(configDescription);
+			CppGeneratorUtils.addLanguageSettingsProvider(configDescription);
 			try {
 				if (project.hasNature("gov.redhawk.ide.codgen.natures.octave")) {
 					List<File> pathArray = locateOctaveIncludeDir();
@@ -395,6 +407,37 @@ public final class CppGeneratorUtils {
 		newParserIDs.add("org.eclipse.cdt.autotools.core.ErrorParser");
 		newParserIDs.addAll(Arrays.asList(parserIDs));
 		configDescription.getBuildSetting().setErrorParserIDs(newParserIDs.toArray(new String[newParserIDs.size()]));
+	}
+
+	/**
+	 * Adds language settings providers to the configuration, such as the GCC build output parser.
+	 * @param configDescription A project configuration description
+	 */
+	private static void addLanguageSettingsProvider(ICConfigurationDescription configDescription) {
+		// Check if our provider is already being used
+		ILanguageSettingsProvidersKeeper keeper = ((ILanguageSettingsProvidersKeeper) configDescription);
+		List<ILanguageSettingsProvider> providers = new ArrayList<ILanguageSettingsProvider>(keeper.getLanguageSettingProviders());
+		for (ILanguageSettingsProvider provider : providers) {
+			if (GCC_BUILD_PARSER_ID.equals(provider.getId())) {
+				return;
+			}
+		}
+
+		// During project *creation*, we must ensure the default providers IDs are set, and we need to create
+		// instances of them and add them. If the default provider IDs aren't set, CDT will ignore our providers and
+		// replace them with defaults.
+		if (keeper.getDefaultLanguageSettingsProvidersIds() == null) {
+			String[] defaultProviderIDs = ManagedBuildManager.getConfigurationForDescription(configDescription).getDefaultLanguageSettingsProviderIds();
+			keeper.setDefaultLanguageSettingsProvidersIds(defaultProviderIDs);
+			providers = LanguageSettingsManager.createLanguageSettingsProviders(defaultProviderIDs);
+			keeper.setLanguageSettingProviders(providers);
+		}
+
+		// Add our provider to the existing provider(s)
+		AbstractBuildCommandParser newProvider = (AbstractBuildCommandParser) LanguageSettingsManager.getExtensionProviderCopy(GCC_BUILD_PARSER_ID, false);
+		newProvider.setResourceScope(ResourceScope.FOLDER);
+		providers.add(newProvider);
+		keeper.setLanguageSettingProviders(providers);
 	}
 
 	/**
