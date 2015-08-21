@@ -22,7 +22,7 @@ import mil.jpeojtrs.sca.spd.SoftPkg;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.conversion.IConverter;
+import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.ChangeEvent;
 import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -102,18 +102,7 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 
 		// Need custom update value strat for the group binding since false -> true and true -> false
 		UpdateValueStrategy tunerTypeGroupUVS = new UpdateValueStrategy();
-		tunerTypeGroupUVS.setConverter(new IConverter() {
-
-			@Override
-			public Object getToType() {
-				return Boolean.class;
-			}
-
-			@Override
-			public Object getFromType() {
-				return Boolean.class;
-			}
-
+		tunerTypeGroupUVS.setConverter(new Converter(Boolean.class, Boolean.class) {
 			@Override
 			public Object convert(Object fromObject) {
 				return !((Boolean) fromObject).booleanValue();
