@@ -124,6 +124,9 @@ public class ExternalSettingProvider extends CExternalSettingProvider {
 		// Create empty settings entry
 		final List<ICSettingEntry> settingEntries = new ArrayList<ICSettingEntry>();
 		final SoftPkg spd = ModelUtil.getSoftPkg(project);
+		if (spd == null) {
+			return new CExternalSetting[0];
+		}
 		Set<IPath> incPaths;
 		try {
 			incPaths = ScaModelCommand.runExclusive(spd, new RunnableWithResult.Impl<Set<IPath>>() {
