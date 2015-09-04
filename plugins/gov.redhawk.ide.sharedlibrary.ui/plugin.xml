@@ -21,7 +21,7 @@
             hasPages="true"
             icon="icons/etool16/newprj_wiz.gif"
             id="gov.redhawk.ide.sharedlibrary.ui.wizards.newsharedlibrary"
-            name="SCA Shared Library Project"
+            name="REDHAWK Shared Library Project"
             project="true">
       </wizard>
       <primaryWizard

@@ -43,7 +43,7 @@ public class SharedLibraryProjectCreator extends ComponentProjectCreator {
 
 	public static IFile createComponentFiles(final IProject project, final String spdName, final String spdId, final String authorName,
 		final IProgressMonitor monitor) throws CoreException {
-		final SubMonitor progress = SubMonitor.convert(monitor, "Creating SCA Shared Library files", 2);
+		final SubMonitor progress = SubMonitor.convert(monitor, "Creating REDHAWK Shared Library files", 2);
 
 		final String baseFilename = getBaseFileName(spdName);
 		// Make sure spdFile does not already exist

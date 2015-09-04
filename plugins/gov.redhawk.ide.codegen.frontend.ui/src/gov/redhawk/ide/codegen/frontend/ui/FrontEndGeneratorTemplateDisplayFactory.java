@@ -183,7 +183,7 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 			eSpd.eResource().save(null);
 			ePrf.eResource().save(null);
 		} catch (IOException e) {
-			throw new CoreException(new Status(IStatus.ERROR, FrontEndDeviceWizardPlugin.PLUGIN_ID, "Failed to write Settings to SCA resources.", e));
+			throw new CoreException(new Status(IStatus.ERROR, FrontEndDeviceWizardPlugin.PLUGIN_ID, "Failed to write settings to XML files.", e));
 		}
 
 	}

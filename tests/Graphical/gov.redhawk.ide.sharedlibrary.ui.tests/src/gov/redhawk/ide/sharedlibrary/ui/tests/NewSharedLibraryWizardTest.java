@@ -53,7 +53,7 @@ public class NewSharedLibraryWizardTest extends UITest {
 		SWTBotShell wizardShell = bot.shell("New");
 		SWTBot wizardBot = wizardShell.bot();
 		wizardShell.activate();
-		wizardBot.tree().getTreeItem("SCA").expand().getNode("SCA Shared Library Project").select();
+		wizardBot.tree().getTreeItem("REDHAWK").expand().getNode("REDHAWK Shared Library Project").select();
 		wizardBot.button("Next >").click();
 
 		SWTBotButton finishButton = wizardBot.button("Finish");
@@ -108,7 +108,7 @@ public class NewSharedLibraryWizardTest extends UITest {
 		SWTBotShell wizardShell = bot.shell("New");
 		SWTBot wizardBot = wizardShell.bot();
 		wizardShell.activate();
-		wizardBot.tree().getTreeItem("SCA").expand().getNode("SCA Shared Library Project").select();
+		wizardBot.tree().getTreeItem("REDHAWK").expand().getNode("REDHAWK Shared Library Project").select();
 		wizardBot.button("Next >").click();
 
 		// Get all widgets

@@ -49,7 +49,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
 /**
- * Resource visitor used for incremental SCA project builds.
+ * Resource visitor used for incremental REDHAWK IDL project builds.
  */
 class IDLBuildVisitor implements IResourceDeltaVisitor, IResourceVisitor {
 

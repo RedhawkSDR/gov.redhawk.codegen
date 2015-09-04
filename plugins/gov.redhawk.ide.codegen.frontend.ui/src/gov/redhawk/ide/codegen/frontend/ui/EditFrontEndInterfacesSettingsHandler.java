@@ -33,9 +33,7 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -169,8 +167,7 @@ public class EditFrontEndInterfacesSettingsHandler extends AbstractHandler {
 					currentProps.eResource().save(null);
 				} catch (IOException e) {
 					FrontEndDeviceWizardPlugin.getDefault();
-					FrontEndDeviceWizardPlugin.logError("Failed to write Settings to SCA resources.", new CoreException(new Status(IStatus.ERROR,
-						FrontEndDeviceWizardPlugin.PLUGIN_ID, "Failed to write Settings to SCA resources.", e)));
+					FrontEndDeviceWizardPlugin.logError("Failed to write settings to XML files.", e);
 				}
 			}
 		}

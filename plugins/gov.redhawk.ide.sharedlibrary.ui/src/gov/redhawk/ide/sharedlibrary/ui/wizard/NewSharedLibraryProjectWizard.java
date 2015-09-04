@@ -218,7 +218,7 @@ public class NewSharedLibraryProjectWizard extends NewScaResourceProjectWizard i
 		try {
 			this.getContainer().run(true, true, operation);
 
-			// Open the default editor for the new SCA component; also invoke code generator for manual templates
+			// Open the default editor for the new REDHAWK component; also invoke code generator for manual templates
 			final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			final IFile spdFile = this.getOpenEditorOn();
 			if ((spdFile != null) && spdFile.exists()) {

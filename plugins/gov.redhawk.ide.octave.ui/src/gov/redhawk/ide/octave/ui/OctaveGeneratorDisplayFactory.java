@@ -205,7 +205,7 @@ public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 			scd.eResource().save(null);
 			props.eResource().save(null);
 		} catch (IOException e) {
-			throw new CoreException(new Status(Status.ERROR, OctaveProjectPlugin.PLUGIN_ID, "Failed to write Octave Settings to SCA resources.", e));
+			throw new CoreException(new Status(Status.ERROR, OctaveProjectPlugin.PLUGIN_ID, "Failed to write Octave settings to XML files", e));
 		}
 
 		// Each of the pages is passed the same settings object so we can grab it from any of them.

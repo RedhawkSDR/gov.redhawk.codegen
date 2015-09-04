@@ -21,7 +21,7 @@
             hasPages="true"
             icon="icons/etool16/newprj_wiz.gif"
             id="gov.redhawk.ide.codegen.frontend.ui.newfridevicewizard"
-            name="SCA Front End Device Project"
+            name="REDHAWK Front End Device Project"
             project="true">
       </wizard>
       <primaryWizard

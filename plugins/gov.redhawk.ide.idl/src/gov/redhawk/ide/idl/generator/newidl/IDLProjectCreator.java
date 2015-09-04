@@ -45,7 +45,7 @@ public class IDLProjectCreator extends ProjectCreator {
 	}
 
 	/**
-	 * Creates a new SCA idl project without any files. Should be invoked in the context of a
+	 * Creates a new REDHAWK IDL project without any files. Should be invoked in the context of a
 	 * WorkspaceModifyOperation.
 	 * 
 	 * @param projectName The project name
@@ -62,7 +62,7 @@ public class IDLProjectCreator extends ProjectCreator {
 	}
 
 	/**
-	 * Creates the basic files for an IDL in an empty SCA component project. Should be invoked in the context of a
+	 * Creates the basic files for a REDHAWK IDL project in an empty project. Should be invoked in the context of a
 	 * WorkspaceModifyOperation
 	 * 
 	 * @param project The project to generate files in
@@ -73,7 +73,7 @@ public class IDLProjectCreator extends ProjectCreator {
 	 */
 	public static void createIDLFiles(final IProject project, final String interfaceName, final String interfaceVersion, final List<String> idlFiles,
 	        final IProgressMonitor monitor) throws CoreException {
-		final SubMonitor progress = SubMonitor.convert(monitor, "Creating SCA IDL project files", 2);
+		final SubMonitor progress = SubMonitor.convert(monitor, "Creating REDHAWK IDL project files", 2);
 
 		final GeneratorArgs args = new GeneratorArgs();
 		args.setProjectName(project.getName());
@@ -172,7 +172,7 @@ public class IDLProjectCreator extends ProjectCreator {
 			throw new CoreException(new Status(IStatus.ERROR, RedhawkIdeIdlPlugin.PLUGIN_ID, "Internal Error", e));
 		}
 		
-		// If the user didn't import any files...and some now
+		// If the user didn't import any files add a sample one
 		if (idlFiles.size() == 0) {
 			final String sampleIdl = new SampleIdlTemplate().generate(args);
 			final IFile sampleIdlFile = project.getFile(interfaceName + ".idl");

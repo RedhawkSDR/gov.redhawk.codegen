@@ -21,7 +21,7 @@
             hasPages="true"
             icon="icons/etool16/newprj_wiz.gif"
             id="gov.redhawk.ide.octave.ui.wizards.newoctavecomponent"
-            name="SCA Octave Project"
+            name="REDHAWK Octave Project"
             project="true">
       </wizard>
       <primaryWizard

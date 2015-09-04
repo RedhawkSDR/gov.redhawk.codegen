@@ -10,7 +10,6 @@
  *******************************************************************************/
 package gov.redhawk.ide.codegen.frontend.ui;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -62,7 +61,7 @@ public class FrontEndDeviceWizardPlugin extends AbstractUIPlugin {
 		return FrontEndDeviceWizardPlugin.plugin;
 	}
 
-	public static void logError(String msg, CoreException e) {
+	public static void logError(String msg, Exception e) {
 		FrontEndDeviceWizardPlugin.getDefault().getLog().log(new Status(IStatus.ERROR, FrontEndDeviceWizardPlugin.PLUGIN_ID, msg, e));
 	}
 

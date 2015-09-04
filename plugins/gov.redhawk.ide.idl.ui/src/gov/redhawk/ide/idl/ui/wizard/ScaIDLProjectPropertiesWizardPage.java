@@ -91,7 +91,7 @@ public class ScaIDLProjectPropertiesWizardPage extends WizardNewProjectCreationP
 
 	protected ScaIDLProjectPropertiesWizardPage(final String pageName) {
 		super(pageName);
-		setTitle("Create an SCA IDL Project");
+		setTitle("Create a REDHAWK IDL Project");
 		setDescription("Enter the settings for the Custom IDL Project");
 	}
 
