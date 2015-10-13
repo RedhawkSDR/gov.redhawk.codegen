@@ -83,7 +83,11 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		@Override
 		public String getText(final Object element) {
 			final Definition def = (Definition) element;
-			return def.getName();
+			if ("dataChar".equals(def.getName())) {
+				return "dataChar (deprecated)";
+			} else {
+				return def.getName();
+			}
 		}
 	};
 
@@ -158,11 +162,10 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 
 	private void populatePropertyTypes() {
 		final IdlLibrary idlLibrary = RedhawkUiActivator.getDefault().getIdlLibraryService().getLibrary();
-		RepositoryModule bulkioIdl;
 		List<Definition> bulkioTypes = new ArrayList<Definition>();
 
 		IStatus loadStatus = idlLibrary.getLoadStatus();
-		
+
 		if (loadStatus == null || loadStatus.getSeverity() == IStatus.ERROR) {
 			try {
 				new ProgressMonitorDialog(Display.getCurrent().getActiveShell()).run(true, true, new IRunnableWithProgress() {
@@ -183,26 +186,21 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 				StatusManager.getManager().handle(new Status(Status.ERROR, FrontEndDeviceWizardPlugin.PLUGIN_ID, "Failed to Load IDL Library.", e), StatusManager.SHOW | StatusManager.LOG);
 			}
 		}
-		
-		// Grab array of available BULKIO types
+
+		// Grab BULKIO port types
 		for (Definition def : idlLibrary.getDefinitions()) {
 			if ("BULKIO".equals(def.getName())) {
-				bulkioIdl = (RepositoryModule) def;
-
-				// We don't want these to show up in any combos
-				List<String> removedTypes = new ArrayList<String>();
-				removedTypes.add("IDL:BULKIO/ProvidesPortStatisticsProvider:1.0");
-				removedTypes.add("IDL:BULKIO/UsesPortStatisticsProvider:1.0");
-				removedTypes.add("IDL:BULKIO/dataFile:1.0");
-				removedTypes.add("IDL:BULKIO/updateSRI:1.0");
-				removedTypes.add("IDL:BULKIO/dataXML:1.0");
-
-				for (Definition bulkioDef : bulkioIdl.getDefinitions()) {
-					if (bulkioDef instanceof IdlInterfaceDcl) {
-						if (removedTypes.contains(bulkioDef.getRepId())) {
+				RepositoryModule bulkioModule = (RepositoryModule) def;
+				for (Definition definition : bulkioModule.getDefinitions()) {
+					if (definition instanceof IdlInterfaceDcl) {
+						// Should be named "data<something>", but not "dataXML"
+						if (!definition.getName().startsWith("data")) {
 							continue;
 						}
-						bulkioTypes.add(bulkioDef);
+						if ("dataXML".equals(definition.getName())) {
+							continue;
+						}
+						bulkioTypes.add(definition);
 					}
 				}
 			}
@@ -211,6 +209,15 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 
 			@Override
 			public int compare(Definition o1, Definition o2) {
+				// Put dataChar at the end
+				if ("dataChar".equals(o1.getName())) {
+					return 1;
+				}
+				if ("dataChar".equals(o2.getName())) {
+					return -1;
+				}
+
+				// Otherwise, compare on name
 				return o1.getName().compareToIgnoreCase(o2.getName());
 			}
 			
