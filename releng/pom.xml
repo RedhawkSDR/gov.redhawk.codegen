@@ -35,7 +35,6 @@
     <gov.redhawk.core>http://download.redhawksdr.org/gov.redhawk.core/releases/1.8</gov.redhawk.core>
     <gov.redhawk.ide>http://download.redhawksdr.org/gov.redhawk.ide/releases/1.8</gov.redhawk.ide>
     <jacorb>http://download.redhawksdr.org/jacorb/stable/updates</jacorb>
-    <logback>http://download.redhawksdr.org/logback/latest</logback>
     <pydev>http://pydev.org/updates/</pydev>
   </properties>
 
@@ -92,12 +91,6 @@
       <id>org.omg.jacorb</id>
       <layout>p2</layout>
       <url>${jacorb}</url>
-    </repository>
-
-    <repository>
-      <id>logback</id>
-      <layout>p2</layout>
-      <url>${logback}</url>
     </repository>
 
     <repository>
