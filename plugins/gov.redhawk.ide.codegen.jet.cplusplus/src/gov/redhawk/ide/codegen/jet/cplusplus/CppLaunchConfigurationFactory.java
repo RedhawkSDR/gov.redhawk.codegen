@@ -37,7 +37,7 @@ public class CppLaunchConfigurationFactory extends AbstractWorkspaceLaunchConfig
 		final IFile resource = getResource(spd.eResource().getURI());
 		retVal.setAttribute(ICDTLaunchConfigurationConstants.ATTR_BUILD_BEFORE_LAUNCH,
 		        ICDTLaunchConfigurationConstants.BUILD_BEFORE_LAUNCH_USE_WORKSPACE_SETTING);
-		retVal.setAttribute(ICDTLaunchConfigurationConstants.ATTR_PROGRAM_NAME, impl.getCode().getLocalFile().getName());
+		retVal.setAttribute(ICDTLaunchConfigurationConstants.ATTR_PROGRAM_NAME, impl.getCode().getEntryPoint());
 		retVal.setAttribute(ICDTLaunchConfigurationConstants.ATTR_PROJECT_NAME, resource.getProject().getName());
 		retVal.setAttribute(ICDTLaunchConfigurationConstants.ATTR_DEBUGGER_STOP_AT_MAIN, false);
 		final ICProjectDescription projDes = CCorePlugin.getDefault().getProjectDescription(resource.getProject());
