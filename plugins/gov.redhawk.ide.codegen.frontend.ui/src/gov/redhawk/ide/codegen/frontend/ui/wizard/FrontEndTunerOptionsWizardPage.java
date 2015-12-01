@@ -290,7 +290,7 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		analogIn.setLayout(new GridLayout(2, false));
 
 		Label numAnalogLabel = new Label(analogIn, SWT.None);
-		numAnalogLabel.setText("Number of Analog input ports: ");
+		numAnalogLabel.setText("Number of Analog input ports:");
 
 		Spinner numAnalogSpinner = new Spinner(analogIn, SWT.BORDER);
 		numAnalogSpinner.setMinimum(1);
@@ -314,7 +314,7 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		digitalIn.setLayout(new GridLayout(2, false));
 
 		Label digitalInputTypeLabel = new Label(digitalIn, SWT.None);
-		digitalInputTypeLabel.setText("Digital Input Type: ");
+		digitalInputTypeLabel.setText("Digital Input Type:");
 
 		ComboViewer digitalInputCombo = new ComboViewer(digitalIn, SWT.READ_ONLY);
 		digitalInputCombo.setContentProvider(new ArrayContentProvider());
@@ -356,7 +356,7 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		digitalOut.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(30, 0).align(SWT.CENTER, SWT.CENTER).create());
 
 		Label digitalOutputTypeLabel = new Label(digitalOut, SWT.None);
-		digitalOutputTypeLabel.setText("Digital Output Type: ");
+		digitalOutputTypeLabel.setText("Digital Output Type:");
 
 		ComboViewer digitalOutputCombo = new ComboViewer(digitalOut, SWT.READ_ONLY);
 		digitalOutputCombo.setContentProvider(new ArrayContentProvider());
@@ -384,7 +384,7 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		transmitterGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
 		Label numDigitalInLabel = new Label(transmitterGroup, SWT.None);
-		numDigitalInLabel.setText("Number of Digital input ports: ");
+		numDigitalInLabel.setText("Number of Digital input ports:");
 
 		Spinner numDigitalSpinner = new Spinner(transmitterGroup, SWT.BORDER);
 		GC gc = new GC(numDigitalSpinner);
@@ -399,7 +399,7 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__NUMBER_OF_DIGITAL_INPUTS_FOR_TX));
 
 		Label digitalInputTypeLabel = new Label(transmitterGroup, SWT.None);
-		digitalInputTypeLabel.setText("Digital Input Type: ");
+		digitalInputTypeLabel.setText("Digital Input Type:");
 		digitalInputTypeLabel.setLayoutData(GridDataFactory.fillDefaults().indent(50, 0).align(SWT.CENTER, SWT.CENTER).create());
 
 		ComboViewer digitalInputCombo = new ComboViewer(transmitterGroup, SWT.READ_ONLY);
