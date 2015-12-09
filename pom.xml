@@ -14,8 +14,8 @@
   xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>gov.redhawk.codegen</groupId>
-  <artifactId>releng</artifactId>
-  <version>1.11.0-SNAPSHOT</version>
+  <artifactId>gov.redhawk.codegen.parent</artifactId>
+  <version>2.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <parent>
@@ -101,50 +101,50 @@
   </repositories>
 
   <modules>
-    <module>../features/gov.redhawk.ide.codegen.feature</module>
-    <module>../features/gov.redhawk.ide.codegen.sdk</module>
-    <module>../plugins/gov.redhawk.ide.codegen.application</module>
-    <module>../plugins/gov.redhawk.ide.codegen.cplusplus</module>
-    <module>../plugins/gov.redhawk.ide.codegen.cplusplus.ui</module>
-    <module>../plugins/gov.redhawk.ide.codegen.frontend.ui</module>
-    <module>../plugins/gov.redhawk.ide.codegen.frontend.edit</module>
-    <module>../plugins/gov.redhawk.ide.codegen.frontend</module>
-    <module>../plugins/gov.redhawk.ide.codegen.java</module>
-    <module>../plugins/gov.redhawk.ide.codegen.jet</module>
-    <module>../plugins/gov.redhawk.ide.codegen.jet.cplusplus</module>
-    <module>../plugins/gov.redhawk.ide.codegen.jet.cplusplus.ui</module>
-    <module>../plugins/gov.redhawk.ide.codegen.jet.java</module>
-    <module>../plugins/gov.redhawk.ide.codegen.jet.java.ui</module>
-    <module>../plugins/gov.redhawk.ide.codegen.jet.python</module>
-    <module>../plugins/gov.redhawk.ide.codegen.jet.python.ui</module>
-    <module>../plugins/gov.redhawk.ide.codegen.jinja</module>
-    <module>../plugins/gov.redhawk.ide.codegen.jinja.ui</module>
-    <module>../plugins/gov.redhawk.ide.codegen.jinja.cplusplus</module>
-    <module>../plugins/gov.redhawk.ide.codegen.jinja.cplusplus.ui</module>
-    <module>../plugins/gov.redhawk.ide.codegen.jinja.java</module>
-    <module>../plugins/gov.redhawk.ide.codegen.jinja.java.ui</module>
-    <module>../plugins/gov.redhawk.ide.codegen.jinja.python</module>
-    <module>../plugins/gov.redhawk.ide.codegen.jinja.python.ui</module>
-    <module>../plugins/gov.redhawk.ide.codegen.manual</module>
-    <module>../plugins/gov.redhawk.ide.codegen.python</module>
-    <module>../plugins/gov.redhawk.ide.cplusplus.utils</module>
-    <module>../plugins/gov.redhawk.ide.octave.ui</module>
-    <module>../plugins/gov.redhawk.ide.idl</module>
-    <module>../plugins/gov.redhawk.ide.idl.ui</module>
-    <module>../plugins/gov.redhawk.ide.linuxtools.cdt.autotools.macros</module>
-    <module>../plugins/gov.redhawk.ide.pydev</module>
-    <module>../plugins/gov.redhawk.ide.sandbox.console.py</module>
-    <module>../plugins/gov.redhawk.ide.sharedlibrary.ui</module>
+    <module>features/gov.redhawk.ide.codegen.feature</module>
+    <module>features/gov.redhawk.ide.codegen.sdk</module>
+    <module>plugins/gov.redhawk.ide.codegen.application</module>
+    <module>plugins/gov.redhawk.ide.codegen.cplusplus</module>
+    <module>plugins/gov.redhawk.ide.codegen.cplusplus.ui</module>
+    <module>plugins/gov.redhawk.ide.codegen.frontend.ui</module>
+    <module>plugins/gov.redhawk.ide.codegen.frontend.edit</module>
+    <module>plugins/gov.redhawk.ide.codegen.frontend</module>
+    <module>plugins/gov.redhawk.ide.codegen.java</module>
+    <module>plugins/gov.redhawk.ide.codegen.jet</module>
+    <module>plugins/gov.redhawk.ide.codegen.jet.cplusplus</module>
+    <module>plugins/gov.redhawk.ide.codegen.jet.cplusplus.ui</module>
+    <module>plugins/gov.redhawk.ide.codegen.jet.java</module>
+    <module>plugins/gov.redhawk.ide.codegen.jet.java.ui</module>
+    <module>plugins/gov.redhawk.ide.codegen.jet.python</module>
+    <module>plugins/gov.redhawk.ide.codegen.jet.python.ui</module>
+    <module>plugins/gov.redhawk.ide.codegen.jinja</module>
+    <module>plugins/gov.redhawk.ide.codegen.jinja.ui</module>
+    <module>plugins/gov.redhawk.ide.codegen.jinja.cplusplus</module>
+    <module>plugins/gov.redhawk.ide.codegen.jinja.cplusplus.ui</module>
+    <module>plugins/gov.redhawk.ide.codegen.jinja.java</module>
+    <module>plugins/gov.redhawk.ide.codegen.jinja.java.ui</module>
+    <module>plugins/gov.redhawk.ide.codegen.jinja.python</module>
+    <module>plugins/gov.redhawk.ide.codegen.jinja.python.ui</module>
+    <module>plugins/gov.redhawk.ide.codegen.manual</module>
+    <module>plugins/gov.redhawk.ide.codegen.python</module>
+    <module>plugins/gov.redhawk.ide.cplusplus.utils</module>
+    <module>plugins/gov.redhawk.ide.octave.ui</module>
+    <module>plugins/gov.redhawk.ide.idl</module>
+    <module>plugins/gov.redhawk.ide.idl.ui</module>
+    <module>plugins/gov.redhawk.ide.linuxtools.cdt.autotools.macros</module>
+    <module>plugins/gov.redhawk.ide.pydev</module>
+    <module>plugins/gov.redhawk.ide.sandbox.console.py</module>
+    <module>plugins/gov.redhawk.ide.sharedlibrary.ui</module>
 
-    <module>../tests/gov.redhawk.ide.idl.tests</module>
-    <module>../tests/gov.redhawk.ide.codegen.cplusplus.tests</module>
-    <module>../tests/gov.redhawk.ide.codegen.java.tests</module>
-    <!-- These tests require a UI envirornment to run and are therefore disabled 
+    <module>tests/gov.redhawk.ide.idl.tests</module>
+    <module>tests/gov.redhawk.ide.codegen.cplusplus.tests</module>
+    <module>tests/gov.redhawk.ide.codegen.java.tests</module>
+    <!-- These tests require a UI envirornment to run and are therefore disabled
       for now -->
     <!-- <module>../tests/gov.redhawk.ide.pydev.tests</module> -->
     <!-- <module>../tests/gov.redhawk.ide.sandbox.console.py.tests</module> -->
     <!-- <module>../tests/gov.redhawk.ide.codegen.tests</module> -->
-    <module>p2</module>
+    <module>releng/p2</module>
   </modules>
 
   <build>
