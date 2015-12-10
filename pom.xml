@@ -166,6 +166,25 @@
               <arch>x86_64</arch>
             </environment>
           </environments>
+          <dependency-resolution>
+            <extraRequirements>
+              <requirement>
+                <type>eclipse-feature</type>
+                <id>org.jacorb</id>
+                <versionRange>0.0.0</versionRange>
+              </requirement>
+              <requirement>
+                <type>eclipse-plugin</type>
+                <id>gov.redhawk.sca.efs</id>
+                <versionRange>0.0.0</versionRange>
+              </requirement>
+              <requirement>
+                <type>eclipse-plugin</type>
+                <id>gov.redhawk.ide.sdr</id>
+                <versionRange>0.0.0</versionRange>
+              </requirement>
+            </extraRequirements>
+          </dependency-resolution>
         </configuration>
       </plugin>
       <plugin>
@@ -175,23 +194,6 @@
         <configuration>
           <argLine>-Xmx512m -Djava.net.preferIPv4Stack=true</argLine>
           <appArgLine>-nl en</appArgLine>
-          <dependencies>
-            <dependency>
-              <type>eclipse-feature</type>
-              <artifactId>org.jacorb</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>gov.redhawk.sca.efs</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
-              <artifactId>gov.redhawk.ide.sdr</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-          </dependencies>
         </configuration>
       </plugin>
     </plugins>
