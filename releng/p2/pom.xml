@@ -13,6 +13,7 @@
   <artifactId>gov.redhawk.codegen.p2</artifactId>
   <packaging>eclipse-repository</packaging>
   <parent>
+    <relativePath>../..</relativePath>
     <groupId>gov.redhawk.codegen</groupId>
     <artifactId>releng</artifactId>
     <version>1.8.10-SNAPSHOT</version>
