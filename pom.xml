@@ -113,9 +113,12 @@
     <module>plugins/gov.redhawk.ide.codegen.application</module>
     <module>plugins/gov.redhawk.ide.codegen.cplusplus</module>
     <module>plugins/gov.redhawk.ide.codegen.cplusplus.ui</module>
+<<<<<<< HEAD:pom.xml
     <module>plugins/gov.redhawk.ide.codegen.frontend.ui</module>
     <module>plugins/gov.redhawk.ide.codegen.frontend.edit</module>
     <module>plugins/gov.redhawk.ide.codegen.frontend</module>
+=======
+>>>>>>> develop-1.9:pom.xml
     <module>plugins/gov.redhawk.ide.codegen.java</module>
     <module>plugins/gov.redhawk.ide.codegen.jet</module>
     <module>plugins/gov.redhawk.ide.codegen.jet.cplusplus</module>
@@ -135,12 +138,16 @@
     <module>plugins/gov.redhawk.ide.codegen.manual</module>
     <module>plugins/gov.redhawk.ide.codegen.python</module>
     <module>plugins/gov.redhawk.ide.cplusplus.utils</module>
+<<<<<<< HEAD:pom.xml
     <module>plugins/gov.redhawk.ide.octave.ui</module>
+=======
+>>>>>>> develop-1.9:pom.xml
     <module>plugins/gov.redhawk.ide.idl</module>
     <module>plugins/gov.redhawk.ide.idl.ui</module>
     <module>plugins/gov.redhawk.ide.linuxtools.cdt.autotools.macros</module>
     <module>plugins/gov.redhawk.ide.pydev</module>
     <module>plugins/gov.redhawk.ide.sandbox.console.py</module>
+<<<<<<< HEAD:pom.xml
 
     <module>tests/gov.redhawk.ide.idl.tests</module>
     <module>tests/gov.redhawk.ide.codegen.cplusplus.tests</module>
@@ -150,6 +157,14 @@
     <!-- <module>tests/gov.redhawk.ide.pydev.tests</module> -->
     <!-- <module>tests/gov.redhawk.ide.sandbox.console.py.tests</module> -->
     <!-- <module>tests/gov.redhawk.ide.codegen.tests</module> -->
+=======
+    <module>tests/gov.redhawk.ide.idl.tests</module>
+    <!-- These tests require a UI envirornment to run and are therefore disabled
+      for now -->
+    <!-- <module>../tests/gov.redhawk.ide.pydev.tests</module> -->
+    <!-- <module>../tests/gov.redhawk.ide.sandbox.console.py.tests</module> -->
+    <!-- <module>../tests/gov.redhawk.ide.codegen.tests</module> -->
+>>>>>>> develop-1.9:pom.xml
     <module>releng/p2</module>
   </modules>
 
