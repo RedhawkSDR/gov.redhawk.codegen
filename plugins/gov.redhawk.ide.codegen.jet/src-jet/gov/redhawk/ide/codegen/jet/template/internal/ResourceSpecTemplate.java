@@ -46,7 +46,7 @@ public class ResourceSpecTemplate
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "# By default, the RPM will install to the standard REDHAWK SDR root location (/var/redhawk/sdr)" + NL + "# You can override this at install time using --prefix /new/sdr/root when invoking rpm (preferred method, if you must)" + NL + "%{!?_sdrroot: %define _sdrroot /var/redhawk/sdr}" + NL + "%define _prefix %{_sdrroot}" + NL + "Prefix: %{_prefix}" + NL + "" + NL + "# Point install paths to locations within our target SDR root" + NL + "%define _sysconfdir    %{_prefix}/etc" + NL + "%define _localstatedir %{_prefix}/var" + NL + "%define _mandir        %{_prefix}/man" + NL + "%define _infodir       %{_prefix}/info" + NL + "" + NL + "Name: ";
+  protected final String TEXT_1 = "# By default, the RPM will install to the standard REDHAWK SDR root location (/var/redhawk/sdr)" + NL + "# You can override this at install time using --prefix /new/sdr/root when invoking rpm (preferred method, if you must)" + NL + "%{!?_sdrroot: %global _sdrroot /var/redhawk/sdr}" + NL + "%define _prefix %{_sdrroot}" + NL + "Prefix: %{_prefix}" + NL + "" + NL + "# Point install paths to locations within our target SDR root" + NL + "%define _sysconfdir    %{_prefix}/etc" + NL + "%define _localstatedir %{_prefix}/var" + NL + "%define _mandir        %{_prefix}/man" + NL + "%define _infodir       %{_prefix}/info" + NL + "" + NL + "Name: ";
   protected final String TEXT_2 = NL + "Summary: ";
   protected final String TEXT_3 = " %{name}";
   protected final String TEXT_4 = " (";
