@@ -15,7 +15,7 @@
   <parent>
     <relativePath>../..</relativePath>
     <groupId>gov.redhawk.codegen</groupId>
-    <artifactId>releng</artifactId>
+    <artifactId>gov.redhawk.codegen.parent</artifactId>
     <version>1.8.10-SNAPSHOT</version>
   </parent>
 </project>
