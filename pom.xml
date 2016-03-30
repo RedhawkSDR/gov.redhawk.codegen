@@ -139,6 +139,7 @@
     <module>tests/gov.redhawk.ide.idl.tests</module>
     <module>tests/gov.redhawk.ide.codegen.cplusplus.tests</module>
     <module>tests/gov.redhawk.ide.codegen.java.tests</module>
+    <module>tests/gov.redhawk.ide.codegen.python.tests</module>
     <!-- These tests require a UI envirornment to run and are therefore disabled
       for now -->
     <!-- <module>../tests/gov.redhawk.ide.pydev.tests</module> -->

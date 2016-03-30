@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Tests for the gov.redhawk.ide.codegen.python bundle
+Bundle-SymbolicName: gov.redhawk.ide.codegen.python.tests
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: REDHAWK
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: gov.redhawk.ide.codegen.python,
+ org.junit,
+ org.eclipse.core.runtime,
+ gov.redhawk.ide.sdr
