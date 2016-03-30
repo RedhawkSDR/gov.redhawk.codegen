@@ -10,7 +10,7 @@
     http://www.eclipse.org/legal/epl-v10.html.
 -->
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="gov.redhawk.ide.codegen.java">
-   <implementation class="gov.redhawk.ide.codegen.java.JavaEnvMap"/>
+   <implementation class="gov.redhawk.ide.codegen.java.internal.JavaEnvMap"/>
    <service>
       <provide interface="gov.redhawk.ide.sdr.util.IEnvMap"/>
    </service>
