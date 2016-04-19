@@ -173,8 +173,14 @@
             id="gov.redhawk.ide.codegen.jinja.cplusplus.launchConfigurationFactory"
             launchConfigType="gov.redhawk.ide.codegen.jet.cplusplus.launchComponentApplication">
       </launchConfigurationFactory>
+      <launchConfigurationFactory
+            codegenref="gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusOctaveGenerator"
+            factory="gov.redhawk.ide.codegen.jinja.cplusplus.OctaveLaunchConfigurationFactory"
+            id="gov.redhawk.ide.codegen.jinja.octave.launchConfigurationFactory"
+            launchConfigType="gov.redhawk.ide.codegen.jet.cplusplus.launchComponentApplication">
+      </launchConfigurationFactory>
    </extension>
-      <extension
+   <extension
          point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
             id="gov.redhawk.ide.codegen.jinja.octave.launchComponentApplication"
