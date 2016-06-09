@@ -27,11 +27,10 @@ import org.eclipse.emf.ecore.util.EContentAdapter;
  * @since 1.1
  */
 public class BooleanGeneratorPropertiesWizardPage2 extends BooleanGeneratorPropertiesWizardPage {
+
 	protected String template;
+
 	private EContentAdapter templateListener = new EContentAdapter() {
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public void notifyChanged(final Notification msg) {
 			super.notifyChanged(msg);
@@ -59,7 +58,8 @@ public class BooleanGeneratorPropertiesWizardPage2 extends BooleanGeneratorPrope
 						}
 					}
 				}
-			break;
+				break;
+			default:
 			}
 		}
 	};

@@ -133,9 +133,6 @@ public class JavaJetGeneratorPropertiesWizardPage extends WizardPage implements 
 	private String currentTemplate;
 	
 	private EContentAdapter templateListener = new EContentAdapter() {
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public void notifyChanged(final Notification msg) {
 			super.notifyChanged(msg);
@@ -163,7 +160,8 @@ public class JavaJetGeneratorPropertiesWizardPage extends WizardPage implements 
 						}
 					}
 				}
-			break;
+				break;
+			default:
 			}
 		}
 	};

@@ -61,7 +61,7 @@ public class LegacyTemplate implements IScaComponentCodegenTemplate {
 			file = new ReconfTemplate().generate(templ);
 		} else if ("startJava.sh".equals(fileName)) {
 			file = new StartJavaShTemplate().generate(templ);
-		} else if (fileName.equals("../" + CodegenFileHelper.getProjectFileName(softPkg) + ".spec")) {
+		} else if (("../" + CodegenFileHelper.getProjectFileName(softPkg) + ".spec").equals(fileName)) {
 			file = new ResourceSpecTemplate().generate(templ);
 		}
 
