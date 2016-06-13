@@ -17,6 +17,7 @@ import gov.redhawk.ide.idl.IdlProjectBuilder;
 import gov.redhawk.ide.idl.generator.newidl.IDLProjectCreator;
 import gov.redhawk.ide.idl.ui.IdeIdlUiPlugin;
 import gov.redhawk.ide.util.ResourceUtils;
+import net.sf.eclipsecorba.compiler.CompileOptions;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -55,6 +56,10 @@ public class NewScaIDLProjectWizard extends Wizard implements INewWizard, IExecu
 
 	/** The configuration used for this Wizard */
 	private IConfigurationElement fConfig;
+	
+	/** Default Include Paths **/
+	String[] defaultInclPaths = {"${OssieHome}/share/idl", "/usr/share/idl/omniORB", "/usr/share/idl/omniORB/COS"};
+	
 
 	/** Instance of the properties page associated with the Wizard */
 	private ScaIDLProjectPropertiesWizardPage idlPropertiesPage;
@@ -145,6 +150,8 @@ public class NewScaIDLProjectWizard extends Wizard implements INewWizard, IExecu
 								}
 							}
 						}
+						
+						addDefaultIncludePaths(project);
 
 						// Setup the IDL Path
 						ResourceUtils.createIdlLibraryResource(project, progress.newChild(1));
@@ -157,6 +164,17 @@ public class NewScaIDLProjectWizard extends Wizard implements INewWizard, IExecu
 					} finally {
 						monitor.done();
 					}
+				}
+
+				@SuppressWarnings("unchecked")
+				private void addDefaultIncludePaths(IProject project) throws CoreException {
+					
+					CompileOptions options = CompileOptions.load(project);
+					options.outputDirectory = "";
+					for (String path : defaultInclPaths) {
+						options.getIncludes().add(path);
+					}
+					options.save(project);
 				}
 			};
 			getContainer().run(false, false, op);
