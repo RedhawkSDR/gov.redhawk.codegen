@@ -12,16 +12,6 @@
 -->
 <plugin>
    <extension
-         point="org.eclipse.ui.views">
-      <view
-            category="gov.redhawk.ide.ui.category.sca_development"
-            class="gov.redhawk.ide.idl.ui.views.IDLBrowser"
-            id="gov.redhawk.ide.ui.idlbrowser"
-            name="%view.name.idlBrowser"
-            restorable="true">
-      </view>
-   </extension>
-   <extension
          point="org.eclipse.ui.newWizards">
       <wizard
             canFinishEarly="false"
