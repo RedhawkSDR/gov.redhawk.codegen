@@ -15,6 +15,7 @@ import mil.jpeojtrs.sca.spd.SoftPkg;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -36,9 +37,15 @@ public class JavaComponentLaunchDelegate extends JavaLaunchDelegate {
 		final int WORK_POST_LAUNCH = 100;
 		SubMonitor subMonitor = SubMonitor.convert(monitor, WORK_LAUNCH + WORK_POST_LAUNCH);
 
+		// Validate all XML before doing anything else
+		final SoftPkg spd = SpdLauncherUtil.getSpd(configuration);
+		IStatus status = SpdLauncherUtil.validateAllXML(spd);
+		if (!status.isOK()) {
+			throw new CoreException(status);
+		}
+
 		final String arguments = configuration.getAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, ""); //$NON-NLS-1$
 		final ILaunchConfigurationWorkingCopy copy = configuration.getWorkingCopy();
-		final SoftPkg spd = SpdLauncherUtil.getSpd(configuration);
 		final String args = SpdLauncherUtil.insertProgramArguments(spd, arguments, launch, configuration);
 		copy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, args);
 

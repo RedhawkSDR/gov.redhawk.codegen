@@ -24,6 +24,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -48,11 +49,17 @@ public class LocalCppCDILaunchDelegate extends LocalCDILaunchDelegate implements
 		final int WORK_POST_LAUNCH = 100;
 		SubMonitor subMonitor = SubMonitor.convert(monitor, WORK_LAUNCH + WORK_POST_LAUNCH);
 
+		// Validate all XML before doing anything else
+		final SoftPkg spd = SpdLauncherUtil.getSpd(config);
+		IStatus status = SpdLauncherUtil.validateAllXML(spd);
+		if (!status.isOK()) {
+			throw new CoreException(status);
+		}
+
 		final ILaunchConfigurationWorkingCopy copy = config.getWorkingCopy();
 		if (copy.getAttribute(ICDTLaunchConfigurationConstants.ATTR_DEBUGGER_ID, (String) null) == null) {
 			copy.setAttribute(ICDTLaunchConfigurationConstants.ATTR_DEBUGGER_ID, getDefaultDebugger(config));
 		}
-		final SoftPkg spd = SpdLauncherUtil.getSpd(config);
 		insertProgramArguments(spd, launch, copy);
 
 		try {

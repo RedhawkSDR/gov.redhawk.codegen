@@ -16,6 +16,7 @@ import mil.jpeojtrs.sca.spd.SoftPkg;
 import org.eclipse.core.externaltools.internal.IExternalToolConstants;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -37,8 +38,14 @@ public class LocalPythonComponentDelegate extends RegularLaunchConfigurationDele
 		final int WORK_POST_LAUNCH = 100;
 		SubMonitor subMonitor = SubMonitor.convert(monitor, WORK_LAUNCH + WORK_POST_LAUNCH);
 
-		final ILaunchConfigurationWorkingCopy workingCopy = conf.getWorkingCopy();
+		// Validate all XML before doing anything else
 		final SoftPkg spd = SpdLauncherUtil.getSpd(conf);
+		IStatus status = SpdLauncherUtil.validateAllXML(spd);
+		if (!status.isOK()) {
+			throw new CoreException(status);
+		}
+
+		final ILaunchConfigurationWorkingCopy workingCopy = conf.getWorkingCopy();
 		insertProgramArguments(spd, launch, workingCopy);
 
 		try {
