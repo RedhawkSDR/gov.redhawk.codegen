@@ -11,6 +11,7 @@
 
 package gov.redhawk.ide.idl.ui.wizard;
 
+import gov.redhawk.ide.RedhawkIdeActivator;
 import gov.redhawk.ide.cplusplus.utils.CppGeneratorUtils;
 import gov.redhawk.ide.idl.IdlLibraryProjectNature;
 import gov.redhawk.ide.idl.IdlProjectBuilder;
@@ -33,6 +34,7 @@ import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -56,10 +58,6 @@ public class NewScaIDLProjectWizard extends Wizard implements INewWizard, IExecu
 
 	/** The configuration used for this Wizard */
 	private IConfigurationElement fConfig;
-	
-	/** Default Include Paths **/
-	String[] defaultInclPaths = {"${OssieHome}/share/idl", "/usr/share/idl/omniORB", "/usr/share/idl/omniORB/COS"};
-	
 
 	/** Instance of the properties page associated with the Wizard */
 	private ScaIDLProjectPropertiesWizardPage idlPropertiesPage;
@@ -168,11 +166,10 @@ public class NewScaIDLProjectWizard extends Wizard implements INewWizard, IExecu
 
 				@SuppressWarnings("unchecked")
 				private void addDefaultIncludePaths(IProject project) throws CoreException {
-					
 					CompileOptions options = CompileOptions.load(project);
 					options.outputDirectory = "";
-					for (String path : defaultInclPaths) {
-						options.getIncludes().add(path);
+					for (IPath path : RedhawkIdeActivator.getDefault().getDefaultIdlIncludePath()) {
+						options.getIncludes().add(path.toOSString());
 					}
 					options.save(project);
 				}
