@@ -25,20 +25,13 @@ import org.eclipse.debug.ui.RefreshTab;
 import org.eclipse.debug.ui.sourcelookup.SourceLookupTab;
 
 /**
- * 
+ * Controls which UI tabs make up the Redhawk "Sandbox C++ Component" launch configuration
  */
 public class CppComponentTabGroup extends AbstractLaunchConfigurationTabGroup {
 
-	/**
-	 * 
-	 */
 	public CppComponentTabGroup() {
-		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void createTabs(final ILaunchConfigurationDialog dialog, final String mode) {
 		final ILaunchConfigurationTab[] tabs = new ILaunchConfigurationTab[] {
@@ -54,5 +47,4 @@ public class CppComponentTabGroup extends AbstractLaunchConfigurationTabGroup {
 		};
 		setTabs(tabs);
 	}
-
 }
