@@ -29,14 +29,13 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.debug.core.model.ILaunchConfigurationDelegate;
 
 /**
- * Used when a C++ component, device, etc. in the workspace is launched in the sandbox.
+ * Used when a C++ component, device, etc. in the <b>workspace</b> is launched in the sandbox in <b>run</b> mode.
  * @since 9.0
  */
 @SuppressWarnings("restriction")
-public class LocalCppCDILaunchDelegate extends LocalCDILaunchDelegate implements ILaunchConfigurationDelegate {
+public class LocalCppCDILaunchDelegate extends LocalCDILaunchDelegate {
 
 	public static final String ID = "gov.redhawk.ide.codegen.jet.cplusplus.launchComponentApplication";
 
@@ -57,9 +56,6 @@ public class LocalCppCDILaunchDelegate extends LocalCDILaunchDelegate implements
 		}
 
 		final ILaunchConfigurationWorkingCopy copy = config.getWorkingCopy();
-		if (copy.getAttribute(ICDTLaunchConfigurationConstants.ATTR_DEBUGGER_ID, (String) null) == null) {
-			copy.setAttribute(ICDTLaunchConfigurationConstants.ATTR_DEBUGGER_ID, getDefaultDebugger(config));
-		}
 		insertProgramArguments(spd, launch, copy);
 
 		try {
@@ -82,6 +78,10 @@ public class LocalCppCDILaunchDelegate extends LocalCDILaunchDelegate implements
 		configuration.setAttribute(ICDTLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, newArgs);
 	}
 
+	/**
+	 * @deprecated Not intended to be public - do not use
+	 */
+	@Deprecated
 	public String getDefaultDebugger(final ILaunchConfiguration config) throws CoreException {
 		// Mostly from CDebbuggerTab
 		String defaultDebugger = null;

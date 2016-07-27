@@ -260,8 +260,17 @@ If false, the data will be taken from the sequence and it is the component's res
       <launchDelegate
             delegate="gov.redhawk.ide.codegen.jet.cplusplus.LocalCppCDILaunchDelegate"
             id="gov.redhawk.ide.codegen.jet.cplusplus.launchDelegate"
-            modes="run,debug"
+            modes="run"
             name="%launchDelegate.name"
+            sourceLocatorId="org.eclipse.cdt.debug.core.sourceLocator"
+            sourcePathComputerId="org.eclipse.cdt.debug.core.sourcePathComputer"
+            type="gov.redhawk.ide.codegen.jet.cplusplus.launchComponentApplication">
+      </launchDelegate>
+      <launchDelegate
+            delegate="gov.redhawk.ide.codegen.jet.cplusplus.LocalCppGdbLaunchDelegate"
+            id="gov.redhawk.ide.codegen.jet.cplusplus.launchDelegateDebug"
+            modes="debug"
+            name="%launchDelegateDebug.name"
             sourceLocatorId="org.eclipse.cdt.debug.core.sourceLocator"
             sourcePathComputerId="org.eclipse.cdt.debug.core.sourcePathComputer"
             type="gov.redhawk.ide.codegen.jet.cplusplus.launchComponentApplication">
