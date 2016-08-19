@@ -10,6 +10,27 @@
  *******************************************************************************/
 package gov.redhawk.ide.codegen.frontend.ui;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.swt.widgets.Composite;
+
+import FRONTEND.AnalogTunerHelper;
+import FRONTEND.DigitalTunerHelper;
+import FRONTEND.GPSHelper;
+import FRONTEND.RFInfoHelper;
+import FRONTEND.RFSourceHelper;
 import gov.redhawk.eclipsecorba.idl.IdlInterfaceDcl;
 import gov.redhawk.eclipsecorba.library.IdlLibrary;
 import gov.redhawk.ide.codegen.frontend.FeiDevice;
@@ -24,20 +45,10 @@ import gov.redhawk.ide.codegen.ui.ICodegenTemplateDisplayFactory;
 import gov.redhawk.ide.codegen.ui.ICodegenWizardPage;
 import gov.redhawk.ide.sdr.ui.SdrUiPlugin;
 import gov.redhawk.sca.util.SubMonitor;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
-
 import mil.jpeojtrs.sca.prf.AccessType;
 import mil.jpeojtrs.sca.prf.ConfigurationKind;
-import mil.jpeojtrs.sca.prf.Kind;
 import mil.jpeojtrs.sca.prf.PrfFactory;
 import mil.jpeojtrs.sca.prf.Properties;
-import mil.jpeojtrs.sca.prf.PropertyConfigurationType;
 import mil.jpeojtrs.sca.prf.PropertyValueType;
 import mil.jpeojtrs.sca.prf.Simple;
 import mil.jpeojtrs.sca.prf.Struct;
@@ -55,21 +66,6 @@ import mil.jpeojtrs.sca.scd.SoftwareComponent;
 import mil.jpeojtrs.sca.scd.Uses;
 import mil.jpeojtrs.sca.spd.SoftPkg;
 import mil.jpeojtrs.sca.util.ScaResourceFactoryUtil;
-
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.swt.widgets.Composite;
-
-import FRONTEND.AnalogTunerHelper;
-import FRONTEND.DigitalTunerHelper;
-import FRONTEND.GPSHelper;
-import FRONTEND.RFInfoHelper;
-import FRONTEND.RFSourceHelper;
 
 public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplateDisplayFactory {
 
@@ -312,27 +308,15 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		connectionName.setId("connectionTable::connection_id");
 		connectionName.setType(PropertyValueType.STRING);
 
-		final Kind connectionNameKind = PrfFactory.eINSTANCE.createKind();
-		connectionNameKind.setType(PropertyConfigurationType.CONFIGURE);
-		connectionName.getKind().add(connectionNameKind);
-
 		Simple streamId = PrfFactory.eINSTANCE.createSimple();
 		streamId.setName("stream_id");
 		streamId.setId("connectionTable::stream_id");
 		streamId.setType(PropertyValueType.STRING);
 
-		final Kind streamIdKind = PrfFactory.eINSTANCE.createKind();
-		streamIdKind.setType(PropertyConfigurationType.CONFIGURE);
-		streamId.getKind().add(streamIdKind);
-
 		Simple portName = PrfFactory.eINSTANCE.createSimple();
 		portName.setName("port_name");
 		portName.setId("connectionTable::port_name");
 		portName.setType(PropertyValueType.STRING);
-
-		final Kind portNameKind = PrfFactory.eINSTANCE.createKind();
-		portNameKind.setType(PropertyConfigurationType.CONFIGURE);
-		portName.getKind().add(portNameKind);
 
 		struct.getSimple().add(connectionName);
 		struct.getSimple().add(streamId);
