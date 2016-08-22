@@ -10,20 +10,8 @@
  *******************************************************************************/
 package gov.redhawk.ide.codegen.frontend.ui;
 
-import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndProp;
-import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndPropLabelProvider;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import mil.jpeojtrs.sca.prf.ConfigurationKind;
-import mil.jpeojtrs.sca.prf.Enumeration;
-import mil.jpeojtrs.sca.prf.Enumerations;
-import mil.jpeojtrs.sca.prf.PrfFactory;
-import mil.jpeojtrs.sca.prf.PropertyValueType;
-import mil.jpeojtrs.sca.prf.Simple;
-import mil.jpeojtrs.sca.prf.Struct;
-import mil.jpeojtrs.sca.prf.StructPropertyConfigurationType;
 
 import org.eclipse.jface.databinding.viewers.ObservableSetContentProvider;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
@@ -41,6 +29,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 
 import FRONTEND.FE_TUNER_DEVICE_KIND;
+import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndProp;
+import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndPropLabelProvider;
+import mil.jpeojtrs.sca.prf.Enumeration;
+import mil.jpeojtrs.sca.prf.Enumerations;
+import mil.jpeojtrs.sca.prf.PrfFactory;
+import mil.jpeojtrs.sca.prf.PropertyValueType;
+import mil.jpeojtrs.sca.prf.Simple;
 
 public enum FrontEndDeviceUIUtils {
 	INSTANCE;
@@ -442,23 +437,4 @@ public enum FrontEndDeviceUIUtils {
 		};
 		return vs;
 	}
-
-	public Struct getListenerAllocationStruct() {
-		Struct listenerAllocationStruct = PrfFactory.eINSTANCE.createStruct();
-		listenerAllocationStruct.setDescription("Allocates a listener (subscriber) based off a previous allocation ");
-		listenerAllocationStruct.setId("FRONTEND::listener_allocation");
-		listenerAllocationStruct.setName("frontend_listener_allocation");
-		final ConfigurationKind kind = PrfFactory.eINSTANCE.createConfigurationKind();
-		kind.setType(StructPropertyConfigurationType.ALLOCATION);
-		listenerAllocationStruct.getConfigurationKind().add(kind);
-
-		listenerAllocationStruct.getSimple().add(
-			createSimple("existing_allocation_id", "FRONTEND::listener_allocation::existing_allocation_id", PropertyValueType.STRING, ""));
-
-		listenerAllocationStruct.getSimple().add(
-			createSimple("listener_allocation_id", "FRONTEND::listener_allocation::listener_allocation_id", PropertyValueType.STRING, ""));
-
-		return listenerAllocationStruct;
-	}
-
 }
