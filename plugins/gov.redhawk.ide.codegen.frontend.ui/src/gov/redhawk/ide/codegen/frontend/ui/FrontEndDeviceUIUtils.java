@@ -10,21 +10,8 @@
  *******************************************************************************/
 package gov.redhawk.ide.codegen.frontend.ui;
 
-import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndProp;
-import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndPropLabelProvider;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-
-import mil.jpeojtrs.sca.prf.ConfigurationKind;
-import mil.jpeojtrs.sca.prf.Enumeration;
-import mil.jpeojtrs.sca.prf.Enumerations;
-import mil.jpeojtrs.sca.prf.PrfFactory;
-import mil.jpeojtrs.sca.prf.PropertyValueType;
-import mil.jpeojtrs.sca.prf.Simple;
-import mil.jpeojtrs.sca.prf.Struct;
-import mil.jpeojtrs.sca.prf.StructPropertyConfigurationType;
 
 import org.eclipse.jface.databinding.viewers.ObservableSetContentProvider;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
@@ -42,6 +29,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 
 import FRONTEND.FE_TUNER_DEVICE_KIND;
+import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndProp;
+import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndPropLabelProvider;
+import mil.jpeojtrs.sca.prf.Enumeration;
+import mil.jpeojtrs.sca.prf.Enumerations;
+import mil.jpeojtrs.sca.prf.PrfFactory;
+import mil.jpeojtrs.sca.prf.PropertyValueType;
+import mil.jpeojtrs.sca.prf.Simple;
 
 public enum FrontEndDeviceUIUtils {
 	INSTANCE;
@@ -443,101 +437,4 @@ public enum FrontEndDeviceUIUtils {
 		};
 		return vs;
 	}
-
-	public Struct getListenerAllocationStruct() {
-		Struct listenerAllocationStruct = PrfFactory.eINSTANCE.createStruct();
-		listenerAllocationStruct.setDescription("Allocates a listener (subscriber) based off a previous allocation ");
-		listenerAllocationStruct.setId("FRONTEND::listener_allocation");
-		listenerAllocationStruct.setName("frontend_listener_allocation");
-		final ConfigurationKind kind = PrfFactory.eINSTANCE.createConfigurationKind();
-		kind.setType(StructPropertyConfigurationType.ALLOCATION);
-		listenerAllocationStruct.getConfigurationKind().add(kind);
-
-		listenerAllocationStruct.getSimple().add(
-			createSimple("existing_allocation_id", "FRONTEND::listener_allocation::existing_allocation_id", PropertyValueType.STRING, ""));
-
-		listenerAllocationStruct.getSimple().add(
-			createSimple("listener_allocation_id", "FRONTEND::listener_allocation::listener_allocation_id", PropertyValueType.STRING, ""));
-
-		return listenerAllocationStruct;
-	}
-
-	public Struct getTunerAllocationStruct() {
-		Struct tunerAllocStruct = PrfFactory.eINSTANCE.createStruct();
-		tunerAllocStruct.setDescription("Frontend Interfaces v2.0 main allocation structure");
-		tunerAllocStruct.setId("FRONTEND::tuner_allocation");
-		tunerAllocStruct.setName("frontend_tuner_allocation");
-		final ConfigurationKind kind = PrfFactory.eINSTANCE.createConfigurationKind();
-		kind.setType(StructPropertyConfigurationType.ALLOCATION);
-		tunerAllocStruct.getConfigurationKind().add(kind);
-		tunerAllocStruct.getSimple().addAll(getTunerAllocationSimples());
-
-		return tunerAllocStruct;
-	}
-
-	private Collection< ? extends Simple> getTunerAllocationSimples() {
-		List<Simple> tunerAllocSimpleList = new ArrayList<Simple>();
-
-		tunerAllocSimpleList.add(createSimple("tuner_type", "FRONTEND::tuner_allocation::tuner_type", PropertyValueType.STRING,
-				"Example Tuner Types: TX, RX, CHANNELIZER, DDC, RX_DIGITIZER, RX_DIGTIZIER_CHANNELIZER"));
-
-		tunerAllocSimpleList.add(createSimple("allocation_id", "FRONTEND::tuner_allocation::allocation_id", PropertyValueType.STRING,
-				"The allocation_id set by the caller. Used by the caller to reference the device uniquely"));
-
-		Simple cFreq = createSimple("center_frequency", "FRONTEND::tuner_allocation::center_frequency", PropertyValueType.DOUBLE, "Requested center frequency.");
-
-		cFreq.setUnits("Hz");
-		cFreq.setValue("0.0");
-		tunerAllocSimpleList.add(cFreq);
-
-		Simple bandwidth = createSimple("bandwidth", "FRONTEND::tuner_allocation::bandwidth", PropertyValueType.DOUBLE, "Requested Bandwidth");
-
-		bandwidth.setUnits("Hz");
-		bandwidth.setValue("0.0");
-
-		tunerAllocSimpleList.add(bandwidth);
-
-		Simple bandwidthTol = createSimple("bandwidth_tolerance", "FRONTEND::tuner_allocation::bandwidth_tolerance", PropertyValueType.DOUBLE,
-				"Allowable Percent above requested bandwidth  (ie - 100 would be up to twice)");
-
-		bandwidthTol.setUnits("percent");
-		bandwidthTol.setValue("10.0");
-
-		tunerAllocSimpleList.add(bandwidthTol);
-
-		Simple sampleRate = createSimple("sample_rate", "FRONTEND::tuner_allocation::sample_rate", PropertyValueType.DOUBLE,
-				"Requested sample rate. This can be ignored for such devices as analog tuners");
-
-		sampleRate.setUnits("sps");
-		sampleRate.setValue("0.0");
-
-		tunerAllocSimpleList.add(sampleRate);
-
-		Simple sampleRateTol = createSimple("sample_rate_tolerance", "FRONTEND::tuner_allocation::sample_rate_tolerance", PropertyValueType.DOUBLE,
-				"Allowable Percent above requested sample rate (ie - 100 would be up to twice)");
-
-		sampleRateTol.setUnits("percent");
-		sampleRateTol.setValue("10.0");
-
-		tunerAllocSimpleList.add(sampleRateTol);
-
-		Simple deviceControl = createSimple(
-			"device_control",
-			"FRONTEND::tuner_allocation::device_control",
-			PropertyValueType.BOOLEAN,
-				"True: Has control over the device to make changes\nFalse: Does not need control and can just attach to any currently tasked device that satisfies the parameters (essentually a listener)");
-
-		deviceControl.setValue("true");
-
-		tunerAllocSimpleList.add(deviceControl);
-
-		tunerAllocSimpleList.add(createSimple("group_id", "FRONTEND::tuner_allocation::group_id", PropertyValueType.STRING,
-				"Unique identifier that specifies a group of device. Must match group_id on the device"));
-
-		tunerAllocSimpleList.add(createSimple("rf_flow_id", "FRONTEND::tuner_allocation::rf_flow_id", PropertyValueType.STRING,
-				"Optional. Specifies a certain RF flow to allocate against. If left empty, it will match all frontend devices."));
-
-		return tunerAllocSimpleList;
-	}
-
 }
