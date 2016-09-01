@@ -39,8 +39,8 @@ import org.eclipse.emf.ecore.EObject;
  * <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isTxTuner <em>Tx Tuner</em>}</li>
  * <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#getNumberOfDigitalInputsForTx <em>Number Of Digital Inputs For
  * Tx</em>}</li>
- * <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#getDigitalInputTypeForTx <em>Digital Input Type For Tx</em>}
- * </li>
+ * <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#getDigitalInputTypeForTx <em>Digital Input Type For
+ * Tx</em>}</li>
  * <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#getTunerStatusStruct <em>Tuner Status Struct</em>}</li>
  * </ul>
  *

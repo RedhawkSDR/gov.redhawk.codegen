@@ -30,8 +30,14 @@ import org.eclipse.emf.ecore.EPackage;
  * <!-- end-user-doc -->
  * @see gov.redhawk.ide.codegen.frontend.FrontendFactory
  * @model kind="package"
- * annotation=
- * "http://www.eclipse.org/emf/2002/GenModel prefix='Frontend' dataTypeConverters='true' binaryCompantibleReflectiveMethods='true' fileExtensions='xml' colorProviders='true' fontProviders='true' tablesProviders='true' resource='XML' templateDirectory='/gov.redhawk.ide.codegen.frontend/templates' forceOverwrite='true' modelPluginVariables='org.eclipse.xtext.xbase.lib' tableProviders='true' runtimeVersion='2.9' codeFormatting='true' commentFormatting='true' dynamicTemplates='true' contentTypeIdentifier='http://codegen.redhawk.gov/frontend/1.0.0' modelDirectory='/gov.redhawk.ide.codegen.frontend/src-model' editDirectory='/gov.redhawk.ide.codegen.frontend.edit/src-gen' basePackage='gov.redhawk.ide.codegen'"
+ * annotation="http://www.eclipse.org/emf/2002/GenModel prefix='Frontend' dataTypeConverters='true'
+ * binaryCompantibleReflectiveMethods='true' fileExtensions='xml' colorProviders='true' fontProviders='true'
+ * tablesProviders='true' resource='XML' templateDirectory='/gov.redhawk.ide.codegen.frontend/templates'
+ * forceOverwrite='true' modelPluginVariables='org.eclipse.xtext.xbase.lib' tableProviders='true' runtimeVersion='2.9'
+ * codeFormatting='true' commentFormatting='true' dynamicTemplates='true'
+ * contentTypeIdentifier='http://codegen.redhawk.gov/frontend/1.0.0'
+ * modelDirectory='/gov.redhawk.ide.codegen.frontend/src-model'
+ * editDirectory='/gov.redhawk.ide.codegen.frontend.edit/src-gen' basePackage='gov.redhawk.ide.codegen'"
  * @generated
  */
 public interface FrontendPackage extends EPackage {
@@ -309,8 +315,8 @@ public interface FrontendPackage extends EPackage {
 	EAttribute getFeiDevice_RxTuner();
 
 	/**
-	 * Returns the meta object for the attribute '
-	 * {@link gov.redhawk.ide.codegen.frontend.FeiDevice#getNumberOfAnalogInputs <em>Number Of Analog Inputs</em>}'.
+	 * Returns the meta object for the attribute
+	 * '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#getNumberOfAnalogInputs <em>Number Of Analog Inputs</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Number Of Analog Inputs</em>'.
@@ -393,8 +399,8 @@ public interface FrontendPackage extends EPackage {
 	EAttribute getFeiDevice_TxTuner();
 
 	/**
-	 * Returns the meta object for the attribute '
-	 * {@link gov.redhawk.ide.codegen.frontend.FeiDevice#getNumberOfDigitalInputsForTx <em>Number Of Digital Inputs For
+	 * Returns the meta object for the attribute
+	 * '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#getNumberOfDigitalInputsForTx <em>Number Of Digital Inputs For
 	 * Tx</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -406,8 +412,8 @@ public interface FrontendPackage extends EPackage {
 	EAttribute getFeiDevice_NumberOfDigitalInputsForTx();
 
 	/**
-	 * Returns the meta object for the attribute '
-	 * {@link gov.redhawk.ide.codegen.frontend.FeiDevice#getDigitalInputTypeForTx <em>Digital Input Type For Tx</em>}'.
+	 * Returns the meta object for the attribute
+	 * '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#getDigitalInputTypeForTx <em>Digital Input Type For Tx</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Digital Input Type For Tx</em>'.

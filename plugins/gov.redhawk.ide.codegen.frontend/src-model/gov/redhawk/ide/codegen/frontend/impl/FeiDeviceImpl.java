@@ -42,16 +42,16 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isHasDigitalInput <em>Has Digital Input</em>}</li>
  * <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#getDigitalInputType <em>Digital Input Type</em>}</li>
  * <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isHasDigitalOutput <em>Has Digital Output</em>}</li>
- * <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#getDigitalOutputType <em>Digital Output Type</em>}
- * </li>
+ * <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#getDigitalOutputType <em>Digital Output
+ * Type</em>}</li>
  * <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isMultiOut <em>Multi Out</em>}</li>
  * <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isTxTuner <em>Tx Tuner</em>}</li>
  * <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#getNumberOfDigitalInputsForTx <em>Number Of Digital
  * Inputs For Tx</em>}</li>
  * <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#getDigitalInputTypeForTx <em>Digital Input Type For
  * Tx</em>}</li>
- * <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#getTunerStatusStruct <em>Tuner Status Struct</em>}
- * </li>
+ * <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#getTunerStatusStruct <em>Tuner Status
+ * Struct</em>}</li>
  * </ul>
  *
  * @generated
