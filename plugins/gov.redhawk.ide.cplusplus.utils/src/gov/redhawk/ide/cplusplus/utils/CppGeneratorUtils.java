@@ -81,7 +81,7 @@ public final class CppGeneratorUtils {
 	 * The ID of the {@link ILanguageSettingsProvider} that parses GCC build output to discover additional settings
 	 * to contribute to the project.
 	 */
-	private  static final String GCC_BUILD_PARSER_ID = "org.eclipse.cdt.managedbuilder.core.GCCBuildCommandParser";
+	private static final String GCC_BUILD_PARSER_ID = "org.eclipse.cdt.managedbuilder.core.GCCBuildCommandParser";
 
 	private CppGeneratorUtils() {
 	}
@@ -124,8 +124,8 @@ public final class CppGeneratorUtils {
 	 * @return
 	 * @since 1.1
 	 */
-	public static MultiStatus addManagedNature(final IProject project, final SubMonitor monitor, final MultiStatus retStatus,
-		final String destinationDirectory, final PrintStream out, final Implementation impl) {
+	public static MultiStatus addManagedNature(final IProject project, final SubMonitor monitor, final MultiStatus retStatus, final String destinationDirectory,
+		final PrintStream out, final Implementation impl) {
 		SubMonitor progress = SubMonitor.convert(monitor, 2);
 
 		// Based on whether or not the managed C project nature has been added, we know whether or not the project has
@@ -454,19 +454,33 @@ public final class CppGeneratorUtils {
 		final ArrayList<ICSourceEntry> entries = new ArrayList<ICSourceEntry>(Arrays.asList(config.getSourceEntries()));
 		final ArrayList<ICSourceEntry> badEntries = new ArrayList<ICSourceEntry>();
 
-		for (final ICSourceEntry ent : entries) {
-			if (ent.getLocation() == null || ((oldSource != null) && oldSource.contains(ent.getLocation().toString()))) {
-				badEntries.add(ent);
+		// Create an entry for our implementation directory
+		final ICSourceEntry implementationEntry = (ICSourceEntry) CDataUtil.createEntry(ICSettingEntry.SOURCE_PATH, outputDir, null, null,
+			ICSettingEntry.VALUE_WORKSPACE_PATH | ICSettingEntry.RESOLVED);
+
+		boolean hasImplEntry = false;
+		for (final ICSourceEntry entry : entries) {
+			// Remove exclusionPatterns for easy comparison
+			ICSourceEntry entryNoExlusion = (ICSourceEntry) CDataUtil.createEntry(entry.getKind(), entry.getName(), entry.getValue(), null,
+				ICSettingEntry.VALUE_WORKSPACE_PATH | ICSettingEntry.RESOLVED);
+
+			// Check if a source path for our implementation directory already exists
+			if (entryNoExlusion.equals(implementationEntry)) {
+				hasImplEntry = true;
+				continue;
+			}
+
+			// Mark any bad source entries for removal
+			if (entry.getLocation() == null || ((oldSource != null) && oldSource.contains(entry.getLocation().toString()))) {
+				badEntries.add(entry);
 			}
 		}
 
 		entries.removeAll(badEntries);
 
 		// Add our implementation directory as a source path if it's not already there
-		final ICSourceEntry entry = (ICSourceEntry) CDataUtil.createEntry(ICSettingEntry.SOURCE_PATH, outputDir, null, null,
-			ICSettingEntry.VALUE_WORKSPACE_PATH | ICSettingEntry.RESOLVED);
-		if (!entries.contains(entry)) {
-			entries.add(entry);
+		if (!hasImplEntry) {
+			entries.add(implementationEntry);
 		}
 
 		// The root of the project gets added as a source path when the project is initially created - this removes it
