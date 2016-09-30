@@ -75,6 +75,15 @@ BUNDLE_REQUIRED_EXECUTION_ENVIRONMENT := J2SE-$(JAVA_TARGET_VERSION)
 lib_LTLIBRARIES = lib<%=idlModuleName.toLowerCase()%>Interfaces.la
 lib<%=idlModuleName.toLowerCase()%>Interfaces_la_SOURCES = $(redhawk_IDL_SOURCES_auto)
 
+.PHONY: stage_idl_files
+stage_idl_files:
+	mkdir -p build/idl/$(LIBRARY_NAME)/$(IDL_MODULE)
+	cp $(IDL_SOURCE_PATH)/*.idl build/idl/$(LIBRARY_NAME)/$(IDL_MODULE)/
+
+-include stage_idl_files
+
+BUILT_SOURCES = $(redhawk_IDL_SOURCES_auto)
+
 ###############################################################################
 # DO NOT MODIFY ANY LINES BELOW HERE
 ###############################################################################
