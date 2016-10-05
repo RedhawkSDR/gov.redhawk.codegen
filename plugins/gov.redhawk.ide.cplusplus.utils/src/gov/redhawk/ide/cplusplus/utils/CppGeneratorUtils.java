@@ -65,9 +65,10 @@ public final class CppGeneratorUtils {
 	private static final String OCTAVE_PATH_REGEX = ".*include/octave-3.[4-9].[0-9]$";
 
 	/**
-	 * Standard include path for REDHAWK
+	 * Standard include paths for REDHAWK
 	 */
 	private static final String OSSIE_INCLUDE = "${OssieHome}/include";
+	private static final String OSSIE_INCLUDE_REDHAWK = "${OssieHome}/include/redhawk";
 	/**
 	 * Standard include path for omniORB
 	 */
@@ -310,7 +311,7 @@ public final class CppGeneratorUtils {
 	 */
 	public static boolean isPathForCDTOnly(String path) {
 		// TODO: How would we adapt if we stopped using one of these paths? Would we still check it here?
-		return OSSIE_INCLUDE.equals(path) || OMNI_ORB_INCLUDE.equals(path) || OMNI_ORB_THREAD_INCLUDE.equals(path);
+		return OSSIE_INCLUDE.equals(path) || OSSIE_INCLUDE_REDHAWK.equals(path) || OMNI_ORB_INCLUDE.equals(path) || OMNI_ORB_THREAD_INCLUDE.equals(path);
 	}
 
 	/**
@@ -334,6 +335,8 @@ public final class CppGeneratorUtils {
 
 		final Set<ICLanguageSettingEntry> includePathSettings = new HashSet<ICLanguageSettingEntry>(lang.getSettingEntriesList(ICSettingEntry.INCLUDE_PATH));
 		includePathSettings.add((ICLanguageSettingEntry) CDataUtil.createEntry(ICSettingEntry.INCLUDE_PATH, OSSIE_INCLUDE, OSSIE_INCLUDE, null, 0));
+		includePathSettings.add(
+			(ICLanguageSettingEntry) CDataUtil.createEntry(ICSettingEntry.INCLUDE_PATH, OSSIE_INCLUDE_REDHAWK, OSSIE_INCLUDE_REDHAWK, null, 0));
 		includePathSettings.add((ICLanguageSettingEntry) CDataUtil.createEntry(ICSettingEntry.INCLUDE_PATH, OMNI_ORB_INCLUDE, OMNI_ORB_INCLUDE, null, 0));
 		includePathSettings.add(
 			(ICLanguageSettingEntry) CDataUtil.createEntry(ICSettingEntry.INCLUDE_PATH, OMNI_ORB_THREAD_INCLUDE, OMNI_ORB_THREAD_INCLUDE, null, 0));
