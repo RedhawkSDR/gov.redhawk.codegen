@@ -17,16 +17,16 @@
             autoGenerate="false"
             class="gov.redhawk.ide.codegen.jinja.java.JavaGenerator"
             compiler="/usr/bin/javac"
-            compilerVersion="1.8"
+            compilerVersion="1.7"
             humanLanguage="EN"
             id="gov.redhawk.ide.codegen.jinja.java.JavaGenerator"
             language="Java"
-            languageVersion="1.8"
+            languageVersion="1.7"
             name="Java Code Generator"
             notDefaultable="false"
             priority="high"
             runtime="/usr/bin/java"
-            runtimeVersion="1.8">
+            runtimeVersion="1.7">
          <description>
             Integrated &apos;redhawk-codegen&apos; Java code generator for components, devices and services.
          </description>
