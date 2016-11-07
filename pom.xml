@@ -166,7 +166,7 @@
       for now -->
     <!-- <module>../tests/gov.redhawk.ide.pydev.tests</module> -->
     <!-- <module>../tests/gov.redhawk.ide.sandbox.console.py.tests</module> -->
-    <!-- <module>../tests/gov.redhawk.ide.codegen.tests</module> -->
+    <!-- <module>../tests/gov.redhawk.ide.codegen.application.tests</module> -->
     <module>releng/p2</module>
   </modules>
 
