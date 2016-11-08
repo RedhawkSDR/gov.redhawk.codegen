@@ -9,7 +9,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
   // BEGIN GENERATED CODE
-package gov.redhawk.ide.codegen.tests;
+package gov.redhawk.ide.codegen.application.tests;
 
 import gov.redhawk.ide.RedhawkIdeActivator;
 import gov.redhawk.ide.codegen.application.CodegeneratorApplication;
@@ -63,6 +63,7 @@ import org.python.pydev.core.IInterpreterManager;
 import org.python.pydev.core.MisconfigurationException;
 import org.python.pydev.plugin.PydevPlugin;
 
+@SuppressWarnings("restriction")
 public class GeneratorTest extends TestCase {
 
 	private static final String[] TEST_COMPONENTS = { "basic", "bulkio_ports", "event_props", "props", "sri" };
