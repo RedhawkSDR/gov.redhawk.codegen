@@ -41,9 +41,11 @@ import org.osgi.framework.Version;
  * @since 1.1
  */
 public class CplusplusGenerator extends AbstractCplusplusCodeGenerator implements IScaComponentCodegenSetup {
-	
+
 	public static final String ID = "gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusGenerator";
-	
+
+	private static final String SO_SUFFIX = ".so";
+
 	private final JinjaGenerator generator = new JinjaGenerator();
 
 	@Override
@@ -58,7 +60,7 @@ public class CplusplusGenerator extends AbstractCplusplusCodeGenerator implement
 		}
 
 		// Entry point is the executable
-		String entryPoint = getSpdBaseName(softPkg);
+		String entryPoint = getSpdBaseName(softPkg) + SO_SUFFIX;
 		if (!outputDir.isEmpty()) {
 			entryPoint = outputDir + File.separator + entryPoint;
 		}
@@ -69,7 +71,7 @@ public class CplusplusGenerator extends AbstractCplusplusCodeGenerator implement
 		final LocalFile file = SpdFactory.eINSTANCE.createLocalFile();
 		file.setName(entryPoint);
 		code.setLocalFile(file);
-		code.setType(CodeFileType.EXECUTABLE);
+		code.setType(CodeFileType.SHARED_LIBRARY);
 
 		return code;
 	}
