@@ -552,7 +552,8 @@ public class CodegeneratorApplication implements IApplication {
 		WaveDevSettings retVal = null;
 		// First, try to get the .wavedev from disk. This will throw an exception if it fails.
 		try {
-			retVal = CodegenUtil.getWaveDevSettings(set.getResource(CodegenUtil.getSettingsURI(softPkg), true));
+			URI uri = CodegenUtil.getWaveDevSettingsURI(softPkg.eResource().getURI()).appendFragment("/");
+			retVal = CodegenUtil.getWaveDevSettings(set.getResource(uri, true));
 		} catch (final Exception e) {
 			System.out.println("Unable to find the settings file, inferring defaults");
 		}
