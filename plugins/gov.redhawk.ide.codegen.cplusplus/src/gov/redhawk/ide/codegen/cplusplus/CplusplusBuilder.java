@@ -91,6 +91,11 @@ public class CplusplusBuilder extends IncrementalProjectBuilder {
 	 */
 	private static final Pattern LIB_A_FILENAME = Pattern.compile(".*\\.a$");
 
+	/**
+	 * Matches files ending with .h or .hh
+	 */
+	private static final Pattern INC_HEADER_FILENAME = Pattern.compile(".*\\.hh?$");
+
 	public CplusplusBuilder() {
 		// PASS
 	}
@@ -580,70 +585,74 @@ public class CplusplusBuilder extends IncrementalProjectBuilder {
 		makefileContents.append("# and choosing Resource Configurations -> Exclude from build. Re-include files\n");
 		makefileContents.append("# by opening the Properties dialog of your project and choosing C/C++ Build ->\n");
 		makefileContents.append("# Tool Chain Editor, and un-checking \"Exclude resource from build \"\n");
-		boolean first = true;
+
+		String equalsStr = "= ";
 		for (final IPath sourceFile : sourceFiles) {
-			if (first) {
-				makefileContents.append("redhawk_SOURCES_auto = ");
-				first = false;
-			} else {
-				makefileContents.append("redhawk_SOURCES_auto += ");
-			}
+			makefileContents.append("redhawk_SOURCES_auto ");
+			makefileContents.append(equalsStr);
 			makefileContents.append(sourceFile.toOSString());
 			makefileContents.append('\n');
+			equalsStr = "+= ";
 		}
-		first = true;
+
+		equalsStr = "= ";
 		for (final String library : librariesExplicit) {
-			if (first) {
-				makefileContents.append("redhawk_LDADD_auto = ");
-				first = false;
-			} else {
-				makefileContents.append("redhawk_LDADD_auto += ");
-			}
+			makefileContents.append("redhawk_LDADD_auto ");
+			makefileContents.append(equalsStr);
 			makefileContents.append(library);
 			makefileContents.append('\n');
+			equalsStr = "+= ";
 		}
-		first = true;
+
+		equalsStr = "= ";
 		for (final String libraryDir : libraryDirs) {
-			if (first) {
-				makefileContents.append("redhawk_LDFLAGS_auto = -L");
-				first = false;
-			} else {
-				makefileContents.append("redhawk_LDFLAGS_auto += -L");
-			}
+			makefileContents.append("redhawk_LDFLAGS_auto ");
+			makefileContents.append(equalsStr);
+			makefileContents.append("-L");
 			makefileContents.append(libraryDir);
 			makefileContents.append('\n');
+			equalsStr = "+= ";
 		}
 		for (final String library : librariesLinkerResolve) {
-			if (first) {
-				makefileContents.append("redhawk_LDFLAGS_auto = -l");
-				first = false;
-			} else {
-				makefileContents.append("redhawk_LDFLAGS_auto += -l");
-			}
+			makefileContents.append("redhawk_LDFLAGS_auto ");
+			makefileContents.append(equalsStr);
+			makefileContents.append("-l");
 			makefileContents.append(library);
 			makefileContents.append('\n');
+			equalsStr = "+= ";
 		}
-		first = true;
+
+		equalsStr = "= ";
 		for (final String include : includeDirs) {
-			if (first) {
-				makefileContents.append("redhawk_INCLUDES_auto = -I");
-				first = false;
-			} else {
-				makefileContents.append("redhawk_INCLUDES_auto += -I");
-			}
+			makefileContents.append("redhawk_INCLUDES_auto ");
+			makefileContents.append(equalsStr);
+			makefileContents.append("-I");
 			makefileContents.append(include);
 			makefileContents.append('\n');
+			equalsStr = "+= ";
 		}
 		for (final String symbol : symbols) {
-			if (first) {
-				makefileContents.append("redhawk_INCLUDES_auto = -D");
-				first = false;
-			} else {
-				makefileContents.append("redhawk_INCLUDES_auto += -D");
-			}
+			makefileContents.append("redhawk_INCLUDES_auto ");
+			makefileContents.append(equalsStr);
+			makefileContents.append("-D");
 			makefileContents.append(symbol);
 			makefileContents.append('\n');
+			equalsStr = "+= ";
 		}
+
+		equalsStr = "= ";
+		for (final IPath sourceFile : sourceFiles) {
+			// We're interested in things in the includes sub-directory, whose filename ends with ".h" or ".hh"
+			if (sourceFile.segmentCount() >= 2 && sourceFile.segment(0).equals("include")
+				&& INC_HEADER_FILENAME.matcher(sourceFile.segment(sourceFile.segmentCount() - 1)).matches()) {
+				makefileContents.append("redhawk_HEADERS_auto ");
+				makefileContents.append(equalsStr);
+				makefileContents.append(sourceFile.toOSString());
+				makefileContents.append('\n');
+				equalsStr = "+= ";
+			}
+		}
+
 		return makefileContents.toString().getBytes();
 	}
 }
