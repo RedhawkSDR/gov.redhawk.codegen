@@ -39,6 +39,10 @@ public class PathLocatorUtil {
 		}
 
 		File[] filesAndDirs = startingDir.listFiles();
+		if (filesAndDirs == null) {
+			return results;
+		}
+
 		List<File> filesDirs = Arrays.asList(filesAndDirs);
 		outer: for (File file : filesDirs) {
 			if (file.isDirectory()) {
