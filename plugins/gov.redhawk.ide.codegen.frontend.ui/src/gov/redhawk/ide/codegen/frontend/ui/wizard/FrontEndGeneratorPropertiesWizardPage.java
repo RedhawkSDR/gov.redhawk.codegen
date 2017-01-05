@@ -14,21 +14,19 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Composite;
 
 import gov.redhawk.ide.codegen.ITemplateDesc;
-import gov.redhawk.ide.codegen.jet.java.ui.JavaJetGeneratorPropertiesWizardPage;
+import gov.redhawk.ide.codegen.jinja.cplusplus.ui.wizard.BooleanGeneratorPropertiesWizardPage2;
 
-// In the standard use of the JavaJetGeneratorPropertiesWizardPage the wizad page will dynamically add pages
-// in the FEI implementation the parent generator does this.  
-// In this class we simply prevent the addition of dynamic pages being added and lock down the template choice 
-
-public class FrontEndJavaGeneratorPropertiesWizardPage extends JavaJetGeneratorPropertiesWizardPage {
-
+/**
+ * Intended for use with C++ and Python implementations
+ */
+public class FrontEndGeneratorPropertiesWizardPage extends BooleanGeneratorPropertiesWizardPage2 {
 	@Override
 	public void createControl(Composite parent) {
 		super.createControl(parent);
 		ITemplateDesc[] inputs = (ITemplateDesc[]) getTemplateViewer().getInput();
 		ITemplateDesc feiInput = null;
 		for (ITemplateDesc input : inputs) {
-			if ("redhawk.codegen.jinja.java.component.frontend".equals(input.getId())) {
+			if (input.getId() != null && input.getId().matches(".*frontend")) {
 				feiInput = input;
 				break;
 			}

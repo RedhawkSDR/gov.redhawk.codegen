@@ -10,19 +10,17 @@
  *******************************************************************************/
 package gov.redhawk.ide.codegen.frontend.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import gov.redhawk.ide.codegen.frontend.FrontendFactory;
-import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndJavaGeneratorPropertiesWizardPage;
 import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndTunerOptionsWizardPage;
 import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndTunerPropsPage;
 import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndTunerTypeSelectionWizardPage;
 import gov.redhawk.ide.codegen.ui.ICodegenWizardPage;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 public class FrontEndJavaGeneratorTemplateDisplayFactory extends FrontEndGeneratorTemplateDisplayFactory {
-	private FrontEndJavaGeneratorPropertiesWizardPage frontEndJavaGeneratorPropertiesWizardPage;
 	
 	@Override
 	public ICodegenWizardPage[] createPages() {
@@ -30,14 +28,10 @@ public class FrontEndJavaGeneratorTemplateDisplayFactory extends FrontEndGenerat
 
 		setFeiDevice(FrontendFactory.eINSTANCE.createFeiDevice());
 
-		this.frontEndJavaGeneratorPropertiesWizardPage = new FrontEndJavaGeneratorPropertiesWizardPage();
-		this.frontEndJavaGeneratorPropertiesWizardPage.setCanFlipToNextPage(true);
-		
 		setFrontEndTunerTypeSelectionPage(new FrontEndTunerTypeSelectionWizardPage(getFeiDevice()));
 		setFrontEndTunerOptionsWizardPage(new FrontEndTunerOptionsWizardPage(getFeiDevice()));
 		setFrontEndTunerPropsWizardPage(new FrontEndTunerPropsPage(getFeiDevice()));
 		
-		pages.add(this.frontEndJavaGeneratorPropertiesWizardPage);
 		pages.add(getFrontEndTunerTypeSelectionPage());
 		pages.add(getFrontEndTunerOptionsWizardPage());
 		pages.add(getFrontEndTunerPropsWizardPage());

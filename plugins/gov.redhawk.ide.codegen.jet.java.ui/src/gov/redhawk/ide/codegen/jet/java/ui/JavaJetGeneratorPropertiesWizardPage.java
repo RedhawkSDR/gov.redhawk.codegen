@@ -120,7 +120,7 @@ public class JavaJetGeneratorPropertiesWizardPage extends WizardPage implements 
 
 	private boolean canFinish = false;
 
-	private final ArrayList<Binding> bindings;
+	protected final ArrayList<Binding> bindings;
 
 	private Property packageName = null;
 

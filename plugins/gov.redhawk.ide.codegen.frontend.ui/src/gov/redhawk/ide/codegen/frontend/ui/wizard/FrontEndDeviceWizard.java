@@ -10,6 +10,18 @@
  *******************************************************************************/
 package gov.redhawk.ide.codegen.frontend.ui.wizard;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.jface.wizard.Wizard;
+
 import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
 import gov.redhawk.ide.codegen.ImplementationSettings;
 import gov.redhawk.ide.codegen.frontend.ui.FrontEndGeneratorTemplateDisplayFactory;
@@ -23,18 +35,7 @@ import gov.redhawk.ide.codegen.util.ImplementationAndSettings;
 import gov.redhawk.ide.dcd.ui.wizard.NewScaDeviceCreationProjectWizard;
 import gov.redhawk.ide.ui.wizard.IImportWizard;
 import gov.redhawk.sca.util.SubMonitor;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.List;
-
 import mil.jpeojtrs.sca.spd.Implementation;
-
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.wizard.IWizardPage;
-import org.eclipse.jface.wizard.Wizard;
 
 public class FrontEndDeviceWizard extends NewScaDeviceCreationProjectWizard implements IImportWizard {
 
@@ -42,10 +43,13 @@ public class FrontEndDeviceWizard extends NewScaDeviceCreationProjectWizard impl
 	private static final String CODEGEN_FRONTEND_JAVA_ID = "redhawk.codegen.jinja.java.component.frontend";
 	private static final String CODEGEN_FRONTEND_PYTHON_ID = "redhawk.codegen.jinja.python.component.frontend";
 
+	private ICodegenWizardPage genPage = null;
+
 	public FrontEndDeviceWizard() {
 		super();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void addPages() {
 		setResourcePropertiesPage(new FrontEndDeviceProjectPropertiesWizardPage("", "Device"));
@@ -91,13 +95,45 @@ public class FrontEndDeviceWizard extends NewScaDeviceCreationProjectWizard impl
 			// We need to remove the pages previously added.
 			ICodeGeneratorPageRegistry codegenTemplateRegistry = RedhawkCodegenUiActivator.getCodeGeneratorsTemplateRegistry();
 
-			List<ICodegenDisplayFactory> codegenDisplayFactories = ((ICodeGeneratorPageRegistry2) codegenTemplateRegistry).findCodegenDisplayFactoriesByGeneratorId(CODEGEN_FRONTEND_CPP_ID);
+			List<ICodegenDisplayFactory> codegenDisplayFactories = ((ICodeGeneratorPageRegistry2) codegenTemplateRegistry).findCodegenDisplayFactoriesByGeneratorId(
+				CODEGEN_FRONTEND_CPP_ID);
 
 			for (ICodegenDisplayFactory factory : codegenDisplayFactories) {
 				if (factory instanceof FrontEndGeneratorTemplateDisplayFactory) {
 					this.removeTemplatePages(getImplPage(), ((FrontEndGeneratorTemplateDisplayFactory) factory).createPages());
 				}
 			}
+
+		}
+
+		// Create a implementation specific codegen setup page.
+		ICodegenWizardPage newGenPage = null;
+		if ("C++".equals(impl.getProgrammingLanguage().getName()) || "Python".equals(impl.getProgrammingLanguage().getName())) {
+			if (genPage != null) {
+				genPage.dispose();
+			}
+			newGenPage = new FrontEndGeneratorPropertiesWizardPage();
+			newGenPage.setCanFlipToNextPage(true);
+		} else if ("Java".equals(impl.getProgrammingLanguage().getName())) {
+			if (!(genPage instanceof FrontEndJavaGeneratorPropertiesWizardPage)) {
+				if (genPage != null) {
+					genPage.dispose();
+				}
+				newGenPage = new FrontEndJavaGeneratorPropertiesWizardPage();
+				newGenPage.setCanFlipToNextPage(true);
+			}
+		}
+
+		if (newGenPage != null) {
+			newGenPage.setWizard(this);
+			genPage = newGenPage;
+		}
+
+		// Dispose all pages added by previous implementation selections
+		for (int i = getWizPages().size() - 1; i > getWizardPageIndex(getImplPage()); i--) {
+			IWizardPage page = getWizPages().get(i);
+			page.dispose();
+			getWizPages().remove(i);
 
 		}
 
@@ -111,15 +147,22 @@ public class FrontEndDeviceWizard extends NewScaDeviceCreationProjectWizard impl
 
 		ICodeGeneratorPageRegistry codegenTemplateRegistry = RedhawkCodegenUiActivator.getCodeGeneratorsTemplateRegistry();
 
-		List<ICodegenDisplayFactory> codegenDisplayFactories = ((ICodeGeneratorPageRegistry2) codegenTemplateRegistry).findCodegenDisplayFactoriesByGeneratorId(settings.getTemplate());
-
+		List<ICodegenDisplayFactory> codegenDisplayFactories = ((ICodeGeneratorPageRegistry2) codegenTemplateRegistry).findCodegenDisplayFactoriesByGeneratorId(
+			settings.getTemplate());
 		for (ICodegenDisplayFactory factory : codegenDisplayFactories) {
 			if (factory instanceof FrontEndGeneratorTemplateDisplayFactory) {
-				ICodegenWizardPage[] pages = ((FrontEndGeneratorTemplateDisplayFactory) factory).createPages();
+
+				// Collect all template specific pages to be created
+				FrontEndGeneratorTemplateDisplayFactory feiFactory = (FrontEndGeneratorTemplateDisplayFactory) factory;
+				List<ICodegenWizardPage> pages = new ArrayList<ICodegenWizardPage>(Arrays.asList(feiFactory.createPages()));
+
+				// Set new codegen setup page as the first page to be created
+				pages.add(0, genPage);
+
 				for (ICodegenWizardPage page : pages) {
 					page.configure(getSoftPkg(), impl, codeGeneratorDescriptor, settings, getComponentType());
 				}
-				this.addTemplatePages(getImplPage(), pages);
+				this.addTemplatePages(getImplPage(), pages.toArray(new ICodegenWizardPage[pages.size()]));
 			}
 		}
 
