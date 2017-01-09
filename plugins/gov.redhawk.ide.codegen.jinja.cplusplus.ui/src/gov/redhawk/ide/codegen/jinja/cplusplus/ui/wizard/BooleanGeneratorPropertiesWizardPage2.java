@@ -67,6 +67,9 @@ public class BooleanGeneratorPropertiesWizardPage2 extends BooleanGeneratorPrope
 	public BooleanGeneratorPropertiesWizardPage2() {
 	}
 	
+	/**
+	 * @since 1.2
+	 */
 	protected void addCustomPages() {
 		if (this.getWizard() instanceof ScaImplementationWizard2) {
 			ICodegenWizardPage[] codeGenTemplatePages = RedhawkCodegenUiActivator.getCodeGeneratorsTemplateRegistry().findPageByGeneratorId(this.template);
@@ -75,6 +78,9 @@ public class BooleanGeneratorPropertiesWizardPage2 extends BooleanGeneratorPrope
 		// Otherwise assume the Wizard is taking care of this itself.
 	}
 	
+	/**
+	 * @since 1.2
+	 */
 	protected void removeCustomPages() {
 		if (this.template == null || "".equals(this.template)) {
 			return;
