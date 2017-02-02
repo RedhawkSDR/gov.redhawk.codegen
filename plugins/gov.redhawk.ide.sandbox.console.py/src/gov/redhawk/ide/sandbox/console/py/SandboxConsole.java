@@ -40,7 +40,7 @@ import ExtendedCF.Sandbox;
 
 public class SandboxConsole extends PydevConsole {
 	private Sandbox sandbox;
-	private ListenerList terminateListeners;
+	private ListenerList<ITerminateListener> terminateListeners;
 
 	public interface ITerminateListener {
 		public void consoleTerminated(SandboxConsole console);
@@ -52,7 +52,7 @@ public class SandboxConsole extends PydevConsole {
 	protected SandboxConsole(PydevConsoleInterpreter interpreter, Sandbox sandbox) {
 		super(interpreter, NLS.bind(Messages.RHLocalConsoleFactory_PY_INIT, sandbox.toString()));
 		this.sandbox = sandbox;
-		this.terminateListeners = new ListenerList();
+		this.terminateListeners = new ListenerList<ITerminateListener>();
 	}
 
 	protected SandboxConsole(PydevConsoleInterpreter interpreter, String additionalInitialComands) {
@@ -81,8 +81,7 @@ public class SandboxConsole extends PydevConsole {
 
 	@Override
 	public void terminate() {
-		for (Object l : terminateListeners.getListeners()) {
-			final ITerminateListener tl = (ITerminateListener) l;
+		for (final ITerminateListener tl : terminateListeners) {
 			SafeRunner.run(new ISafeRunnable() {
 
 				@Override

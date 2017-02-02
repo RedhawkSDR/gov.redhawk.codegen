@@ -108,7 +108,7 @@ public class JavaJetGeneratorPropertiesWizardPage extends WizardPage implements 
 
 	private ComboViewer templateViewer;
 
-	private HashMap<ImplementationSettings, WritableSet> setMap;
+	private HashMap<ImplementationSettings, WritableSet<IPropertyDescriptor>> setMap;
 
 	private CheckboxTableViewer propertiesViewer;
 
@@ -698,10 +698,10 @@ public class JavaJetGeneratorPropertiesWizardPage extends WizardPage implements 
 	 */
 	protected Binding createPropertyBinding() {
 		if (this.setMap == null) {
-			this.setMap = new HashMap<ImplementationSettings, WritableSet>();
+			this.setMap = new HashMap<ImplementationSettings, WritableSet<IPropertyDescriptor>>();
 		}
 
-		final WritableSet mySet = new WritableSet();
+		final WritableSet<IPropertyDescriptor> mySet = new WritableSet<IPropertyDescriptor>();
 		for (final IPropertyDescriptor prop : this.selectedTemplate.getPropertyDescriptors()) {
 			// Initialize to the default value of the property
 			boolean val = "TRUE".equalsIgnoreCase(prop.getDefaultValue());
@@ -717,9 +717,9 @@ public class JavaJetGeneratorPropertiesWizardPage extends WizardPage implements 
 				mySet.add(prop);
 			}
 		}
-		mySet.addSetChangeListener(new ISetChangeListener() {
+		mySet.addSetChangeListener(new ISetChangeListener<IPropertyDescriptor>() {
 			@Override
-			public void handleSetChange(final SetChangeEvent event) {
+			public void handleSetChange(final SetChangeEvent<? extends IPropertyDescriptor> event) {
 				final EList<Property> properties = JavaJetGeneratorPropertiesWizardPage.this.implSettings.getProperties();
 				for (final Object obj : event.diff.getRemovals()) {
 					final IPropertyDescriptor cp = (IPropertyDescriptor) obj;

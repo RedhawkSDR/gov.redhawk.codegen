@@ -35,8 +35,8 @@ public class SelectFrontEndTunerPropsDialog extends Dialog {
 	private static final int DIALOG_HORIZONTAL_HINT = 800;
 	private static final int DIALOG_VERTICAL_HINT = 400;
 	private CheckboxTableViewer theTableViewer;
-	private final WritableSet input = new WritableSet();
-	private final WritableSet output = new WritableSet();
+	private final WritableSet<FrontEndProp> input = new WritableSet<FrontEndProp>();
+	private final WritableSet<FrontEndProp> output = new WritableSet<FrontEndProp>();
 	private DataBindingContext context = new DataBindingContext();
 
 	protected SelectFrontEndTunerPropsDialog(Shell parentShell) {

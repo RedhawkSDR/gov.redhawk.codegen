@@ -71,7 +71,7 @@ public class MFileVariableMapingWizardPage extends WizardPage implements ICodege
 	private DataBindingContext dataBindingContext = new DataBindingContext();
 	private TableViewerColumn typeColumn;
 	private TableViewerColumn mappingColumn;
-	private WritableValue validationValue = new WritableValue();
+	private WritableValue<IStatus> validationValue = new WritableValue<IStatus>();
 	private IValidator validator = new IValidator() {
 
 		@Override
@@ -141,23 +141,23 @@ public class MFileVariableMapingWizardPage extends WizardPage implements ICodege
 		createOctaveTable(mFileOutputsGroup, "functionOutputs");
 
 		dataBindingContext.addValidationStatusProvider(new ValidationStatusProvider() {
-			private IObservableList list = new WritableList();
+			private IObservableList<WritableValue<IStatus>> list = new WritableList<WritableValue<IStatus>>();
 			{
 				list.add(validationValue);
 			}
 
 			@Override
-			public IObservableValue getValidationStatus() {
+			public IObservableValue<IStatus> getValidationStatus() {
 				return validationValue;
 			}
 
 			@Override
-			public IObservableList getTargets() {
+			public IObservableList<WritableValue<IStatus>> getTargets() {
 				return list;
 			}
 
 			@Override
-			public IObservableList getModels() {
+			public IObservableList< ? > getModels() {
 				return Observables.emptyObservableList();
 			}
 		});
@@ -194,7 +194,9 @@ public class MFileVariableMapingWizardPage extends WizardPage implements ICodege
 		theTableViewer.setContentProvider(new ArrayContentProvider());
 		theTableViewer.setLabelProvider(new OctaveMFileTableLabelProvider());
 
-		Binding binding = this.dataBindingContext.bindValue(ViewerProperties.input().observe(theTableViewer), BeanProperties.value(propName).observe(this.octaveProjProps), null, null);
+		@SuppressWarnings("unchecked")
+		IObservableValue< ? > octavePropObservable = BeanProperties.value(propName).observe(this.octaveProjProps);
+		Binding binding = this.dataBindingContext.bindValue(ViewerProperties.input().observe(theTableViewer), octavePropObservable, null, null);
 
 		EditingSupport octaveTypeEditingSupport = new OctaveMFileTableTypeEditingSupport(typeColumn.getViewer(), this.validator);
 		typeColumn.setEditingSupport(octaveTypeEditingSupport);

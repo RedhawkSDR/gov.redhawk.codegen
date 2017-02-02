@@ -284,21 +284,24 @@ public class MFileSelectionWizardPage extends WizardPage implements ICodegenWiza
 		DataBindingContext ctx = new DataBindingContext();
 
 		// Defining the Model objects as Beans
-		IObservableValue primaryMFileModel = BeanProperties.value("primaryMFile").observe(this.octaveProjProps);
-		IObservableValue currentDepFileModel = BeanProperties.value("currentDepFile").observe(this.octaveProjProps);
-		IObservableValue hasDepsModel = BeanProperties.value("hasDeps").observe(this.octaveProjProps);
+		@SuppressWarnings("unchecked")
+		IObservableValue< ? > primaryMFileModel = BeanProperties.value("primaryMFile").observe(this.octaveProjProps);
+		@SuppressWarnings("unchecked")
+		IObservableValue< ? > currentDepFileModel = BeanProperties.value("currentDepFile").observe(this.octaveProjProps);
+		@SuppressWarnings("unchecked")
+		IObservableValue< ? > hasDepsModel = BeanProperties.value("hasDeps").observe(this.octaveProjProps);
 
 		// Defining the Target objects
-		IObservableValue primaryMFileTarget = WidgetProperties.text(SWT.Modify).observe(this.primaryMFileTextBox);
-		IObservableValue currentDepFileTarget = WidgetProperties.text(SWT.Modify).observe(this.dependencyTextBox);
-		IObservableValue hasDepsTarget = WidgetProperties.selection().observe(this.dependencyCheckBox);
+		IObservableValue< ? > primaryMFileTarget = WidgetProperties.text(SWT.Modify).observe(this.primaryMFileTextBox);
+		IObservableValue< ? > currentDepFileTarget = WidgetProperties.text(SWT.Modify).observe(this.dependencyTextBox);
+		IObservableValue< ? > hasDepsTarget = WidgetProperties.selection().observe(this.dependencyCheckBox);
 
 		// The target objects that need to be disabled when the hasDeps model object changes.
-		IObservableValue depsTextBoxTarget = WidgetProperties.enabled().observe(this.dependencyTextBox);
-		IObservableValue depsAddButtonTarget = WidgetProperties.enabled().observe(this.depsAddButton);
-		IObservableValue depsBrowseButtonTarget = WidgetProperties.enabled().observe(this.depsBrowseButton);
-		IObservableValue depsRemoveButtonTarget = WidgetProperties.enabled().observe(this.depsRemoveButton);
-		IObservableValue depsListViewerTarget = WidgetProperties.enabled().observe(this.depsListViewer.getControl());
+		IObservableValue< ? > depsTextBoxTarget = WidgetProperties.enabled().observe(this.dependencyTextBox);
+		IObservableValue< ? > depsAddButtonTarget = WidgetProperties.enabled().observe(this.depsAddButton);
+		IObservableValue< ? > depsBrowseButtonTarget = WidgetProperties.enabled().observe(this.depsBrowseButton);
+		IObservableValue< ? > depsRemoveButtonTarget = WidgetProperties.enabled().observe(this.depsRemoveButton);
+		IObservableValue< ? > depsListViewerTarget = WidgetProperties.enabled().observe(this.depsListViewer.getControl());
 
 		// Define my strategy for the Primary & Deps M-File bindings.
 		UpdateValueStrategy primaryMFileUpdateStrat = new UpdateValueStrategy();

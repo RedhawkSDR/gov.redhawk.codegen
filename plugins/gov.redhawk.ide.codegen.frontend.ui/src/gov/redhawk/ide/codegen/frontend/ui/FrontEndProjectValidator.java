@@ -30,10 +30,10 @@ import org.eclipse.jface.wizard.WizardPage;
  */
 public class FrontEndProjectValidator extends ValidationStatusProvider {
 
-	private final WritableValue status = new WritableValue();
-	private final IObservableList models;
+	private final WritableValue<IStatus> status = new WritableValue<IStatus>();
+	private final IObservableList< ? > models;
 	private DeviceProjectSettings projectSettings;
-	private IObservableList list = new WritableList();
+	private IObservableList<WritableValue<IStatus>> list = new WritableList<WritableValue<IStatus>>();
 	private WizardPage page;
 	{
 		list.add(status);
@@ -74,25 +74,25 @@ public class FrontEndProjectValidator extends ValidationStatusProvider {
 	}
 
 	protected void updateWizardMessage() {
-		if (((IStatus) this.status.getValue()).isOK()) {
+		if (this.status.getValue().isOK()) {
 			this.page.setErrorMessage(null);
 		} else {
-			this.page.setErrorMessage(((IStatus) this.status.getValue()).getMessage());
+			this.page.setErrorMessage(this.status.getValue().getMessage());
 		}
 	}
 
 	@Override
-	public IObservableValue getValidationStatus() {
+	public IObservableValue<IStatus> getValidationStatus() {
 		return this.status;
 	}
 
 	@Override
-	public IObservableList getTargets() {
+	public IObservableList<WritableValue<IStatus>> getTargets() {
 		return this.list;
 	}
 
 	@Override
-	public IObservableList getModels() {
+	public IObservableList< ? > getModels() {
 		return this.models;
 	}
 	

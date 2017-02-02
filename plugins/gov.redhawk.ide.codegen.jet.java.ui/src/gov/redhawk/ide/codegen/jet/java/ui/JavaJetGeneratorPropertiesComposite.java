@@ -69,7 +69,7 @@ public class JavaJetGeneratorPropertiesComposite extends BaseGeneratorProperties
 
 	private FormEntry packageNameEntry;
 	private CheckboxTableViewer propertiesViewer;
-	private HashMap<ImplementationSettings, WritableSet> setMap;
+	private HashMap<ImplementationSettings, WritableSet<Property>> setMap;
 	private Binding propBinding;
 	private Binding packageBinding;
 	private Property packageName = null;
@@ -201,13 +201,13 @@ public class JavaJetGeneratorPropertiesComposite extends BaseGeneratorProperties
 	@Override
 	protected void createPropertyBinding() {
 		if (this.setMap == null) {
-			this.setMap = new HashMap<ImplementationSettings, WritableSet>();
+			this.setMap = new HashMap<ImplementationSettings, WritableSet<Property>>();
 		} else {
 			this.getContext().removeBinding(this.propBinding);
 			this.setMap.clear();
 		}
 
-		final WritableSet mySet = new WritableSet();
+		final WritableSet<Property> mySet = new WritableSet<Property>();
 
 		for (final Property prop : this.getImplSettings().getProperties()) {
 			if ("TRUE".equalsIgnoreCase(prop.getValue())) {
@@ -215,9 +215,9 @@ public class JavaJetGeneratorPropertiesComposite extends BaseGeneratorProperties
 			}
 		}
 
-		mySet.addSetChangeListener(new ISetChangeListener() {
+		mySet.addSetChangeListener(new ISetChangeListener<Property>() {
 			@Override
-			public void handleSetChange(final SetChangeEvent event) {
+			public void handleSetChange(final SetChangeEvent<? extends Property> event) {
 				final EditingDomain domain = JavaJetGeneratorPropertiesComposite.this.getEditingDomain();
 				for (final Object obj : event.diff.getRemovals()) {
 					final Property p = (Property) obj;

@@ -22,7 +22,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TreeColumnViewerLabelProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -314,7 +314,7 @@ public enum FrontEndDeviceUIUtils {
 		CheckboxTableViewer theTableViewer = new CheckboxTableViewer(createTable(parent, SWT.CHECK | SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL
 			| SWT.H_SCROLL));
 		theTableViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		theTableViewer.setSorter(getTableSorter());
+		theTableViewer.setComparator(getTableSorter());
 
 		addColumns(theTableViewer);
 
@@ -326,7 +326,7 @@ public enum FrontEndDeviceUIUtils {
 		TableViewer theTableViewer = new TableViewer(createTable(parent, SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.H_SCROLL));
 
 		theTableViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		theTableViewer.setSorter(getTableSorter());
+		theTableViewer.setComparator(getTableSorter());
 
 		addColumns(theTableViewer);
 
@@ -415,8 +415,8 @@ public enum FrontEndDeviceUIUtils {
 		theTableViewer.setContentProvider(new ObservableSetContentProvider());
 	}
 
-	private ViewerSorter getTableSorter() {
-		ViewerSorter vs = new ViewerSorter() {
+	private ViewerComparator getTableSorter() {
+		ViewerComparator vs = new ViewerComparator() {
 			@Override
 			public int compare(Viewer viewer, Object e1, Object e2) {
 				FrontEndProp frontEndProp1 = (FrontEndProp) e1;

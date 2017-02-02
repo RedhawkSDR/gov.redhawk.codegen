@@ -264,11 +264,14 @@ public class SharedLibraryProjectPropertiesWizardPage extends ScaResourceProject
 
 	private void bind() {
 		// Binds model type name with type combo
-		dbc.bindValue(WidgetProperties.selection().observe(typeCombo), BeanProperties.value(model.getClass(), SharedLibraryModel.TYPE_NAME).observe(model));
+		@SuppressWarnings("unchecked")
+		IObservableValue< ? > typeNameObservable = BeanProperties.value(model.getClass(), SharedLibraryModel.TYPE_NAME).observe(model);
+		dbc.bindValue(WidgetProperties.selection().observe(typeCombo), typeNameObservable);
 
 		// Binds the mFile Text box for validation purposes
-		IObservableValue currentMFileModel = BeanProperties.value("currentMFile").observe(this.model);
-		IObservableValue currentMFileTarget = WidgetProperties.text(SWT.Modify).observe(this.mFileTextBox);
+		@SuppressWarnings("unchecked")
+		IObservableValue< ? > currentMFileModel = BeanProperties.value("currentMFile").observe(this.model);
+		IObservableValue< ? > currentMFileTarget = WidgetProperties.text(SWT.Modify).observe(this.mFileTextBox);
 		UpdateValueStrategy mFileUpdateStrat = new UpdateValueStrategy();
 		mFileUpdateStrat.setConverter(getStringToFileConverter());
 		mFileUpdateStrat.setAfterConvertValidator(getMFileNameValidator());

@@ -132,7 +132,7 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		if (propWizPage != null) {
 			this.validator = new FrontEndProjectValidator(propWizPage.getProjectSettings(), this);
 			ctx.addValidationStatusProvider(validator);
-			IObservableValue validationStatus = validator.getValidationStatus();
+			IObservableValue<IStatus> validationStatus = validator.getValidationStatus();
 			validationStatus.addChangeListener(new IChangeListener() {
 
 				@Override

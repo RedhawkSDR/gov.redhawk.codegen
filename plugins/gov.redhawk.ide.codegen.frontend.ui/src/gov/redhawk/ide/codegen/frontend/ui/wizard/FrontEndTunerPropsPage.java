@@ -62,7 +62,7 @@ public class FrontEndTunerPropsPage extends WizardPage implements ICodegenWizard
 	private TableViewer theTableViewer;
 	private Table theTable;
 	private Button removeTunerStatusPropButton;
-	private WritableSet selectedProps = new WritableSet();
+	private WritableSet<FrontEndProp> selectedProps = new WritableSet<FrontEndProp>();
 	private ImplementationSettings implSettings;
 	private FeiDevice feiDevice;
 	private FrontEndProjectValidator validator;
@@ -125,7 +125,7 @@ public class FrontEndTunerPropsPage extends WizardPage implements ICodegenWizard
 		if (propWizPage != null) {
 			this.validator = new FrontEndProjectValidator(propWizPage.getProjectSettings(), this);
 			ctx.addValidationStatusProvider(validator);
-			IObservableValue validationStatus = validator.getValidationStatus();
+			IObservableValue<IStatus> validationStatus = validator.getValidationStatus();
 			validationStatus.addChangeListener(new IChangeListener() {
 
 				@Override
