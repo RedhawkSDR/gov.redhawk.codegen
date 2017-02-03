@@ -13,9 +13,8 @@ package gov.redhawk.ide.codegen.jet.cplusplus.ui;
 import gov.redhawk.ide.debug.ui.tabs.ComponentPropertiesTab;
 import gov.redhawk.ide.debug.ui.tabs.LocalComponentMainTab;
 
-import org.eclipse.cdt.launch.ui.ApplicationCDebuggerTab;
 import org.eclipse.cdt.launch.ui.CArgumentsTab;
-import org.eclipse.cdt.launch.ui.CMainTab;
+import org.eclipse.cdt.launch.ui.CMainTab2;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTabGroup;
 import org.eclipse.debug.ui.CommonTab;
 import org.eclipse.debug.ui.EnvironmentTab;
@@ -37,10 +36,10 @@ public class CppComponentTabGroup extends AbstractLaunchConfigurationTabGroup {
 		final ILaunchConfigurationTab[] tabs = new ILaunchConfigurationTab[] {
 		        new LocalComponentMainTab(),
 		        new ComponentPropertiesTab(),
-		        new CMainTab(),
+		        new CMainTab2(),
 		        new CArgumentsTab(),
 		        new EnvironmentTab(),
-		        new ApplicationCDebuggerTab(),
+		        // org.eclipse.cdt.dsf.gdb.internal.ui.launching.CDebuggerTab via extension point,
 		        new SourceLookupTab(),
 		        new RefreshTab(),
 		        new CommonTab()

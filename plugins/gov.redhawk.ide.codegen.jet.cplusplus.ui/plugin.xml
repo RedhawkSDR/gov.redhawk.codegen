@@ -27,4 +27,16 @@
             type="gov.redhawk.ide.codegen.jet.cplusplus.launchComponentApplication">
       </launchConfigurationTabGroup>
    </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTabs">
+      <tab
+            class="org.eclipse.cdt.dsf.gdb.internal.ui.launching.LocalApplicationCDebuggerTab"
+            group="gov.redhawk.ide.codegen.jet.cplusplus.ui.launchConfigurationTabGroup"
+            id="gov.redhawk.ide.codegen.jet.cplusplus.ui.debuggerTab"
+            name="%launchTab.debugger.name">
+         <placement
+               after="org.eclipse.debug.ui.environmentTab">
+         </placement>
+      </tab>
+   </extension>
 </plugin>
