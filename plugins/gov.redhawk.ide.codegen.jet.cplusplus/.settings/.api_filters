@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <component id="gov.redhawk.ide.codegen.jet.cplusplus" version="2">
-    <resource path="src/gov/redhawk/ide/codegen/jet/cplusplus/LocalCppCDILaunchDelegate.java" type="gov.redhawk.ide.codegen.jet.cplusplus.LocalCppCDILaunchDelegate">
-        <filter id="576720909">
+    <resource path="src/gov/redhawk/ide/codegen/jet/cplusplus/LocalCppRunLaunchDelegate.java" type="gov.redhawk.ide.codegen.jet.cplusplus.LocalCppRunLaunchDelegate">
+        <filter comment="We extend the delegate to add Redhawk functionality" id="576720909">
             <message_arguments>
-                <message_argument value="LocalCDILaunchDelegate"/>
-                <message_argument value="LocalCppCDILaunchDelegate"/>
+                <message_argument value="LocalRunLaunchDelegate"/>
+                <message_argument value="LocalCppRunLaunchDelegate"/>
             </message_arguments>
         </filter>
     </resource>

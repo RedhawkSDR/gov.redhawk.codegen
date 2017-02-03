@@ -258,7 +258,7 @@ If false, the data will be taken from the sequence and it is the component's res
    <extension
          point="org.eclipse.debug.core.launchDelegates">
       <launchDelegate
-            delegate="gov.redhawk.ide.codegen.jet.cplusplus.LocalCppCDILaunchDelegate"
+            delegate="gov.redhawk.ide.codegen.jet.cplusplus.LocalCppRunLaunchDelegate"
             id="gov.redhawk.ide.codegen.jet.cplusplus.launchDelegate"
             modes="run"
             name="%launchDelegate.name"
