@@ -120,13 +120,6 @@
          unpack="false"/>
 
    <plugin
-         id="gov.redhawk.ide.linuxtools.cdt.autotools.macros"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
          id="gov.redhawk.ide.pydev"
          download-size="0"
          install-size="0"

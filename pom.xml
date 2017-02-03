@@ -146,7 +146,6 @@
     <module>plugins/gov.redhawk.ide.octave.ui</module>
     <module>plugins/gov.redhawk.ide.idl</module>
     <module>plugins/gov.redhawk.ide.idl.ui</module>
-    <module>plugins/gov.redhawk.ide.linuxtools.cdt.autotools.macros</module>
     <module>plugins/gov.redhawk.ide.pydev</module>
     <module>plugins/gov.redhawk.ide.sandbox.console.py</module>
     <module>plugins/gov.redhawk.ide.sharedlibrary.ui</module>
