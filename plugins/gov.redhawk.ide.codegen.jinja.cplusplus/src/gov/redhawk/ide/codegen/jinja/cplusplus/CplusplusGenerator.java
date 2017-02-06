@@ -22,6 +22,7 @@ import java.io.PrintStream;
 import java.util.List;
 import java.util.Set;
 
+import mil.jpeojtrs.sca.scd.ComponentType;
 import mil.jpeojtrs.sca.spd.Code;
 import mil.jpeojtrs.sca.spd.CodeFileType;
 import mil.jpeojtrs.sca.spd.Implementation;
@@ -60,7 +61,13 @@ public class CplusplusGenerator extends AbstractCplusplusCodeGenerator implement
 		}
 
 		// Entry point is the executable
-		String entryPoint = getSpdBaseName(softPkg) + SO_SUFFIX;
+		String entryPoint = getSpdBaseName(softPkg);
+		String componentType = softPkg.getDescriptor().getComponent().getComponentType();
+		if (ComponentType.RESOURCE.getLiteral().equals(componentType)) {
+			// Entry point for shared address space components is the shared object file
+			entryPoint = getSpdBaseName(softPkg) + SO_SUFFIX;
+		}
+
 		if (!outputDir.isEmpty()) {
 			entryPoint = outputDir + File.separator + entryPoint;
 		}
@@ -71,7 +78,12 @@ public class CplusplusGenerator extends AbstractCplusplusCodeGenerator implement
 		final LocalFile file = SpdFactory.eINSTANCE.createLocalFile();
 		file.setName(entryPoint);
 		code.setLocalFile(file);
-		code.setType(CodeFileType.SHARED_LIBRARY);
+
+		if (ComponentType.RESOURCE.getLiteral().equals(componentType)) {
+			code.setType(CodeFileType.SHARED_LIBRARY);
+		} else {
+			code.setType(CodeFileType.EXECUTABLE);
+		}
 
 		return code;
 	}
