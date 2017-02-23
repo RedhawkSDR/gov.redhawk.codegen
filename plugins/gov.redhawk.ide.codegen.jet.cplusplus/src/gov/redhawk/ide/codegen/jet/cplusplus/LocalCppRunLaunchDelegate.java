@@ -20,7 +20,13 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 
+import gov.redhawk.ide.debug.LocalScaWaveform;
+import gov.redhawk.ide.debug.ScaDebugLaunchConstants;
+import gov.redhawk.ide.debug.ScaDebugPlugin;
 import gov.redhawk.ide.debug.SpdLauncherUtil;
+import gov.redhawk.ide.debug.internal.ComponentLaunch;
+import gov.redhawk.ide.debug.internal.ComponentProgramLaunchUtils;
+import mil.jpeojtrs.sca.spd.Implementation;
 import mil.jpeojtrs.sca.spd.SoftPkg;
 
 /**
@@ -37,10 +43,6 @@ public class LocalCppRunLaunchDelegate extends LocalRunLaunchDelegate {
 
 	@Override
 	public void launch(final ILaunchConfiguration config, final String mode, final ILaunch launch, final IProgressMonitor monitor) throws CoreException {
-		final int WORK_LAUNCH = 10;
-		final int WORK_POST_LAUNCH = 100;
-		SubMonitor subMonitor = SubMonitor.convert(monitor, WORK_LAUNCH + WORK_POST_LAUNCH);
-
 		// Validate all XML before doing anything else
 		final SoftPkg spd = SpdLauncherUtil.getSpd(config);
 		IStatus status = SpdLauncherUtil.validateAllXML(spd);
@@ -48,12 +50,24 @@ public class LocalCppRunLaunchDelegate extends LocalRunLaunchDelegate {
 			throw new CoreException(status);
 		}
 
-		final ILaunchConfigurationWorkingCopy copy = config.getWorkingCopy();
-		insertProgramArguments(spd, launch, copy);
+		final ILaunchConfigurationWorkingCopy workingCopy = config.getWorkingCopy();
+		insertProgramArguments(spd, launch, workingCopy);
+
+		String implID = config.getAttribute(ScaDebugLaunchConstants.ATT_IMPL_ID, (String) null);
+		final Implementation impl = spd.getImplementation(implID);
 
 		try {
-			super.launch(copy, mode, launch, subMonitor.newChild(WORK_LAUNCH));
-			SpdLauncherUtil.postLaunch(spd, copy, mode, launch, subMonitor.newChild(WORK_POST_LAUNCH));
+			// Shared address space components must be launched within a component host
+			if (SoftPkg.Util.isContainedComponent(impl)) {
+				LocalScaWaveform waveform = ScaDebugPlugin.getInstance().getLocalSca().getSandboxWaveform();
+				ComponentProgramLaunchUtils.launch(waveform, workingCopy, (ComponentLaunch) launch, spd, impl, mode, monitor);
+			} else {
+				// Legacy launch behavior for non-shared address space components and all other resource types
+				final int WORK_LAUNCH = 10, WORK_POST_LAUNCH = 100;
+				SubMonitor subMonitor = SubMonitor.convert(monitor, WORK_LAUNCH + WORK_POST_LAUNCH);
+				super.launch(workingCopy, mode, launch, subMonitor.newChild(WORK_LAUNCH));
+				SpdLauncherUtil.postLaunch(spd, workingCopy, mode, launch, subMonitor.newChild(WORK_POST_LAUNCH));
+			}
 		} finally {
 			if (monitor != null) {
 				monitor.done();
@@ -69,5 +83,11 @@ public class LocalCppRunLaunchDelegate extends LocalRunLaunchDelegate {
 
 		final String newArgs = SpdLauncherUtil.insertProgramArguments(spd, args, launch, configuration);
 		configuration.setAttribute(ICDTLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, newArgs);
+	}
+
+	@Override
+	public ILaunch getLaunch(ILaunchConfiguration configuration, String mode) throws CoreException {
+		super.getLaunch(configuration, mode);
+		return new ComponentLaunch(configuration, mode, null);
 	}
 }
