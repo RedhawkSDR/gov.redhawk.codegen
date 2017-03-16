@@ -62,7 +62,7 @@ import mil.jpeojtrs.sca.spd.Implementation;
 
 public final class CppGeneratorUtils {
 
-	private static final String OCTAVE_PATH_REGEX = ".*include/octave-3.[4-9].[0-9]$";
+	private static final String OCTAVE_PATH_REGEX = ".*include.*octave-3\\.\\d\\.\\d";
 
 	/**
 	 * Standard include paths for REDHAWK
@@ -245,8 +245,10 @@ public final class CppGeneratorUtils {
 				}
 			} catch (CoreException e) {
 				retStatus.add(new Status(IStatus.ERROR, CplusplusUtilsPlugin.PLUGIN_ID, "Unable to access the project for the octave nature", e));
+				return retStatus;
 			} catch (IOException io) {
-				retStatus.add(new Status(IStatus.ERROR, CplusplusUtilsPlugin.PLUGIN_ID, "Error while locating Octave Include folder", io));
+				retStatus.add(new Status(IStatus.ERROR, CplusplusUtilsPlugin.PLUGIN_ID, "Error while locating the Octave include directory", io));
+				return retStatus;
 			}
 		}
 
@@ -267,12 +269,12 @@ public final class CppGeneratorUtils {
 	private static List<File> locateOctaveIncludeDir() throws IOException {
 		PathLocatorUtil fileLocator = new PathLocatorUtil();
 		fileLocator.setBreakOnFirstResult(true);
-		fileLocator.setExcludePathRegex(".*(bin|share|lib|lib64|games|etc|java).*");
+		fileLocator.setExcludePathSegmentRegex("bin|etc|games|lib|lib64|libexec|sbin|share|src|tmp");
 		fileLocator.setMatchRegex(OCTAVE_PATH_REGEX);
-		File startingDir = new File("/usr");
-		List<File> files = fileLocator.getFileListings(startingDir);
+		File searchLocation = new File("/usr");
+		List<File> files = fileLocator.getFileListings(searchLocation);
 		if (files == null || files.isEmpty()) {
-			throw new IOException("Octave path not found. Searching under: " + startingDir);
+			throw new IOException("Octave include directory not found. Searched under: " + searchLocation);
 		}
 		return files;
 	}
