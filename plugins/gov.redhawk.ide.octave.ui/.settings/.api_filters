@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <component id="gov.redhawk.ide.octave.ui" version="2">
+    <resource path="META-INF/MANIFEST.MF" type="gov.redhawk.ide.octave.ui.wizard.MFileVariableMapingWizardPage">
+        <filter id="305324134">
+            <message_arguments>
+                <message_argument value="gov.redhawk.ide.octave.ui.wizard.MFileVariableMapingWizardPage"/>
+                <message_argument value="gov.redhawk.ide.octave.ui_1.0.0"/>
+            </message_arguments>
+        </filter>
+    </resource>
     <resource path="src/gov/redhawk/ide/octave/ui/BeanModelObject.java" type="gov.redhawk.ide.octave.ui.BeanModelObject">
         <filter id="305365105">
             <message_arguments>
@@ -92,14 +100,6 @@
         <filter id="305365105">
             <message_arguments>
                 <message_argument value="gov.redhawk.ide.octave.ui.wizard.MFileSelectionWizardPage"/>
-                <message_argument value="gov.redhawk.ide.octave.ui_1.0.0"/>
-            </message_arguments>
-        </filter>
-    </resource>
-    <resource path="src/gov/redhawk/ide/octave/ui/wizard/MFileVariableMapingWizardPage.java" type="gov.redhawk.ide.octave.ui.wizard.MFileVariableMapingWizardPage">
-        <filter id="305365105">
-            <message_arguments>
-                <message_argument value="gov.redhawk.ide.octave.ui.wizard.MFileVariableMapingWizardPage"/>
                 <message_argument value="gov.redhawk.ide.octave.ui_1.0.0"/>
             </message_arguments>
         </filter>

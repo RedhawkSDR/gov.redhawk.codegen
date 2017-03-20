@@ -63,7 +63,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 /**
  * @since 8.1
  */
-public class MFileVariableMapingWizardPage extends WizardPage implements ICodegenWizardPage {
+public class MFileVariableMappingWizardPage extends WizardPage implements ICodegenWizardPage {
 
 	private static final ImageDescriptor TITLE_IMAGE = AbstractUIPlugin.imageDescriptorFromPlugin(OctaveProjectPlugin.PLUGIN_ID, "icons/octaveLogo.png");
 	private static final int NUM_COLUMNS = 1;
@@ -108,8 +108,8 @@ public class MFileVariableMapingWizardPage extends WizardPage implements ICodege
 	private Implementation impl;
 	private ImplementationSettings implSettings;
 
-	public MFileVariableMapingWizardPage(OctaveProjectProperties octaveProjProps, String name, String componentType) {
-		super(name, "Map M-file", MFileVariableMapingWizardPage.TITLE_IMAGE);
+	public MFileVariableMappingWizardPage(OctaveProjectProperties octaveProjProps, String name, String componentType) {
+		super(name, "Map M-file", MFileVariableMappingWizardPage.TITLE_IMAGE);
 		this.octaveProjProps = octaveProjProps;
 		validationValue.setValue(Status.OK_STATUS);
 	}
@@ -125,16 +125,16 @@ public class MFileVariableMapingWizardPage extends WizardPage implements ICodege
 	}
 
 	private void createUIElements(Composite client) {
-		client.setLayout(new GridLayout(MFileVariableMapingWizardPage.NUM_COLUMNS, false));
+		client.setLayout(new GridLayout(MFileVariableMappingWizardPage.NUM_COLUMNS, false));
 
 		final Group mFileInputsGroup = new Group(client, SWT.None);
 		mFileInputsGroup.setLayout(new GridLayout(1, false));
-		mFileInputsGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(MFileVariableMapingWizardPage.NUM_COLUMNS, 1).create());
+		mFileInputsGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(MFileVariableMappingWizardPage.NUM_COLUMNS, 1).create());
 		mFileInputsGroup.setText("Inputs");
 
 		final Group mFileOutputsGroup = new Group(client, SWT.None);
 		mFileOutputsGroup.setLayout(new GridLayout(1, false));
-		mFileOutputsGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(MFileVariableMapingWizardPage.NUM_COLUMNS, 1).create());
+		mFileOutputsGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(MFileVariableMappingWizardPage.NUM_COLUMNS, 1).create());
 		mFileOutputsGroup.setText("Outputs");
 
 		createOctaveTable(mFileInputsGroup, "functionInputs");
