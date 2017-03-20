@@ -10,16 +10,16 @@
  *******************************************************************************/
 package gov.redhawk.ide.octave.ui;
 
-
 public class OctaveFunctionVariables extends BeanModelObject {
-	
+
 	private String name;
 	private OctaveVariableMappingEnum mapping;
 	private OctaveVariableTypeEnum type;
 	private boolean inputVariable;
-	
+	private String defaultValue;
+
 	public OctaveFunctionVariables(boolean inputVariable) {
-		this.inputVariable = inputVariable; 
+		this.inputVariable = inputVariable;
 	}
 
 	public String getName() {
@@ -50,6 +50,16 @@ public class OctaveFunctionVariables extends BeanModelObject {
 		final OctaveVariableTypeEnum oldValue = this.type;
 		this.type = type;
 		firePropertyChange("type", oldValue, this.type);
+	}
+
+	public void setDefaultValue(String newValue) {
+		final Object oldValue = this.defaultValue;
+		this.defaultValue = newValue;
+		firePropertyChange("defaultValue", oldValue, this.defaultValue);
+	}
+
+	public String getDefaultValue() {
+		return this.defaultValue;
 	}
 
 	public boolean isInputVariable() {

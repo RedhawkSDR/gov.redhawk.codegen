@@ -22,8 +22,8 @@ import gov.redhawk.ide.octave.ui.OctaveVariableTypeEnum;
 import gov.redhawk.mfile.parser.MFileParser;
 import gov.redhawk.mfile.parser.ParseException;
 import gov.redhawk.mfile.parser.TokenMgrError;
+import gov.redhawk.mfile.parser.model.Function;
 import gov.redhawk.mfile.parser.model.MFile;
-import gov.redhawk.sca.util.Debug;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -75,8 +75,6 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  * @since 8.1
  */
 public class MFileSelectionWizardPage extends WizardPage implements ICodegenWizardPage {
-
-	private static final Debug DEBUG = new Debug(OctaveProjectPlugin.PLUGIN_ID, "MFileSelectionWizardPage");
 
 	/** The Constant TITLE_IMAGE. */
 	private static final ImageDescriptor TITLE_IMAGE = AbstractUIPlugin.imageDescriptorFromPlugin(OctaveProjectPlugin.PLUGIN_ID, "icons/octaveLogo.png");
@@ -336,28 +334,21 @@ public class MFileSelectionWizardPage extends WizardPage implements ICodegenWiza
 
 			@Override
 			public IStatus validate(Object value) {
-				if (value == null || !((File) value).exists() || ((File) value).isDirectory()) {
-					return ValidationStatus.error("Primary M-File location must be provided");
+				if (value == null) {
+					return ValidationStatus.error("Please provide an Octave script");
+				}
+				if (!((File) value).exists()) {
+					return ValidationStatus.error("File does not exist");
+				}
+				if (((File) value).isDirectory()) {
+					return ValidationStatus.error("Location is a directory");
 				}
 
 				// Parse the current file selection and set the Octave Project Properties object
 				try {
 					parseFile((File) value);
-				} catch (IOException e) {
-					if (DEBUG.enabled) {
-						DEBUG.catching("MFile Parse Error", e);
-					}
-					return ValidationStatus.error("Could not parse given Primary M-file", e);
-				} catch (ParseException e) {
-					if (DEBUG.enabled) {
-						DEBUG.catching("MFile Parse Error", e);
-					}
-					return ValidationStatus.error("Could not parse given Primary M-file", e);
-				} catch (TokenMgrError e) {
-					if (DEBUG.enabled) {
-						DEBUG.catching("MFile Parse Error", e);
-					}
-					return ValidationStatus.error("Could not parse given Primary M-file", e);
+				} catch (IOException | ParseException | TokenMgrError e) {
+					return ValidationStatus.error("Error parsing script file: " + e.getMessage());
 				}
 
 				return ValidationStatus.ok();
@@ -402,20 +393,29 @@ public class MFileSelectionWizardPage extends WizardPage implements ICodegenWiza
 	 */
 	private void parseFile(File file) throws FileNotFoundException, ParseException {
 		MFile mFile = MFileParser.parse(new FileInputStream(file), null);
+		Function function = mFile.getFunction();
 
 		List<OctaveFunctionVariables> inputs = new ArrayList<OctaveFunctionVariables>();
-		for (String inputVar : mFile.getFunction().getInputs()) {
+		if (function == null) {
+			throw new ParseException("No function was found in the script file");
+		}
+		for (String inputVar : function.getInputs()) {
 			OctaveFunctionVariables ofv = new OctaveFunctionVariables(true);
 			ofv.setName(inputVar);
 			// Default values
-			ofv.setMapping(OctaveVariableMappingEnum.PORT);
+			if (function.getInputDefaultValues().containsKey(inputVar)) {
+				ofv.setMapping(OctaveVariableMappingEnum.PROPERTY_SIMPLE);
+				ofv.setDefaultValue(function.getInputDefaultValues().get(inputVar).toString());
+			} else {
+				ofv.setMapping(OctaveVariableMappingEnum.PORT);
+			}
 			ofv.setType(OctaveVariableTypeEnum.Double_Real);
 			inputs.add(ofv);
 		}
 		this.octaveProjProps.setFunctionInputs(inputs);
 
 		List<OctaveFunctionVariables> outputs = new ArrayList<OctaveFunctionVariables>();
-		for (String outputVar : mFile.getFunction().getOutputs()) {
+		for (String outputVar : function.getOutputs()) {
 			OctaveFunctionVariables ofv = new OctaveFunctionVariables(false);
 			ofv.setName(outputVar);
 			// Default values
@@ -424,7 +424,7 @@ public class MFileSelectionWizardPage extends WizardPage implements ICodegenWiza
 			outputs.add(ofv);
 		}
 		this.octaveProjProps.setFunctionOutputs(outputs);
-		this.octaveProjProps.setFunctionName(mFile.getFunction().getName());
+		this.octaveProjProps.setFunctionName(function.getName());
 	}
 
 

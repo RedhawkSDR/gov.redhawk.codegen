@@ -11,77 +11,89 @@
 package gov.redhawk.ide.cplusplus.utils;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.FileVisitor;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * @since 1.1
  */
 public class PathLocatorUtil {
+
 	private boolean breakOnFirstResult = false;
-	private boolean resultFound = false;
-	private String excludePathRegex = null;
-	private String matchRegex = null;
+	private Pattern excludePathRegex = null;
+	private Pattern excludePathSegmentRegex = null;
+	private Pattern matchRegex = null;
 
 	public List<File> getFileListings(File startingDir) {
-		List<File> results = new ArrayList<File>();
-
-		// Check common locations only if expecting only a single result. No reason to do it if returning multiple
-		// paths.
-		if (breakOnFirstResult) {
-			checkCommonLocations(results);
-		}
-
-		// Stops deep dives once a result is found, when only expecting a single path
-		if (breakOnFirstResult && resultFound) {
-			return results;
-		}
-
-		File[] filesAndDirs = startingDir.listFiles();
-		if (filesAndDirs == null) {
-			return results;
-		}
-
-		List<File> filesDirs = Arrays.asList(filesAndDirs);
-		outer: for (File file : filesDirs) {
-			if (file.isDirectory()) {
-				// Directory found, recursive call
-				if (file.toString().matches(excludePathRegex)) {
-					continue outer;
-				}
-				if (file.toString().matches(matchRegex)) {
-					results.add(file);
-					resultFound = true;
-					if (breakOnFirstResult) {
-						return results;
-					}
-				}
-
-				List<File> deeperList = getFileListings(file);
-				results.addAll(deeperList);
-			}
-		}
-		return results;
+		return getFileListings(Arrays.asList(startingDir));
 	}
 
-	private void checkCommonLocations(List<File> results) {
-		File[] commonPaths = { new File("/usr/include"), new File("/usr/local/include") };
+	/**
+	 * @since 2.1
+	 */
+	public List<File> getFileListings(List<File> startingDirs) {
+		final List<File> results = new ArrayList<File>();
+		for (File startingDir : startingDirs) {
+			try {
+				Files.walkFileTree(startingDir.toPath(), new FileVisitor<Path>() {
+					@Override
+					public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+						if (excludePathRegex != null && excludePathRegex.matcher(dir.toString()).matches()) {
+							return FileVisitResult.SKIP_SUBTREE;
+						} else if (excludePathSegmentRegex != null && excludePathSegmentRegex.matcher(dir.getFileName().toString()).matches()) {
+							return FileVisitResult.SKIP_SUBTREE;
+						}
+						return checkForMatch(dir);
+					}
 
-		outer: for (File path : commonPaths) {
-			if (!path.exists()) {
-				continue;
+					@Override
+					public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+						if (excludePathRegex != null && excludePathRegex.matcher(file.toString()).matches()) {
+							return FileVisitResult.CONTINUE;
+						} else if (excludePathSegmentRegex != null && excludePathSegmentRegex.matcher(file.getFileName().toString()).matches()) {
+							return FileVisitResult.CONTINUE;
+						}
+						return checkForMatch(file);
+					}
+
+					private FileVisitResult checkForMatch(Path path) {
+						if (matchRegex.matcher(path.toString()).matches()) {
+							results.add(path.toFile());
+							if (breakOnFirstResult) {
+								return FileVisitResult.TERMINATE;
+							}
+						}
+						return FileVisitResult.CONTINUE;
+					}
+
+					@Override
+					public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+						return FileVisitResult.CONTINUE;
+					}
+
+					@Override
+					public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+						return FileVisitResult.CONTINUE;
+					}
+				});
+			} catch (IOException e) {
+				// PASS
 			}
 
-			File[] contents = path.listFiles();
-			for (File file : contents) {
-				if (file.isDirectory() && file.toString().matches(matchRegex)) {
-					results.add(file);
-					resultFound = true;
-					break outer;
-				}
+			if (breakOnFirstResult && !results.isEmpty()) {
+				return results;
 			}
 		}
+
+		return results;
 	}
 
 	/**
@@ -93,18 +105,26 @@ public class PathLocatorUtil {
 	}
 
 	/**
-	 * Regular expression denoting which folders to skip when traversing the file tree
+	 * Paths matching this regular expression will be excluded from the search.
 	 * @param excludePaths
 	 */
 	public void setExcludePathRegex(String excludePaths) {
-		this.excludePathRegex = excludePaths;
+		this.excludePathRegex = Pattern.compile(excludePaths);
 	}
 
 	/**
-	 * The regular expression which files and folders will match to
+	 * If the last segment of a path matches this regular expression it will be excluded from the search.
+	 * @since 2.1
+	 */
+	public void setExcludePathSegmentRegex(String excludePathSegements) {
+		this.excludePathSegmentRegex = Pattern.compile(excludePathSegements);
+	}
+
+	/**
+	 * Paths matching this regular expression will be considered a match.
 	 * @param matchRegex
 	 */
 	public void setMatchRegex(String matchRegex) {
-		this.matchRegex = matchRegex;
+		this.matchRegex = Pattern.compile(matchRegex);
 	}
 }

@@ -53,6 +53,7 @@ public class PyDevConfigureStartup implements IStartup {
 
 	@Override
 	public void earlyStartup() {
+		// The application will be null when debugging, but is set in the built product
 		final String app = System.getProperty("eclipse.application");
 		final boolean runConfig = app == null || "org.eclipse.ui.ide.workbench".equals(app);
 		if (!runConfig) {
@@ -60,6 +61,8 @@ public class PyDevConfigureStartup implements IStartup {
 		}
 
 		// Don't show the PyDev pop-up
+		// NOTE: The earlyStartup() method will run after some workbench activities such as restoring editors the user
+		// left open when they last exited.
 		System.setProperty("pydev.funding.hide", "true");
 
 		// If PyDev isn't configured at all, then prompt the user

@@ -21,7 +21,7 @@ import gov.redhawk.ide.codegen.ui.ICodegenComposite;
 import gov.redhawk.ide.codegen.ui.ICodegenDisplayFactory2;
 import gov.redhawk.ide.codegen.ui.ICodegenWizardPage;
 import gov.redhawk.ide.octave.ui.wizard.MFileSelectionWizardPage;
-import gov.redhawk.ide.octave.ui.wizard.MFileVariableMapingWizardPage;
+import gov.redhawk.ide.octave.ui.wizard.MFileVariableMappingWizardPage;
 import gov.redhawk.ide.sdr.ui.SdrUiPlugin;
 import gov.redhawk.sca.util.SubMonitor;
 
@@ -73,7 +73,7 @@ public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 
 	private OctaveProjectProperties octaveProjectProperties;
 	private MFileSelectionWizardPage mFileSelectionWizardPage;
-	private MFileVariableMapingWizardPage mFileVariableMapingWizardPage;
+	private MFileVariableMappingWizardPage mFileVariableMappingWizardPage;
 
 	@Override
 	public ICodegenWizardPage[] createPages() {
@@ -84,12 +84,12 @@ public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 		this.mFileSelectionWizardPage.setDescription("Select an M-File for this component."
 			+ " If the primary M-File depends on non-standard methods, select the dependent M-Files ");
 
-		this.mFileVariableMapingWizardPage = new MFileVariableMapingWizardPage(octaveProjectProperties, "", ICodeGeneratorDescriptor.COMPONENT_TYPE_RESOURCE);
+		this.mFileVariableMappingWizardPage = new MFileVariableMappingWizardPage(octaveProjectProperties, "", ICodeGeneratorDescriptor.COMPONENT_TYPE_RESOURCE);
 
-		mFileVariableMapingWizardPage.setDescription("Create a mapping of octave input(s)/output(s) to a REDHAWK port or property. "
+		mFileVariableMappingWizardPage.setDescription("Create a mapping of octave input(s)/output(s) to a REDHAWK port or property. "
 			+ "\nPorts and properties may also be modified in the component editor.");
 
-		pages.add(mFileVariableMapingWizardPage);
+		pages.add(mFileVariableMappingWizardPage);
 
 		return pages.toArray(new ICodegenWizardPage[pages.size()]);
 
@@ -334,6 +334,9 @@ public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 		Simple simple = PrfFactory.eINSTANCE.createSimple();
 		simple.setId(var.getName());
 		simple.setName(var.getName());
+		if (var.getDefaultValue() != null) {
+			simple.setValue(var.getDefaultValue());
+		}
 		switch (var.getType()) {
 		case Double_Complex:
 			simple.setType(PropertyValueType.DOUBLE);
