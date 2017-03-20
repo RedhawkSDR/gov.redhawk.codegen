@@ -334,6 +334,9 @@ public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 		Simple simple = PrfFactory.eINSTANCE.createSimple();
 		simple.setId(var.getName());
 		simple.setName(var.getName());
+		if (var.getDefaultValue() != null) {
+			simple.setValue(var.getDefaultValue());
+		}
 		switch (var.getType()) {
 		case Double_Complex:
 			simple.setType(PropertyValueType.DOUBLE);

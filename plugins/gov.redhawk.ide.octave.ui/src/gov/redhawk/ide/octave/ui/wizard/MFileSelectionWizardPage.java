@@ -22,6 +22,7 @@ import gov.redhawk.ide.octave.ui.OctaveVariableTypeEnum;
 import gov.redhawk.mfile.parser.MFileParser;
 import gov.redhawk.mfile.parser.ParseException;
 import gov.redhawk.mfile.parser.TokenMgrError;
+import gov.redhawk.mfile.parser.model.Function;
 import gov.redhawk.mfile.parser.model.MFile;
 
 import java.io.File;
@@ -389,23 +390,29 @@ public class MFileSelectionWizardPage extends WizardPage implements ICodegenWiza
 	 */
 	private void parseFile(File file) throws FileNotFoundException, ParseException {
 		MFile mFile = MFileParser.parse(new FileInputStream(file), null);
+		Function function = mFile.getFunction();
 
 		List<OctaveFunctionVariables> inputs = new ArrayList<OctaveFunctionVariables>();
-		if (mFile.getFunction() == null) {
+		if (function == null) {
 			throw new ParseException("No function was found in the script file");
 		}
-		for (String inputVar : mFile.getFunction().getInputs()) {
+		for (String inputVar : function.getInputs()) {
 			OctaveFunctionVariables ofv = new OctaveFunctionVariables(true);
 			ofv.setName(inputVar);
 			// Default values
-			ofv.setMapping(OctaveVariableMappingEnum.PORT);
+			if (function.getInputDefaultValues().containsKey(inputVar)) {
+				ofv.setMapping(OctaveVariableMappingEnum.PROPERTY_SIMPLE);
+				ofv.setDefaultValue(function.getInputDefaultValues().get(inputVar).toString());
+			} else {
+				ofv.setMapping(OctaveVariableMappingEnum.PORT);
+			}
 			ofv.setType(OctaveVariableTypeEnum.Double_Real);
 			inputs.add(ofv);
 		}
 		this.octaveProjProps.setFunctionInputs(inputs);
 
 		List<OctaveFunctionVariables> outputs = new ArrayList<OctaveFunctionVariables>();
-		for (String outputVar : mFile.getFunction().getOutputs()) {
+		for (String outputVar : function.getOutputs()) {
 			OctaveFunctionVariables ofv = new OctaveFunctionVariables(false);
 			ofv.setName(outputVar);
 			// Default values
@@ -414,7 +421,7 @@ public class MFileSelectionWizardPage extends WizardPage implements ICodegenWiza
 			outputs.add(ofv);
 		}
 		this.octaveProjProps.setFunctionOutputs(outputs);
-		this.octaveProjProps.setFunctionName(mFile.getFunction().getName());
+		this.octaveProjProps.setFunctionName(function.getName());
 	}
 
 
