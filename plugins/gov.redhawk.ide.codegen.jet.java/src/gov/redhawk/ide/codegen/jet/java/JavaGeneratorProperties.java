@@ -66,7 +66,6 @@ public final class JavaGeneratorProperties {
 	public static String getMainClass(final Implementation impl, final ImplementationSettings implementationSettings) {
 		final ImplementationSettings implSettings = CodegenUtil.getImplementationSettings(impl);
 		final String srcPackage = JavaGeneratorProperties.getPackage((SoftPkg) impl.eContainer(), impl, implSettings);
-		final SoftPkg spd = (SoftPkg) impl.eContainer();
 		final String prefix = CodegenFileHelper.getPreferredFilePrefix((SoftPkg) impl.eContainer(), implSettings);
 		return srcPackage + "." + prefix;
 	}
