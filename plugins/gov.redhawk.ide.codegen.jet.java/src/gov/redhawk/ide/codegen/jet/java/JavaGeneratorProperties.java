@@ -43,6 +43,9 @@ public final class JavaGeneratorProperties {
 				pkg = pkg.substring(0, pkg.length() - 1);
 			}
 		}
+
+		// Ensure first letter of the package is lower case, in keeping with standard Java conventions
+		pkg = Character.toLowerCase(pkg.charAt(0)) + pkg.substring(1);
 		return pkg;
 	}
 
