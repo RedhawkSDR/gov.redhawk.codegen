@@ -43,6 +43,9 @@ public final class JavaGeneratorProperties {
 				pkg = pkg.substring(0, pkg.length() - 1);
 			}
 		}
+
+		// Ensure first letter of the package is lower case, in keeping with standard Java conventions
+		pkg = Character.toLowerCase(pkg.charAt(0)) + pkg.substring(1);
 		return pkg;
 	}
 
@@ -63,7 +66,6 @@ public final class JavaGeneratorProperties {
 	public static String getMainClass(final Implementation impl, final ImplementationSettings implementationSettings) {
 		final ImplementationSettings implSettings = CodegenUtil.getImplementationSettings(impl);
 		final String srcPackage = JavaGeneratorProperties.getPackage((SoftPkg) impl.eContainer(), impl, implSettings);
-		final SoftPkg spd = (SoftPkg) impl.eContainer();
 		final String prefix = CodegenFileHelper.getPreferredFilePrefix((SoftPkg) impl.eContainer(), implSettings);
 		return srcPackage + "." + prefix;
 	}
