@@ -22,15 +22,14 @@ import gov.redhawk.ide.spd.ui.wizard.NewScaResourceProjectWizard;
 import gov.redhawk.ide.ui.wizard.ScaProjectPropertiesWizardPage;
 import gov.redhawk.sca.util.SubMonitor;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
+import java.nio.file.Files;
 import java.util.List;
 
 import mil.jpeojtrs.sca.spd.Implementation;
@@ -163,7 +162,7 @@ public class NewSharedLibraryProjectWizard extends NewScaResourceProjectWizard i
 						throw e;
 					}
 
-					// If project is an Octave shared library, load the mfiles into their desired location
+					// If project is an Octave shared library, load the m-files into the share directory
 					if (OctaveSharedLibraryGenerator.TEMPLATE.equals(settings.getTemplate())) {
 
 						String outputDirStr = settings.getOutputDir();
@@ -181,21 +180,13 @@ public class NewSharedLibraryProjectWizard extends NewScaResourceProjectWizard i
 
 						for (File mFile : p1.getModel().getmFilesList()) {
 							IFile targetFile = sharedDir.getFile(mFile.getName());
-							InputStream inputStream = null;
-
-							try {
-								inputStream = new BufferedInputStream(new FileInputStream(mFile));
+							try (InputStream inputStream = Files.newInputStream(mFile.toPath())) {
 								targetFile.create(inputStream, true, null);
 							} catch (FileNotFoundException e) {
 								throw new CoreException(new Status(Status.ERROR, SharedLibraryUi.PLUGIN_ID, "Failed to find M-File to copy into project.", e));
-							} finally {
-								if (inputStream != null) {
-									try {
-										inputStream.close();
-									} catch (IOException e) {
-										// PASS
-									}
-								}
+							} catch (IOException e) {
+								Status status = new Status(IStatus.WARNING, SharedLibraryUi.PLUGIN_ID, "Unable to close input file", e);
+								SharedLibraryUi.getDefault().getLog().log(status);
 							}
 						}
 
