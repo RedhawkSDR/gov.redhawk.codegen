@@ -364,34 +364,31 @@ public class ScaIDLProjectPropertiesWizardPage extends WizardNewProjectCreationP
 	 */
 	private void updateModuleName() {
 		final File file = new File(this.idlFiles.get(0));
-		Scanner input = null;
 
-		try {
-			input = new Scanner(file);
-		} catch (final FileNotFoundException e) {
-			// PASS
-		}
+		try (Scanner input = new Scanner(file)) {
+			while (input.hasNext()) {
+				final String line = input.nextLine();
 
-		while (input != null && input.hasNext()) {
-			final String line = input.nextLine();
+				if (line.contains("module")) {
+					final String[] splitNames = line.split("[ ]+");
 
-			if (line.contains("module")) {
-				final String[] splitNames = line.split("[ ]+");
+					for (final String token : splitNames) {
+						if (!"module".equals(token) && token.matches("[A-Z]+") && !this.moduleNameText.getText().equalsIgnoreCase(token)) {
+							final MessageDialog dialog = new MessageDialog(getShell(), "Update Module Name", null, "Module " + token
+								+ " was found in the imported IDL file(s).  Update your project's model name?", MessageDialog.QUESTION, new String[] { "No", "Yes" }, 1);
+							final int selection = dialog.open();
 
-				for (final String token : splitNames) {
-					if (!"module".equals(token) && token.matches("[A-Z]+") && !this.moduleNameText.getText().equalsIgnoreCase(token)) {
-						final MessageDialog dialog = new MessageDialog(getShell(), "Update Module Name", null, "Module " + token
-							+ " was found in the imported IDL file(s).  Update?", MessageDialog.QUESTION, new String[] { "No", "Yes" }, 1);
-						final int selection = dialog.open();
-
-						if (selection == 1) {
-							this.moduleNameText.setText(token.toLowerCase());
+							if (selection == 1) {
+								this.moduleNameText.setText(token.toLowerCase());
+							}
 						}
 					}
-				}
 
-				break;
+					break;
+				}
 			}
+		} catch (final FileNotFoundException e) {
+			return;
 		}
 	}
 

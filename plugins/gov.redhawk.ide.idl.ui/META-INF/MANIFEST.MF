@@ -13,7 +13,7 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.6.0",
  org.jacorb.idl.compiler;bundle-version="3.3.0",
  net.sf.eclipsecorba.ui;bundle-version="0.7.0"
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: gov.redhawk.ide.idl.ui,
  gov.redhawk.ide.idl.ui.wizard
 Bundle-Localization: plugin
