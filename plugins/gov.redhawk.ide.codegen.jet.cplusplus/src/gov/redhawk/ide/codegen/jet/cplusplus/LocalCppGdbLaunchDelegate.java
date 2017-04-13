@@ -11,6 +11,7 @@
 package gov.redhawk.ide.codegen.jet.cplusplus;
 
 import org.eclipse.cdt.debug.core.ICDTLaunchConfigurationConstants;
+import org.eclipse.cdt.dsf.gdb.launching.GdbLaunch;
 import org.eclipse.cdt.dsf.gdb.launching.GdbLaunchDelegate;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -19,14 +20,22 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.debug.core.model.ISourceLocator;
 
+import gov.redhawk.ide.debug.LocalScaWaveform;
+import gov.redhawk.ide.debug.ScaDebugLaunchConstants;
+import gov.redhawk.ide.debug.ScaDebugPlugin;
 import gov.redhawk.ide.debug.SpdLauncherUtil;
+import gov.redhawk.ide.debug.internal.ComponentDebugLaunch;
+import gov.redhawk.ide.debug.internal.ComponentProgramLaunchUtils;
+import mil.jpeojtrs.sca.spd.Implementation;
 import mil.jpeojtrs.sca.spd.SoftPkg;
 
 /**
  * Used when a C++ component, device, etc. in the <b>workspace</b> is launched in the sandbox in <b>debug</b> mode.
  * @since 10.2
  */
+@SuppressWarnings("restriction")
 public class LocalCppGdbLaunchDelegate extends GdbLaunchDelegate {
 
 	public LocalCppGdbLaunchDelegate() {
@@ -43,6 +52,11 @@ public class LocalCppGdbLaunchDelegate extends GdbLaunchDelegate {
 		final ILaunchConfigurationWorkingCopy workingCopy = configuration.getWorkingCopy();
 		return super.getLaunch(workingCopy, mode);
 	}
+	
+	@Override
+	protected GdbLaunch createGdbLaunch(ILaunchConfiguration configuration, String mode, ISourceLocator locator) throws CoreException {
+		return new ComponentDebugLaunch(configuration, mode, locator);
+	}
 
 	@Override
 	public void launch(final ILaunchConfiguration configuration, final String mode, final ILaunch launch, final IProgressMonitor monitor) throws CoreException {
@@ -57,13 +71,22 @@ public class LocalCppGdbLaunchDelegate extends GdbLaunchDelegate {
 			throw new CoreException(status);
 		}
 
-		// We used a working copy when constructin the ILaunch in getLaunch(ILaunchConfiguration, String)
-		ILaunchConfigurationWorkingCopy launchConfiguration = (ILaunchConfigurationWorkingCopy) launch.getLaunchConfiguration();
-		insertProgramArguments(spd, launch, launchConfiguration);
+		// We used a working copy when constructing the ILaunch in getLaunch(ILaunchConfiguration, String)
+		ILaunchConfigurationWorkingCopy workingCopy = (ILaunchConfigurationWorkingCopy) launch.getLaunchConfiguration();
+		insertProgramArguments(spd, launch, workingCopy);
+		
+		String implID = configuration.getAttribute(ScaDebugLaunchConstants.ATT_IMPL_ID, (String) null);
+		final Implementation impl = spd.getImplementation(implID);
 
 		try {
-			super.launch(configuration, mode, launch, subMonitor.newChild(WORK_LAUNCH));
-			SpdLauncherUtil.postLaunch(spd, configuration, mode, launch, subMonitor.newChild(WORK_POST_LAUNCH));
+			if (SoftPkg.Util.isContainedComponent(impl)) {
+				LocalScaWaveform waveform = ScaDebugPlugin.getInstance().getLocalSca().getSandboxWaveform();
+				ComponentProgramLaunchUtils.launch(waveform, workingCopy, launch, spd, impl, mode, monitor);
+			} else {
+				// Legacy launch behavior for non-shared address space components
+				super.launch(configuration, mode, launch, subMonitor.newChild(WORK_LAUNCH));
+				SpdLauncherUtil.postLaunch(spd, configuration, mode, launch, subMonitor.newChild(WORK_POST_LAUNCH));
+			}
 		} finally {
 			if (monitor != null) {
 				monitor.done();
@@ -76,7 +99,6 @@ public class LocalCppGdbLaunchDelegate extends GdbLaunchDelegate {
 	 */
 	protected void insertProgramArguments(final SoftPkg spd, final ILaunch launch, final ILaunchConfigurationWorkingCopy configuration) throws CoreException {
 		final String args = configuration.getAttribute(ICDTLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, "");
-
 		final String newArgs = SpdLauncherUtil.insertProgramArguments(spd, args, launch, configuration);
 		configuration.setAttribute(ICDTLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, newArgs);
 	}
