@@ -168,7 +168,7 @@ public class NewScaIDLProjectWizard extends Wizard implements INewWizard, IExecu
 				private void addDefaultIncludePaths(IProject project) throws CoreException {
 					CompileOptions options = CompileOptions.load(project);
 					options.outputDirectory = "";
-					for (IPath path : RedhawkIdeActivator.getDefault().getDefaultIdlIncludePath()) {
+					for (IPath path : RedhawkIdeActivator.getDefault().getDefaultIdlIncludePath(false)) {
 						options.getIncludes().add(path.toOSString());
 					}
 					options.save(project);
