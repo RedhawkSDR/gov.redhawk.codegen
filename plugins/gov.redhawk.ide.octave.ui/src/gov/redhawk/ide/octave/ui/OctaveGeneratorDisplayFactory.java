@@ -25,12 +25,11 @@ import gov.redhawk.ide.octave.ui.wizard.MFileVariableMappingWizardPage;
 import gov.redhawk.ide.sdr.ui.SdrUiPlugin;
 import gov.redhawk.sca.util.SubMonitor;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,6 +59,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
@@ -128,7 +128,8 @@ public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 		}
 		
 		if (octaveImpl == null) {
-			OctaveProjectPlugin.logError("Could not find Octave implementation, local file in SPD file may not be set.", null);
+			Status status = new Status(IStatus.ERROR, OctaveProjectPlugin.PLUGIN_ID, "Could not find Octave implementation, local file in SPD file may not be set.");
+			OctaveProjectPlugin.getDefault().getLog().log(status);
 		} else {
 			
 			String[] tokens = octaveImpl.getCode().getLocalFile().getName().split("/");
@@ -223,22 +224,14 @@ public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 
 			for (File f : files) {
 				IFile targetFile = outputDir.getFile(f.getName());
-				InputStream inputStream = null;
-				try {
-					inputStream = new BufferedInputStream(new FileInputStream(f));
+				try (InputStream inputStream = Files.newInputStream(f.toPath())) {
 					targetFile.create(inputStream, true, null);
 				} catch (FileNotFoundException e) {
 					throw new CoreException(new Status(Status.ERROR, OctaveProjectPlugin.PLUGIN_ID, "Failed to find M-File to copy into project.", e));
-				} finally {
-					if (inputStream != null) {
-						try {
-							inputStream.close();
-						} catch (IOException e) {
-							// PASS
-						}
-					}
+				} catch (IOException e) {
+					Status status = new Status(IStatus.WARNING, OctaveProjectPlugin.PLUGIN_ID, "Unable to close input file", e);
+					OctaveProjectPlugin.getDefault().getLog().log(status);
 				}
-
 			}
 		}
 	}

@@ -18,6 +18,7 @@ import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 
 public class OctaveProjectNature implements IProjectNature {
 
@@ -73,7 +74,8 @@ public class OctaveProjectNature implements IProjectNature {
 
 			return (OctaveProjectNature) project.getNature(OctaveProjectNature.ID);
 		} catch (final CoreException e) {
-			OctaveProjectPlugin.logError("Unable to add Octave nature to project", e);
+			Status status = new Status(e.getStatus().getSeverity(), OctaveProjectPlugin.PLUGIN_ID, e.getMessage(), e);
+			OctaveProjectPlugin.getDefault().getLog().log(status);
 		} finally {
 			monitor.done();
 		}
