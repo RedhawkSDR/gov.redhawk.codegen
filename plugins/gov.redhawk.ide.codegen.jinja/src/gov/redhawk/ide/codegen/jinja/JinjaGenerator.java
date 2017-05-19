@@ -29,6 +29,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -158,7 +160,10 @@ public class JinjaGenerator {
 		arguments.add("-C");
 		arguments.add(project.getLocation().toOSString());
 
-		// Turn the settings into command-line flags.
+		// Header settings
+		arguments.addAll(headerSettings(project));
+
+		// Implementation settings
 		arguments.addAll(settingsToOptions(implSettings));
 
 		// The SPD file is the first positional argument.
@@ -273,6 +278,19 @@ public class JinjaGenerator {
 			out.println(""); // add newline to separate current output from next run's output in console
 			subMonitor.done();
 		}
+	}
+
+	/**
+	 * If the code generator is version 2.1.1+ and the header file is present, returns command line arguments to
+	 * instruct the code generator to use the header.
+	 * @param project The project for which code generation is occurring.
+	 * @return A list of command line arguments to be added.
+	 */
+	private List<String> headerSettings(IProject project) {
+		if (getCodegenVersion().compareTo(new Version(2, 1, 1)) < 0 || !project.getFile("HEADER").exists()) {
+			return Collections.emptyList();
+		}
+		return Arrays.asList("--header", "HEADER");
 	}
 
 	public Set<FileStatus> list(final ImplementationSettings implSettings, final SoftPkg softpkg) throws CoreException {
