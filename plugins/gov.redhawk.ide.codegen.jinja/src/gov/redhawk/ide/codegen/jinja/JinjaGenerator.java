@@ -66,8 +66,6 @@ import org.osgi.framework.Version;
 public class JinjaGenerator {
 	static final String[] EMPTY_STRING_ARRAY = new String[0];
 	static final Pattern VERSION_REGEX = Pattern.compile("\\d+(\\.\\d+(\\.\\d+(\\.\\S+)?)?)?$");
-	static final Version VERSION_1_10_1 = new Version(1, 10, 1);
-	static final Version VERSION_1_11_0 = new Version(1, 11, 0);
 
 	private static final Debug DEBUG = new Debug(JinjaGeneratorPlugin.PLUGIN_ID, "command");
 
@@ -249,7 +247,7 @@ public class JinjaGenerator {
 				}
 			}
 			Version cfCodegenVersion = getCodegenVersion();
-			if (cfCodegenVersion.compareTo(VERSION_1_10_1) >= 0) { // 1.10.1+ CF codegen is good for all implementation
+			if (new Version(1, 10, 1).compareTo(cfCodegenVersion) <= 0) { // 1.10.1+ CF codegen is good for all implementation
 																	// languages
 				// Look for build.sh top-level and in the impl directory
 				boolean foundTopLevelBuildSh = false;
@@ -287,7 +285,7 @@ public class JinjaGenerator {
 	 * @return A list of command line arguments to be added.
 	 */
 	private List<String> headerSettings(IProject project) {
-		if (getCodegenVersion().compareTo(new Version(2, 1, 1)) < 0 || !project.getFile("HEADER").exists()) {
+		if (new Version(2, 1, 1).compareTo(getCodegenVersion()) <= 0 || !project.getFile("HEADER").exists()) {
 			return Collections.emptyList();
 		}
 		return Arrays.asList("--header", "HEADER");
@@ -438,7 +436,7 @@ public class JinjaGenerator {
 		arguments.add(redhawkCodegen);
 
 		// Check if template is supported
-		if (cfCodegenVersion.compareTo(VERSION_1_11_0) >= 0) {
+		if (new Version(1, 11, 0).compareTo(cfCodegenVersion) <= 0) {
 			arguments.add("--check-template=" + templateId); // 1.11+ CF codegen option
 		} else {
 			arguments.add("--template=" + templateId); // provide template 1.9+ CF codegen option
