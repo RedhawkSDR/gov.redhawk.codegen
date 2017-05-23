@@ -117,7 +117,7 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		final ResourceSet resourceSet = ScaResourceFactoryUtil.createResourceSet();
 		final URI spdUri = URI.createPlatformResourceURI(spdFile.getFullPath().toString(), true).appendFragment(SoftPkg.EOBJECT_PATH);
 
-		final SoftPkg eSpd = (SoftPkg) resourceSet.getEObject(spdUri, true);
+		final SoftPkg eSpd = SoftPkg.Util.getSoftPkg(resourceSet.getResource(spdUri, true));
 		SoftwareComponent eScd = eSpd.getDescriptor().getComponent();
 
 		if (getFeiDevice().isIngestsGPS()) {

@@ -63,7 +63,7 @@ public class SoftPkgRefClasspathContainer implements IClasspathContainer {
 		} catch (Exception e) { // SUPPRESS CHECKSTYLE Logged Catch all exception
 			throw new CoreException(new Status(Status.ERROR, JavaGeneratorPlugin.PLUGIN_ID, "Failed to load spd file: " + softPkgFile, e));
 		}
-		SoftPkg spd = (SoftPkg) resource.getEObject(SoftPkg.EOBJECT_PATH);
+		SoftPkg spd = SoftPkg.Util.getSoftPkg(resource);
 		EList<Implementation> impls = spd.getImplementation();
 		// TODO How do we determine which impl to use here?
 		Implementation impl = impls.get(0);

@@ -107,7 +107,7 @@ public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 		final ResourceSet resourceSet = ScaResourceFactoryUtil.createResourceSet();
 
 		Assert.isTrue(spdFile.exists());
-		final SoftPkg eSpd = (SoftPkg) resourceSet.getEObject(spdUri, true);
+		final SoftPkg eSpd = SoftPkg.Util.getSoftPkg(resourceSet.getResource(spdUri, true));
 
 		// We need to modify the local file variable since this dictates what is being deployed into the SDRROOT.
 		// In the octave case, we need the m-files which would normally be left behind since only the binary is

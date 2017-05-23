@@ -60,7 +60,7 @@ public class EditFrontEndInterfacesSettingsHandler extends AbstractHandler {
 
 			IFile inputFile = ((FileEditorInput) editorInput).getFile();
 			final URI spdUri = URI.createPlatformResourceURI(inputFile.getFullPath().toString(), true).appendFragment(SoftPkg.EOBJECT_PATH);
-			final SoftPkg eSpd = (SoftPkg) resourceSet.getEObject(spdUri, true);
+			final SoftPkg eSpd = SoftPkg.Util.getSoftPkg(resourceSet.getResource(spdUri, true));
 
 			Properties currentProps = eSpd.getPropertyFile().getProperties();
 
