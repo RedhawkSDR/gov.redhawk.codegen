@@ -341,6 +341,8 @@ public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 		case String:
 			simple.setType(PropertyValueType.STRING);
 			break;
+		default:
+			throw new IllegalArgumentException();
 		}
 		eSpd.getPropertyFile().getProperties().getSimple().add(simple);
 	}
@@ -365,6 +367,8 @@ public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 		case String:
 			simpleSeq.setType(PropertyValueType.STRING);
 			break;
+		default:
+			throw new IllegalArgumentException();
 		}
 		eSpd.getPropertyFile().getProperties().getSimpleSequence().add(simpleSeq);
 	}
