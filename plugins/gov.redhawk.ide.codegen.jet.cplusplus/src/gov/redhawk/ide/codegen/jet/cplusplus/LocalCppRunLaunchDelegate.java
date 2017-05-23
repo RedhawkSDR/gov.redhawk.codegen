@@ -26,6 +26,7 @@ import gov.redhawk.ide.debug.ScaDebugPlugin;
 import gov.redhawk.ide.debug.SpdLauncherUtil;
 import gov.redhawk.ide.debug.internal.ComponentLaunch;
 import gov.redhawk.ide.debug.internal.ComponentProgramLaunchUtils;
+import gov.redhawk.ide.debug.variables.LaunchVariables;
 import mil.jpeojtrs.sca.spd.Implementation;
 import mil.jpeojtrs.sca.spd.SoftPkg;
 
@@ -59,7 +60,17 @@ public class LocalCppRunLaunchDelegate extends LocalRunLaunchDelegate {
 		try {
 			// Shared address space components must be launched within a component host
 			if (SoftPkg.Util.isContainedComponent(impl)) {
+
+				// Default to sandbox waveform
 				LocalScaWaveform waveform = ScaDebugPlugin.getInstance().getLocalSca().getSandboxWaveform();
+
+				String waveformName = config.getAttribute(LaunchVariables.WAVEFORM_NAME, (String) null);
+				for (LocalScaWaveform wf : ScaDebugPlugin.getInstance().getLocalSca().getWaveforms()) {
+					if (wf.getName().equals(waveformName)) {
+						waveform = wf;
+					}
+				}
+
 				ComponentProgramLaunchUtils.launch(waveform, workingCopy, launch, spd, impl, mode, monitor);
 			} else {
 				// Legacy launch behavior for non-shared address space components and all other resource types

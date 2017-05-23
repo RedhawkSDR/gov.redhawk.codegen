@@ -28,6 +28,7 @@ import gov.redhawk.ide.debug.ScaDebugPlugin;
 import gov.redhawk.ide.debug.SpdLauncherUtil;
 import gov.redhawk.ide.debug.internal.ComponentDebugLaunch;
 import gov.redhawk.ide.debug.internal.ComponentProgramLaunchUtils;
+import gov.redhawk.ide.debug.variables.LaunchVariables;
 import mil.jpeojtrs.sca.spd.Implementation;
 import mil.jpeojtrs.sca.spd.SoftPkg;
 
@@ -80,7 +81,17 @@ public class LocalCppGdbLaunchDelegate extends GdbLaunchDelegate {
 
 		try {
 			if (SoftPkg.Util.isContainedComponent(impl)) {
+
+				// Default to sandbox waveform
 				LocalScaWaveform waveform = ScaDebugPlugin.getInstance().getLocalSca().getSandboxWaveform();
+
+				String waveformName = configuration.getAttribute(LaunchVariables.WAVEFORM_NAME, (String) null);
+				for (LocalScaWaveform wf : ScaDebugPlugin.getInstance().getLocalSca().getWaveforms()) {
+					if (wf.getName().equals(waveformName)) {
+						waveform = wf;
+					}
+				}
+
 				ComponentProgramLaunchUtils.launch(waveform, workingCopy, launch, spd, impl, mode, monitor);
 			} else {
 				// Legacy launch behavior for non-shared address space components
