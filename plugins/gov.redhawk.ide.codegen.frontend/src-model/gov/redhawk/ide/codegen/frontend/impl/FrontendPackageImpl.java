@@ -99,7 +99,8 @@ public class FrontendPackageImpl extends EPackageImpl implements FrontendPackage
 
 		// Obtain or create and register package
 		FrontendPackageImpl theFrontendPackage = (FrontendPackageImpl) (EPackage.Registry.INSTANCE.get(eNS_URI) instanceof FrontendPackageImpl
-			? EPackage.Registry.INSTANCE.get(eNS_URI) : new FrontendPackageImpl());
+			? EPackage.Registry.INSTANCE.get(eNS_URI)
+			: new FrontendPackageImpl());
 
 		isInited = true;
 
