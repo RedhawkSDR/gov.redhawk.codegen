@@ -11,8 +11,9 @@
 package gov.redhawk.ide.codegen.jet.java.ui;
 
 import gov.redhawk.ide.codegen.ui.ICodegenComposite;
-import gov.redhawk.ide.codegen.ui.ICodegenDisplayFactory;
+import gov.redhawk.ide.codegen.ui.ICodegenLanguageDisplayFactory;
 import gov.redhawk.ide.codegen.ui.ICodegenWizardPage;
+import mil.jpeojtrs.sca.spd.Implementation;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -20,11 +21,16 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 /**
  * @since 2.0
  */
-public class JavaJetGeneratorDisplayFactory implements ICodegenDisplayFactory {
+public class JavaJetGeneratorDisplayFactory implements ICodegenLanguageDisplayFactory {
 
 	@Override
 	public ICodegenComposite createComposite(final Composite parent, final int style, final FormToolkit toolkit) {
 		return new JavaJetGeneratorPropertiesComposite(parent, style, toolkit);
+	}
+
+	@Override
+	public ICodegenComposite createComposite(Implementation impl, String codegenId, Composite parent, int style, FormToolkit toolkit) {
+		return new JavaJetGeneratorPropertiesComposite(impl, codegenId, parent, style, toolkit);
 	}
 
 	@Override

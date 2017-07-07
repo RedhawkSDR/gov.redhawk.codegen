@@ -14,8 +14,10 @@ import gov.redhawk.ide.codegen.jinja.cplusplus.ui.wizard.BooleanGeneratorPropert
 import gov.redhawk.ide.codegen.ui.BooleanGeneratorPropertiesComposite;
 import gov.redhawk.ide.codegen.ui.ICodegenComposite;
 import gov.redhawk.ide.codegen.ui.ICodegenDisplayFactory2;
+import gov.redhawk.ide.codegen.ui.ICodegenLanguageDisplayFactory;
 import gov.redhawk.ide.codegen.ui.ICodegenWizardPage;
 import gov.redhawk.sca.util.SubMonitor;
+import mil.jpeojtrs.sca.spd.Implementation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +28,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
-public class FrontEndGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
+public class FrontEndGeneratorDisplayFactory implements ICodegenDisplayFactory2, ICodegenLanguageDisplayFactory {
 
 	private BooleanGeneratorPropertiesWizardPage2 propertiesPage;
 
@@ -46,6 +48,11 @@ public class FrontEndGeneratorDisplayFactory implements ICodegenDisplayFactory2 
 	}
 
 	@Override
+	public ICodegenComposite createComposite(Implementation impl, String codegenId, Composite parent, int style, FormToolkit toolkit) {
+		return new BooleanGeneratorPropertiesComposite(impl, codegenId, parent, style, toolkit);
+	}
+
+	@Override
 	public void modifyProject(IProject project, IFile spdFile, SubMonitor newChild) throws CoreException {
 		// Drop through, no modifications here.
 	}
@@ -58,5 +65,6 @@ public class FrontEndGeneratorDisplayFactory implements ICodegenDisplayFactory2 
 
 		return pages.toArray(new ICodegenWizardPage[pages.size()]);
 	}
+
 
 }
