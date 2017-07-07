@@ -19,6 +19,7 @@ import gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusOctaveGenerator;
 import gov.redhawk.ide.codegen.ui.BooleanGeneratorPropertiesComposite;
 import gov.redhawk.ide.codegen.ui.ICodegenComposite;
 import gov.redhawk.ide.codegen.ui.ICodegenDisplayFactory2;
+import gov.redhawk.ide.codegen.ui.ICodegenLanguageDisplayFactory;
 import gov.redhawk.ide.codegen.ui.ICodegenWizardPage;
 import gov.redhawk.ide.octave.ui.wizard.MFileSelectionWizardPage;
 import gov.redhawk.ide.octave.ui.wizard.MFileVariableMappingWizardPage;
@@ -69,7 +70,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import BULKIO.dataDoubleHelper;
 
-public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
+public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2, ICodegenLanguageDisplayFactory {
 
 	private OctaveProjectProperties octaveProjectProperties;
 	private MFileSelectionWizardPage mFileSelectionWizardPage;
@@ -98,6 +99,11 @@ public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2 {
 	@Override
 	public ICodegenComposite createComposite(Composite parent, int style, FormToolkit toolkit) {
 		return new BooleanGeneratorPropertiesComposite(parent, style, toolkit);
+	}
+
+	@Override
+	public ICodegenComposite createComposite(Implementation impl, String codegenId, Composite parent, int style, FormToolkit toolkit) {
+		return new BooleanGeneratorPropertiesComposite(impl, codegenId, parent, style, toolkit);
 	}
 
 	@Override
