@@ -254,12 +254,12 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		inputContainer.setLayout(new GridLayout(1, false));
 		inputContainer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-		GridData layoutData = GridDataFactory.fillDefaults().grab(true, false).indent(30, 0).align(SWT.LEFT, SWT.CENTER).create();
+		GridDataFactory childLayout = GridDataFactory.fillDefaults().grab(true, false).indent(30, 0).align(SWT.LEFT, SWT.CENTER);
 
 		Button analogInputButton = new Button(inputContainer, SWT.RADIO);
 		analogInputButton.setText("Analog Input (default)");
 		analogInputButton.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, true, false, 2, 1));
-		createAnalogIn(inputContainer).setLayoutData(layoutData);
+		createAnalogIn(inputContainer).setLayoutData(childLayout.create());
 		UpdateValueStrategy uvs = booleanConverter();
 		ctx.bindValue(WidgetProperties.selection().observe(analogInputButton),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__HAS_DIGITAL_INPUT), uvs, uvs);
@@ -267,7 +267,7 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		Button digitalInputButton = new Button(inputContainer, SWT.RADIO);
 		digitalInputButton.setText("Digital Input");
 		digitalInputButton.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, true, false, 2, 1));
-		createDigitalIn(inputContainer).setLayoutData(layoutData);
+		createDigitalIn(inputContainer).setLayoutData(childLayout.create());
 		ctx.bindValue(WidgetProperties.selection().observe(digitalInputButton),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__HAS_DIGITAL_INPUT));
 
@@ -290,17 +290,11 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		analogIn.setLayout(new GridLayout(2, false));
 
 		Label numAnalogLabel = new Label(analogIn, SWT.None);
-		numAnalogLabel.setText("Number of Analog input ports:");
+		numAnalogLabel.setText("Analog input ports:");
 
 		Spinner numAnalogSpinner = new Spinner(analogIn, SWT.BORDER);
 		numAnalogSpinner.setMinimum(1);
-		GC gc = new GC(numAnalogSpinner);
-		try {
-			Point size = gc.textExtent("XXX");
-			numAnalogSpinner.setLayoutData(GridDataFactory.fillDefaults().hint(size.x, SWT.DEFAULT).create());
-		} finally {
-			gc.dispose();
-		}
+
 		UpdateValueStrategy uvs = booleanConverter();
 		ctx.bindValue(WidgetProperties.selection().observe(numAnalogSpinner),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__NUMBER_OF_ANALOG_INPUTS));
