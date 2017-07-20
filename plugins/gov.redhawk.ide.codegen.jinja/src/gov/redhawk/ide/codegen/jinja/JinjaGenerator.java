@@ -285,7 +285,7 @@ public class JinjaGenerator {
 	 * @return A list of command line arguments to be added.
 	 */
 	private List<String> headerSettings(IProject project) {
-		if (new Version(2, 1, 1).compareTo(getCodegenVersion()) <= 0 || !project.getFile("HEADER").exists()) {
+		if (new Version(2, 1, 1).compareTo(getCodegenVersion()) > 0 || !project.getFile("HEADER").exists()) {
 			return Collections.emptyList();
 		}
 		return Arrays.asList("--header", "HEADER");
