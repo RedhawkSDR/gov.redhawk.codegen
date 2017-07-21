@@ -10,24 +10,12 @@
  *******************************************************************************/
 package gov.redhawk.ide.codegen.frontend.ui;
 
-import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndProp;
-import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndTunerPropsPage;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import mil.jpeojtrs.sca.prf.AccessType;
-import mil.jpeojtrs.sca.prf.PrfFactory;
-import mil.jpeojtrs.sca.prf.Properties;
-import mil.jpeojtrs.sca.prf.Simple;
-import mil.jpeojtrs.sca.prf.Struct;
-import mil.jpeojtrs.sca.prf.StructSequence;
-import mil.jpeojtrs.sca.spd.SoftPkg;
-import mil.jpeojtrs.sca.util.ScaResourceFactoryUtil;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -43,6 +31,16 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.part.FileEditorInput;
+
+import gov.redhawk.frontend.util.TunerProperties.TunerStatusProperty;
+import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndProp;
+import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndTunerPropsPage;
+import mil.jpeojtrs.sca.prf.Properties;
+import mil.jpeojtrs.sca.prf.Simple;
+import mil.jpeojtrs.sca.prf.Struct;
+import mil.jpeojtrs.sca.prf.StructSequence;
+import mil.jpeojtrs.sca.spd.SoftPkg;
+import mil.jpeojtrs.sca.util.ScaResourceFactoryUtil;
 
 /**
  * @since 1.1
@@ -70,7 +68,7 @@ public class EditFrontEndInterfacesSettingsHandler extends AbstractHandler {
 
 			// Get the current tuner status properties.
 			for (StructSequence structSequence : currentProps.getStructSequence()) {
-				if (structSequence.getId().equals(FrontEndDeviceUIUtils.TUNER_STATUS_STRUCT_SEQ_ID)) {
+				if (structSequence.getId().equals(TunerStatusProperty.INSTANCE.getId())) {
 					tunerStatusStructSeq = structSequence;
 					break;
 				}
@@ -78,19 +76,13 @@ public class EditFrontEndInterfacesSettingsHandler extends AbstractHandler {
 
 			// They must have removed their Tuner Status Struct Seq Property, we need to add it back for them.
 			if (tunerStatusStructSeq == null) {
-				tunerStatusStructSeq = PrfFactory.eINSTANCE.createStructSequence();
-				tunerStatusStructSeq.setId(FrontEndDeviceUIUtils.TUNER_STATUS_STRUCT_SEQ_ID);
-				tunerStatusStructSeq.setName(FrontEndDeviceUIUtils.TUNER_STATUS_STRUCT_SEQ_NAME);
-				tunerStatusStructSeq.setDescription(FrontEndDeviceUIUtils.TUNER_STATUS_STRUCT_SEQ_DESCRIPTION);
-				tunerStatusStructSeq.setMode(AccessType.READONLY);
+				tunerStatusStructSeq = TunerStatusProperty.INSTANCE.createProperty();
 				currentProps.getStructSequence().add(tunerStatusStructSeq);
 			}
 
 			// They must have removed their Tuner Status Struct Property, we need to add it back for them.
 			if (tunerStatusStructSeq.getStruct() == null) {
-				tunerStatusStruct = PrfFactory.eINSTANCE.createStruct();
-				tunerStatusStruct.setName(FrontEndDeviceUIUtils.TUNER_STATUS_STRUCT_NAME);
-				tunerStatusStruct.setId(FrontEndDeviceUIUtils.TUNER_STATUS_STRUCT_ID);
+				tunerStatusStruct = TunerStatusProperty.INSTANCE.createProperty().getStruct();
 				tunerStatusStructSeq.setStruct(tunerStatusStruct);
 			}
 

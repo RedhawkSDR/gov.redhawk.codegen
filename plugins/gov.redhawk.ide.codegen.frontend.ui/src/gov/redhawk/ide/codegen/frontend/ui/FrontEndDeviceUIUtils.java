@@ -29,28 +29,18 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 
 import FRONTEND.FE_TUNER_DEVICE_KIND;
+import gov.redhawk.frontend.util.TunerProperties.TunerStatusAllocationProperties;
 import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndProp;
 import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndPropLabelProvider;
-import mil.jpeojtrs.sca.prf.Enumeration;
-import mil.jpeojtrs.sca.prf.Enumerations;
-import mil.jpeojtrs.sca.prf.PrfFactory;
-import mil.jpeojtrs.sca.prf.PropertyValueType;
 import mil.jpeojtrs.sca.prf.Simple;
 
 public enum FrontEndDeviceUIUtils {
 	INSTANCE;
 
-	public static final String TUNER_DEVICE_KIND_NAME = FE_TUNER_DEVICE_KIND.value;
+	protected static final String TUNER_DEVICE_KIND_NAME = FE_TUNER_DEVICE_KIND.value;
 
 	// Antenna device kind name is still in flux but should eventually be defined within the IDL
-	public static final String ANTENNA_DEVICE_KIND_NAME = "FRONTEND::RFSOURCE";
-
-	public static final String TUNER_STATUS_STRUCT_NAME = "frontend_tuner_status_struct";
-	public static final String TUNER_STATUS_STRUCT_ID = "FRONTEND::tuner_status_struct";
-
-	public static final String TUNER_STATUS_STRUCT_SEQ_NAME = "frontend_tuner_status";
-	public static final String TUNER_STATUS_STRUCT_SEQ_ID = "FRONTEND::tuner_status";
-	public static final String TUNER_STATUS_STRUCT_SEQ_DESCRIPTION = "Status of each tuner, including entries for both allocated and un-allocated tuners. Each entry represents a single tuner.";
+	protected static final String ANTENNA_DEVICE_KIND_NAME = "FRONTEND::RFSOURCE";
 
 	private List<FrontEndProp> allFrontEndProps = null;
 	private List<FrontEndProp> optionalFrontEndProps = null;
@@ -61,237 +51,22 @@ public enum FrontEndDeviceUIUtils {
 	}
 
 	private void initFriProps() {
-
 		allFrontEndProps = new ArrayList<FrontEndProp>();
 		optionalFrontEndProps = new ArrayList<FrontEndProp>();
 		requiredFrontEndProps = new ArrayList<FrontEndProp>();
 
-		// Required Props
-
-		allFrontEndProps.add(new FrontEndProp(createSimple("tuner_type", "FRONTEND::tuner_status::tuner_type", PropertyValueType.STRING,
-				"Example Tuner Types: TX, RX, CHANNELIZER, DDC, RX_DIGITIZER, RX_DIGTIZIER_CHANNELIZER"), true));
-
-		allFrontEndProps.add(new FrontEndProp(createSimple("allocation_id_csv", "FRONTEND::tuner_status::allocation_id_csv", PropertyValueType.STRING,
-				"Comma separated list of current Allocation IDs."), true));
-
-		Simple centerFreq = createSimple("center_frequency", "FRONTEND::tuner_status::center_frequency", PropertyValueType.DOUBLE,
-				"Current center frequency in Hz.");
-
-		centerFreq.setUnits("Hz");
-
-		allFrontEndProps.add(new FrontEndProp(centerFreq, true));
-
-		Simple bandwidth = createSimple("bandwidth", "FRONTEND::tuner_status::bandwidth", PropertyValueType.DOUBLE, "Current bandwidth in Hz");
-
-		bandwidth.setUnits("Hz");
-
-		allFrontEndProps.add(new FrontEndProp(bandwidth, true));
-
-		Simple sampleRate = createSimple("sample_rate", "FRONTEND::tuner_status::sample_rate", PropertyValueType.DOUBLE,
-				"Current sample rate in samples per second.");
-
-		sampleRate.setUnits("sps");
-
-		allFrontEndProps.add(new FrontEndProp(sampleRate, true));
-
-		allFrontEndProps.add(new FrontEndProp(createSimple("group_id", "FRONTEND::tuner_status::group_id", PropertyValueType.STRING,
-				"Unique ID that specifies a group of Device."), true));
-
-		allFrontEndProps.add(new FrontEndProp(createSimple("rf_flow_id", "FRONTEND::tuner_status::rf_flow_id", PropertyValueType.STRING,
-				"Specifies a certain RF flow to allocate against."), true));
-
-		allFrontEndProps.add(new FrontEndProp(createSimple("enabled", "FRONTEND::tuner_status::enabled", PropertyValueType.BOOLEAN,
-				"Indicates if tuner is enabled, in reference to the output state of the tuner."), true));
-
-		// Optional Props
-
-		Simple bandwidthTolerence = createSimple("bandwidth_tolerance", "FRONTEND::tuner_status::bandwidth_tolerance", PropertyValueType.DOUBLE,
-				"Allowable percentage over requested bandwidth. This value is provided by the requester during allocation.");
-
-		bandwidthTolerence.setUnits("%");
-
-		allFrontEndProps.add(new FrontEndProp(bandwidthTolerence, false));
-
-		Simple sampleRateTolerence = createSimple("sample_rate_tolerance", "FRONTEND::tuner_status::sample_rate_tolerance", PropertyValueType.DOUBLE,
-				"Allowable percentage over requested sample rate. This value is provided by the requester during allocation.");
-
-		sampleRateTolerence.setUnits("%");
-
-		allFrontEndProps.add(new FrontEndProp(sampleRateTolerence, false));
-
-		allFrontEndProps.add(new FrontEndProp(createSimple("complex", "FRONTEND::tuner_status::complex", PropertyValueType.BOOLEAN,
-				"Indicates if the output data is complex."), false));
-
-		Simple gain = createSimple("gain", "FRONTEND::tuner_status::gain", PropertyValueType.DOUBLE, "Current gain in dB.");
-
-		gain.setUnits("dB");
-
-		allFrontEndProps.add(new FrontEndProp(gain, false));
-
-		allFrontEndProps.add(new FrontEndProp(createSimple("agc", "FRONTEND::tuner_status::agc", PropertyValueType.BOOLEAN,
-				"Indicates if the tuner has Automatic Gain Control enabled."), false));
-
-		allFrontEndProps.add(new FrontEndProp(
-			createSimple(
-				"valid",
-				"FRONTEND::tuner_status::valid",
-				PropertyValueType.BOOLEAN,
-					"Indicates if the tuner is in a valid state. For DDCs, false indicates the attached CHANNELIZER has moved such that the DDC can no longer tune to the appropriate frequency."),
-					false));
-
-		Simple availableFreq = createSimple("available_frequency", "FRONTEND::tuner_status::available_frequency", PropertyValueType.STRING,
-				"Available frequencies (Hz) in range (XX-YY) or csv (X,Y,Z) format. Do not put units in field.");
-
-		availableFreq.setUnits("Hz");
-
-		allFrontEndProps.add(new FrontEndProp(availableFreq, false));
-
-		Simple availableBandwidth = createSimple("available_bandwidth", "FRONTEND::tuner_status::available_bandwidth", PropertyValueType.STRING,
-				"Available bandwidth (Hz) in range (XX-YY) or csv (X,Y,Z) format. Do not put units in field.");
-
-		availableBandwidth.setUnits("Hz");
-
-		allFrontEndProps.add(new FrontEndProp(availableBandwidth, false));
-
-		Simple availableGain = createSimple("available_gain", "FRONTEND::tuner_status::available_gain", PropertyValueType.STRING,
-				"Available gain (dB) in range (XX-YY) or csv (X,Y,Z) format. Do not put units in field.");
-
-		availableGain.setUnits("dB");
-
-		allFrontEndProps.add(new FrontEndProp(availableGain, false));
-
-		Simple availableSampleRate = createSimple("available_sample_rate", "FRONTEND::tuner_status::available_sample_rate", PropertyValueType.STRING,
-				"Available sample_rate (sps) in range (XX-YY) or csv (X,Y,Z) format. Do not put units in field.");
-
-		availableSampleRate.setUnits("sps");
-
-		allFrontEndProps.add(new FrontEndProp(availableSampleRate, false));
-
-		Simple referenceSource = createSimple("reference_source", "FRONTEND::tuner_status::reference_source", PropertyValueType.LONG,
-				"Indicates internal (0) vs external (1) reference source.");
-
-		Enumerations refSourceEnumerations = PrfFactory.eINSTANCE.createEnumerations();
-
-		Enumeration internalEnum = PrfFactory.eINSTANCE.createEnumeration();
-		internalEnum.setLabel("INTERNAL");
-		internalEnum.setValue("0");
-		refSourceEnumerations.getEnumeration().add(internalEnum);
-
-		Enumeration externalEnum = PrfFactory.eINSTANCE.createEnumeration();
-		externalEnum.setLabel("EXTERNAL");
-		externalEnum.setValue("1");
-		refSourceEnumerations.getEnumeration().add(externalEnum);
-
-		referenceSource.setEnumerations(refSourceEnumerations);
-
-		allFrontEndProps.add(new FrontEndProp(referenceSource, false));
-
-		Simple outputFormat = createSimple("output_format", "FRONTEND::tuner_status::output_format", PropertyValueType.STRING,
-				"Indicates the SDDS digraph that describes the current output data format.");
-
-		Enumerations enumList = PrfFactory.eINSTANCE.createEnumerations();
-
-		Enumeration sp = PrfFactory.eINSTANCE.createEnumeration();
-		sp.setLabel("SP");
-		sp.setValue("SP");
-		enumList.getEnumeration().add(sp);
-
-		Enumeration sb = PrfFactory.eINSTANCE.createEnumeration();
-		sb.setLabel("SB");
-		sb.setValue("SB");
-		enumList.getEnumeration().add(sb);
-
-		Enumeration si = PrfFactory.eINSTANCE.createEnumeration();
-		si.setLabel("SI");
-		si.setValue("SI");
-		enumList.getEnumeration().add(si);
-
-		Enumeration sl = PrfFactory.eINSTANCE.createEnumeration();
-		sl.setLabel("SL");
-		sl.setValue("SL");
-		enumList.getEnumeration().add(sl);
-
-		Enumeration sx = PrfFactory.eINSTANCE.createEnumeration();
-		sx.setLabel("SX");
-		sx.setValue("SX");
-		enumList.getEnumeration().add(sx);
-
-		Enumeration sf = PrfFactory.eINSTANCE.createEnumeration();
-		sf.setLabel("SF");
-		sf.setValue("SF");
-		enumList.getEnumeration().add(sf);
-
-		Enumeration sd = PrfFactory.eINSTANCE.createEnumeration();
-		sd.setLabel("SD");
-		sd.setValue("SD");
-		enumList.getEnumeration().add(sd);
-
-		Enumeration cb = PrfFactory.eINSTANCE.createEnumeration();
-		cb.setLabel("CB");
-		cb.setValue("CB");
-		enumList.getEnumeration().add(cb);
-
-		Enumeration ci = PrfFactory.eINSTANCE.createEnumeration();
-		ci.setLabel("CI");
-		ci.setValue("CI");
-		enumList.getEnumeration().add(ci);
-
-		Enumeration cl = PrfFactory.eINSTANCE.createEnumeration();
-		cl.setLabel("CL");
-		cl.setValue("CL");
-		enumList.getEnumeration().add(cl);
-
-		Enumeration cx = PrfFactory.eINSTANCE.createEnumeration();
-		cx.setLabel("CX");
-		cx.setValue("CX");
-		enumList.getEnumeration().add(cx);
-
-		Enumeration cf = PrfFactory.eINSTANCE.createEnumeration();
-		cf.setLabel("CF");
-		cf.setValue("CF");
-		enumList.getEnumeration().add(cf);
-
-		Enumeration cd = PrfFactory.eINSTANCE.createEnumeration();
-		cd.setLabel("CD");
-		cd.setValue("CD");
-		enumList.getEnumeration().add(cd);
-
-		outputFormat.setEnumerations(enumList);
-
-		allFrontEndProps.add(new FrontEndProp(outputFormat, false));
-
-		allFrontEndProps.add(new FrontEndProp(createSimple("output_multicast", "FRONTEND::tuner_status::output_multicast", PropertyValueType.STRING,
-				"Multicast address for SDDS output."), false));
-
-		allFrontEndProps.add(new FrontEndProp(createSimple("output_vlan", "FRONTEND::tuner_status::output_vlan", PropertyValueType.LONG,
-				"VLAN number for SDDS output. A value of zero (0) indicates no VLAN is used."), false));
-
-		allFrontEndProps.add(new FrontEndProp(createSimple("output_port", "FRONTEND::tuner_status::output_port", PropertyValueType.LONG,
-				"Port number for SDDS output."), false));
-
-		allFrontEndProps.add(new FrontEndProp(createSimple("decimation", "FRONTEND::tuner_status::decimation", PropertyValueType.LONG,
-				"Current decimation of tuner. For DDC tuners, this is the ratio of input sample rate to output sample rate regardless of data format."), false));
-
-		allFrontEndProps.add(new FrontEndProp(createSimple("tuner_number", "FRONTEND::tuner_status::tuner_number", PropertyValueType.SHORT,
-				"Physical tuner ID."), false));
-
-		for (FrontEndProp prop : allFrontEndProps) {
-			if (prop.isRequired()) {
-				this.requiredFrontEndProps.add(prop);
+		for (TunerStatusAllocationProperties propDetails : TunerStatusAllocationProperties.values()) {
+			Simple prop = (Simple) propDetails.createProperty();
+			FrontEndProp wrappedProp;
+			if (propDetails.isRequired()) {
+				wrappedProp = new FrontEndProp(prop, true);
+				requiredFrontEndProps.add(wrappedProp);
 			} else {
-				this.optionalFrontEndProps.add(prop);
+				wrappedProp = new FrontEndProp(prop, false);
+				optionalFrontEndProps.add(wrappedProp);
 			}
+			allFrontEndProps.add(wrappedProp);
 		}
-	}
-
-	private Simple createSimple(String name, String id, PropertyValueType type, String description) {
-		Simple tmpProp = PrfFactory.eINSTANCE.createSimple();
-		tmpProp.setName(name);
-		tmpProp.setId(id);
-		tmpProp.setType(type);
-		tmpProp.setDescription(description);
-
-		return tmpProp;
 	}
 
 	/**
