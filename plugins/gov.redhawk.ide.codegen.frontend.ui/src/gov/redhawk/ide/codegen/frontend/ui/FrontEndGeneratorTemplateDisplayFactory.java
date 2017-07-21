@@ -34,6 +34,8 @@ import FRONTEND.RFSourceHelper;
 import gov.redhawk.eclipsecorba.idl.IdlInterfaceDcl;
 import gov.redhawk.eclipsecorba.library.IdlLibrary;
 import gov.redhawk.frontend.util.TunerProperties;
+import gov.redhawk.frontend.util.TunerProperties.ConnectionTableProperty;
+import gov.redhawk.frontend.util.TunerProperties.TunerStatusProperty;
 import gov.redhawk.ide.codegen.frontend.FeiDevice;
 import gov.redhawk.ide.codegen.frontend.FrontendFactory;
 import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndProp;
@@ -46,14 +48,9 @@ import gov.redhawk.ide.codegen.ui.ICodegenTemplateDisplayFactory;
 import gov.redhawk.ide.codegen.ui.ICodegenWizardPage;
 import gov.redhawk.ide.sdr.ui.SdrUiPlugin;
 import gov.redhawk.sca.util.SubMonitor;
-import mil.jpeojtrs.sca.prf.AccessType;
-import mil.jpeojtrs.sca.prf.ConfigurationKind;
-import mil.jpeojtrs.sca.prf.PrfFactory;
 import mil.jpeojtrs.sca.prf.Properties;
-import mil.jpeojtrs.sca.prf.PropertyValueType;
 import mil.jpeojtrs.sca.prf.Simple;
 import mil.jpeojtrs.sca.prf.Struct;
-import mil.jpeojtrs.sca.prf.StructPropertyConfigurationType;
 import mil.jpeojtrs.sca.prf.StructSequence;
 import mil.jpeojtrs.sca.scd.InheritsInterface;
 import mil.jpeojtrs.sca.scd.Interface;
@@ -146,7 +143,8 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 						addDigitalTunerPort(eSpd);
 						addUsesDataPort(eSpd, getFeiDevice().getDigitalOutputType().getName() + "_out", getFeiDevice().getDigitalOutputType().getRepId());
 						if (getFeiDevice().isMultiOut()) {
-							addMultiOutProperty(eSpd);
+							StructSequence structSeq = ConnectionTableProperty.INSTANCE.createProperty();
+							eSpd.getPropertyFile().getProperties().getStructSequence().add(structSeq);
 						}
 					} else { // It has Analog Output
 						addProvidesControlPort(eSpd, "AnalogTuner_in", AnalogTunerHelper.id());
@@ -160,7 +158,8 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 					addProvidesDataPort(eSpd, getFeiDevice().getDigitalInputType().getName() + "_in", getFeiDevice().getDigitalInputType().getRepId());
 					addUsesDataPort(eSpd, getFeiDevice().getDigitalOutputType().getName() + "_out", getFeiDevice().getDigitalOutputType().getRepId());
 					if (getFeiDevice().isMultiOut()) {
-						addMultiOutProperty(eSpd);
+						StructSequence structSeq = ConnectionTableProperty.INSTANCE.createProperty();
+						eSpd.getPropertyFile().getProperties().getStructSequence().add(structSeq);
 					}
 				}
 			}
@@ -289,44 +288,6 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		}
 	}
 
-	private void addMultiOutProperty(SoftPkg eSpd) {
-		StructSequence structSeq = PrfFactory.eINSTANCE.createStructSequence();
-		structSeq.setId("connectionTable");
-
-		structSeq.setMode(AccessType.READONLY);
-		
-		final ConfigurationKind structKind = PrfFactory.eINSTANCE.createConfigurationKind();
-		structKind.setType(StructPropertyConfigurationType.PROPERTY);
-		structSeq.getConfigurationKind().add(structKind);
-
-		Struct struct = PrfFactory.eINSTANCE.createStruct();
-		struct.setName("connection_descriptor");
-		struct.setId("connectionTable::connection_descriptor");
-
-		Simple connectionName = PrfFactory.eINSTANCE.createSimple();
-		connectionName.setName("connection_id");
-		connectionName.setId("connectionTable::connection_id");
-		connectionName.setType(PropertyValueType.STRING);
-
-		Simple streamId = PrfFactory.eINSTANCE.createSimple();
-		streamId.setName("stream_id");
-		streamId.setId("connectionTable::stream_id");
-		streamId.setType(PropertyValueType.STRING);
-
-		Simple portName = PrfFactory.eINSTANCE.createSimple();
-		portName.setName("port_name");
-		portName.setId("connectionTable::port_name");
-		portName.setType(PropertyValueType.STRING);
-
-		struct.getSimple().add(connectionName);
-		struct.getSimple().add(streamId);
-		struct.getSimple().add(portName);
-
-		structSeq.setStruct(struct);
-
-		eSpd.getPropertyFile().getProperties().getStructSequence().add(structSeq);
-	}
-
 	private void addTunerSpecificProps(SoftPkg eSpd) {
 		// If the tunerStatusStructProps is null then we must have come through the Wizard otherwise, maybe someoneone
 		// set it and we should accept that.
@@ -344,37 +305,26 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		}
 		Collections.sort(sortedList, new Comparator<FrontEndProp>() {
 			public int compare(FrontEndProp fep1, FrontEndProp fep2) {
-                return fep1.getProp().getName().compareTo(fep2.getProp().getName());
-            }
-		});	
+				return fep1.getProp().getName().compareTo(fep2.getProp().getName());
+			}
+		});
 
-		StructSequence structSeq = PrfFactory.eINSTANCE.createStructSequence();
-		structSeq.setId(FrontEndDeviceUIUtils.TUNER_STATUS_STRUCT_SEQ_ID);
-		structSeq.setDescription(FrontEndDeviceUIUtils.TUNER_STATUS_STRUCT_SEQ_DESCRIPTION);
-		structSeq.setName(FrontEndDeviceUIUtils.TUNER_STATUS_STRUCT_SEQ_NAME);
-		structSeq.setMode(AccessType.READONLY);
-
-		final ConfigurationKind kind = PrfFactory.eINSTANCE.createConfigurationKind();
-		kind.setType(StructPropertyConfigurationType.PROPERTY);
-		structSeq.getConfigurationKind().add(kind);
-
-		Struct struct = PrfFactory.eINSTANCE.createStruct();
-		struct.setId(FrontEndDeviceUIUtils.TUNER_STATUS_STRUCT_ID);
-		struct.setName(FrontEndDeviceUIUtils.TUNER_STATUS_STRUCT_NAME);
-
+		// Get a copy of the tuner status struct, but use the fields the user has selected
+		StructSequence structSeq = TunerStatusProperty.INSTANCE.createProperty();
+		Struct struct = structSeq.getStruct();
+		structSeq.getStruct().getFields().clear();
 		for (FrontEndProp frontEndProp : sortedList) {
 			Simple prop = frontEndProp.getProp();
 			if (prop != null) {
 				struct.getSimple().add(prop);
 			}
 		}
-		structSeq.setStruct(struct);
 		eSpd.getPropertyFile().getProperties().getStructSequence().add(structSeq);
 
 		// Add the two other required properties
-		eSpd.getPropertyFile().getProperties().getStruct().add(TunerProperties.ListenerAllocationProperty.INSTANCE.createStruct());
-		eSpd.getPropertyFile().getProperties().getStruct().add(TunerProperties.TunerAllocationProperty.INSTANCE.createStruct());
-		
+		eSpd.getPropertyFile().getProperties().getStruct().add(TunerProperties.ListenerAllocationProperty.INSTANCE.createProperty());
+		eSpd.getPropertyFile().getProperties().getStruct().add(TunerProperties.TunerAllocationProperty.INSTANCE.createProperty());
+
 		// Have to remember to set this back to null since this is a singleton
 		this.tunerStatusStructProps = null;
 	}
