@@ -64,7 +64,6 @@ public class EditFrontEndInterfacesSettingsHandler extends AbstractHandler {
 
 			StructSequence tunerStatusStructSeq = null;
 			Struct tunerStatusStruct = null;
-			Set<Simple> structSeqProperties = null;
 
 			// Get the current tuner status properties.
 			for (StructSequence structSequence : currentProps.getStructSequence()) {
@@ -88,13 +87,11 @@ public class EditFrontEndInterfacesSettingsHandler extends AbstractHandler {
 
 			tunerStatusStruct = tunerStatusStructSeq.getStruct();
 
-			// struct seq properties is there current list of simples.
-			//			structSeqProperties = new HashSet<Simple>(EcoreUtil.copyAll(tunerStatusStruct.getSimple()));
-			structSeqProperties = new HashSet<Simple>(tunerStatusStruct.getSimple());
-
 			// Pass it into the wizard page so that the displayed props are the ones they have.
+			Set<Simple> structSeqProperties = new HashSet<Simple>(tunerStatusStruct.getSimple());
 			this.frontEndWizardPage = new FrontEndTunerPropsPage(structSeqProperties);
-			this.frontEndWizardPage.setDescription("Select the tuner port type and the set of tuner status properties for the tuner status struct.  Note that required properties may not be removed.");
+			this.frontEndWizardPage.setDescription(
+				"Select the tuner port type and the set of tuner status properties for the tuner status struct.  Note that required properties may not be removed.");
 			Wizard simpleFrontEndWizard = new SimpleFrontEndWizard();
 			this.frontEndWizardPage.setCanFinish(true);
 			simpleFrontEndWizard.addPage(this.frontEndWizardPage);
@@ -102,7 +99,6 @@ public class EditFrontEndInterfacesSettingsHandler extends AbstractHandler {
 
 			// Open the wizard.
 			if (dialog.open() == IStatus.OK) {
-
 				// Props selected is the full set of properties they want.
 				Set<FrontEndProp> propsSelected = this.frontEndWizardPage.getSelectedProperties();
 
@@ -143,7 +139,7 @@ public class EditFrontEndInterfacesSettingsHandler extends AbstractHandler {
 				for (Simple simp : simplesToRemove) {
 					tunerStatusStruct.getSimple().remove(simp);
 				}
-				
+
 				// Try and sort the list.
 				ECollections.sort(tunerStatusStruct.getSimple(), new Comparator<Simple>() {
 
@@ -153,7 +149,7 @@ public class EditFrontEndInterfacesSettingsHandler extends AbstractHandler {
 					}
 
 				});
-				
+
 				try {
 					eSpd.eResource().save(null);
 					currentProps.eResource().save(null);
