@@ -149,7 +149,7 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 					} else { // It has Analog Output
 						addProvidesControlPort(eSpd, "AnalogTuner_in", AnalogTunerHelper.id());
 						addRFInfoUsesPort(eSpd, "RFInfo_out");
-						//						addRFSourcePort(eSpd);  // Holding off on supporting RFSourcePorts until post CCB
+						// addRFSourcePort(eSpd); // Holding off on supporting RFSourcePorts until post CCB
 					}
 
 				} else { // Has Digital Input
@@ -203,7 +203,6 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 	}
 
 	private void setDeviceKindName(SoftPkg eSpd, String name) {
-
 		for (Simple simpProp : eSpd.getPropertyFile().getProperties().getSimple()) {
 			if ("device_kind".equals(simpProp.getName())) {
 				simpProp.setValue(name);
@@ -294,14 +293,13 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		if (this.tunerStatusStructProps == null && this.getFrontEndTunerPropsWizardPage() != null) {
 			this.tunerStatusStructProps = this.getFrontEndTunerPropsWizardPage().getSelectedProperties();
 		}
-		
-		
+
 		// Make things easier for the user by sorting the list here
 		final List<FrontEndProp> sortedList;
 		if (this.tunerStatusStructProps == null) {
 			sortedList = Collections.emptyList();
 		} else {
-			 sortedList = new ArrayList<FrontEndProp>(this.tunerStatusStructProps);
+			sortedList = new ArrayList<FrontEndProp>(this.tunerStatusStructProps);
 		}
 		Collections.sort(sortedList, new Comparator<FrontEndProp>() {
 			public int compare(FrontEndProp fep1, FrontEndProp fep2) {
@@ -359,17 +357,17 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		i.setRepid(repId);
 
 		final IdlInterfaceDcl idlInter = (IdlInterfaceDcl) library.find(repId);
-		//If the interface isn't present in the IdlLibrary, there's nothing to do
+		// If the interface isn't present in the IdlLibrary, there's nothing to do
 		if (idlInter != null) {
 			i.setName(idlInter.getName());
 
-			//Add all the inherited interfaces first.
+			// Add all the inherited interfaces first.
 			for (final IdlInterfaceDcl inherited : idlInter.getInheritedInterfaces()) {
 				final InheritsInterface iface = ScdFactory.eINSTANCE.createInheritsInterface();
 				iface.setRepid(inherited.getRepId());
 				i.getInheritsInterfaces().add(iface);
 
-				//If the inherited interface isn't already present, make a recursive call to add it.
+				// If the inherited interface isn't already present, make a recursive call to add it.
 				addInterface(library, inherited.getRepId(), interfaces);
 			}
 		}

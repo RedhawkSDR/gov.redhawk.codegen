@@ -86,8 +86,8 @@ public enum FrontEndDeviceUIUtils {
 	}
 
 	public CheckboxTableViewer getCheckboxTableViewer(Composite parent) {
-		CheckboxTableViewer theTableViewer = new CheckboxTableViewer(createTable(parent, SWT.CHECK | SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL
-			| SWT.H_SCROLL));
+		CheckboxTableViewer theTableViewer = new CheckboxTableViewer(
+			createTable(parent, SWT.CHECK | SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.H_SCROLL));
 		theTableViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		theTableViewer.setSorter(getTableSorter());
 
@@ -197,7 +197,8 @@ public enum FrontEndDeviceUIUtils {
 				FrontEndProp frontEndProp1 = (FrontEndProp) e1;
 				FrontEndProp frontEndProp2 = (FrontEndProp) e2;
 
-				// Required properties should be displayed last since the user will only really interact with non-required.
+				// Required properties should be displayed last since the user will only really interact with
+				// non-required.
 				if (frontEndProp1.isRequired() != frontEndProp2.isRequired()) {
 					if (frontEndProp1.isRequired()) {
 						return 1;
