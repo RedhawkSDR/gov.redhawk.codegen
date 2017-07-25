@@ -93,10 +93,12 @@ public class FrontEndTunerPropsPage extends WizardPage implements ICodegenWizard
 		this.setTitle(Messages.FrontEndTunerPropsPage_Title);
 		this.setDescription(Messages.FrontEndTunerPropsPage_Description);
 
-		final Composite client = new Composite(parent, SWT.NULL);
+		final Composite client = new Composite(parent, SWT.NONE);
 
 		// Creates the basic layout of the UI elements
-		createUIElements(client);
+		client.setLayout(new GridLayout(FrontEndTunerPropsPage.NUM_COLUMNS, false));
+		createTunerStatusPropSection(client).setInput(this.selectedProps);
+		createBindings();
 		createListeners();
 
 		this.setControl(client);
@@ -202,23 +204,17 @@ public class FrontEndTunerPropsPage extends WizardPage implements ICodegenWizard
 		});
 	}
 
-	private void createUIElements(Composite client) {
-		client.setLayout(new GridLayout(FrontEndTunerPropsPage.NUM_COLUMNS, false));
-		createTunerStatusPropSection(client).setInput(this.selectedProps);
-		createBindings();
-	}
-
 	private TableViewer createTunerStatusPropSection(Composite parent) {
-		Group tunerStatusPropertyGroup = new Group(parent, SWT.None);
+		Group tunerStatusPropertyGroup = new Group(parent, SWT.NONE);
 		tunerStatusPropertyGroup.setText(Messages.FrontEndTunerPropsPage_GroupText);
 		tunerStatusPropertyGroup.setLayout(new GridLayout(2, false));
-		tunerStatusPropertyGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+		tunerStatusPropertyGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 350).create());
 
 		theTableViewer = FrontEndDeviceUIUtils.INSTANCE.getTableViewer(tunerStatusPropertyGroup);
 		theTable = theTableViewer.getTable();
 
 		// Create Add/Remove button
-		Composite buttonComposite = new Composite(tunerStatusPropertyGroup, SWT.None);
+		Composite buttonComposite = new Composite(tunerStatusPropertyGroup, SWT.NONE);
 		buttonComposite.setLayout(new GridLayout(1, false));
 		buttonComposite.setLayoutData(GridDataFactory.fillDefaults().create());
 

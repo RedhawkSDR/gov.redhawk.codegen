@@ -111,10 +111,10 @@ public enum FrontEndDeviceUIUtils {
 	private Table createTable(Composite parent, int style) {
 		// Define table layout
 		TableLayout theTableLayout = new TableLayout();
-		theTableLayout.addColumnData(new ColumnWeightData(30));
+		theTableLayout.addColumnData(new ColumnWeightData(25));
 		theTableLayout.addColumnData(new ColumnWeightData(10));
 		theTableLayout.addColumnData(new ColumnWeightData(10));
-		theTableLayout.addColumnData(new ColumnWeightData(50));
+		theTableLayout.addColumnData(new ColumnWeightData(55));
 
 		// Define the table
 		Table theTable = new Table(parent, style);
