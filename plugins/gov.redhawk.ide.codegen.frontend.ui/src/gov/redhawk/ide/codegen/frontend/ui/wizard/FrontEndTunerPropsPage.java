@@ -64,20 +64,18 @@ public class FrontEndTunerPropsPage extends WizardPage implements ICodegenWizard
 	private Button removeTunerStatusPropButton;
 	private WritableSet selectedProps = new WritableSet();
 	private ImplementationSettings implSettings;
-	private FeiDevice feiDevice;
 	private FrontEndProjectValidator validator;
 	private boolean viewed = false;
 
 	public FrontEndTunerPropsPage(FeiDevice feiDevice) {
-		super("");
-		this.feiDevice = feiDevice;
+		super(""); //$NON-NLS-1$
 		if (this.selectedProps.isEmpty()) {
 			selectedProps.addAll(FrontEndDeviceUIUtils.INSTANCE.getRequiredFrontEndProps());
 		}
 	}
 
 	public FrontEndTunerPropsPage(Set<Simple> props) {
-		super("");
+		super(""); //$NON-NLS-1$
 
 		if (this.selectedProps.isEmpty()) {
 			selectedProps.addAll(FrontEndDeviceUIUtils.INSTANCE.getRequiredFrontEndProps());
@@ -92,8 +90,8 @@ public class FrontEndTunerPropsPage extends WizardPage implements ICodegenWizard
 	@Override
 	public void createControl(Composite parent) {
 		this.viewed  = true;
-		this.setTitle("FrontEnd Interfaces Tuner Status Customization");
-		this.setDescription("Select set of tuner status properties for the tuner status struct.  Note that required properties may not be removed.");
+		this.setTitle(Messages.FrontEndTunerPropsPage_Title);
+		this.setDescription(Messages.FrontEndTunerPropsPage_Description);
 
 		final Composite client = new Composite(parent, SWT.NULL);
 
@@ -212,7 +210,7 @@ public class FrontEndTunerPropsPage extends WizardPage implements ICodegenWizard
 
 	private TableViewer createTunerStatusPropSection(Composite parent) {
 		Group tunerStatusPropertyGroup = new Group(parent, SWT.None);
-		tunerStatusPropertyGroup.setText("Tuner Status Property Selection");
+		tunerStatusPropertyGroup.setText(Messages.FrontEndTunerPropsPage_GroupText);
 		tunerStatusPropertyGroup.setLayout(new GridLayout(2, false));
 		tunerStatusPropertyGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
@@ -225,12 +223,15 @@ public class FrontEndTunerPropsPage extends WizardPage implements ICodegenWizard
 		buttonComposite.setLayoutData(GridDataFactory.fillDefaults().create());
 
 		this.addTunerStatusPropButton = new Button(buttonComposite, SWT.PUSH);
-		this.addTunerStatusPropButton.setImage(AbstractUIPlugin.imageDescriptorFromPlugin(FrontEndDeviceWizardPlugin.PLUGIN_ID, "icons/add.gif").createImage());
+		this.addTunerStatusPropButton.setImage(AbstractUIPlugin.imageDescriptorFromPlugin(FrontEndDeviceWizardPlugin.PLUGIN_ID, "icons/add.gif").createImage()); //$NON-NLS-1$
+		this.addTunerStatusPropButton.setToolTipText(Messages.FrontEndTunerPropsPage_AddProperty);
 		this.addTunerStatusPropButton.setLayoutData(GridDataFactory.swtDefaults().create());
 
 		this.removeTunerStatusPropButton = new Button(buttonComposite, SWT.PUSH);
-		this.removeTunerStatusPropButton.setImage(AbstractUIPlugin.imageDescriptorFromPlugin(FrontEndDeviceWizardPlugin.PLUGIN_ID, "icons/remove.gif").createImage());
+		this.removeTunerStatusPropButton.setImage(AbstractUIPlugin.imageDescriptorFromPlugin(FrontEndDeviceWizardPlugin.PLUGIN_ID, "icons/remove.gif").createImage()); //$NON-NLS-1$
+		this.removeTunerStatusPropButton.setToolTipText(Messages.FrontEndTunerPropsPage_RemoveProperty);
 		this.removeTunerStatusPropButton.setLayoutData(GridDataFactory.swtDefaults().create());
+		this.removeTunerStatusPropButton.setEnabled(false);
 
 		return theTableViewer;
 	}
