@@ -10,7 +10,7 @@
  *******************************************************************************/
 package gov.redhawk.ide.codegen.frontend.ui.wizard;
 
-import gov.redhawk.ide.codegen.internal.CodeGeneratorDescriptor;
+import gov.redhawk.ide.codegen.ICodeGeneratorDescriptor;
 import gov.redhawk.ide.codegen.jinja.cplusplus.CplusplusGenerator;
 import gov.redhawk.ide.codegen.jinja.java.JavaGenerator;
 import gov.redhawk.ide.codegen.jinja.python.PythonGenerator;
@@ -29,12 +29,11 @@ public class FrontEndImplementationWizardPage extends ImplementationWizardPage {
 		super(name, componentTypeDevice);
 		ViewerFilter viewerFilter = new ViewerFilter() {
 
-			@SuppressWarnings("restriction")
 			@Override
 			public boolean select(Viewer viewer, Object parentElement, Object element) {
-				if (CplusplusGenerator.ID.equalsIgnoreCase(((CodeGeneratorDescriptor) element).getId())
-											|| PythonGenerator.ID.equalsIgnoreCase(((CodeGeneratorDescriptor) element).getId()) 
-											||	JavaGenerator.ID.equalsIgnoreCase(((CodeGeneratorDescriptor) element).getId())) {
+				if (CplusplusGenerator.ID.equalsIgnoreCase(((ICodeGeneratorDescriptor) element).getId())
+					|| PythonGenerator.ID.equalsIgnoreCase(((ICodeGeneratorDescriptor) element).getId())
+					|| JavaGenerator.ID.equalsIgnoreCase(((ICodeGeneratorDescriptor) element).getId())) {
 					return true;
 				}
 				return false;
