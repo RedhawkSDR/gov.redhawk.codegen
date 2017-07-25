@@ -16,6 +16,20 @@ import org.eclipse.osgi.util.NLS;
 
 /* package */ class Messages extends NLS {
 	private static final String BUNDLE_NAME = "gov.redhawk.ide.codegen.frontend.ui.wizard.messages"; //$NON-NLS-1$
+	public static String FrontEndTunerOptionsWizardPage_AnalogInput;
+	public static String FrontEndTunerOptionsWizardPage_AnalogInputPorts;
+	public static String FrontEndTunerOptionsWizardPage_AnalogOutput;
+	public static String FrontEndTunerOptionsWizardPage_Description;
+	public static String FrontEndTunerOptionsWizardPage_DigitalInput;
+	public static String FrontEndTunerOptionsWizardPage_DigitalInputPorts;
+	public static String FrontEndTunerOptionsWizardPage_DigitalInputType;
+	public static String FrontEndTunerOptionsWizardPage_DigitalOutput;
+	public static String FrontEndTunerOptionsWizardPage_DigitalOutputType;
+	public static String FrontEndTunerOptionsWizardPage_IDLLibraryLoadError;
+	public static String FrontEndTunerOptionsWizardPage_MultiOut;
+	public static String FrontEndTunerOptionsWizardPage_ReceiverGroupText;
+	public static String FrontEndTunerOptionsWizardPage_Title;
+	public static String FrontEndTunerOptionsWizardPage_TransmitterGroupText;
 	public static String FrontEndTunerPropsPage_AddProperty;
 	public static String FrontEndTunerPropsPage_Description;
 	public static String FrontEndTunerPropsPage_GroupText;

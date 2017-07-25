@@ -83,7 +83,7 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		@Override
 		public String getText(final Object element) {
 			final Definition def = (Definition) element;
-			if ("dataChar".equals(def.getName())) {
+			if ("dataChar".equals(def.getName())) { //$NON-NLS-1$
 				return "dataChar (deprecated)";
 			} else {
 				return def.getName();
@@ -92,7 +92,7 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 	};
 
 	public FrontEndTunerOptionsWizardPage(FeiDevice feiDevice) {
-		super("");
+		super(""); //$NON-NLS-1$
 		this.feiDevice = feiDevice;
 		populatePropertyTypes();
 
@@ -106,8 +106,8 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 
 	@Override
 	public void createControl(Composite parent) {
-		this.setTitle("FrontEnd Interface Tuner Options");
-		this.setDescription("Select the input and output types for this FrontEnd Interfaces Tuner Device");
+		this.setTitle(Messages.FrontEndTunerOptionsWizardPage_Title);
+		this.setDescription(Messages.FrontEndTunerOptionsWizardPage_Description);
 		this.parent = parent;
 		client = new Composite(parent, SWT.NULL);
 		ctx = new DataBindingContext();
@@ -147,7 +147,8 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		}
 
 		if (this.propertyTypes == null || this.propertyTypes.length == 0) {
-			this.validator.setCustomValidationStatus(new Status(Status.ERROR, FrontEndDeviceWizardPlugin.PLUGIN_ID, "Failed to Load IDL Library.", null));
+			this.validator.setCustomValidationStatus(
+				new Status(Status.ERROR, FrontEndDeviceWizardPlugin.PLUGIN_ID, Messages.FrontEndTunerOptionsWizardPage_IDLLibraryLoadError, null));
 		}
 	}
 
@@ -183,21 +184,23 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 			} catch (InterruptedException e) {
 				// PASS
 			} catch (InvocationTargetException e) {
-				StatusManager.getManager().handle(new Status(Status.ERROR, FrontEndDeviceWizardPlugin.PLUGIN_ID, "Failed to Load IDL Library.", e), StatusManager.SHOW | StatusManager.LOG);
+				StatusManager.getManager().handle(
+					new Status(Status.ERROR, FrontEndDeviceWizardPlugin.PLUGIN_ID, Messages.FrontEndTunerOptionsWizardPage_IDLLibraryLoadError, e),
+					StatusManager.SHOW | StatusManager.LOG);
 			}
 		}
 
 		// Grab BULKIO port types
 		for (Definition def : idlLibrary.getDefinitions()) {
-			if ("BULKIO".equals(def.getName())) {
+			if ("BULKIO".equals(def.getName())) { //$NON-NLS-1$
 				RepositoryModule bulkioModule = (RepositoryModule) def;
 				for (Definition definition : bulkioModule.getDefinitions()) {
 					if (definition instanceof IdlInterfaceDcl) {
 						// Should be named "data<something>", but not "dataXML"
-						if (!definition.getName().startsWith("data")) {
+						if (!definition.getName().startsWith("data")) { //$NON-NLS-1$
 							continue;
 						}
-						if ("dataXML".equals(definition.getName())) {
+						if ("dataXML".equals(definition.getName())) { //$NON-NLS-1$
 							continue;
 						}
 						bulkioTypes.add(definition);
@@ -210,10 +213,10 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 			@Override
 			public int compare(Definition o1, Definition o2) {
 				// Put dataChar at the end
-				if ("dataChar".equals(o1.getName())) {
+				if ("dataChar".equals(o1.getName())) { //$NON-NLS-1$
 					return 1;
 				}
-				if ("dataChar".equals(o2.getName())) {
+				if ("dataChar".equals(o2.getName())) { //$NON-NLS-1$
 					return -1;
 				}
 
@@ -241,7 +244,7 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 	// Create Receiver Group and all sub-methods
 	private void createReceiverGroup(Composite client) {
 		Group receiverGroup = new Group(client, SWT.SHADOW_ETCHED_IN);
-		receiverGroup.setText("Receiver Properties");
+               receiverGroup.setText(Messages.FrontEndTunerOptionsWizardPage_ReceiverGroupText);
 		receiverGroup.setLayout(new GridLayout(2, false));
 		receiverGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
@@ -257,7 +260,7 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		GridDataFactory childLayout = GridDataFactory.fillDefaults().grab(true, false).indent(30, 0).align(SWT.LEFT, SWT.CENTER);
 
 		Button analogInputButton = new Button(inputContainer, SWT.RADIO);
-		analogInputButton.setText("Analog Input (default)");
+               analogInputButton.setText(Messages.FrontEndTunerOptionsWizardPage_AnalogInput);
 		analogInputButton.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, true, false, 2, 1));
 		createAnalogIn(inputContainer).setLayoutData(childLayout.create());
 		UpdateValueStrategy uvs = booleanConverter();
@@ -265,7 +268,7 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__HAS_DIGITAL_INPUT), uvs, uvs);
 
 		Button digitalInputButton = new Button(inputContainer, SWT.RADIO);
-		digitalInputButton.setText("Digital Input");
+               digitalInputButton.setText(Messages.FrontEndTunerOptionsWizardPage_DigitalInput);
 		digitalInputButton.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, true, false, 2, 1));
 		createDigitalIn(inputContainer).setLayoutData(childLayout.create());
 		ctx.bindValue(WidgetProperties.selection().observe(digitalInputButton),
@@ -290,7 +293,7 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		analogIn.setLayout(new GridLayout(2, false));
 
 		Label numAnalogLabel = new Label(analogIn, SWT.None);
-		numAnalogLabel.setText("Analog input ports:");
+		numAnalogLabel.setText(Messages.FrontEndTunerOptionsWizardPage_AnalogInputPorts);
 
 		Spinner numAnalogSpinner = new Spinner(analogIn, SWT.BORDER);
 		numAnalogSpinner.setMinimum(1);
@@ -308,7 +311,7 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		digitalIn.setLayout(new GridLayout(2, false));
 
 		Label digitalInputTypeLabel = new Label(digitalIn, SWT.None);
-		digitalInputTypeLabel.setText("Digital Input Type:");
+		digitalInputTypeLabel.setText(Messages.FrontEndTunerOptionsWizardPage_DigitalInputType);
 
 		ComboViewer digitalInputCombo = new ComboViewer(digitalIn, SWT.READ_ONLY);
 		digitalInputCombo.setContentProvider(new ArrayContentProvider());
@@ -328,7 +331,7 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		outputContainer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
 		Button analogOutputButton = new Button(outputContainer, SWT.RADIO);
-		analogOutputButton.setText("Analog Output");
+               analogOutputButton.setText(Messages.FrontEndTunerOptionsWizardPage_AnalogOutput);
 		analogOutputButton.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, true, false, 2, 1));
 		UpdateValueStrategy uvs = booleanConverter();
 		ctx.bindValue(WidgetProperties.enabled().observe(analogOutputButton),
@@ -337,7 +340,7 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__HAS_DIGITAL_OUTPUT), uvs, uvs);
 
 		Button digitalOutputButton = new Button(outputContainer, SWT.RADIO);
-		digitalOutputButton.setText("Digital Output (default)");
+               digitalOutputButton.setText(Messages.FrontEndTunerOptionsWizardPage_DigitalOutput);
 		digitalOutputButton.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, true, false, 2, 1));
 		createDigitalOut(outputContainer);
 		ctx.bindValue(WidgetProperties.selection().observe(digitalOutputButton),
@@ -350,7 +353,7 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		digitalOut.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(30, 0).align(SWT.CENTER, SWT.CENTER).create());
 
 		Label digitalOutputTypeLabel = new Label(digitalOut, SWT.None);
-		digitalOutputTypeLabel.setText("Digital Output Type:");
+		digitalOutputTypeLabel.setText(Messages.FrontEndTunerOptionsWizardPage_DigitalOutputType);
 
 		ComboViewer digitalOutputCombo = new ComboViewer(digitalOut, SWT.READ_ONLY);
 		digitalOutputCombo.setContentProvider(new ArrayContentProvider());
@@ -362,7 +365,7 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__HAS_DIGITAL_OUTPUT));
 
 		Button multiOutCheck = new Button(digitalOut, SWT.CHECK);
-		multiOutCheck.setText("Multi-out");
+		multiOutCheck.setText(Messages.FrontEndTunerOptionsWizardPage_MultiOut);
 		ctx.bindValue(WidgetProperties.selection().observe(multiOutCheck),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__MULTI_OUT));
 		ctx.bindValue(WidgetProperties.enabled().observe(multiOutCheck),
@@ -373,12 +376,12 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 	//Create Transmitter Group and all sub-methods
 	private void createTransmitterGroup(Composite client) {
 		Group transmitterGroup = new Group(client, SWT.SHADOW_ETCHED_IN);
-		transmitterGroup.setText("Transmitter Properties");
+               transmitterGroup.setText(Messages.FrontEndTunerOptionsWizardPage_TransmitterGroupText);
 		transmitterGroup.setLayout(new GridLayout(4, false));
 		transmitterGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
 		Label numDigitalInLabel = new Label(transmitterGroup, SWT.None);
-		numDigitalInLabel.setText("Number of Digital input ports:");
+               numDigitalInLabel.setText(Messages.FrontEndTunerOptionsWizardPage_DigitalInputPorts);
 
 		Spinner numDigitalSpinner = new Spinner(transmitterGroup, SWT.BORDER);
 		GC gc = new GC(numDigitalSpinner);
@@ -393,7 +396,7 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__NUMBER_OF_DIGITAL_INPUTS_FOR_TX));
 
 		Label digitalInputTypeLabel = new Label(transmitterGroup, SWT.None);
-		digitalInputTypeLabel.setText("Digital Input Type:");
+               digitalInputTypeLabel.setText(Messages.FrontEndTunerOptionsWizardPage_DigitalInputType);
 		digitalInputTypeLabel.setLayoutData(GridDataFactory.fillDefaults().indent(50, 0).align(SWT.CENTER, SWT.CENTER).create());
 
 		ComboViewer digitalInputCombo = new ComboViewer(transmitterGroup, SWT.READ_ONLY);
