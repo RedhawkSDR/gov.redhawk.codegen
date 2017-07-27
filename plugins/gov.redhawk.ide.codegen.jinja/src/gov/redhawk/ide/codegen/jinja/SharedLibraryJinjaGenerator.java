@@ -56,6 +56,9 @@ public class SharedLibraryJinjaGenerator extends JinjaGenerator {
 		args.add("-C");
 		args.add(project.getLocation().toOSString());
 
+		// Header settings
+		args.addAll(headerSettings(project));
+
 		// Turn the settings into command-line flags
 		args.addAll(settingsToOptions(implSettings));
 

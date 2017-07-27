@@ -283,8 +283,9 @@ public class JinjaGenerator {
 	 * instruct the code generator to use the header.
 	 * @param project The project for which code generation is occurring.
 	 * @return A list of command line arguments to be added.
+	 * @since 1.3
 	 */
-	private List<String> headerSettings(IProject project) {
+	protected List<String> headerSettings(IProject project) {
 		if (new Version(2, 1, 1).compareTo(getCodegenVersion()) > 0 || !project.getFile("HEADER").exists()) {
 			return Collections.emptyList();
 		}
