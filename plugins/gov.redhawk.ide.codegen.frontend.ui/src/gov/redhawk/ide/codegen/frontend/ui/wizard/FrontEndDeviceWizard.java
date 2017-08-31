@@ -32,7 +32,7 @@ import gov.redhawk.ide.codegen.ui.ICodegenWizardPage;
 import gov.redhawk.ide.codegen.ui.RedhawkCodegenUiActivator;
 import gov.redhawk.ide.codegen.util.CodegenFileHelper;
 import gov.redhawk.ide.codegen.util.ImplementationAndSettings;
-import gov.redhawk.ide.dcd.ui.wizard.NewScaDeviceCreationProjectWizard;
+import gov.redhawk.ide.graphiti.dcd.ui.project.wizards.NewScaDeviceCreationProjectWizard;
 import gov.redhawk.ide.ui.wizard.IImportWizard;
 import gov.redhawk.sca.util.SubMonitor;
 import mil.jpeojtrs.sca.spd.Implementation;
