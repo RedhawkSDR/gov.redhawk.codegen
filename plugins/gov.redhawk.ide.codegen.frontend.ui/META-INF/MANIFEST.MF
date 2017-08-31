@@ -21,7 +21,6 @@ Require-Bundle: org.eclipse.ui,
  gov.redhawk.ide.sdr.ui,
  org.eclipse.jface.databinding,
  org.eclipse.core.databinding.beans,
- gov.redhawk.ide.dcd.ui,
  gov.redhawk.ide.spd.ui;bundle-version="8.1.0",
  gov.redhawk.ide.ui,
  org.eclipse.ui.ide,
@@ -38,6 +37,7 @@ Require-Bundle: org.eclipse.ui,
  mil.jpeojtrs.sca.prf,
  gov.redhawk.sca.model;bundle-version="19.0.0",
  gov.redhawk.frontend,
- gov.redhawk.ide.codegen.jet.java.ui
+ gov.redhawk.ide.codegen.jet.java.ui,
+ gov.redhawk.ide.graphiti.dcd.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy

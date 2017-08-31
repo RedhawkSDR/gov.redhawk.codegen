@@ -17,7 +17,7 @@ import gov.redhawk.ide.codegen.frontend.ui.FrontEndDeviceUIUtils;
 import gov.redhawk.ide.codegen.frontend.ui.FrontEndDeviceWizardPlugin;
 import gov.redhawk.ide.codegen.frontend.ui.FrontEndProjectValidator;
 import gov.redhawk.ide.codegen.ui.ICodegenWizardPage;
-import gov.redhawk.ide.dcd.ui.wizard.ScaDeviceProjectPropertiesWizardPage;
+import gov.redhawk.ide.graphiti.dcd.ui.project.wizards.ScaDeviceProjectPropertiesWizardPage;
 
 import java.util.ArrayList;
 import java.util.Collections;

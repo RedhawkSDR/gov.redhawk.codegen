@@ -10,8 +10,6 @@
  *******************************************************************************/
 package gov.redhawk.ide.codegen.frontend.ui;
 
-import gov.redhawk.ide.dcd.ui.wizard.DeviceProjectSettings;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -24,6 +22,8 @@ import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.WizardPage;
+
+import gov.redhawk.ide.graphiti.dcd.ui.project.wizards.DeviceProjectSettings;
 
 /**
  * @since 1.1

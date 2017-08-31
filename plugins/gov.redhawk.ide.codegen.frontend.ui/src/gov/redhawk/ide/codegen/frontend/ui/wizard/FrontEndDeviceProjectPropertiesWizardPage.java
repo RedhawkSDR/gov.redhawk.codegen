@@ -10,7 +10,7 @@
  *******************************************************************************/
 package gov.redhawk.ide.codegen.frontend.ui.wizard;
 
-import gov.redhawk.ide.dcd.ui.wizard.ScaDeviceProjectPropertiesWizardPage;
+import gov.redhawk.ide.graphiti.dcd.ui.project.wizards.ScaDeviceProjectPropertiesWizardPage;
 
 
 public class FrontEndDeviceProjectPropertiesWizardPage extends ScaDeviceProjectPropertiesWizardPage {
