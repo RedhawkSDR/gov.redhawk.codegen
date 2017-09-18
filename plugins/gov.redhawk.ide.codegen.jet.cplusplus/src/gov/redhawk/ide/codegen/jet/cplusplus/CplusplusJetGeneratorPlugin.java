@@ -20,47 +20,25 @@ import org.osgi.framework.BundleContext;
  */
 public class CplusplusJetGeneratorPlugin extends Plugin {
 
-	// The plug-in ID
 	public static final String PLUGIN_ID = "gov.redhawk.ide.codegen.jet.cplusplus";
 
-	// The shared instance
 	private static CplusplusJetGeneratorPlugin plugin;
 
-	/**
-	 * The constructor.
-	 */
 	public CplusplusJetGeneratorPlugin() {
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
-	 */
 	@Override
 	public void start(final BundleContext context) throws Exception {
 		super.start(context);
 		CplusplusJetGeneratorPlugin.plugin = this;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
-	 */
 	@Override
 	public void stop(final BundleContext context) throws Exception {
 		CplusplusJetGeneratorPlugin.plugin = null;
 		super.stop(context);
 	}
 
-	/**
-	 * Returns the shared instance
-	 * 
-	 * @return the shared instance
-	 */
 	public static CplusplusJetGeneratorPlugin getDefault() {
 		return CplusplusJetGeneratorPlugin.plugin;
 	}
@@ -69,13 +47,6 @@ public class CplusplusJetGeneratorPlugin extends Plugin {
 		return CplusplusJetGeneratorPlugin.getDefault().getBundle().getSymbolicName();
 	}
 
-	/**
-	 * Logging functionality
-	 * 
-	 * @param msg
-	 * @param e
-	 * @since 4.1
-	 */
 	public static final void logError(final String msg, final Throwable e) {
 		CplusplusJetGeneratorPlugin.getDefault().getLog().log(new Status(IStatus.ERROR, CplusplusJetGeneratorPlugin.PLUGIN_ID, msg, e));
 	}

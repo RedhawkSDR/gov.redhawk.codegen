@@ -17,7 +17,7 @@
       <codegen
             associatedPerspectiveId="org.eclipse.jdt.ui.JavaPerspective"
             autoGenerate="false"
-            class="gov.redhawk.ide.codegen.jet.java.JavaGenerator"
+            class="gov.redhawk.ide.codegen.jet.java.GeneratorStub"
             compiler="/usr/bin/javac"
             compilerVersion="1.5"
             deprecated="true"

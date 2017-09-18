@@ -17,7 +17,7 @@
       <codegen
             associatedPerspectiveId="org.eclipse.cdt.ui.CPerspective"
             autoGenerate="false"
-            class="gov.redhawk.ide.codegen.jet.cplusplus.CplusplusGenerator"
+            class="gov.redhawk.ide.codegen.jet.cplusplus.GeneratorStub"
             compiler="/usr/bin/gcc"
             compilerVersion="4.1.2"
             deprecated="true"
@@ -91,7 +91,6 @@
             id="gov.redhawk.ide.codegen.jet.cplusplus.PullPortDataTemplate"
             name="Pull Port Data"
             notDefaultable="false"
-            portCodegenId="gov.redhawk.ide.codegen.jet.cplusplus.portHandler"
             selectable="true"
             usesPortTemplates="true">
          <description>

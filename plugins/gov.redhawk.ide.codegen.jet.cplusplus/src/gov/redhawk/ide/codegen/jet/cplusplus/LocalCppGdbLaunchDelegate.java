@@ -57,7 +57,7 @@ public class LocalCppGdbLaunchDelegate extends GdbLaunchDelegate {
 			throw new CoreException(status);
 		}
 
-		// We used a working copy when constructin the ILaunch in getLaunch(ILaunchConfiguration, String)
+		// We used a working copy when constructing the ILaunch in getLaunch(ILaunchConfiguration, String)
 		ILaunchConfigurationWorkingCopy launchConfiguration = (ILaunchConfigurationWorkingCopy) launch.getLaunchConfiguration();
 		insertProgramArguments(spd, launch, launchConfiguration);
 

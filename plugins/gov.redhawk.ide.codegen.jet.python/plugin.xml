@@ -16,7 +16,7 @@
       <codegen
             associatedPerspectiveId="org.python.pydev.ui.PythonPerspective"
             autoGenerate="false"
-            class="gov.redhawk.ide.codegen.jet.python.PythonGenerator"
+            class="gov.redhawk.ide.codegen.jet.python.GeneratorStub"
             deprecated="true"
             humanLanguage="en"
             id="gov.redhawk.ide.codegen.jet.python.PythonGenerator"
@@ -104,7 +104,6 @@
             id="gov.redhawk.ide.codegen.jet.python.pattern.PullPortDataTemplate"
             name="Pull Port Data"
             notDefaultable="false"
-            portCodegenId="gov.redhawk.ide.codegen.jet.python.portHandler"
             selectable="true"
             usesPortTemplates="true">
          <description>
