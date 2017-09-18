@@ -48,55 +48,7 @@
    <extension
          point="gov.redhawk.ide.codegen.codegenTemplate">
       <template
-            class="gov.redhawk.ide.codegen.jet.java.pattern.LegacyTemplate"
-            codegenId="gov.redhawk.ide.codegen.jet.java.JavaGenerator"
-            hasSettings="true"
-            id="gov.redhawk.ide.codegen.jet.java.pattern.LegacyTemplate"
-            name="Legacy Project"
-            notDefaultable="true"
-            selectable="false"
-            usesPortTemplates="false">
-         <description>
-            This is the template for previously generated projects prior to template definitions.
-         </description>
-         <property
-               default_value="FALSE"
-               deprecated="true"
-               key="auto_start"
-               name="Auto start"
-               required="true">
-            <description>
-               When this property is set, the generated code's initialize function is tied to the start function, which in turn starts the processing thread. 
-	When the property is not set, the start function needs to be explicitly called to start the processing thread.
-            </description>
-         </property>
-         <property
-               default_value="TRUE"
-               key="queued_ports"
-               name="Enable queued ports"
-               required="true">
-            <description>
-               Set this to true to use queue's for sending and receiving port data
-            </description>
-         </property>
-         <property
-               default_value=""
-               key="java_package"
-               name="Name of the Java package"
-               required="true">
-            <description>
-               The package that the generated component should be named.
-            </description>
-         </property>
-         <componenttype
-               type="resource">
-         </componenttype>
-         <componenttype
-               type="device">
-         </componenttype>
-      </template>
-      <template
-            class="gov.redhawk.ide.codegen.jet.java.pattern.ManualTemplate"
+            class="gov.redhawk.ide.codegen.jet.java.pattern.TemplateStub"
             codegenId="gov.redhawk.ide.codegen.jet.java.JavaGenerator"
             hasSettings="true"
             id="gov.redhawk.ide.codegen.jet.java.pattern.ManualTemplate"
@@ -136,13 +88,12 @@
          </componenttype>
       </template>
       <template
-            class="gov.redhawk.ide.codegen.jet.java.pattern.PullPortDataTemplate"
+            class="gov.redhawk.ide.codegen.jet.java.pattern.TemplateStub"
             codegenId="gov.redhawk.ide.codegen.jet.java.JavaGenerator"
             hasSettings="true"
             id="gov.redhawk.ide.codegen.jet.java.JavaGenerator"
             name="Pull Port Data"
             notDefaultable="false"
-            portCodegenId="gov.redhawk.ide.codegen.jet.java.portHandler"
             selectable="true"
             usesPortTemplates="true">
          <description>
@@ -188,29 +139,6 @@
                required="true">
          </property>
       </template>
-   </extension>
-   <extension
-         point="gov.redhawk.ide.codegen.portGenerator">
-      <portHandler
-            class="gov.redhawk.ide.codegen.jet.java.ports.PullPortTemplate"
-            id="gov.redhawk.ide.codegen.jet.java.portHandler"
-            name="Default Java Port Generator"
-            pullInputData="true">
-         <description>
-            This is the default REDHAWK provided port generator. It uses the Pull Data pattern for port generation.
-         </description>
-         <interfaces>
-            <portInterface
-                  idlInterface="IDL:BULKIO/.*:1.0">
-            </portInterface>
-            <portInterface
-                  idlInterface="IDL:REDHAWK/.*:1.0">
-            </portInterface>
-         </interfaces>
-         <language
-               name="Java">
-         </language>
-      </portHandler>
    </extension>
    <extension
          point="org.eclipse.debug.core.launchConfigurationTypes">

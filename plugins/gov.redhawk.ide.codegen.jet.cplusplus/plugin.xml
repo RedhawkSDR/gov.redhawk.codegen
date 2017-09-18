@@ -54,66 +54,7 @@
    <extension
          point="gov.redhawk.ide.codegen.codegenTemplate">
       <template
-            class="gov.redhawk.ide.codegen.jet.cplusplus.pattern.LegacyTemplate"
-            codegenId="gov.redhawk.ide.codegen.jet.cplusplus.CplusplusGenerator"
-            hasSettings="true"
-            id="gov.redhawk.ide.codegen.jet.cplusplus.CplusplusGenerator"
-            name="Legacy Project"
-            notDefaultable="true"
-            selectable="false"
-            usesPortTemplates="false">
-         <description>
-            This is the template for previously generated projects prior to template definitions.
-         </description>
-         <property
-               default_value="FALSE"
-               deprecated="true"
-               key="auto_start"
-               name="Auto start"
-               required="true">
-            <description>
-               When this property is set, the generated code's initialize function is tied to the start function, which in turn starts the processing thread. 
-When the property is not set, the start function needs to be explicitly called to start the processing thread.
-            </description>
-         </property>
-         <property
-               default_value="TRUE"
-               key="queued_ports"
-               name="Enable Queued Ports"
-               required="true">
-            <description>
-               Set this to true to use queue's for sending and receiving port data
-            </description>
-         </property>
-         <property
-               default_value="TRUE"
-               key="generatorStyle"
-               name="Port Pulling Interaction"
-               required="true">
-            <description>
-               This pattern generates a Component that pulls data from its ports into the processing thread, 
-	whereupon it is the job of the user to deal with the pulled data.
-            </description>
-         </property>
-         <property
-               default_value="TRUE"
-               key="memcpy_buffer"
-               name="Use memcpy for Buffers"
-               required="true">
-            <description>
-               If this is true, the incoming sequences will be memcpy'd into separate buffers.  
-If false, the data will be taken from the sequence and it is the component's responsibility to free the data.
-            </description>
-         </property>
-         <componenttype
-               type="resource">
-         </componenttype>
-         <componenttype
-               type="device">
-         </componenttype>
-      </template>
-      <template
-            class="gov.redhawk.ide.codegen.jet.cplusplus.pattern.ManualTemplate"
+            class="gov.redhawk.ide.codegen.jet.cplusplus.pattern.TemplateStub"
             codegenId="gov.redhawk.ide.codegen.jet.cplusplus.CplusplusGenerator"
             hasSettings="true"
             id="gov.redhawk.ide.codegen.jet.cplusplus.ManualTemplate"
@@ -144,7 +85,7 @@ If false, the data will be taken from the sequence and it is the component's res
          </componenttype>
       </template>
       <template
-            class="gov.redhawk.ide.codegen.jet.cplusplus.pattern.PullPortDataTemplate"
+            class="gov.redhawk.ide.codegen.jet.cplusplus.pattern.TemplateStub"
             codegenId="gov.redhawk.ide.codegen.jet.cplusplus.CplusplusGenerator"
             hasSettings="true"
             id="gov.redhawk.ide.codegen.jet.cplusplus.PullPortDataTemplate"
@@ -174,79 +115,6 @@ If false, the data will be taken from the sequence and it is the component's res
                type="device">
          </componenttype>
       </template>
-      <template
-            class="gov.redhawk.ide.codegen.jet.cplusplus.pattern.PushPortDataTemplate"
-            codegenId="gov.redhawk.ide.codegen.jet.cplusplus.CplusplusGenerator"
-            hasSettings="true"
-            id="gov.redhawk.ide.codegen.jet.cplusplus.PushPortDataTemplate"
-            name="Push Port Data"
-            notDefaultable="true"
-            selectable="false"
-            usesPortTemplates="false">
-         <description>
-            This template will have any data coming from the input port pushed to the parent component.
-         </description>
-         <property
-               default_value="FALSE"
-               deprecated="true"
-               key="auto_start"
-               name="Auto start"
-               required="true">
-            <description>
-               When this property is set, the generated code's initialize function is tied to the start function, which in turn starts the processing thread. 
-When the property is not set, the start function needs to be explicitly called to start the processing thread.
-            </description>
-         </property>
-         <property
-               default_value="TRUE"
-               key="queued_ports"
-               name="Enable Queued Ports"
-               required="true">
-            <description>
-               Set this to true to use queue's for sending and receiving port data
-            </description>
-         </property>
-         <property
-               default_value="TRUE"
-               key="memcpy_buffer"
-               name="Use memcpy for Buffers"
-               required="true">
-            <description>
-               If this is true, the incoming sequences will be memcpy'd into separate buffers.  
-If false, the data will be taken from the sequence and it is the component's responsibility to free the data.
-            </description>
-         </property>
-         <componenttype
-               type="resource">
-         </componenttype>
-         <componenttype
-               type="device">
-         </componenttype>
-      </template>
-   </extension>
-   <extension
-         point="gov.redhawk.ide.codegen.portGenerator">
-      <portHandler
-            class="gov.redhawk.ide.codegen.jet.cplusplus.ports.PullPortTemplate"
-            id="gov.redhawk.ide.codegen.jet.cplusplus.portHandler"
-            language="C++"
-            name="Default C++ Port Generator"
-            pullInputData="true">
-         <description>
-            This is the default REDHAWK provided port generator. It uses the Pull Data pattern for port generation.
-         </description>
-         <interfaces>
-            <portInterface
-                  idlInterface="IDL:BULKIO/.*:1.0">
-            </portInterface>
-            <portInterface
-                  idlInterface="IDL:REDHAWK/.*:1.0">
-            </portInterface>
-         </interfaces>
-         <language
-               name="C++">
-         </language>
-      </portHandler>
    </extension>
    <extension
          point="org.eclipse.debug.core.launchConfigurationTypes">

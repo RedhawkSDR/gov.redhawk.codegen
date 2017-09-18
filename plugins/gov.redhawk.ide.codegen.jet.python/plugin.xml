@@ -48,54 +48,7 @@
    <extension
          point="gov.redhawk.ide.codegen.codegenTemplate">
       <template
-            class="gov.redhawk.ide.codegen.jet.python.pattern.LegacyTemplate"
-            codegenId="gov.redhawk.ide.codegen.jet.python.PythonGenerator"
-            hasSettings="true"
-            id="gov.redhawk.ide.codegen.jet.python.PythonGenerator"
-            name="Legacy Project"
-            notDefaultable="true"
-            selectable="false"
-            usesPortTemplates="false">
-         <description>
-            This is the Jet generator for Python components and devices.
-         </description>
-         <property
-               default_value="FALSE"
-               deprecated="true"
-               key="auto_start_component"
-               name="Auto Start the Component"
-               required="false">
-            <description>
-               By enabling this option, the waveform will automatically begin processing data as soon as it is installed.
-            </description>
-         </property>
-         <property
-               default_value="FALSE"
-               key="use_old_style"
-               name="Use Legacy Pattern"
-               required="false">
-            <description>
-               The old style makes use of an external file where all processing is designated.
-            </description>
-         </property>
-         <property
-               default_value="TRUE"
-               key="work_module"
-               name="Use Work Module"
-               required="false">
-            <description>
-               Set this to true if you want to use a work module for your processing. Only valid with&quot;Use Legacy Pattern&quot; set to true.
-            </description>
-         </property>
-         <componenttype
-               type="resource">
-         </componenttype>
-         <componenttype
-               type="device">
-         </componenttype>
-      </template>
-      <template
-            class="gov.redhawk.ide.codegen.jet.python.pattern.ManualTemplate"
+            class="gov.redhawk.ide.codegen.jet.python.pattern.TemplateStub"
             codegenId="gov.redhawk.ide.codegen.jet.python.PythonGenerator"
             hasSettings="true"
             id="gov.redhawk.ide.codegen.jet.python.pattern.ManualTemplate"
@@ -126,7 +79,7 @@
          </componenttype>
       </template>
       <template
-            class="gov.redhawk.ide.codegen.jet.python.pattern.MinimalTemplate"
+            class="gov.redhawk.ide.codegen.jet.python.pattern.TemplateStub"
             codegenId="gov.redhawk.ide.codegen.jet.python.PythonGenerator"
             hasSettings="false"
             id="gov.redhawk.ide.codegen.jet.python.pattern.MinimalTemplate"
@@ -145,7 +98,7 @@
          </componenttype>
       </template>
       <template
-            class="gov.redhawk.ide.codegen.jet.python.pattern.PullPortDataTemplate"
+            class="gov.redhawk.ide.codegen.jet.python.pattern.TemplateStub"
             codegenId="gov.redhawk.ide.codegen.jet.python.PythonGenerator"
             hasSettings="true"
             id="gov.redhawk.ide.codegen.jet.python.pattern.PullPortDataTemplate"
@@ -175,26 +128,7 @@
          </componenttype>
       </template>
       <template
-            class="gov.redhawk.ide.codegen.jet.python.pattern.WorkModuleTemplate"
-            codegenId="gov.redhawk.ide.codegen.jet.python.PythonGenerator"
-            hasSettings="true"
-            id="gov.redhawk.ide.codegen.jet.python.pattern.WorkModuleTemplate"
-            name="Work Module Processor"
-            notDefaultable="false"
-            selectable="false"
-            usesPortTemplates="false">
-         <description>
-            This is the Jet generator for Python components and devices.
-         </description>
-         <componenttype
-               type="resource">
-         </componenttype>
-         <componenttype
-               type="device">
-         </componenttype>
-      </template>
-      <template
-            class="gov.redhawk.ide.codegen.jet.python.pattern.MinimalServiceTemplate"
+            class="gov.redhawk.ide.codegen.jet.python.pattern.TemplateStub"
             codegenId="gov.redhawk.ide.codegen.jet.python.PythonGenerator"
             hasSettings="false"
             id="gov.redhawk.ide.codegen.jet.python.pattern.MinimalServiceTemplate"
@@ -209,46 +143,6 @@
                type="service">
          </componenttype>
       </template>
-   </extension>
-   <extension
-         point="gov.redhawk.ide.codegen.portGenerator">
-      <portHandler
-            class="gov.redhawk.ide.codegen.jet.python.ports.PullPortTemplate"
-            id="gov.redhawk.ide.codegen.jet.python.portHandler"
-            name="Default Python Port Generator"
-            pullInputData="true">
-         <description>
-            This is the default REDHAWK provided port generator. It uses the Pull Data pattern for port generation.
-         </description>
-         <interfaces>
-            <portInterface
-                  idlInterface="IDL:BULKIO/.*:1.0">
-            </portInterface>
-            <portInterface
-                  idlInterface="IDL:REDHAWK/.*:1.0">
-            </portInterface>
-         </interfaces>
-         <language
-               name="Python">
-         </language>
-      </portHandler>
-      <portHandler
-            class="gov.redhawk.ide.codegen.jet.python.ports.PropertyChangeEventPortTemplate"
-            id="gov.redhawk.ide.codegen.jet.python.propertyChangeEventPortHandler"
-            name="Property Change Event Channel Port Generator"
-            pullInputData="false">
-         <description>
-            This port generator creates a port to handle Property Change Events from an Event Channel.
-         </description>
-         <interfaces>
-            <portInterface
-                  idlInterface="IDL:omg.org/CosEventChannelAdmin/EventChannel:1.0">
-            </portInterface>
-         </interfaces>
-         <language
-               name="Python">
-         </language>
-      </portHandler>
    </extension>
    <extension
          point="org.eclipse.debug.core.launchConfigurationTypes">
