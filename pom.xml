@@ -132,7 +132,6 @@
     <module>plugins/gov.redhawk.ide.codegen.frontend.edit</module>
     <module>plugins/gov.redhawk.ide.codegen.frontend</module>
     <module>plugins/gov.redhawk.ide.codegen.java</module>
-    <module>plugins/gov.redhawk.ide.codegen.jet</module>
     <module>plugins/gov.redhawk.ide.codegen.jet.cplusplus</module>
     <module>plugins/gov.redhawk.ide.codegen.jet.cplusplus.ui</module>
     <module>plugins/gov.redhawk.ide.codegen.jet.java</module>
