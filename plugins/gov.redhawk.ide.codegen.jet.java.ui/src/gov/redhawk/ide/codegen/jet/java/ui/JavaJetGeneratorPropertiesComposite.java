@@ -359,11 +359,11 @@ public class JavaJetGeneratorPropertiesComposite extends BaseGeneratorProperties
 		List<ICodeGeneratorDescriptor> tempCodegens = new ArrayList<ICodeGeneratorDescriptor>();
 		for (int i = 0; i < availableCodegens.length; i++) {
 			ICodeGeneratorDescriptor codegen = availableCodegens[i];
-			if (codegen.isDeprecated() && !codegen.getId().equals(codegenId)) {
-				continue;
-			} else {
+//			if (codegen.isDeprecated() && !codegen.getId().equals(codegenId)) {
+//				continue;
+//			} else {
 				tempCodegens.add(codegen);
-			}
+//			}
 		}
 
 		return tempCodegens.toArray(new ICodeGeneratorDescriptor[0]);
