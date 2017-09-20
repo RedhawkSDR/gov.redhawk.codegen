@@ -28,7 +28,7 @@ import org.eclipse.emf.ecore.util.EContentAdapter;
  */
 public class BooleanGeneratorPropertiesWizardPage2 extends BooleanGeneratorPropertiesWizardPage {
 
-	protected String template;
+	protected String template;  // SUPPRESS CHECKSTYLE INLINE
 
 	private EContentAdapter templateListener = new EContentAdapter() {
 		@Override

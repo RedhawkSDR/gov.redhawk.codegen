@@ -7,10 +7,22 @@ Bundle-Vendor: REDHAWK
 Service-Component: OSGI-INF/redhawkImportWizardAssist.xml
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: gov.redhawk.ide.codegen.ui;bundle-version="7.0.0",
- gov.redhawk.ide.codegen.jet.java.ui;bundle-version="8.1.0",
  gov.redhawk.ide.ui;bundle-version="9.1.0",
  org.eclipse.core.resources;bundle-version="3.8.1",
  gov.redhawk.ide.codegen;bundle-version="10.0.0",
  gov.redhawk.ide.codegen.java,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ org.eclipse.debug.ui,
+ gov.redhawk.ide.debug.ui,
+ org.eclipse.jdt.debug.ui,
+ org.eclipse.ui.forms,
+ org.eclipse.jface,
+ org.eclipse.jface.databinding,
+ org.eclipse.emf.databinding,
+ org.eclipse.core.databinding.property,
+ gov.redhawk.codegen.validation,
+ gov.redhawk.ui,
+ gov.redhawk.ide.spd.ui,
+ org.eclipse.emf.validation
 Bundle-ActivationPolicy: lazy
+Export-Package: gov.redhawk.ide.codegen.jet.java.ui;x-friends:="gov.redhawk.ide.codegen.frontend.ui"
