@@ -8,17 +8,23 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.8.0",
  org.eclipse.ui;bundle-version="3.8.2",
  gov.redhawk.ide.codegen;bundle-version="10.0.0",
  org.eclipse.cdt.core;bundle-version="5.4.1",
+ org.eclipse.cdt.debug.core,
  org.eclipse.cdt.managedbuilder.core;bundle-version="8.1.0",
  gov.redhawk.ide;bundle-version="6.0.0",
  gov.redhawk.sca.model;bundle-version="18.0.0",
  org.eclipse.core.resources;bundle-version="3.8.1",
  gov.redhawk.ide.codegen.edit;bundle-version="5.0.0",
  gov.redhawk.ide.cplusplus.utils;bundle-version="1.0.0";visibility:=reexport,
- gov.redhawk.ide.sdr
+ gov.redhawk.ide.sdr,
+ org.eclipse.debug.core,
+ gov.redhawk.ide.debug,
+ org.eclipse.cdt.dsf.gdb,
+ org.eclipse.cdt.launch
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: gov.redhawk.ide.codegen.cplusplus,
- gov.redhawk.ide.codegen.cplusplus.internal;x-friends:="gov.redhawk.ide.codegen.cplusplus.tests"
+ gov.redhawk.ide.codegen.cplusplus.internal;x-friends:="gov.redhawk.ide.codegen.cplusplus.tests",
+ gov.redhawk.ide.codegen.jet.cplusplus;x-friends:="gov.redhawk.ide.codegen.jinja.cplusplus"
 Bundle-Vendor: %Bundle-Vendor
 Service-Component: OSGI-INF/cppEnvMap.xml,
  OSGI-INF/octaveEnvMap.xml

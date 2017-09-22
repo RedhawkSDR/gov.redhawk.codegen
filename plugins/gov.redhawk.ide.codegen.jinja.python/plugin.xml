@@ -118,5 +118,141 @@
             launchConfigType="gov.redhawk.ide.codegen.jet.python.launchComponent">
       </launchConfigurationFactory>
    </extension>
+   <extension
+         id="Legacy JET Python Generator Extension Points"
+         name="Legacy JET Python Generator Extension Points"
+         point="gov.redhawk.ide.codegen.codegens">
+      <codegen
+            associatedPerspectiveId="org.python.pydev.ui.PythonPerspective"
+            autoGenerate="false"
+            class="gov.redhawk.ide.codegen.jet.python.GeneratorStub"
+            deprecated="true"
+            humanLanguage="en"
+            id="gov.redhawk.ide.codegen.jet.python.PythonGenerator"
+            language="Python"
+            languageVersion="2.4.4"
+            name="Legacy JET Python Code Generator"
+            notDefaultable="false"
+            priority="normal"
+            runtime="python"
+            runtimeVersion="2.4.4">
+         <description>
+            This is the Jet generator for Python components and devices.
+         </description>
+         <operatingSystem
+               default="true"
+               os="Linux">
+         </operatingSystem>
+         <componenttype
+               type="resource">
+         </componenttype>
+         <componenttype
+               type="device">
+         </componenttype>
+         <componenttype
+               type="service">
+         </componenttype>
+      </codegen>
+   </extension>
+   <extension
+         id="Legacy JET Python Template Extension Points"
+         name="Legacy JET Python Template Extension Points"
+         point="gov.redhawk.ide.codegen.codegenTemplate">
+      <template
+            class="gov.redhawk.ide.codegen.jet.python.pattern.TemplateStub"
+            codegenId="gov.redhawk.ide.codegen.jet.python.PythonGenerator"
+            hasSettings="true"
+            id="gov.redhawk.ide.codegen.jet.python.pattern.ManualTemplate"
+            name="Manual Generation"
+            notDefaultable="true"
+            selectable="true"
+            usesPortTemplates="false">
+         <description>
+            By default this only prepares the project for future Python development and generates askeleton outline of methods that need to be implemented.
+         </description>
+         <property
+               default_value="TRUE"
+               key="generate_skeleton"
+               name="Generate skeleton code"
+               required="true">
+            <description>
+               Whether or not to generate a skeleton code implementation
+            </description>
+         </property>
+         <componenttype
+               type="resource">
+         </componenttype>
+         <componenttype
+               type="device">
+         </componenttype>
+         <componenttype
+               type="service">
+         </componenttype>
+      </template>
+      <template
+            class="gov.redhawk.ide.codegen.jet.python.pattern.TemplateStub"
+            codegenId="gov.redhawk.ide.codegen.jet.python.PythonGenerator"
+            hasSettings="false"
+            id="gov.redhawk.ide.codegen.jet.python.pattern.MinimalTemplate"
+            name="Minimal Implementation"
+            notDefaultable="true"
+            selectable="true"
+            usesPortTemplates="false">
+         <description>
+            Generates two files - one that contains ports and properties and another where you can extend their functionality
+         </description>
+         <componenttype
+               type="resource">
+         </componenttype>
+         <componenttype
+               type="device">
+         </componenttype>
+      </template>
+      <template
+            class="gov.redhawk.ide.codegen.jet.python.pattern.TemplateStub"
+            codegenId="gov.redhawk.ide.codegen.jet.python.PythonGenerator"
+            hasSettings="true"
+            id="gov.redhawk.ide.codegen.jet.python.pattern.PullPortDataTemplate"
+            name="Pull Port Data"
+            notDefaultable="false"
+            selectable="true"
+            usesPortTemplates="true">
+         <description>
+            This is the Jet generator for Python components and devices.
+         </description>
+         <property
+               default_value="FALSE"
+               deprecated="true"
+               key="auto_start"
+               name="Auto Start the Component"
+               required="true">
+            <description>
+               By enabling this option, the waveform will automatically begin processing data as soon as it is installed.
+            </description>
+         </property>
+         <componenttype
+               type="resource">
+         </componenttype>
+         <componenttype
+               type="device">
+         </componenttype>
+      </template>
+      <template
+            class="gov.redhawk.ide.codegen.jet.python.pattern.TemplateStub"
+            codegenId="gov.redhawk.ide.codegen.jet.python.PythonGenerator"
+            hasSettings="false"
+            id="gov.redhawk.ide.codegen.jet.python.pattern.MinimalServiceTemplate"
+            name="Minimal Generator"
+            notDefaultable="false"
+            selectable="true"
+            usesPortTemplates="false">
+         <description>
+            A minimal service generator.
+         </description>
+         <componenttype
+               type="service">
+         </componenttype>
+      </template>
+   </extension>
 
 </plugin>

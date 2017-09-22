@@ -23,5 +23,21 @@
          </codegenId>
       </codegenPage>
    </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+      <launchConfigurationTypeImage
+            configTypeID="gov.redhawk.ide.codegen.jet.cplusplus.launchComponentApplication"
+            icon="icons/RedHawk_Logo16x.gif"
+            id="gov.redhawk.ide.codegen.jet.cplusplus.ui.launchComponentApplication">
+      </launchConfigurationTypeImage>
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+      <launchConfigurationTabGroup
+            class="gov.redhawk.ide.codegen.jet.cplusplus.ui.CppComponentTabGroup"
+            id="gov.redhawk.ide.codegen.jet.cplusplus.ui.launchConfigurationTabGroup"
+            type="gov.redhawk.ide.codegen.jet.cplusplus.launchComponentApplication">
+      </launchConfigurationTabGroup>
+   </extension>
 
 </plugin>

@@ -281,5 +281,112 @@
             name="Local Octave Component">
       </launchConfigurationType>
    </extension>
+   <extension
+         id="Legacy JET C++ Generator Extension Points"
+         name="Legacy JET C++ Generator Extension Points"
+         point="gov.redhawk.ide.codegen.codegens">
+      <codegen
+            associatedPerspectiveId="org.eclipse.cdt.ui.CPerspective"
+            autoGenerate="false"
+            class="gov.redhawk.ide.codegen.jet.cplusplus.GeneratorStub"
+            compiler="/usr/bin/gcc"
+            compilerVersion="4.1.2"
+            deprecated="true"
+            humanLanguage="EN"
+            id="gov.redhawk.ide.codegen.jet.cplusplus.CplusplusGenerator"
+            language="C++"
+            languageVersion="0"
+            name="Legacy JET C++ Code Generator"
+            notDefaultable="false"
+            priority="normal">
+         <description>
+            This is the Jet generator for C++ components and devices.
+         </description>
+         <operatingSystem
+               default="true"
+               os="Linux">
+         </operatingSystem>
+         <processor
+               default="true"
+               proc_type="x86">
+         </processor>
+         <processor
+               default="true"
+               proc_type="x86_64">
+         </processor>
+         <componenttype
+               type="resource">
+         </componenttype>
+         <componenttype
+               type="device">
+         </componenttype>
+      </codegen>
+   </extension>
+   <extension
+         id="Legacy JET C++ Template Extension Points"
+         name="Legacy JET C++ Template Extension Points"
+         point="gov.redhawk.ide.codegen.codegenTemplate">
+      <template
+            class="gov.redhawk.ide.codegen.jet.cplusplus.pattern.TemplateStub"
+            codegenId="gov.redhawk.ide.codegen.jet.cplusplus.CplusplusGenerator"
+            hasSettings="true"
+            id="gov.redhawk.ide.codegen.jet.cplusplus.ManualTemplate"
+            name="Manual Generator"
+            notDefaultable="true"
+            selectable="true"
+            usesPortTemplates="false">
+         <description>
+            By default this only prepares the project for future C++ development and generates a basic component outline.
+         </description>
+         <property
+               default_value="TRUE"
+               key="generate_skeleton"
+               name="Generate Skeleton Code"
+               required="true">
+            <description>
+               Selecting this option will generate basic skeleton code.
+            </description>
+         </property>
+         <componenttype
+               type="resource">
+         </componenttype>
+         <componenttype
+               type="device">
+         </componenttype>
+         <componenttype
+               type="service">
+         </componenttype>
+      </template>
+      <template
+            class="gov.redhawk.ide.codegen.jet.cplusplus.pattern.TemplateStub"
+            codegenId="gov.redhawk.ide.codegen.jet.cplusplus.CplusplusGenerator"
+            hasSettings="true"
+            id="gov.redhawk.ide.codegen.jet.cplusplus.PullPortDataTemplate"
+            name="Pull Port Data"
+            notDefaultable="false"
+            selectable="true"
+            usesPortTemplates="true">
+         <description>
+            This template will queue all data inside each input port. It is the developers responsibility to pull the data from the port's queue for processing.
+         </description>
+         <property
+               default_value="FALSE"
+               deprecated="true"
+               key="auto_start"
+               name="Auto Start the Component"
+               required="true">
+            <description>
+               When this property is set, the generated code's initialize function is tied to the start function, which in turn starts the processing thread. 
+	When the property is not set, the start function needs to be explicitly called to start the processing thread.
+            </description>
+         </property>
+         <componenttype
+               type="resource">
+         </componenttype>
+         <componenttype
+               type="device">
+         </componenttype>
+      </template>
+   </extension>
 
 </plugin>

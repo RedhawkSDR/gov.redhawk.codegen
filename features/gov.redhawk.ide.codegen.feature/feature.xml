@@ -43,34 +43,6 @@
          unpack="false"/>
 
    <plugin
-         id="gov.redhawk.ide.codegen.jet"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="gov.redhawk.ide.codegen.jet.cplusplus"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="gov.redhawk.ide.codegen.jet.java"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="gov.redhawk.ide.codegen.jet.python"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="gov.redhawk.ide.codegen.manual"
          download-size="0"
          install-size="0"
@@ -86,27 +58,6 @@
 
    <plugin
          id="gov.redhawk.ide.codegen.application"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="gov.redhawk.ide.codegen.jet.cplusplus.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="gov.redhawk.ide.codegen.jet.java.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="gov.redhawk.ide.codegen.jet.python.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"

@@ -23,5 +23,33 @@
          </codegenId>
       </codegenPage>
    </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+      <launchConfigurationTypeImage
+            configTypeID="gov.redhawk.ide.codegen.jet.java.launching.localJavaComponent"
+            icon="icons/RedHawk_Logo16x.gif"
+            id="gov.redhawk.ide.codegen.jet.java.ui.localJavaComponent">
+      </launchConfigurationTypeImage>
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+      <launchConfigurationTabGroup
+            class="gov.redhawk.ide.codegen.jet.java.ui.LocalScaJavaComponentTabGroup"
+            id="gov.redhawk.ide.codegen.jet.java.ui.localJavaComponent"
+            type="gov.redhawk.ide.codegen.jet.java.launching.localJavaComponent">
+      </launchConfigurationTabGroup>
+   </extension>
+   <extension
+         point="gov.redhawk.ide.codegen.ui.codegenPages">
+      <codegenPage
+            compositeClass="gov.redhawk.ide.codegen.jet.java.ui.JavaJetGeneratorDisplayFactory"
+            id="gov.redhawk.ide.codegen.jet.java.ui.JavaCodegenPropertiesFactory"
+            name="Java Code Generator Properties Factory"
+            wizardClass="gov.redhawk.ide.codegen.jet.java.ui.JavaJetGeneratorDisplayFactory">
+         <codegenId
+               targetCodegenId="gov.redhawk.ide.codegen.jet.java.JavaGenerator">
+         </codegenId>
+      </codegenPage>
+   </extension>
 
 </plugin>

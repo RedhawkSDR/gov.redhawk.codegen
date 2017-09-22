@@ -17,10 +17,15 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.8.0",
  gov.redhawk.sca.util;bundle-version="1.4.0",
  gov.redhawk.ide.idl;bundle-version="4.1.0",
  gov.redhawk.ide.sdr,
- org.jacorb.idl.compiler;bundle-version="3.3.0"
+ org.jacorb.idl.compiler;bundle-version="3.3.0",
+ org.eclipse.debug.core,
+ gov.redhawk.ide.debug,
+ mil.jpeojtrs.sca.validator,
+ org.eclipse.core.databinding
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: gov.redhawk.ide.codegen.java,
- gov.redhawk.ide.codegen.java.internal;x-friends:="gov.redhawk.ide.codegen.java.tests"
+ gov.redhawk.ide.codegen.java.internal;x-friends:="gov.redhawk.ide.codegen.java.tests",
+ gov.redhawk.ide.codegen.jet.java;x-friends:="gov.redhawk.ide.codegen.jet.java.ui"
 Bundle-Vendor: %Bundle-Vendor
 Service-Component: OSGI-INF/javaEnvMap.xml
