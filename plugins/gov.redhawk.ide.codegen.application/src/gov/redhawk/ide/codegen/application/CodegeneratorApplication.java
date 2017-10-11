@@ -156,7 +156,8 @@ public class CodegeneratorApplication implements IApplication {
 
 		// Show usage and exit if necessary
 		if (usage) {
-			System.out.println("Usage: eclipse -nosplash -application gov.redhawk.ide.codegen.tests.commandLineGenerator [OPTION]... -create PROJECT_PATH -Dlang=LANG");
+			System.out.println(
+				"Usage: eclipse -nosplash -application gov.redhawk.ide.codegen.tests.commandLineGenerator [OPTION]... -create PROJECT_PATH -Dlang=LANG");
 			System.out.println("  or:  eclipse -nosplash -application gov.redhawk.ide.codegen.tests.commandLineGenerator [OPTION]... -generate PROJECT_PATH");
 			System.out.println("");
 			System.out.println("Common Options:");
@@ -185,8 +186,8 @@ public class CodegeneratorApplication implements IApplication {
 		// so you still get a plethora of workspace folders...
 		//
 		// The code is kept here for two reasons:
-		//  1. So we can remember how to use the equinox relaunch capability
-		//  2. So that if we do need to overrideArgs...the code is already in-place
+		// 1. So we can remember how to use the equinox relaunch capability
+		// 2. So that if we do need to overrideArgs...the code is already in-place
 		final HashMap<String, String> overrideArgs = new HashMap<String, String>();
 		// If we have modified any of the command line arguments we need to do a re-launch
 		if (!overrideArgs.isEmpty()) {
@@ -206,7 +207,7 @@ public class CodegeneratorApplication implements IApplication {
 			return IApplication.EXIT_OK;
 		}
 		System.out.println("CommandLine Generator starting...");
-		//		System.out.println("  Workspace: " + workspaceLocation.getURL());
+		// System.out.println(" Workspace: " + workspaceLocation.getURL());
 
 		final IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		final IWorkspaceDescription description = workspace.getDescription();
@@ -412,16 +413,8 @@ public class CodegeneratorApplication implements IApplication {
 	private ICodeGeneratorDescriptor findCodeGen(final String lang, final String codegenId) throws CoreException {
 		ICodeGeneratorDescriptor code_gen = null;
 		if (codegenId == null) {
-			// TODO the code generator registry should eventually be fixed to be case-insensitive
-			String kludge_lang = lang;
-			if (lang.equalsIgnoreCase("c++")) {
-				kludge_lang = "C++";
-			} else if (lang.equalsIgnoreCase("python")) {
-				kludge_lang = "Python";
-			} else if (lang.equalsIgnoreCase("java")) {
-				kludge_lang = "Java";
-			}
-			final ICodeGeneratorDescriptor[] code_gens = RedhawkCodegenActivator.getCodeGeneratorsRegistry().findCodegenByLanguage(kludge_lang, "resource");
+			final ICodeGeneratorDescriptor[] code_gens = RedhawkCodegenActivator.getCodeGeneratorsRegistry().findCodegenByLanguage(lang.toLowerCase(),
+				"resource");
 			for (final ICodeGeneratorDescriptor cg : code_gens) {
 				if (!cg.notDefaultableGenerator()) {
 					code_gen = cg;
@@ -592,7 +585,8 @@ public class CodegeneratorApplication implements IApplication {
 					settings.setName(name);
 					settings.setOutputDir(lf.substring(0, lf.lastIndexOf('/')));
 
-					// Find the template if specified, otherwise pick the first selectable and defaultable one returned by the registry
+					// Find the template if specified, otherwise pick the first selectable and defaultable one returned
+					// by the registry
 					ITemplateDesc templateDesc = null;
 					if (templateId != null) {
 						templateDesc = RedhawkCodegenActivator.getCodeGeneratorTemplatesRegistry().findTemplate(templateId);
