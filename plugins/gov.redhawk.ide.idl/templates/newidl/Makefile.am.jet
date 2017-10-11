@@ -98,6 +98,8 @@ all-local: all-python all-java
 
 install-exec-hook: install-python install-java install-java-src
 
+install-data-hook: install-data-cpp
+
 clean-local: clean-python clean-java clean-cpp
 	rm -rf build
 
@@ -127,6 +129,10 @@ src/cpp/$(LIBRARY_NAME)/$(IDL_MODULE)/%DynSK.cpp src/cpp/$(LIBRARY_NAME)/$(IDL_M
 clean-cpp:
 	rm -rf src/cpp
 	rm -f $(PACKAGE_NAME).pc
+
+install-data-cpp:
+	chmod 755 $(pkgconfigdir)
+	chmod 755 $(pkgincludedir)
 
 $(PACKAGE_NAME).pc: Makefile.am
 	@echo "prefix=$(prefix)" > $@
@@ -160,7 +166,7 @@ PY_IDL_INCLUDES := -I build/idl -I ${OSSIE_HOME}/share/idl -I /usr/share/idl -I 
 
 $(PY_SRC_OUT_DIR)/%_idl.py: build/idl/$(LIBRARY_NAME)/$(IDL_MODULE)/%.idl
 	mkdir -p $(PY_SRC_OUT_DIR)
-	$(IDL) $(PY_IDL_INCLUDES) $(OSSIE_CFLAGS) $(OSSIE_IDLFLAGS) -C src/python -bpython -Wbpackage=$(PYTHON_PACKAGE) $(PY_IDL_EXTERNS) $<
+	umask 022; $(IDL) $(PY_IDL_INCLUDES) $(OSSIE_CFLAGS) $(OSSIE_IDLFLAGS) -C src/python -bpython -Wbpackage=$(PYTHON_PACKAGE) $(PY_IDL_EXTERNS) $<
 
 setup.py: Makefile.am
 # Build up a setup.py line-by-line
@@ -191,13 +197,13 @@ setup.py: Makefile.am
 	@echo ")" >> $@
 
 $(PY_BUILD_OUT_DIR): $(PY_SRCS) setup.py
-	python setup.py build --build-lib build/lib
+	umask 022; python setup.py build --build-lib build/lib
 	touch $(PY_BUILD_OUT_DIR)
 
 all-python: $(PY_BUILD_OUT_DIR)
 
 install-python: $(PY_BUILT_SRCS) setup.py
-	python setup.py install -f --$(PYTHON_INSTALL_SCHEME)=$(DESTDIR)$(prefix)
+	umask 022; python setup.py install -f --$(PYTHON_INSTALL_SCHEME)=$(DESTDIR)$(prefix)
 
 clean-python: setup.py
 	rm -rf src/python
@@ -311,9 +317,11 @@ $(JAVA_SRC_JAR): build/java.files src/java/META-INF/MANIFEST.MF
 
 install-java: $(JAVA_OUTPUT_JAR)
 	cp $< $(DESTDIR)$(prefix)/lib
+	chmod 644 $(DESTDIR)$(prefix)/lib/$<
 
 install-java-src: $(JAVA_SRC_JAR)
 	cp $< $(DESTDIR)$(prefix)/lib
+	chmod 644 $(DESTDIR)$(prefix)/lib/$<
 
 ###############################################################################
 # No Java - stubs
