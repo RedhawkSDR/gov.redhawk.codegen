@@ -24,6 +24,7 @@ Require-Bundle: org.eclipse.ui,
  gov.redhawk.eclipsecorba.library,
  gov.redhawk.ide.sdr.ui;bundle-version="3.2.0",
  org.eclipse.ui.ide,
- org.eclipse.ui.forms
+ org.eclipse.ui.forms,
+ gov.redhawk.ide.sdr
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
