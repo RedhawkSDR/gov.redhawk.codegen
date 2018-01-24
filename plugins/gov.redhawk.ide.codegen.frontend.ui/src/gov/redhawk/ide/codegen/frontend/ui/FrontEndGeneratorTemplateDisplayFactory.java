@@ -30,7 +30,6 @@ import FRONTEND.AnalogTunerHelper;
 import FRONTEND.DigitalTunerHelper;
 import FRONTEND.GPSHelper;
 import FRONTEND.RFInfoHelper;
-import FRONTEND.RFSourceHelper;
 import gov.redhawk.eclipsecorba.idl.IdlInterfaceDcl;
 import gov.redhawk.eclipsecorba.library.IdlLibrary;
 import gov.redhawk.frontend.util.TunerProperties;
@@ -125,51 +124,45 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 			addGPSUsesPort(eSpd);
 		}
 
-		if (getFeiDevice().isAntenna()) {
-			setDeviceKindName(eSpd, FrontEndDeviceUIUtils.ANTENNA_DEVICE_KIND_NAME);
-			addAntennaSpecificPorts(eSpd);
-			addAntennaSpecificProps(eSpd);
-		} else { // It's a Tuner
-			// Add the front end nature to the project if it's a tuner.
-			FrontEndProjectNature.addNature(project, null, newChild);
+		// Add the front end nature to the project if it's a tuner.
+		FrontEndProjectNature.addNature(project, null, newChild);
 
-			addTunerSpecificProps(eSpd);
-			setDeviceKindName(eSpd, FrontEndDeviceUIUtils.TUNER_DEVICE_KIND_NAME);
-			if (getFeiDevice().isRxTuner()) {
-				if (!getFeiDevice().isHasDigitalInput()) { // Has analog input
-					addRFInfoProvidesPorts(eSpd, getFeiDevice().getNumberOfAnalogInputs());
+		addTunerSpecificProps(eSpd);
+		setDeviceKindName(eSpd, FrontEndDeviceUIUtils.TUNER_DEVICE_KIND_NAME);
+		if (getFeiDevice().isRxTuner()) {
+			if (!getFeiDevice().isHasDigitalInput()) { // Has analog input
+				addRFInfoProvidesPorts(eSpd, getFeiDevice().getNumberOfAnalogInputs());
 
-					if (getFeiDevice().isHasDigitalOutput()) { // Has digital output
-						addDigitalTunerPort(eSpd);
-						addUsesDataPort(eSpd, getFeiDevice().getDigitalOutputType().getName() + "_out", getFeiDevice().getDigitalOutputType().getRepId());
-						if (getFeiDevice().isMultiOut()) {
-							StructSequence structSeq = ConnectionTableProperty.INSTANCE.createProperty();
-							eSpd.getPropertyFile().getProperties().getStructSequence().add(structSeq);
-						}
-					} else { // It has Analog Output
-						addProvidesControlPort(eSpd, "AnalogTuner_in", AnalogTunerHelper.id());
-						addRFInfoUsesPort(eSpd, "RFInfo_out");
-						// addRFSourcePort(eSpd); // Holding off on supporting RFSourcePorts until post CCB
-					}
-
-				} else { // Has Digital Input
-					// If it has Digital Input it must have Digital Output
+				if (getFeiDevice().isHasDigitalOutput()) { // Has digital output
 					addDigitalTunerPort(eSpd);
-					addProvidesDataPort(eSpd, getFeiDevice().getDigitalInputType().getName() + "_in", getFeiDevice().getDigitalInputType().getRepId());
 					addUsesDataPort(eSpd, getFeiDevice().getDigitalOutputType().getName() + "_out", getFeiDevice().getDigitalOutputType().getRepId());
 					if (getFeiDevice().isMultiOut()) {
 						StructSequence structSeq = ConnectionTableProperty.INSTANCE.createProperty();
 						eSpd.getPropertyFile().getProperties().getStructSequence().add(structSeq);
 					}
+				} else { // It has Analog Output
+					addProvidesControlPort(eSpd, "AnalogTuner_in", AnalogTunerHelper.id());
+					addRFInfoUsesPort(eSpd, "RFInfo_out");
+					// addRFSourcePort(eSpd); // Holding off on supporting RFSourcePorts until post CCB
+				}
+
+			} else { // Has Digital Input
+				// If it has Digital Input it must have Digital Output
+				addDigitalTunerPort(eSpd);
+				addProvidesDataPort(eSpd, getFeiDevice().getDigitalInputType().getName() + "_in", getFeiDevice().getDigitalInputType().getRepId());
+				addUsesDataPort(eSpd, getFeiDevice().getDigitalOutputType().getName() + "_out", getFeiDevice().getDigitalOutputType().getRepId());
+				if (getFeiDevice().isMultiOut()) {
+					StructSequence structSeq = ConnectionTableProperty.INSTANCE.createProperty();
+					eSpd.getPropertyFile().getProperties().getStructSequence().add(structSeq);
 				}
 			}
+		}
 
-			if (getFeiDevice().isTxTuner()) {
-				addDigitalTunerPort(eSpd);
-				addRFInfoUsesTXPorts(eSpd, getFeiDevice().getNumberOfDigitalInputsForTx());
-				addProvidesDataPorts(eSpd, getFeiDevice().getDigitalInputTypeForTx().getName() + "TX_in", getFeiDevice().getDigitalInputTypeForTx().getRepId(),
-					getFeiDevice().getNumberOfDigitalInputsForTx());
-			}
+		if (getFeiDevice().isTxTuner()) {
+			addDigitalTunerPort(eSpd);
+			addRFInfoUsesTXPorts(eSpd, getFeiDevice().getNumberOfDigitalInputsForTx());
+			addProvidesDataPorts(eSpd, getFeiDevice().getDigitalInputTypeForTx().getName() + "TX_in", getFeiDevice().getDigitalInputTypeForTx().getRepId(),
+				getFeiDevice().getNumberOfDigitalInputsForTx());
 		}
 
 		Properties ePrf = eSpd.getPropertyFile().getProperties();
@@ -239,10 +232,6 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		return addUsesPort(eSpd, name, repId, PortType.DATA);
 	}
 
-	private Ports addUsesControlPort(SoftPkg eSpd, String name, String repId) {
-		return addUsesPort(eSpd, name, repId, PortType.CONTROL);
-	}
-
 	private Ports addUsesPort(SoftPkg eSpd, String name, String repId, PortType portType) {
 		Ports ports = createPorts(eSpd);
 		Uses portToAdd = ScdFactory.eINSTANCE.createUses();
@@ -257,10 +246,6 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		ports.getUses().add(portToAdd);
 
 		return ports;
-	}
-
-	private Ports addRFSourcePort(SoftPkg eSpd) {
-		return addProvidesControlPort(eSpd, "RFSource_in", RFSourceHelper.id());
 	}
 
 	private Ports addRFInfoUsesPort(SoftPkg eSpd, String name) {
@@ -325,21 +310,6 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 
 		// Have to remember to set this back to null since this is a singleton
 		this.tunerStatusStructProps = null;
-	}
-
-	private void addAntennaSpecificProps(SoftPkg eSpd) {
-		// TODO: Need to find out what the properties are.
-	}
-
-	private void addAntennaSpecificPorts(SoftPkg eSpd) {
-		Ports ports = addRFInfoUsesPort(eSpd, "RFInfo_out");
-
-		// RF Source
-		Provides rfSourcePort = ScdFactory.eINSTANCE.createProvides();
-		rfSourcePort.setName("RFSource_In");
-		rfSourcePort.setRepID(RFSourceHelper.id());
-		addInterface(SdrUiPlugin.getDefault().getTargetSdrRoot().getIdlLibrary(), rfSourcePort.getRepID(), eSpd.getDescriptor().getComponent().getInterfaces());
-		ports.getProvides().add(rfSourcePort);
 	}
 
 	private void addGPSUsesPort(SoftPkg eSpd) {

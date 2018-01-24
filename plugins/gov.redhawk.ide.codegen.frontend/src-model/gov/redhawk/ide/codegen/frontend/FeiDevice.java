@@ -53,8 +53,7 @@ public interface FeiDevice extends EObject {
 	 * Returns the value of the '<em><b>Antenna</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Antenna</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * @deprecated Creating FEI antenna devices is not supported. Do not use.
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Antenna</em>' attribute.
@@ -63,6 +62,7 @@ public interface FeiDevice extends EObject {
 	 * @model unique="false"
 	 * @generated
 	 */
+	@Deprecated
 	boolean isAntenna();
 
 	/**
