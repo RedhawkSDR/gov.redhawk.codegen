@@ -32,6 +32,9 @@ class FeiDevice {
 	int numberOfDigitalInputsForTx
 	IDLDef digitalInputTypeForTx
 
+	// Scanner
+	boolean Scanner = "false"
+
 	// Tuner status properties
 	TunerStatusStruct tunerStatusStruct
 }
