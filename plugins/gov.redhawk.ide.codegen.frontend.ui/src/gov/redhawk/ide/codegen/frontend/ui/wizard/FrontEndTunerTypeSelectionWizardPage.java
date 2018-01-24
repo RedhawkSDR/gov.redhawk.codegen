@@ -54,9 +54,12 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 	private Button transmitOnlyTunerButton;
 	private Button bothRxTxButton;
 
+	private Button scannerCheckbox;
+
 	private DataBindingContext ctx;
 
 	private FrontEndProjectValidator validator;
+
 	public FrontEndTunerTypeSelectionWizardPage(FeiDevice feiDevice) {
 		super("");
 		this.feiDevice = feiDevice;
@@ -115,6 +118,9 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 			}
 		});
 
+		// Bindings for scanner
+		ctx.bindValue(WidgetProperties.selection().observe(scannerCheckbox), EMFObservables.observeValue(feiDevice, FrontendPackage.Literals.FEI_DEVICE__SCANNER));
+
 		IWizardPage[] wizPages = this.getWizard().getPages();
 		ScaDeviceProjectPropertiesWizardPage propWizPage = null;
 
@@ -160,7 +166,7 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 		client.setLayout(new GridLayout(1, false));
 
 		this.setTitle("FrontEnd Interfaces Device Type Selection");
-		this.setDescription("Select if this tuner will ingest and/or output GPS data.  Select whether this device is receive only, can transmit, or both.");
+		this.setDescription("Select options about the type of device to be created.");
 
 		// GPS Usage Group
 		Group gpsUsageGroup = new Group(client, SWT.BORDER);
@@ -196,6 +202,16 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 		this.bothRxTxButton.setText("Both receive and transmit");
 		this.bothRxTxButton.setLayoutData(GridDataFactory.fillDefaults().create());
 
+		// Scanner capability
+		Group scannerGroup = new Group(client, SWT.BORDER);
+		scannerGroup.setText("Scanner Capability");
+		scannerGroup.setLayout(new GridLayout(1, false));
+		scannerGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+
+		scannerCheckbox = new Button(scannerGroup, SWT.CHECK);
+		scannerCheckbox.setText("This device provides a programmable scanning capability");
+		scannerCheckbox.setLayoutData(GridDataFactory.fillDefaults().create());
+		scannerCheckbox.setToolTipText("Selecting this will ensure the control ports implement FRONTEND::ScanningTuner and add applicable properties.");
 	}
 
 	@Override
