@@ -12,27 +12,26 @@ type TunerStatusStruct wraps ScaStructProperty
 type IDLDef wraps Definition
 
 class FeiDevice {
-	
+
 	// Basic Device properties
 	boolean Antenna
 	boolean ingestsGPS
 	boolean outputsGPS
-	
-	
+
 	// Specific props to Tuner
 	boolean RxTuner = "true"
 	int numberOfAnalogInputs
 	boolean hasDigitalInput = "false"
-	IDLDef digitalInputType 
+	IDLDef digitalInputType
 	boolean hasDigitalOutput = "true"
-	IDLDef digitalOutputType 
+	IDLDef digitalOutputType
 	boolean MultiOut = "true"
-	
-	// Transmit props 
+
+	// Transmit props
 	boolean TxTuner
 	int numberOfDigitalInputsForTx
-	IDLDef digitalInputTypeForTx 
-	
+	IDLDef digitalInputTypeForTx
+
 	// Tuner status properties
 	TunerStatusStruct tunerStatusStruct
 }

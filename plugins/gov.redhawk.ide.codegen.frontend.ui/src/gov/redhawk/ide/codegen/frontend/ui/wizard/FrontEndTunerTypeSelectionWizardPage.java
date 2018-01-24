@@ -22,7 +22,6 @@ import mil.jpeojtrs.sca.spd.SoftPkg;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.ChangeEvent;
 import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -47,17 +46,17 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 	private ImplementationSettings implSettings;
 	private FeiDevice feiDevice;
 	private boolean apiCanFinish = true;
-	//	private Button deviceTypeTunerButton;
-	//	private Button deviceTypeAntennaButton;
+
 	private Button ingestGPSCheckbox;
 	private Button outputGPSCheckbox;
+
 	private Button receiveOnlyTunerButton;
 	private Button transmitOnlyTunerButton;
 	private Button bothRxTxButton;
-	private DataBindingContext ctx;
-	private Group tunerTypeGroup;
-	private FrontEndProjectValidator validator;
 
+	private DataBindingContext ctx;
+
+	private FrontEndProjectValidator validator;
 	public FrontEndTunerTypeSelectionWizardPage(FeiDevice feiDevice) {
 		super("");
 		this.feiDevice = feiDevice;
@@ -84,38 +83,12 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 		// create new Context
 		this.ctx = new DataBindingContext();
 
-		//		
-		//		// Binding for the antenna only option
-		//		this.ctx.bindValue(SWTObservables.observeSelection(this.deviceTypeAntennaButton),
-		//			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__ANTENNA), new UpdateValueStrategy(), new UpdateValueStrategy());
-
 		// Binding for GPS ingest & output
 		this.ctx.bindValue(WidgetProperties.selection().observe(this.ingestGPSCheckbox),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__INGESTS_GPS), new UpdateValueStrategy(), new UpdateValueStrategy());
 
 		this.ctx.bindValue(WidgetProperties.selection().observe(this.outputGPSCheckbox),
 			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__OUTPUTS_GPS), new UpdateValueStrategy(), new UpdateValueStrategy());
-
-		// Need custom update value strat for the group binding since false -> true and true -> false
-		UpdateValueStrategy tunerTypeGroupUVS = new UpdateValueStrategy();
-		tunerTypeGroupUVS.setConverter(new Converter(Boolean.class, Boolean.class) {
-			@Override
-			public Object convert(Object fromObject) {
-				return !((Boolean) fromObject).booleanValue();
-			}
-		});
-
-		this.ctx.bindValue(WidgetProperties.enabled().observe(this.tunerTypeGroup),
-			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__ANTENNA), new UpdateValueStrategy(), tunerTypeGroupUVS);
-
-		this.ctx.bindValue(WidgetProperties.enabled().observe(this.receiveOnlyTunerButton),
-			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__ANTENNA), new UpdateValueStrategy(), tunerTypeGroupUVS);
-
-		this.ctx.bindValue(WidgetProperties.enabled().observe(this.transmitOnlyTunerButton),
-			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__ANTENNA), new UpdateValueStrategy(), tunerTypeGroupUVS);
-
-		this.ctx.bindValue(WidgetProperties.enabled().observe(this.bothRxTxButton),
-			EMFObservables.observeValue(this.feiDevice, FrontendPackage.Literals.FEI_DEVICE__ANTENNA), new UpdateValueStrategy(), tunerTypeGroupUVS);
 
 		// Bindings for the tuner type is difficult since it is a 3 way with the third option being both the 1st and 2nd so listeners are used.
 		this.bothRxTxButton.addSelectionListener(new SelectionAdapter() {
@@ -187,28 +160,8 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 		client.setLayout(new GridLayout(1, false));
 
 		this.setTitle("FrontEnd Interfaces Device Type Selection");
-		//this.setDescription("Select the device type and if this device will ingest and/or output GPS data. "
-		// + "If the device is a tuner, select whether this device is receive only, can transmit, or both.");
 		this.setDescription("Select if this tuner will ingest and/or output GPS data.  Select whether this device is receive only, can transmit, or both.");
 
-		/**  // Currently only allow the selection of a Tuner 
-		 * 
-				// Device Type Group
-				Group deviceTypeGroup = new Group(client, SWT.BORDER);
-				deviceTypeGroup.setText("Device Type");
-				deviceTypeGroup.setLayout(new GridLayout(2, false));
-				deviceTypeGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-
-				this.deviceTypeTunerButton = new Button(deviceTypeGroup, SWT.RADIO);
-				this.deviceTypeTunerButton.setText("Tuner (default)");
-				this.deviceTypeTunerButton.setLayoutData(GridDataFactory.fillDefaults().create());
-				this.deviceTypeTunerButton.setToolTipText("Frontend tuners includes RX and TX devices, digitizers, channelizers and analog receivers.");
-
-				this.deviceTypeAntennaButton = new Button(deviceTypeGroup, SWT.RADIO);
-				this.deviceTypeAntennaButton.setText("Antenna Only");
-				this.deviceTypeAntennaButton.setLayoutData(GridDataFactory.fillDefaults().create());
-				this.deviceTypeAntennaButton.setToolTipText("Frontend antennas provide an RF Info Uses and RF Source Provides port.");
-		*/
 		// GPS Usage Group
 		Group gpsUsageGroup = new Group(client, SWT.BORDER);
 		gpsUsageGroup.setLayout(new GridLayout(1, false));
@@ -226,7 +179,7 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 		this.outputGPSCheckbox.setToolTipText("Selecting this checkbox will add an output GPS Info port.");
 
 		// Tuner Type Group
-		this.tunerTypeGroup = new Group(client, SWT.BORDER);
+		Group tunerTypeGroup = new Group(client, SWT.BORDER);
 		tunerTypeGroup.setText("Tuner Type");
 		tunerTypeGroup.setLayout(new GridLayout(1, false));
 		tunerTypeGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
@@ -276,11 +229,6 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 	@Override
 	public void setCanFlipToNextPage(boolean canFlip) {
 		// Ignored
-	}
-
-	@Override
-	public boolean canFlipToNextPage() {
-		return (super.canFlipToNextPage() && !this.feiDevice.isAntenna());
 	}
 
 	@Override
