@@ -44,13 +44,9 @@ import org.eclipse.swt.widgets.Group;
 
 public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements ICodegenWizardPage {
 
-	private SoftPkg softpkg;
-	private Implementation impl;
-	private ICodeGeneratorDescriptor codeGenDescriptor;
 	private ImplementationSettings implSettings;
 	private FeiDevice feiDevice;
 	private boolean apiCanFinish = true;
-	private boolean apiCanFlip = true;
 	//	private Button deviceTypeTunerButton;
 	//	private Button deviceTypeAntennaButton;
 	private Button ingestGPSCheckbox;
@@ -251,9 +247,6 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 
 	@Override
 	public void configure(SoftPkg softpkg, Implementation impl, ICodeGeneratorDescriptor desc, ImplementationSettings implSettings, String componentType) {
-		this.softpkg = softpkg;
-		this.impl = impl;
-		this.codeGenDescriptor = desc;
 		this.implSettings = implSettings;
 
 	}
@@ -282,7 +275,7 @@ public class FrontEndTunerTypeSelectionWizardPage extends WizardPage implements 
 
 	@Override
 	public void setCanFlipToNextPage(boolean canFlip) {
-		this.apiCanFlip = canFlip;
+		// Ignored
 	}
 
 	@Override
