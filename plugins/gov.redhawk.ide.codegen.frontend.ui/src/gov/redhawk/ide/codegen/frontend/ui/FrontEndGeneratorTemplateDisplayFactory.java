@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -26,7 +25,9 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.swt.widgets.Composite;
 
+import FRONTEND.AnalogScanningTunerHelper;
 import FRONTEND.AnalogTunerHelper;
+import FRONTEND.DigitalScanningTunerHelper;
 import FRONTEND.DigitalTunerHelper;
 import FRONTEND.GPSHelper;
 import FRONTEND.RFInfoHelper;
@@ -70,7 +71,6 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 	private FrontEndTunerTypeSelectionWizardPage frontEndTunerTypeSelectionPage;
 	private FrontEndTunerOptionsWizardPage frontEndTunerOptionsWizardPage;
 	private FeiDevice feiDevice;
-	private Set<FrontEndProp> tunerStatusStructProps;
 
 	@Override
 	public ICodegenWizardPage createPage() {
@@ -114,6 +114,7 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		final URI spdUri = URI.createPlatformResourceURI(spdFile.getFullPath().toString(), true).appendFragment(SoftPkg.EOBJECT_PATH);
 
 		final SoftPkg eSpd = SoftPkg.Util.getSoftPkg(resourceSet.getResource(spdUri, true));
+		Properties ePrf = eSpd.getPropertyFile().getProperties();
 		SoftwareComponent eScd = eSpd.getDescriptor().getComponent();
 
 		if (getFeiDevice().isIngestsGPS()) {
@@ -130,42 +131,15 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		addTunerSpecificProps(eSpd);
 		setDeviceKindName(eSpd, FrontEndDeviceUIUtils.TUNER_DEVICE_KIND_NAME);
 		if (getFeiDevice().isRxTuner()) {
-			if (!getFeiDevice().isHasDigitalInput()) { // Has analog input
-				addRFInfoProvidesPorts(eSpd, getFeiDevice().getNumberOfAnalogInputs());
-
-				if (getFeiDevice().isHasDigitalOutput()) { // Has digital output
-					addDigitalTunerPort(eSpd);
-					addUsesDataPort(eSpd, getFeiDevice().getDigitalOutputType().getName() + "_out", getFeiDevice().getDigitalOutputType().getRepId());
-					if (getFeiDevice().isMultiOut()) {
-						StructSequence structSeq = ConnectionTableProperty.INSTANCE.createProperty();
-						eSpd.getPropertyFile().getProperties().getStructSequence().add(structSeq);
-					}
-				} else { // It has Analog Output
-					addProvidesControlPort(eSpd, "AnalogTuner_in", AnalogTunerHelper.id());
-					addRFInfoUsesPort(eSpd, "RFInfo_out");
-					// addRFSourcePort(eSpd); // Holding off on supporting RFSourcePorts until post CCB
-				}
-
-			} else { // Has Digital Input
-				// If it has Digital Input it must have Digital Output
-				addDigitalTunerPort(eSpd);
-				addProvidesDataPort(eSpd, getFeiDevice().getDigitalInputType().getName() + "_in", getFeiDevice().getDigitalInputType().getRepId());
-				addUsesDataPort(eSpd, getFeiDevice().getDigitalOutputType().getName() + "_out", getFeiDevice().getDigitalOutputType().getRepId());
-				if (getFeiDevice().isMultiOut()) {
-					StructSequence structSeq = ConnectionTableProperty.INSTANCE.createProperty();
-					eSpd.getPropertyFile().getProperties().getStructSequence().add(structSeq);
-				}
-			}
+			addRxTunerOptions(eSpd, ePrf);
 		}
-
 		if (getFeiDevice().isTxTuner()) {
-			addDigitalTunerPort(eSpd);
-			addRFInfoUsesTXPorts(eSpd, getFeiDevice().getNumberOfDigitalInputsForTx());
-			addProvidesDataPorts(eSpd, getFeiDevice().getDigitalInputTypeForTx().getName() + "TX_in", getFeiDevice().getDigitalInputTypeForTx().getRepId(),
-				getFeiDevice().getNumberOfDigitalInputsForTx());
+			addTxTunerOptions(eSpd);
+		}
+		if (getFeiDevice().isScanner()) {
+			addScannerSpecificProps(eSpd);
 		}
 
-		Properties ePrf = eSpd.getPropertyFile().getProperties();
 		try {
 			eScd.eResource().save(null);
 			eSpd.eResource().save(null);
@@ -176,6 +150,47 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 
 	}
 
+	private void addScannerSpecificProps(SoftPkg eSpd) {
+		eSpd.getPropertyFile().getProperties().getStruct().add(TunerProperties.ScannerAllocationProperty.INSTANCE.createProperty());
+	}
+
+	private void addRxTunerOptions(SoftPkg spd, Properties prf) {
+		if (!getFeiDevice().isHasDigitalInput()) { // Has analog input
+			addRFInfoProvidesPorts(spd, getFeiDevice().getNumberOfAnalogInputs());
+
+			if (getFeiDevice().isHasDigitalOutput()) { // Has digital output
+				addDigitalTunerPort(spd, getFeiDevice().isScanner());
+				addUsesDataPort(spd, getFeiDevice().getDigitalOutputType().getName() + "_out", getFeiDevice().getDigitalOutputType().getRepId());
+				if (getFeiDevice().isMultiOut()) {
+					StructSequence structSeq = ConnectionTableProperty.INSTANCE.createProperty();
+					prf.getStructSequence().add(structSeq);
+				}
+			} else { // It has Analog Output
+				String repId = (getFeiDevice().isScanner()) ? AnalogScanningTunerHelper.id() : AnalogTunerHelper.id();
+				addProvidesControlPort(spd, "AnalogTuner_in", repId);
+				addRFInfoUsesPort(spd, "RFInfo_out");
+				// addRFSourcePort(eSpd); // Holding off on supporting RFSourcePorts until post CCB
+			}
+
+		} else { // Has Digital Input
+			// If it has Digital Input it must have Digital Output
+			addDigitalTunerPort(spd, getFeiDevice().isScanner());
+			addProvidesDataPort(spd, getFeiDevice().getDigitalInputType().getName() + "_in", getFeiDevice().getDigitalInputType().getRepId());
+			addUsesDataPort(spd, getFeiDevice().getDigitalOutputType().getName() + "_out", getFeiDevice().getDigitalOutputType().getRepId());
+			if (getFeiDevice().isMultiOut()) {
+				StructSequence structSeq = ConnectionTableProperty.INSTANCE.createProperty();
+				spd.getPropertyFile().getProperties().getStructSequence().add(structSeq);
+			}
+		}
+	}
+
+	private void addTxTunerOptions(SoftPkg spd) {
+		addDigitalTunerPort(spd, getFeiDevice().isScanner());
+		addRFInfoUsesTXPorts(spd, getFeiDevice().getNumberOfDigitalInputsForTx());
+		addProvidesDataPorts(spd, getFeiDevice().getDigitalInputTypeForTx().getName() + "TX_in", getFeiDevice().getDigitalInputTypeForTx().getRepId(),
+			getFeiDevice().getNumberOfDigitalInputsForTx());
+	}
+
 	private void addProvidesDataPorts(SoftPkg eSpd, String name, String repId, int numberOfPorts) {
 		addProvidesDataPort(eSpd, name, repId);
 
@@ -184,7 +199,7 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		}
 	}
 
-	private void addDigitalTunerPort(SoftPkg eSpd) {
+	private void addDigitalTunerPort(SoftPkg eSpd, boolean scanner) {
 		Ports ports = createPorts(eSpd);
 		for (Provides providesPort : ports.getProvides()) {
 			if (providesPort.getRepID().equals(DigitalTunerHelper.id())) {
@@ -192,7 +207,8 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 				return;
 			}
 		}
-		addProvidesControlPort(eSpd, "DigitalTuner_in", DigitalTunerHelper.id());
+		String repId = (scanner) ? DigitalScanningTunerHelper.id() : DigitalTunerHelper.id();
+		addProvidesControlPort(eSpd, "DigitalTuner_in", repId);
 	}
 
 	private void setDeviceKindName(SoftPkg eSpd, String name) {
@@ -273,18 +289,12 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 	}
 
 	private void addTunerSpecificProps(SoftPkg eSpd) {
-		// If the tunerStatusStructProps is null then we must have come through the Wizard otherwise, maybe someoneone
-		// set it and we should accept that.
-		if (this.tunerStatusStructProps == null && this.getFrontEndTunerPropsWizardPage() != null) {
-			this.tunerStatusStructProps = this.getFrontEndTunerPropsWizardPage().getSelectedProperties();
-		}
-
 		// Make things easier for the user by sorting the list here
 		final List<FrontEndProp> sortedList;
-		if (this.tunerStatusStructProps == null) {
+		if (getFrontEndTunerPropsWizardPage() == null) {
 			sortedList = Collections.emptyList();
 		} else {
-			sortedList = new ArrayList<FrontEndProp>(this.tunerStatusStructProps);
+			sortedList = new ArrayList<FrontEndProp>(getFrontEndTunerPropsWizardPage().getSelectedProperties());
 		}
 		Collections.sort(sortedList, new Comparator<FrontEndProp>() {
 			public int compare(FrontEndProp fep1, FrontEndProp fep2) {
@@ -295,21 +305,15 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 		// Get a copy of the tuner status struct, but use the fields the user has selected
 		StructSequence structSeq = TunerStatusProperty.INSTANCE.createProperty();
 		Struct struct = structSeq.getStruct();
-		structSeq.getStruct().getFields().clear();
+		struct.getFields().clear();
 		for (FrontEndProp frontEndProp : sortedList) {
-			Simple prop = frontEndProp.getProp();
-			if (prop != null) {
-				struct.getSimple().add(prop);
-			}
+			struct.getSimple().add(frontEndProp.getProp());
 		}
 		eSpd.getPropertyFile().getProperties().getStructSequence().add(structSeq);
 
 		// Add the two other required properties
 		eSpd.getPropertyFile().getProperties().getStruct().add(TunerProperties.ListenerAllocationProperty.INSTANCE.createProperty());
 		eSpd.getPropertyFile().getProperties().getStruct().add(TunerProperties.TunerAllocationProperty.INSTANCE.createProperty());
-
-		// Have to remember to set this back to null since this is a singleton
-		this.tunerStatusStructProps = null;
 	}
 
 	private void addGPSUsesPort(SoftPkg eSpd) {
@@ -361,10 +365,6 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 			scd.getComponentFeatures().setPorts(ScdFactory.eINSTANCE.createPorts());
 		}
 		return scd.getComponentFeatures().getPorts();
-	}
-
-	public void setTunerStatusStructProps(Set<FrontEndProp> tunerStatusStructProps) {
-		this.tunerStatusStructProps = tunerStatusStructProps;
 	}
 
 	protected FeiDevice getFeiDevice() {
