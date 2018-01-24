@@ -210,13 +210,22 @@ public interface FrontendPackage extends EPackage {
 	int FEI_DEVICE__DIGITAL_INPUT_TYPE_FOR_TX = 12;
 
 	/**
+	 * The feature id for the '<em><b>Scanner</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FEI_DEVICE__SCANNER = 13;
+
+	/**
 	 * The feature id for the '<em><b>Tuner Status Struct</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FEI_DEVICE__TUNER_STATUS_STRUCT = 13;
+	int FEI_DEVICE__TUNER_STATUS_STRUCT = 14;
 
 	/**
 	 * The number of structural features of the '<em>Fei Device</em>' class.
@@ -225,7 +234,7 @@ public interface FrontendPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FEI_DEVICE_FEATURE_COUNT = 14;
+	int FEI_DEVICE_FEATURE_COUNT = 15;
 
 	/**
 	 * The number of operations of the '<em>Fei Device</em>' class.
@@ -424,6 +433,18 @@ public interface FrontendPackage extends EPackage {
 	EAttribute getFeiDevice_DigitalInputTypeForTx();
 
 	/**
+	 * Returns the meta object for the attribute '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isScanner
+	 * <em>Scanner</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Scanner</em>'.
+	 * @see gov.redhawk.ide.codegen.frontend.FeiDevice#isScanner()
+	 * @see #getFeiDevice()
+	 * @generated
+	 */
+	EAttribute getFeiDevice_Scanner();
+
+	/**
 	 * Returns the meta object for the attribute '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#getTunerStatusStruct
 	 * <em>Tuner Status Struct</em>}'.
 	 * <!-- begin-user-doc -->
@@ -595,6 +616,14 @@ public interface FrontendPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute FEI_DEVICE__DIGITAL_INPUT_TYPE_FOR_TX = eINSTANCE.getFeiDevice_DigitalInputTypeForTx();
+
+		/**
+		 * The meta object literal for the '<em><b>Scanner</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute FEI_DEVICE__SCANNER = eINSTANCE.getFeiDevice_Scanner();
 
 		/**
 		 * The meta object literal for the '<em><b>Tuner Status Struct</b></em>' attribute feature.

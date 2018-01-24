@@ -254,8 +254,17 @@ public class FrontendPackageImpl extends EPackageImpl implements FrontendPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getFeiDevice_TunerStatusStruct() {
+	public EAttribute getFeiDevice_Scanner() {
 		return (EAttribute) feiDeviceEClass.getEStructuralFeatures().get(13);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getFeiDevice_TunerStatusStruct() {
+		return (EAttribute) feiDeviceEClass.getEStructuralFeatures().get(14);
 	}
 
 	/**
@@ -319,6 +328,7 @@ public class FrontendPackageImpl extends EPackageImpl implements FrontendPackage
 		createEAttribute(feiDeviceEClass, FEI_DEVICE__TX_TUNER);
 		createEAttribute(feiDeviceEClass, FEI_DEVICE__NUMBER_OF_DIGITAL_INPUTS_FOR_TX);
 		createEAttribute(feiDeviceEClass, FEI_DEVICE__DIGITAL_INPUT_TYPE_FOR_TX);
+		createEAttribute(feiDeviceEClass, FEI_DEVICE__SCANNER);
 		createEAttribute(feiDeviceEClass, FEI_DEVICE__TUNER_STATUS_STRUCT);
 
 		// Create data types
@@ -387,6 +397,8 @@ public class FrontendPackageImpl extends EPackageImpl implements FrontendPackage
 			!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getFeiDevice_DigitalInputTypeForTx(), this.getIDLDef(), "digitalInputTypeForTx", null, 0, 1, FeiDevice.class, !IS_TRANSIENT,
 			!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getFeiDevice_Scanner(), theEcorePackage.getEBoolean(), "Scanner", "false", 0, 1, FeiDevice.class, !IS_TRANSIENT, !IS_VOLATILE,
+			IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getFeiDevice_TunerStatusStruct(), this.getTunerStatusStruct(), "tunerStatusStruct", null, 0, 1, FeiDevice.class, !IS_TRANSIENT,
 			!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 

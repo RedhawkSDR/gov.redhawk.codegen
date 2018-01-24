@@ -50,6 +50,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * Inputs For Tx</em>}</li>
  * <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#getDigitalInputTypeForTx <em>Digital Input Type For
  * Tx</em>}</li>
+ * <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#isScanner <em>Scanner</em>}</li>
  * <li>{@link gov.redhawk.ide.codegen.frontend.impl.FeiDeviceImpl#getTunerStatusStruct <em>Tuner Status
  * Struct</em>}</li>
  * </ul>
@@ -318,6 +319,26 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
 	 * @ordered
 	 */
 	protected Definition digitalInputTypeForTx = DIGITAL_INPUT_TYPE_FOR_TX_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isScanner() <em>Scanner</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isScanner()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean SCANNER_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isScanner() <em>Scanner</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isScanner()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean scanner = SCANNER_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getTunerStatusStruct() <em>Tuner Status Struct</em>}' attribute.
@@ -639,6 +660,27 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isScanner() {
+		return scanner;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setScanner(boolean newScanner) {
+		boolean oldScanner = scanner;
+		scanner = newScanner;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, FrontendPackage.FEI_DEVICE__SCANNER, oldScanner, scanner));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public ScaStructProperty getTunerStatusStruct() {
 		return tunerStatusStruct;
 	}
@@ -689,6 +731,8 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
 			return getNumberOfDigitalInputsForTx();
 		case FrontendPackage.FEI_DEVICE__DIGITAL_INPUT_TYPE_FOR_TX:
 			return getDigitalInputTypeForTx();
+		case FrontendPackage.FEI_DEVICE__SCANNER:
+			return isScanner();
 		case FrontendPackage.FEI_DEVICE__TUNER_STATUS_STRUCT:
 			return getTunerStatusStruct();
 		}
@@ -741,6 +785,9 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
 			return;
 		case FrontendPackage.FEI_DEVICE__DIGITAL_INPUT_TYPE_FOR_TX:
 			setDigitalInputTypeForTx((Definition) newValue);
+			return;
+		case FrontendPackage.FEI_DEVICE__SCANNER:
+			setScanner((Boolean) newValue);
 			return;
 		case FrontendPackage.FEI_DEVICE__TUNER_STATUS_STRUCT:
 			setTunerStatusStruct((ScaStructProperty) newValue);
@@ -796,6 +843,9 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
 		case FrontendPackage.FEI_DEVICE__DIGITAL_INPUT_TYPE_FOR_TX:
 			setDigitalInputTypeForTx(DIGITAL_INPUT_TYPE_FOR_TX_EDEFAULT);
 			return;
+		case FrontendPackage.FEI_DEVICE__SCANNER:
+			setScanner(SCANNER_EDEFAULT);
+			return;
 		case FrontendPackage.FEI_DEVICE__TUNER_STATUS_STRUCT:
 			setTunerStatusStruct(TUNER_STATUS_STRUCT_EDEFAULT);
 			return;
@@ -838,6 +888,8 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
 		case FrontendPackage.FEI_DEVICE__DIGITAL_INPUT_TYPE_FOR_TX:
 			return DIGITAL_INPUT_TYPE_FOR_TX_EDEFAULT == null ? digitalInputTypeForTx != null
 				: !DIGITAL_INPUT_TYPE_FOR_TX_EDEFAULT.equals(digitalInputTypeForTx);
+		case FrontendPackage.FEI_DEVICE__SCANNER:
+			return scanner != SCANNER_EDEFAULT;
 		case FrontendPackage.FEI_DEVICE__TUNER_STATUS_STRUCT:
 			return TUNER_STATUS_STRUCT_EDEFAULT == null ? tunerStatusStruct != null : !TUNER_STATUS_STRUCT_EDEFAULT.equals(tunerStatusStruct);
 		}
@@ -881,6 +933,8 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
 		result.append(numberOfDigitalInputsForTx);
 		result.append(", digitalInputTypeForTx: ");
 		result.append(digitalInputTypeForTx);
+		result.append(", Scanner: ");
+		result.append(scanner);
 		result.append(", tunerStatusStruct: ");
 		result.append(tunerStatusStruct);
 		result.append(')');

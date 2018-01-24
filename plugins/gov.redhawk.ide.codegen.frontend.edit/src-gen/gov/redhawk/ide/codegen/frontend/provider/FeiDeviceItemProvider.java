@@ -81,6 +81,7 @@ public class FeiDeviceItemProvider extends ItemProviderAdapter
 			addTxTunerPropertyDescriptor(object);
 			addNumberOfDigitalInputsForTxPropertyDescriptor(object);
 			addDigitalInputTypeForTxPropertyDescriptor(object);
+			addScannerPropertyDescriptor(object);
 			addTunerStatusStructPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
@@ -253,6 +254,18 @@ public class FeiDeviceItemProvider extends ItemProviderAdapter
 	}
 
 	/**
+	 * This adds a property descriptor for the Scanner feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addScannerPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
+			getString("_UI_FeiDevice_Scanner_feature"), getString("_UI_PropertyDescriptor_description", "_UI_FeiDevice_Scanner_feature", "_UI_FeiDevice_type"),
+			FrontendPackage.Literals.FEI_DEVICE__SCANNER, true, false, false, ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE, null, null));
+	}
+
+	/**
 	 * This adds a property descriptor for the Tuner Status Struct feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -345,6 +358,7 @@ public class FeiDeviceItemProvider extends ItemProviderAdapter
 		case FrontendPackage.FEI_DEVICE__TX_TUNER:
 		case FrontendPackage.FEI_DEVICE__NUMBER_OF_DIGITAL_INPUTS_FOR_TX:
 		case FrontendPackage.FEI_DEVICE__DIGITAL_INPUT_TYPE_FOR_TX:
+		case FrontendPackage.FEI_DEVICE__SCANNER:
 		case FrontendPackage.FEI_DEVICE__TUNER_STATUS_STRUCT:
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 			return;

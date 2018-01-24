@@ -41,6 +41,7 @@ import org.eclipse.emf.ecore.EObject;
  * Tx</em>}</li>
  * <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#getDigitalInputTypeForTx <em>Digital Input Type For
  * Tx</em>}</li>
+ * <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isScanner <em>Scanner</em>}</li>
  * <li>{@link gov.redhawk.ide.codegen.frontend.FeiDevice#getTunerStatusStruct <em>Tuner Status Struct</em>}</li>
  * </ul>
  *
@@ -400,6 +401,33 @@ public interface FeiDevice extends EObject {
 	 * @generated
 	 */
 	void setDigitalInputTypeForTx(Definition value);
+
+	/**
+	 * Returns the value of the '<em><b>Scanner</b></em>' attribute.
+	 * The default value is <code>"false"</code>.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Scanner</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Scanner</em>' attribute.
+	 * @see #setScanner(boolean)
+	 * @see gov.redhawk.ide.codegen.frontend.FrontendPackage#getFeiDevice_Scanner()
+	 * @model default="false" unique="false"
+	 * @generated
+	 */
+	boolean isScanner();
+
+	/**
+	 * Sets the value of the '{@link gov.redhawk.ide.codegen.frontend.FeiDevice#isScanner <em>Scanner</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Scanner</em>' attribute.
+	 * @see #isScanner()
+	 * @generated
+	 */
+	void setScanner(boolean value);
 
 	/**
 	 * Returns the value of the '<em><b>Tuner Status Struct</b></em>' attribute.
