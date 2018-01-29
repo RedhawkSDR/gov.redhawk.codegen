@@ -10,10 +10,8 @@
  *******************************************************************************/
 package gov.redhawk.ide.codegen.frontend.ui.wizard;
 
-import gov.redhawk.ide.codegen.frontend.ui.FrontEndDeviceUIUtils;
-
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.databinding.DataBindingContext;
@@ -27,6 +25,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
+import gov.redhawk.ide.codegen.frontend.FeiDevice;
+import gov.redhawk.ide.codegen.frontend.ui.FrontEndDeviceUIUtils;
+import mil.jpeojtrs.sca.prf.AbstractProperty;
+
 /**
  * @since 1.1
  */
@@ -35,12 +37,14 @@ public class SelectFrontEndTunerPropsDialog extends Dialog {
 	private static final int DIALOG_HORIZONTAL_HINT = 800;
 	private static final int DIALOG_VERTICAL_HINT = 400;
 	private CheckboxTableViewer theTableViewer;
-	private final WritableSet<FrontEndProp> input = new WritableSet<FrontEndProp>();
-	private final WritableSet<FrontEndProp> output = new WritableSet<FrontEndProp>();
+	private final WritableSet<AbstractProperty> input = new WritableSet<>();
+	private final WritableSet<AbstractProperty> output = new WritableSet<>();
 	private DataBindingContext context = new DataBindingContext();
+	private FeiDevice feiDevice;
 
-	protected SelectFrontEndTunerPropsDialog(Shell parentShell) {
+	protected SelectFrontEndTunerPropsDialog(Shell parentShell, FeiDevice feiDevice) {
 		super(parentShell);
+		this.feiDevice = feiDevice;
 	}
 
 	@Override
@@ -57,17 +61,17 @@ public class SelectFrontEndTunerPropsDialog extends Dialog {
 	}
 
 	private void createTable(Composite client) {
-		theTableViewer = FrontEndDeviceUIUtils.INSTANCE.getCheckboxTableViewer(client);
+		theTableViewer = FrontEndDeviceUIUtils.INSTANCE.getCheckboxTableViewer(client, feiDevice);
 		theTableViewer.setInput(this.input);
-		context.bindSet(ViewersObservables.observeCheckedElements(theTableViewer, FrontEndProp.class), this.output);
+		context.bindSet(ViewersObservables.observeCheckedElements(theTableViewer, AbstractProperty.class), this.output);
 	}
 
-	public void setInput(List<FrontEndProp> input) {
+	public void setInput(Collection<AbstractProperty> input) {
 		this.input.clear();
 		this.input.addAll(input);
 	}
 
-	public Set<FrontEndProp> getResult() {
+	public Set<AbstractProperty> getResult() {
 		return Collections.unmodifiableSet(this.output);
 	}
 

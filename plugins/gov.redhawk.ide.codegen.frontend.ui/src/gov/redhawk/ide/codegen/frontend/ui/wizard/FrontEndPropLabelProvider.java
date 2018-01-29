@@ -14,7 +14,17 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
+import gov.redhawk.frontend.util.TunerProperties;
+import gov.redhawk.ide.codegen.frontend.FeiDevice;
+import mil.jpeojtrs.sca.prf.Simple;
+
 public class FrontEndPropLabelProvider extends LabelProvider implements ITableLabelProvider {
+
+	private FeiDevice feiDevice;
+
+	public FrontEndPropLabelProvider(FeiDevice feiDevice) {
+		this.feiDevice = feiDevice;
+	}
 
 	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
@@ -23,16 +33,17 @@ public class FrontEndPropLabelProvider extends LabelProvider implements ITableLa
 
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
-		FrontEndProp feiProp = (FrontEndProp) element;
+		Simple feiProp = (Simple) element;
 		switch (columnIndex) {
 		case 0:
-			return feiProp.getProp().getName();
+			return feiProp.getName();
 		case 1:
-			return feiProp.getProp().getType().getName();
+			return feiProp.getType().getLiteral();
 		case 2:
-			return Boolean.toString(feiProp.isRequired());
+			boolean required = TunerProperties.TunerStatusAllocationProperties.fromPropID(feiProp.getId()).isRequired(feiDevice.isScanner());
+			return Boolean.toString(required);
 		case 3:
-			return feiProp.getProp().getDescription();
+			return feiProp.getDescription();
 		default:
 			return "";
 		}

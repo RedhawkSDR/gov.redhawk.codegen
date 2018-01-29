@@ -38,7 +38,6 @@ import gov.redhawk.frontend.util.TunerProperties.ConnectionTableProperty;
 import gov.redhawk.frontend.util.TunerProperties.TunerStatusProperty;
 import gov.redhawk.ide.codegen.frontend.FeiDevice;
 import gov.redhawk.ide.codegen.frontend.FrontendFactory;
-import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndProp;
 import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndTunerOptionsWizardPage;
 import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndTunerPropsPage;
 import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndTunerTypeSelectionWizardPage;
@@ -48,8 +47,10 @@ import gov.redhawk.ide.codegen.ui.ICodegenTemplateDisplayFactory;
 import gov.redhawk.ide.codegen.ui.ICodegenWizardPage;
 import gov.redhawk.ide.sdr.ui.SdrUiPlugin;
 import gov.redhawk.sca.util.SubMonitor;
+import mil.jpeojtrs.sca.prf.AbstractProperty;
 import mil.jpeojtrs.sca.prf.Properties;
 import mil.jpeojtrs.sca.prf.Simple;
+import mil.jpeojtrs.sca.prf.SimpleSequence;
 import mil.jpeojtrs.sca.prf.Struct;
 import mil.jpeojtrs.sca.prf.StructSequence;
 import mil.jpeojtrs.sca.scd.InheritsInterface;
@@ -290,24 +291,28 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 
 	private void addTunerSpecificProps(SoftPkg eSpd) {
 		// Make things easier for the user by sorting the list here
-		final List<FrontEndProp> sortedList;
+		final List<AbstractProperty> sortedList;
 		if (getFrontEndTunerPropsWizardPage() == null) {
 			sortedList = Collections.emptyList();
 		} else {
-			sortedList = new ArrayList<FrontEndProp>(getFrontEndTunerPropsWizardPage().getSelectedProperties());
+			sortedList = new ArrayList<>(getFrontEndTunerPropsWizardPage().getSelectedProperties());
 		}
-		Collections.sort(sortedList, new Comparator<FrontEndProp>() {
-			public int compare(FrontEndProp fep1, FrontEndProp fep2) {
-				return fep1.getProp().getName().compareTo(fep2.getProp().getName());
+		Collections.sort(sortedList, new Comparator<AbstractProperty>() {
+			public int compare(AbstractProperty prop1, AbstractProperty prop2) {
+				return prop1.getName().compareTo(prop2.getName());
 			}
 		});
 
 		// Get a copy of the tuner status struct, but use the fields the user has selected
-		StructSequence structSeq = TunerStatusProperty.INSTANCE.createProperty();
+		StructSequence structSeq = TunerStatusProperty.INSTANCE.createProperty(false);
 		Struct struct = structSeq.getStruct();
 		struct.getFields().clear();
-		for (FrontEndProp frontEndProp : sortedList) {
-			struct.getSimple().add(frontEndProp.getProp());
+		for (AbstractProperty field : sortedList) {
+			if (field instanceof Simple) {
+				struct.getSimple().add((Simple) field);
+			} else if (field instanceof SimpleSequence) {
+				struct.getSimpleSequence().add((SimpleSequence) field);
+			}
 		}
 		eSpd.getPropertyFile().getProperties().getStructSequence().add(structSeq);
 

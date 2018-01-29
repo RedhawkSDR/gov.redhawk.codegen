@@ -10,37 +10,36 @@
  *******************************************************************************/
 package gov.redhawk.ide.codegen.frontend.ui;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.ECollections;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.eclipse.ui.part.FileEditorInput;
 
 import gov.redhawk.frontend.util.TunerProperties.TunerStatusProperty;
-import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndProp;
+import gov.redhawk.ide.codegen.frontend.FeiDevice;
+import gov.redhawk.ide.codegen.frontend.FrontendFactory;
 import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndTunerPropsPage;
+import gov.redhawk.model.sca.commands.ScaModelCommand;
+import gov.redhawk.ui.editor.SCAFormEditor;
+import mil.jpeojtrs.sca.prf.AbstractProperty;
 import mil.jpeojtrs.sca.prf.Properties;
 import mil.jpeojtrs.sca.prf.Simple;
+import mil.jpeojtrs.sca.prf.SimpleSequence;
 import mil.jpeojtrs.sca.prf.Struct;
 import mil.jpeojtrs.sca.prf.StructSequence;
+import mil.jpeojtrs.sca.scd.SoftwareComponent;
 import mil.jpeojtrs.sca.spd.SoftPkg;
-import mil.jpeojtrs.sca.util.ScaResourceFactoryUtil;
+import mil.jpeojtrs.sca.util.collections.FeatureMapList;
 
 /**
  * @since 1.1
@@ -51,114 +50,88 @@ public class EditFrontEndInterfacesSettingsHandler extends AbstractHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		final ResourceSet resourceSet = ScaResourceFactoryUtil.createResourceSet();
 		IEditorPart editor = HandlerUtil.getActiveEditor(event);
-		IEditorInput editorInput = editor.getEditorInput();
-		if (editorInput instanceof FileEditorInput) {
+		if (!(editor instanceof SCAFormEditor)) {
+			return null;
+		}
 
-			IFile inputFile = ((FileEditorInput) editorInput).getFile();
-			final URI spdUri = URI.createPlatformResourceURI(inputFile.getFullPath().toString(), true).appendFragment(SoftPkg.EOBJECT_PATH);
-			final SoftPkg eSpd = SoftPkg.Util.getSoftPkg(resourceSet.getResource(spdUri, true));
+		// Try to get the PRF, SCD, and the editor's editing domain
+		Resource resource = ((SCAFormEditor) editor).getMainResource();
+		SoftPkg spd = SoftPkg.Util.getSoftPkg(resource);
+		if (spd == null) {
+			return null;
+		}
+		Properties prf = spd.getPropertyFile().getProperties();
+		SoftwareComponent scd = spd.getDescriptor().getComponent();
+		if (prf == null || scd == null) {
+			return null;
+		}
 
-			Properties currentProps = eSpd.getPropertyFile().getProperties();
+		// Attempt to recreate FEI device settings
+		FeiDevice feiDevice = FrontendFactory.eINSTANCE.createFeiDevice(prf, scd);
 
-			StructSequence tunerStatusStructSeq = null;
-			Struct tunerStatusStruct = null;
+		StructSequence tunerStatusStructSeq = null;
 
-			// Get the current tuner status properties.
-			for (StructSequence structSequence : currentProps.getStructSequence()) {
-				if (structSequence.getId().equals(TunerStatusProperty.INSTANCE.getId())) {
-					tunerStatusStructSeq = structSequence;
-					break;
-				}
+		// Get the current tuner status properties
+		for (StructSequence structSequence : prf.getStructSequence()) {
+			if (structSequence.getId().equals(TunerStatusProperty.INSTANCE.getId())) {
+				tunerStatusStructSeq = structSequence;
+				break;
 			}
+		}
 
-			// They must have removed their Tuner Status Struct Seq Property, we need to add it back for them.
-			if (tunerStatusStructSeq == null) {
-				tunerStatusStructSeq = TunerStatusProperty.INSTANCE.createProperty();
-				currentProps.getStructSequence().add(tunerStatusStructSeq);
-			}
+		// If they removed the tuner status property, add it back
+		if (tunerStatusStructSeq == null) {
+			StructSequence newStructSeq = TunerStatusProperty.INSTANCE.createProperty(feiDevice.isScanner());
+			ScaModelCommand.execute(prf, () -> {
+				prf.getStructSequence().add(newStructSeq);
+			});
+			tunerStatusStructSeq = newStructSeq;
+		}
 
-			// They must have removed their Tuner Status Struct Property, we need to add it back for them.
-			if (tunerStatusStructSeq.getStruct() == null) {
-				tunerStatusStruct = TunerStatusProperty.INSTANCE.createProperty().getStruct();
-				tunerStatusStructSeq.setStruct(tunerStatusStruct);
-			}
+		// If they removed the tuner status's inner struct, add it back
+		if (tunerStatusStructSeq.getStruct() == null) {
+			StructSequence structSeq = tunerStatusStructSeq;
+			Struct newStruct = TunerStatusProperty.INSTANCE.createProperty(feiDevice.isScanner()).getStruct();
+			ScaModelCommand.execute(tunerStatusStructSeq, () -> {
+				structSeq.setStruct(newStruct);
+			});
+		}
 
-			tunerStatusStruct = tunerStatusStructSeq.getStruct();
+		// Pass it into the wizard page so that the displayed props are the ones they have.
+		Set<AbstractProperty> structSeqProperties = new HashSet<>(new FeatureMapList<>(tunerStatusStructSeq.getStruct().getFields(), AbstractProperty.class));
+		this.frontEndWizardPage = new FrontEndTunerPropsPage(feiDevice, structSeqProperties);
+		this.frontEndWizardPage.setDescription(
+			"Select the tuner port type and the set of tuner status properties for the tuner status struct.  Note that required properties may not be removed.");
+		Wizard simpleFrontEndWizard = new SimpleFrontEndWizard();
+		this.frontEndWizardPage.setCanFinish(true);
+		simpleFrontEndWizard.addPage(this.frontEndWizardPage);
+		WizardDialog dialog = new WizardDialog(HandlerUtil.getActiveShell(event), simpleFrontEndWizard);
 
-			// Pass it into the wizard page so that the displayed props are the ones they have.
-			Set<Simple> structSeqProperties = new HashSet<Simple>(tunerStatusStruct.getSimple());
-			this.frontEndWizardPage = new FrontEndTunerPropsPage(structSeqProperties);
-			this.frontEndWizardPage.setDescription(
-				"Select the tuner port type and the set of tuner status properties for the tuner status struct.  Note that required properties may not be removed.");
-			Wizard simpleFrontEndWizard = new SimpleFrontEndWizard();
-			this.frontEndWizardPage.setCanFinish(true);
-			simpleFrontEndWizard.addPage(this.frontEndWizardPage);
-			WizardDialog dialog = new WizardDialog(HandlerUtil.getActiveShell(event), simpleFrontEndWizard);
-
-			// Open the wizard.
-			if (dialog.open() == IStatus.OK) {
-				// Props selected is the full set of properties they want.
-				Set<FrontEndProp> propsSelected = this.frontEndWizardPage.getSelectedProperties();
-
-				// Adding the new props.
-				for (FrontEndProp prop : propsSelected) {
-					boolean unique = true;
-					for (Simple simp : tunerStatusStruct.getSimple()) {
-						if (simp.getId().equals(prop.getProp().getId())) {
-							// already part of the list don't add.
-							unique = false;
-							break;
-						}
+		// Open the wizard.
+		if (dialog.open() == IStatus.OK) {
+			Struct tunerStatusStruct = tunerStatusStructSeq.getStruct();
+			ScaModelCommand.execute(prf, () -> {
+				// Clear existing fields, use the ones the user selected
+				tunerStatusStruct.getFields().clear();
+				for (AbstractProperty prop : frontEndWizardPage.getSelectedProperties()) {
+					if (prop instanceof Simple) {
+						tunerStatusStruct.getSimple().add((Simple) prop);
+					} else if (prop instanceof SimpleSequence) {
+						tunerStatusStruct.getSimpleSequence().add((SimpleSequence) prop);
 					}
-					if (unique) {
-						tunerStatusStruct.getSimple().add(prop.getProp());
-					}
-				}
-
-				// Can't remove them while iterating so store those to remove.
-				List<Simple> simplesToRemove = new ArrayList<Simple>();
-
-				// Removing the props the user wants removed.
-				for (Simple simp : tunerStatusStruct.getSimple()) {
-					boolean remove = true;
-					for (FrontEndProp prop : propsSelected) {
-						if (simp.getId().equals(prop.getProp().getId())) {
-							// Already part of the list, don't remove.
-							remove = false;
-							break;
-						}
-					}
-					if (remove) {
-						simplesToRemove.add(simp);
-					}
-				}
-
-				// Remove all throws exception, must remove each one individually.
-				for (Simple simp : simplesToRemove) {
-					tunerStatusStruct.getSimple().remove(simp);
 				}
 
 				// Try and sort the list.
 				ECollections.sort(tunerStatusStruct.getSimple(), new Comparator<Simple>() {
-
 					@Override
 					public int compare(Simple o1, Simple o2) {
 						return (o1).getId().compareTo(o2.getId());
 					}
-
 				});
-
-				try {
-					eSpd.eResource().save(null);
-					currentProps.eResource().save(null);
-				} catch (IOException e) {
-					FrontEndDeviceWizardPlugin.getDefault();
-					FrontEndDeviceWizardPlugin.logError("Failed to write settings to XML files.", e);
-				}
-			}
+			});
 		}
+
 		return null;
 	}
 }

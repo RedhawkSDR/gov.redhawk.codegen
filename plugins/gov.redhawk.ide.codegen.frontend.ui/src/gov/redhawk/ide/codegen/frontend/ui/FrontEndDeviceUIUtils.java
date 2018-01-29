@@ -10,9 +10,6 @@
  *******************************************************************************/
 package gov.redhawk.ide.codegen.frontend.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.jface.databinding.viewers.ObservableSetContentProvider;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
@@ -30,9 +27,9 @@ import org.eclipse.swt.widgets.Table;
 
 import FRONTEND.FE_TUNER_DEVICE_KIND;
 import gov.redhawk.frontend.util.TunerProperties.TunerStatusAllocationProperties;
-import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndProp;
+import gov.redhawk.ide.codegen.frontend.FeiDevice;
 import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndPropLabelProvider;
-import mil.jpeojtrs.sca.prf.Simple;
+import mil.jpeojtrs.sca.prf.AbstractProperty;
 
 public enum FrontEndDeviceUIUtils {
 	INSTANCE;
@@ -42,68 +39,28 @@ public enum FrontEndDeviceUIUtils {
 	// Antenna device kind name is still in flux but should eventually be defined within the IDL
 	protected static final String ANTENNA_DEVICE_KIND_NAME = "FRONTEND::RFSOURCE";
 
-	private List<FrontEndProp> allFrontEndProps = null;
-	private List<FrontEndProp> optionalFrontEndProps = null;
-	private List<FrontEndProp> requiredFrontEndProps = null;
-
 	private FrontEndDeviceUIUtils() {
-		initFriProps();
 	}
 
-	private void initFriProps() {
-		allFrontEndProps = new ArrayList<FrontEndProp>();
-		optionalFrontEndProps = new ArrayList<FrontEndProp>();
-		requiredFrontEndProps = new ArrayList<FrontEndProp>();
-
-		for (TunerStatusAllocationProperties propDetails : TunerStatusAllocationProperties.values()) {
-			Simple prop = (Simple) propDetails.createProperty();
-			FrontEndProp wrappedProp;
-			if (propDetails.isRequired()) {
-				wrappedProp = new FrontEndProp(prop, true);
-				requiredFrontEndProps.add(wrappedProp);
-			} else {
-				wrappedProp = new FrontEndProp(prop, false);
-				optionalFrontEndProps.add(wrappedProp);
-			}
-			allFrontEndProps.add(wrappedProp);
-		}
-	}
-
-	/**
-	 * Provides a List of the front end props each indicating if they are required or not.
-	 * @return The list of Front end properties.
-	 */
-	public List<FrontEndProp> getAllFrontEndProps() {
-		return allFrontEndProps;
-	}
-
-	public List<FrontEndProp> getRequiredFrontEndProps() {
-		return requiredFrontEndProps;
-	}
-
-	public List<FrontEndProp> getOptionalFrontEndProps() {
-		return optionalFrontEndProps;
-	}
-
-	public CheckboxTableViewer getCheckboxTableViewer(Composite parent) {
+	public CheckboxTableViewer getCheckboxTableViewer(Composite parent, FeiDevice feiDevice) {
 		CheckboxTableViewer theTableViewer = new CheckboxTableViewer(
 			createTable(parent, SWT.CHECK | SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.H_SCROLL));
 		theTableViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		theTableViewer.setComparator(getTableSorter());
+		theTableViewer.setComparator(getTableSorter(feiDevice));
 
-		addColumns(theTableViewer);
+		addColumns(theTableViewer, feiDevice);
 
 		return theTableViewer;
 	}
 
-	public TableViewer getTableViewer(Composite parent) {
+	public TableViewer getTableViewer(Composite parent, FeiDevice feiDevice) {
 		// Define the Table Viewer
 		TableViewer theTableViewer = new TableViewer(createTable(parent, SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.H_SCROLL));
 
 		theTableViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		theTableViewer.setComparator(getTableSorter());
+		theTableViewer.setComparator(getTableSorter(feiDevice));
 
-		addColumns(theTableViewer);
+		addColumns(theTableViewer, feiDevice);
 
 		return theTableViewer;
 	}
@@ -125,10 +82,10 @@ public enum FrontEndDeviceUIUtils {
 		return theTable;
 	}
 
-	private void addColumns(TableViewer theTableViewer) {
+	private void addColumns(TableViewer theTableViewer, FeiDevice feiDevice) {
 		ColumnViewerToolTipSupport.enableFor(theTableViewer);
 
-		final FrontEndPropLabelProvider lp = new FrontEndPropLabelProvider();
+		final FrontEndPropLabelProvider lp = new FrontEndPropLabelProvider(feiDevice);
 
 		TableViewerColumn nameIDColumn = new TableViewerColumn(theTableViewer, SWT.NONE);
 		nameIDColumn.setLabelProvider(new TreeColumnViewerLabelProvider(lp) {
@@ -190,25 +147,23 @@ public enum FrontEndDeviceUIUtils {
 		theTableViewer.setContentProvider(new ObservableSetContentProvider());
 	}
 
-	private ViewerComparator getTableSorter() {
+	private ViewerComparator getTableSorter(final FeiDevice device) {
 		ViewerComparator vs = new ViewerComparator() {
 			@Override
 			public int compare(Viewer viewer, Object e1, Object e2) {
-				FrontEndProp frontEndProp1 = (FrontEndProp) e1;
-				FrontEndProp frontEndProp2 = (FrontEndProp) e2;
+				AbstractProperty frontEndProp1 = (AbstractProperty) e1;
+				AbstractProperty frontEndProp2 = (AbstractProperty) e2;
 
 				// Required properties should be displayed last since the user will only really interact with
 				// non-required.
-				if (frontEndProp1.isRequired() != frontEndProp2.isRequired()) {
-					if (frontEndProp1.isRequired()) {
-						return 1;
-					} else {
-						return -1;
-					}
+				boolean required1 = TunerStatusAllocationProperties.fromPropID(frontEndProp1.getId()).isRequired(device.isScanner());
+				boolean required2 = TunerStatusAllocationProperties.fromPropID(frontEndProp2.getId()).isRequired(device.isScanner());
+				if (required1 != required2) {
+					return (required1) ? 1 : -1;
 				}
 
-				// If they are both in the same category sort by Name/Id alphabetically
-				return frontEndProp1.getProp().getId().compareTo(frontEndProp2.getProp().getId());
+				// If they are both in the same category sort by ID
+				return frontEndProp1.getId().compareTo(frontEndProp2.getId());
 			}
 		};
 		return vs;
