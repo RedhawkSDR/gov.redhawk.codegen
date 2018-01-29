@@ -12,10 +12,18 @@
 package gov.redhawk.ide.codegen.frontend.impl;
 
 import gov.redhawk.eclipsecorba.idl.Definition;
-
+import gov.redhawk.frontend.util.TunerProperties.ConnectionTableProperty;
 import gov.redhawk.ide.codegen.frontend.*;
 
 import gov.redhawk.model.sca.ScaStructProperty;
+import mil.jpeojtrs.sca.prf.Properties;
+import mil.jpeojtrs.sca.scd.Interface;
+import mil.jpeojtrs.sca.scd.PortType;
+import mil.jpeojtrs.sca.scd.PortTypeContainer;
+import mil.jpeojtrs.sca.scd.Provides;
+import mil.jpeojtrs.sca.scd.ScdFactory;
+import mil.jpeojtrs.sca.scd.SoftwareComponent;
+import mil.jpeojtrs.sca.scd.Uses;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
@@ -25,6 +33,10 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
+
+import FRONTEND.GPSHelper;
+import FRONTEND.RFInfoHelper;
+import FRONTEND.ScanningTunerHelper;
 
 /**
  * <!-- begin-user-doc -->
@@ -119,6 +131,80 @@ public class FrontendFactoryImpl extends EFactoryImpl implements FrontendFactory
 		FeiDeviceImpl feiDevice = new FeiDeviceImpl();
 		return feiDevice;
 	}
+
+	// END GENERATED CODE
+
+	@Override
+	public FeiDevice createFeiDevice(Properties prf, SoftwareComponent scd) {
+		FeiDevice feiDevice = createFeiDevice();
+
+		// PRF checks
+		feiDevice.setMultiOut(prf.getProperty(ConnectionTableProperty.INSTANCE.getId()) != null);
+
+		// SCD checks
+		final String bulkioPrefix = "IDL:BULKIO/";
+		final Interface gps = ScdFactory.eINSTANCE.createInterface(GPSHelper.id());
+		final Interface rfInfo = ScdFactory.eINSTANCE.createInterface(RFInfoHelper.id());
+		final Interface scanningTuner = ScdFactory.eINSTANCE.createInterface(ScanningTunerHelper.id());
+
+		feiDevice.setIngestsGPS(false);
+		feiDevice.setScanner(false);
+		int analogInputs = 0;
+		boolean digitalInput = false;
+		for (Provides providesPort : scd.getComponentFeatures().getPorts().getProvides()) {
+			if (providesPort.getInterface().isInstance(gps)) {
+				feiDevice.setIngestsGPS(true);
+			}
+			if (providesPort.getInterface().isInstance(rfInfo)) {
+				analogInputs++;
+			}
+			if (providesPort.getInterface().isInstance(scanningTuner)) {
+				feiDevice.setScanner(true);
+			}
+			if (providesPort.getInterface().getRepid().startsWith(bulkioPrefix) && !providesPort.getName().contains("TX_in")) {
+				for (PortTypeContainer container : providesPort.getPortType()) {
+					if (PortType.DATA.equals(container.getType())) {
+						digitalInput = true;
+						break;
+					}
+				}
+			}
+		}
+		feiDevice.setRxTuner(analogInputs > 0 || digitalInput);
+		feiDevice.setHasDigitalInput(analogInputs == 0 && digitalInput);
+		feiDevice.setNumberOfAnalogInputs(analogInputs);
+
+		feiDevice.setOutputsGPS(false);
+		boolean digitalOutput = false;
+		int txOutputs = 0, analogOutputs = 0;
+		for (Uses usesPort : scd.getComponentFeatures().getPorts().getUses()) {
+			if (usesPort.getInterface().isInstance(gps)) {
+				feiDevice.setOutputsGPS(true);
+			}
+			if (usesPort.getInterface().isInstance(rfInfo)) {
+				if (usesPort.getName().startsWith("RFInfoTX_out")) {
+					txOutputs++;
+				} else {
+					analogOutputs++;
+				}
+			}
+			if (usesPort.getInterface().getRepid().startsWith(bulkioPrefix) && !usesPort.getName().contains("TX_out")) {
+				for (PortTypeContainer container : usesPort.getPortType()) {
+					if (PortType.DATA.equals(container.getType())) {
+						digitalOutput = true;
+						break;
+					}
+				}
+			}
+		}
+		feiDevice.setHasDigitalOutput(analogOutputs == 0 && digitalOutput);
+		feiDevice.setTxTuner(txOutputs > 0);
+		feiDevice.setNumberOfDigitalInputsForTx(txOutputs);
+
+		return feiDevice;
+	}
+
+	// BEGIN GENERATED CODE
 
 	/**
 	 * <!-- begin-user-doc -->

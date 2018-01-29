@@ -14,6 +14,8 @@ package gov.redhawk.ide.codegen.frontend;
 import gov.redhawk.eclipsecorba.idl.Definition;
 
 import gov.redhawk.model.sca.ScaStructProperty;
+import mil.jpeojtrs.sca.prf.Properties;
+import mil.jpeojtrs.sca.scd.SoftwareComponent;
 
 import org.eclipse.emf.ecore.EFactory;
 
@@ -42,6 +44,17 @@ public interface FrontendFactory extends EFactory {
 	 * @generated
 	 */
 	FeiDevice createFeiDevice();
+
+	// END GENERATED CODE
+
+	/**
+	 * Attempts to recreate some of the FEI device settings based on the PRF and SCD XML files.
+	 * @param scd
+	 * @return
+	 */
+	FeiDevice createFeiDevice(Properties prf, SoftwareComponent scd);
+
+	// BEGIN GENERATED CODE
 
 	/**
 	 * Returns an instance of data type '<em>Tuner Status Struct</em>' corresponding the given literal.

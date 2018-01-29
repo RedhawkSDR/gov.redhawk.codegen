@@ -17,6 +17,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.xtext;visibility:=reexport,
  org.eclipse.emf.ecore.xcore,
  gov.redhawk.sca.model;bundle-version="19.0.0",
- gov.redhawk.eclipsecorba.idl
+ gov.redhawk.eclipsecorba.idl,
+ gov.redhawk.frontend
 Bundle-ActivationPolicy: lazy
+Import-Package: FRONTEND;version="[2.1.1,2.2.0)"
 Automatic-Module-Name: gov.redhawk.ide.codegen.frontend
