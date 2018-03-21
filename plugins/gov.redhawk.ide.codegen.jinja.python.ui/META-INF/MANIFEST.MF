@@ -16,3 +16,4 @@ Require-Bundle: gov.redhawk.ide.codegen.ui;bundle-version="7.0.0",
  org.python.pydev.debug
 Service-Component: OSGI-INF/redhawkImporWizardAssist.xml
 Bundle-ActivationPolicy: lazy
+Automatic-Module-Name: gov.redhawk.ide.codegen.jinja.python.ui

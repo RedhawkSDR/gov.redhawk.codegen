@@ -29,3 +29,4 @@ Export-Package: gov.redhawk.ide.codegen.java,
  gov.redhawk.ide.codegen.jet.java;x-friends:="gov.redhawk.ide.codegen.jet.java.ui"
 Bundle-Vendor: %Bundle-Vendor
 Service-Component: OSGI-INF/javaEnvMap.xml
+Automatic-Module-Name: gov.redhawk.ide.codegen.java

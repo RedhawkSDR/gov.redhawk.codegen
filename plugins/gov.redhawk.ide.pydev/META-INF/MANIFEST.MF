@@ -17,3 +17,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: gov.redhawk.ide.pydev.util
 Bundle-Vendor: %Bundle-Vendor
 Eclipse-ExtensibleAPI: true
+Automatic-Module-Name: gov.redhawk.ide.pydev

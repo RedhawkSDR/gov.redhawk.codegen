@@ -17,3 +17,4 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: gov.redhawk.ide.cplusplus.utils
 Bundle-Vendor: %Bundle-Vendor
+Automatic-Module-Name: gov.redhawk.ide.cplusplus.utils

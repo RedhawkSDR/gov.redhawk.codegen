@@ -20,3 +20,4 @@ Export-Package: gov.redhawk.ide.codegen.jinja.ui,
  gov.redhawk.ide.codegen.jinja.ui.internal;x-internal:=true,
  gov.redhawk.ide.codegen.jinja.ui.preferences
 Service-Component: OSGI-INF/component.xml
+Automatic-Module-Name: gov.redhawk.ide.codegen.jinja.ui

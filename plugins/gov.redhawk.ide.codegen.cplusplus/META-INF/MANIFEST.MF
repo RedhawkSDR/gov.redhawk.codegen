@@ -28,3 +28,4 @@ Export-Package: gov.redhawk.ide.codegen.cplusplus,
 Bundle-Vendor: %Bundle-Vendor
 Service-Component: OSGI-INF/cppEnvMap.xml,
  OSGI-INF/octaveEnvMap.xml
+Automatic-Module-Name: gov.redhawk.ide.codegen.cplusplus

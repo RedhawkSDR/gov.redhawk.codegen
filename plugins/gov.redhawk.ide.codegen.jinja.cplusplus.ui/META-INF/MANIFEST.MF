@@ -16,3 +16,4 @@ Require-Bundle: gov.redhawk.ide.codegen.ui;bundle-version="7.0.0",
  org.eclipse.cdt.launch
 Export-Package: gov.redhawk.ide.codegen.jinja.cplusplus.ui.factory,
  gov.redhawk.ide.codegen.jinja.cplusplus.ui.wizard
+Automatic-Module-Name: gov.redhawk.ide.codegen.jinja.cplusplus.ui
