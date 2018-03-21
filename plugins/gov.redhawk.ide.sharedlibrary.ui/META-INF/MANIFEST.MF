@@ -35,3 +35,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: gov.redhawk.ide.sharedlibrary.ui.wizard,
  gov.redhawk.ide.sharedlibrary.ui.wizard.models
+Automatic-Module-Name: gov.redhawk.ide.sharedlibrary.ui

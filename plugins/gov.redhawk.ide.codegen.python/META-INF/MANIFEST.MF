@@ -27,3 +27,4 @@ Export-Package: gov.redhawk.ide.codegen.jet.python;x-friends:="gov.redhawk.ide.c
 Bundle-ClassPath: .
 Bundle-Vendor: %Bundle-Vendor
 Service-Component: OSGI-INF/pythonEnvMap.xml
+Automatic-Module-Name: gov.redhawk.ide.codegen.python

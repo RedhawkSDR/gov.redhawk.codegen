@@ -18,3 +18,4 @@ Export-Package: gov.redhawk.ide.idl.ui,
  gov.redhawk.ide.idl.ui.wizard
 Bundle-Localization: plugin
 Bundle-Vendor: %Bundle-Provider.0
+Automatic-Module-Name: gov.redhawk.ide.idl.ui
