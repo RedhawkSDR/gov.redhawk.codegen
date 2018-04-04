@@ -71,7 +71,6 @@ import gov.redhawk.ide.codegen.util.ProjectCreator;
 import gov.redhawk.ide.dcd.generator.newdevice.DeviceProjectCreator;
 import gov.redhawk.ide.pydev.util.AutoConfigPydevInterpreterUtil;
 import gov.redhawk.ide.spd.generator.newcomponent.ComponentProjectCreator;
-import gov.redhawk.ide.util.ResourceUtils;
 import mil.jpeojtrs.sca.spd.Compiler;
 import mil.jpeojtrs.sca.spd.HumanLanguage;
 import mil.jpeojtrs.sca.spd.Implementation;
@@ -298,9 +297,6 @@ public class CodegeneratorApplication implements IApplication {
 				ComponentProjectCreator.createComponentFiles(project, spd.getName(), spd.getId(), "", monitor.newChild(1));
 
 				ProjectCreator.addImplementation(project, spd.getName(), impl, settings, monitor.newChild(1));
-
-				// Setup the IDL Path
-				ResourceUtils.createIdlLibraryResource(project, monitor.newChild(1));
 			}
 		};
 		try {
@@ -342,9 +338,6 @@ public class CodegeneratorApplication implements IApplication {
 				DeviceProjectCreator.createDeviceFiles(project, spd.getName(), spd.getId(), "", deviceType, false, monitor.newChild(1));
 
 				ProjectCreator.addImplementation(project, spd.getName(), impl, settings, monitor.newChild(1));
-
-				// Setup the IDL Path
-				ResourceUtils.createIdlLibraryResource(project, monitor.newChild(1));
 			}
 		};
 		try {
@@ -582,7 +575,6 @@ public class CodegeneratorApplication implements IApplication {
 
 					// Set the generator, settings name and output directory
 					settings.setGeneratorId(generator.getClass().getCanonicalName());
-					settings.setName(name);
 					settings.setOutputDir(lf.substring(0, lf.lastIndexOf('/')));
 
 					// Find the template if specified, otherwise pick the first selectable and defaultable one returned

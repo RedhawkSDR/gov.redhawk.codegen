@@ -243,14 +243,6 @@ public final class AutoConfigPydevInterpreterUtil {
 	}
 
 	/**
-	 * @deprecated Use {@link #configurePydev(IProgressMonitor, boolean, String)} instead
-	 */
-	@Deprecated
-	public static void configurePydev(final IProgressMonitor monitor, final int i, final String pathLocation) throws CoreException {
-		AutoConfigPydevInterpreterUtil.configurePydev(monitor, i > 0, pathLocation);
-	}
-
-	/**
 	 * Generates a 'prefix-style' Python path
 	 *
 	 * @param ossiehome The location of REDHAWK

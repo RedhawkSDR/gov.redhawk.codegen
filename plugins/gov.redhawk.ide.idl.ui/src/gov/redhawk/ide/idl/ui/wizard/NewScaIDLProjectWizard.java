@@ -17,7 +17,6 @@ import gov.redhawk.ide.idl.IdlLibraryProjectNature;
 import gov.redhawk.ide.idl.IdlProjectBuilder;
 import gov.redhawk.ide.idl.generator.newidl.IDLProjectCreator;
 import gov.redhawk.ide.idl.ui.IdeIdlUiPlugin;
-import gov.redhawk.ide.util.ResourceUtils;
 import net.sf.eclipsecorba.compiler.CompileOptions;
 
 import java.io.FileInputStream;
@@ -150,9 +149,6 @@ public class NewScaIDLProjectWizard extends Wizard implements INewWizard, IExecu
 						}
 						
 						addDefaultIncludePaths(project);
-
-						// Setup the IDL Path
-						ResourceUtils.createIdlLibraryResource(project, progress.newChild(1));
 
 						// Schedule a new job which will run a clean build; this should ensure all resource change
 						// notifications are dispatched before beginning the build

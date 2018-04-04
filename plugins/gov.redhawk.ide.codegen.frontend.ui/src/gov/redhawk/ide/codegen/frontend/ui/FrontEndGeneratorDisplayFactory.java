@@ -32,11 +32,6 @@ public class FrontEndGeneratorDisplayFactory implements ICodegenDisplayFactory2,
 
 	private BooleanGeneratorPropertiesWizardPage2 propertiesPage;
 
-	/**
-	 * 
-	 * @deprecated Use createPages instead
-	 */
-	@Deprecated
 	@Override
 	public ICodegenWizardPage createPage() {
 		return createPages()[0];

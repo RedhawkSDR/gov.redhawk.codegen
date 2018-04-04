@@ -31,9 +31,6 @@ import mil.jpeojtrs.sca.prf.Simple;
 import mil.jpeojtrs.sca.prf.SimpleSequence;
 import mil.jpeojtrs.sca.prf.Struct;
 import mil.jpeojtrs.sca.prf.StructSequence;
-import mil.jpeojtrs.sca.scd.Ports;
-import mil.jpeojtrs.sca.scd.Provides;
-import mil.jpeojtrs.sca.scd.Uses;
 import mil.jpeojtrs.sca.spd.SoftPkg;
 import mil.jpeojtrs.sca.util.DceUuidUtil;
 
@@ -214,7 +211,7 @@ public class JavaGeneratorUtils {
 	public static String repIdToClassPrefix(final String repId) throws CoreException {
 		String nameSpace = "";
 		String interfaceName = "";
-		final Interface intf = IdlJavaUtil.getInstance().getInterface(Arrays.asList(RedhawkIdeActivator.getDefault().getDefaultIdlIncludePath()),
+		final Interface intf = IdlJavaUtil.getInstance().getInterface(Arrays.asList(RedhawkIdeActivator.getDefault().getDefaultIdlIncludePath(true)),
 		        repId.split(":")[1], true);
 		if (intf == null) {
 			throw new CoreException(new Status(IStatus.ERROR, JavaGeneratorPlugin.PLUGIN_ID, "Unable to find interface for " + repId));
@@ -314,7 +311,7 @@ public class JavaGeneratorUtils {
 	public static String getPortName(final String repId) throws CoreException {
 		String nameSpace = "";
 		String interfaceName = "";
-		final Interface intf = IdlJavaUtil.getInstance().getInterface(Arrays.asList(RedhawkIdeActivator.getDefault().getDefaultIdlIncludePath()),
+		final Interface intf = IdlJavaUtil.getInstance().getInterface(Arrays.asList(RedhawkIdeActivator.getDefault().getDefaultIdlIncludePath(true)),
 		        repId.split(":")[1], true);
 		if (intf == null) {
 			throw new CoreException(new Status(IStatus.ERROR, JavaGeneratorPlugin.PLUGIN_ID, "Unable to find interface for " + repId));
@@ -496,40 +493,6 @@ public class JavaGeneratorUtils {
 
 		entries.add(JavaCore.newContainerEntry(ScaCore.OSSIE_LIB_CONTAINER_PATH));
 		entries.add(JavaCore.newContainerEntry(ScaCore.SOFT_PKG_REF_CONTAINER_PATH));
-
-		jproject.setRawClasspath(entries.toArray(new IClasspathEntry[entries.size()]), progress.newChild(1));
-	}
-
-	/**
-	 * @deprecated The code in {@link #addRedhawkJavaClassPaths} will correctly include all of the .jar files
-	 * @param jproject
-	 * @param ports
-	 * @param monitor
-	 * @throws CoreException
-	 */
-	@Deprecated
-	public static void addRedhawkPortClassPaths(final IJavaProject jproject, final Ports ports, final IProgressMonitor monitor) throws CoreException {
-		final Set<String> packages = new LinkedHashSet<String>();
-		for (final Provides p : ports.getProvides()) {
-			final String[] ints = p.getRepID().split(":")[1].split("/");
-			packages.add(ints[ints.length - 2]);
-		}
-		for (final Uses u : ports.getUses()) {
-			final String[] ints = u.getRepID().split(":")[1].split("/");
-			packages.add(ints[ints.length - 2]);
-		}
-
-		final SubMonitor progress = SubMonitor.convert(monitor, packages.size() + 1);
-		final Set<IClasspathEntry> entries = new LinkedHashSet<IClasspathEntry>(Arrays.asList(jproject.getRawClasspath()));
-
-		for (final String pack : packages) {
-			final String jarFile = "OSSIEHOME/lib/" + pack + "Interfaces.jar";
-			final IClasspathEntry e = JavaCore.newVariableEntry(new Path(jarFile), null, null);
-			if (!entries.contains(e)) {
-				entries.add(e);
-			}
-			progress.worked(1);
-		}
 
 		jproject.setRawClasspath(entries.toArray(new IClasspathEntry[entries.size()]), progress.newChild(1));
 	}
