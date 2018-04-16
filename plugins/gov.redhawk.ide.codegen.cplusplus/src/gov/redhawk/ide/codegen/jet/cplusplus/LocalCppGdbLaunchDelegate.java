@@ -80,7 +80,7 @@ public class LocalCppGdbLaunchDelegate extends GdbLaunchDelegate {
 		final Implementation impl = spd.getImplementation(implID);
 
 		try {
-			if (SoftPkg.Util.isContainedComponent(impl)) {
+			if (SoftPkg.Util.isSharedAddressComponent(impl)) {
 
 				// Default to sandbox waveform
 				LocalScaWaveform waveform = ScaDebugPlugin.getInstance().getLocalSca().getSandboxWaveform();

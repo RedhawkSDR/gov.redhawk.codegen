@@ -59,7 +59,7 @@ public class LocalCppRunLaunchDelegate extends LocalRunLaunchDelegate {
 
 		try {
 			// Shared address space components must be launched within a component host
-			if (SoftPkg.Util.isContainedComponent(impl)) {
+			if (SoftPkg.Util.isSharedAddressComponent(impl)) {
 
 				// Default to sandbox waveform
 				LocalScaWaveform waveform = ScaDebugPlugin.getInstance().getLocalSca().getSandboxWaveform();
