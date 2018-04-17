@@ -1,13 +1,13 @@
-/*******************************************************************************
- * This file is protected by Copyright. 
+/**
+ * This file is protected by Copyright.
  * Please refer to the COPYRIGHT file distributed with this source distribution.
  *
  * This file is part of REDHAWK IDE.
  *
- * All rights reserved.  This program and the accompanying materials are made available under 
- * the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at 
- * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ * All rights reserved.  This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html.
+ */
 package gov.redhawk.ide.sandbox.console.py;
 
 import gov.redhawk.ide.sandbox.console.py.SandboxConsole.ITerminateListener;
@@ -34,6 +34,9 @@ import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.statushandlers.StatusManager;
 
+/**
+ * The "Sandbox Console" view (not to be confused with a console within the "Console" view)
+ */
 public class RHSandboxConsoleView extends ViewPart implements IConsoleView, IPageSite, ITerminateListener {
 
 	private SandboxConsole console;

@@ -1,67 +1,55 @@
-/*******************************************************************************
- * This file is protected by Copyright. 
+/**
+ * This file is protected by Copyright.
  * Please refer to the COPYRIGHT file distributed with this source distribution.
  *
  * This file is part of REDHAWK IDE.
  *
- * All rights reserved.  This program and the accompanying materials are made available under 
- * the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at 
- * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ * All rights reserved.  This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html.
+ */
 package gov.redhawk.ide.sandbox.console.py;
-
-import gov.redhawk.ide.debug.ScaDebugPlugin;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.ListenerList;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.osgi.util.NLS;
-import org.eclipse.ui.statushandlers.StatusManager;
 import org.omg.PortableServer.POAPackage.ServantNotActive;
 import org.omg.PortableServer.POAPackage.WrongPolicy;
-import org.python.pydev.core.IInterpreterInfo;
-import org.python.pydev.core.IInterpreterManager;
-import org.python.pydev.core.IPythonNature;
 import org.python.pydev.debug.newconsole.PydevConsole;
-import org.python.pydev.debug.newconsole.PydevConsoleFactory;
+import org.python.pydev.debug.newconsole.PydevConsoleCommunication;
 import org.python.pydev.debug.newconsole.PydevConsoleInterpreter;
-import org.python.pydev.debug.newconsole.env.PydevIProcessFactory;
-import org.python.pydev.debug.newconsole.env.PydevIProcessFactory.PydevConsoleLaunchInfo;
-import org.python.pydev.plugin.PydevPlugin;
 
-import ExtendedCF.Sandbox;
-
+/**
+ * Used within {@link RHSandboxConsoleView}
+ */
 public class SandboxConsole extends PydevConsole {
-	private Sandbox sandbox;
+
 	private ListenerList<ITerminateListener> terminateListeners;
 
 	public interface ITerminateListener {
 		public void consoleTerminated(SandboxConsole console);
 	}
 
-	/**
-	 * @since 3.0
-	 */
-	protected SandboxConsole(PydevConsoleInterpreter interpreter, Sandbox sandbox) {
-		super(interpreter, NLS.bind(Messages.RHLocalConsoleFactory_PY_INIT, sandbox.toString()));
-		this.sandbox = sandbox;
+	protected SandboxConsole(PydevConsoleInterpreter interpreter, String additionalInitialCommands) {
+		super(interpreter, additionalInitialCommands);
 		this.terminateListeners = new ListenerList<ITerminateListener>();
-	}
-
-	protected SandboxConsole(PydevConsoleInterpreter interpreter, String additionalInitialComands) {
-		super(interpreter, additionalInitialComands);
 	}
 
 	public static SandboxConsole create() throws CoreException {
 		try {
-			return create(createInterpreter(), ScaDebugPlugin.getInstance().getSandbox(null));
+			PydevConsoleInterpreter interpreter = RHLocalConsoleFactory.createInterpreter();
+
+			// Must "say hello" via the communication before back-and-forth communication works with the console
+			PydevConsoleCommunication consoleCommunication = (PydevConsoleCommunication) interpreter.getConsoleCommunication();
+			consoleCommunication.hello(new NullProgressMonitor());
+
+			String additionalInitialCommands = RHLocalConsoleFactory.getSandboxConsoleInitialCommands();
+
+			return new SandboxConsole(interpreter, additionalInitialCommands);
 		} catch (ServantNotActive e) {
 			throw new CoreException(new Status(IStatus.ERROR, RHLocalConsolePlugin.PLUGIN_ID, "Error creating sandbox console"));
 		} catch (WrongPolicy e) {
@@ -97,35 +85,6 @@ public class SandboxConsole extends PydevConsole {
 			});
 		}
 		super.terminate();
-	}
-
-	/**
-	 * @since 3.0
-	 */
-	public static SandboxConsole create(PydevConsoleInterpreter interpreter, Sandbox sandbox) {
-		final SandboxConsole console = new SandboxConsole(interpreter, sandbox);
-		return console;
-	}
-
-	private static PydevConsoleInterpreter createInterpreter() throws Exception {
-		final PydevIProcessFactory processFactory = new PydevIProcessFactory();
-
-		final IInterpreterManager interpreterManager = PydevPlugin.getPythonInterpreterManager();
-		final IInterpreterInfo[] interpreters = interpreterManager.getInterpreterInfos();
-		if (interpreters.length == 0) {
-			StatusManager.getManager().handle(new Status(IStatus.ERROR, RHLocalConsolePlugin.PLUGIN_ID, Messages.RHLocalConsoleFactory_PY_ERROR, null),
-			        StatusManager.LOG | StatusManager.SHOW);
-		}
-		final IInterpreterInfo interpreterInfo = interpreters[0];
-		interpreterInfo.updateEnv(new String[] { "IDE_REF=${IDE_REF}" });
-		final Collection<String> pythonPath = interpreterInfo.getPythonPath();
-		final IPythonNature nature = null;
-		final List<IPythonNature> natures = new ArrayList<IPythonNature>();
-		PydevConsoleLaunchInfo info = processFactory.createLaunch(interpreterManager, interpreterInfo, pythonPath, nature, natures);
-
-		final PydevConsoleInterpreter interpreter = PydevConsoleFactory.createPydevInterpreter(info, processFactory.getNaturesUsed(), "UTF-8");
-
-		return interpreter;
 	}
 
 }

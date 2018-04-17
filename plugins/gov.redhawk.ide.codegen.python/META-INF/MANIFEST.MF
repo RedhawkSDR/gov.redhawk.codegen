@@ -2,13 +2,11 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: gov.redhawk.ide.codegen.python;singleton:=true
-Bundle-Version: 10.0.0.qualifier
+Bundle-Version: 11.0.0.qualifier
 Bundle-Activator: gov.redhawk.ide.codegen.python.PythonGeneratorPlugin
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.6.0",
  gov.redhawk.ide.codegen;bundle-version="10.0.0",
  gov.redhawk.sca.model;bundle-version="1.0.0",
- org.python.pydev;bundle-version="3.4.1";visibility:=reexport,
- org.python.pydev.core;bundle-version="3.4.1";visibility:=reexport,
  org.eclipse.ui;bundle-version="3.4.2",
  gov.redhawk.ide;bundle-version="1.0.0",
  org.eclipse.core.resources;bundle-version="3.4.2",
@@ -16,8 +14,11 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.6.0",
  gov.redhawk.ide.sdr;bundle-version="8.2.0",
  org.eclipse.debug.core,
  gov.redhawk.ide.debug,
- org.python.pydev.debug,
- org.eclipse.core.externaltools
+ org.eclipse.core.externaltools,
+ org.python.pydev;bundle-version="6.3.1";visibility:=reexport,
+ org.python.pydev.ast;bundle-version="6.3.1",
+ org.python.pydev.debug;bundle-version="6.3.1",
+ org.python.pydev.core;bundle-version="6.3.1";visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: gov.redhawk.ide.codegen.jet.python;x-friends:="gov.redhawk.ide.codegen.jinja.python",

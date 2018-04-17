@@ -17,5 +17,11 @@
             class="gov.redhawk.ide.pydev.PyDevConfigureStartup">
       </startup>
    </extension>
+   <extension
+         point="org.python.pydev.pydev_interpreter_new_custom_entries">
+      <interpreter_new_custom_entries_participant
+            class="gov.redhawk.ide.internal.pydev.RedhawkPythonInterpreterEntries">
+      </interpreter_new_custom_entries_participant>
+   </extension>
 
 </plugin>

@@ -1,16 +1,14 @@
-/*******************************************************************************
- * This file is protected by Copyright. 
+/**
+ * This file is protected by Copyright.
  * Please refer to the COPYRIGHT file distributed with this source distribution.
  *
  * This file is part of REDHAWK IDE.
  *
- * All rights reserved.  This program and the accompanying materials are made available under 
- * the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at 
- * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ * All rights reserved.  This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html.
+ */
 package gov.redhawk.ide.pydev;
-
-import gov.redhawk.ide.pydev.util.AutoConfigPydevInterpreterUtil;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -21,7 +19,9 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.PlatformUI;
-import org.python.pydev.plugin.PydevPlugin;
+import org.python.pydev.ast.interpreter_managers.InterpreterManagersAPI;
+
+import gov.redhawk.ide.pydev.util.AutoConfigPydevInterpreterUtil;
 
 public class PyDevConfigureStartup implements IStartup {
 
@@ -66,7 +66,7 @@ public class PyDevConfigureStartup implements IStartup {
 		System.setProperty("pydev.funding.hide", "true");
 
 		// If PyDev isn't configured at all, then prompt the user
-		if (PydevPlugin.getPythonInterpreterManager().isConfigured()) {
+		if (InterpreterManagersAPI.getPythonInterpreterManager().isConfigured()) {
 			try {
 				boolean configuredCorrectly = AutoConfigPydevInterpreterUtil.isPydevConfigured(new NullProgressMonitor(), null);
 				if (!configuredCorrectly) {

@@ -1,29 +1,19 @@
-/*******************************************************************************
- * This file is protected by Copyright. 
+/**
+ * This file is protected by Copyright.
  * Please refer to the COPYRIGHT file distributed with this source distribution.
  *
  * This file is part of REDHAWK IDE.
  *
- * All rights reserved.  This program and the accompanying materials are made available under 
- * the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at 
- * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ * All rights reserved.  This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html.
+ */
 package gov.redhawk.ide.codegen.python;
-
-import gov.redhawk.ide.codegen.AbstractCodeGenerator;
-import gov.redhawk.ide.codegen.FileToCRCMap;
-import gov.redhawk.ide.codegen.ImplementationSettings;
-import gov.redhawk.ide.codegen.python.utils.PythonGeneratorUtils;
-import gov.redhawk.ide.codegen.util.CodegenFileHelper;
-import gov.redhawk.model.sca.util.ModelUtil;
 
 import java.io.PrintStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-
-import mil.jpeojtrs.sca.spd.Implementation;
-import mil.jpeojtrs.sca.spd.SoftPkg;
 
 import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IProject;
@@ -37,11 +27,20 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
+import org.python.pydev.ast.interpreter_managers.InterpreterManagersAPI;
 import org.python.pydev.core.IInterpreterManager;
 import org.python.pydev.core.IPythonNature;
 import org.python.pydev.core.IPythonPathNature;
-import org.python.pydev.plugin.PydevPlugin;
 import org.python.pydev.plugin.nature.PythonNature;
+
+import gov.redhawk.ide.codegen.AbstractCodeGenerator;
+import gov.redhawk.ide.codegen.FileToCRCMap;
+import gov.redhawk.ide.codegen.ImplementationSettings;
+import gov.redhawk.ide.codegen.python.utils.PythonGeneratorUtils;
+import gov.redhawk.ide.codegen.util.CodegenFileHelper;
+import gov.redhawk.model.sca.util.ModelUtil;
+import mil.jpeojtrs.sca.spd.Implementation;
+import mil.jpeojtrs.sca.spd.SoftPkg;
 
 /**
  * An abstract class for Python implementation generation. It handles most aspects of configuring PyDev, but leaves
@@ -82,7 +81,7 @@ public abstract class AbstractPythonGenerator extends AbstractCodeGenerator {
 		final String destinationDirectory = project.getFolder(implSettings.getOutputDir()).getFullPath().toString();
 
 		// Check to see if interpeterManager is configured
-		final IInterpreterManager interpreterManager = PydevPlugin.getPythonInterpreterManager();
+		final IInterpreterManager interpreterManager = InterpreterManagersAPI.getPythonInterpreterManager();
 		if (interpreterManager.isConfigured()) {
 			out.println("Interpreter is configured, attempting to add nature.");
 		} else {
@@ -235,7 +234,7 @@ public abstract class AbstractPythonGenerator extends AbstractCodeGenerator {
 	 */
 	@Override
 	public IStatus validate() {
-		final IInterpreterManager interpreterManager = PydevPlugin.getPythonInterpreterManager();
+		final IInterpreterManager interpreterManager = InterpreterManagersAPI.getPythonInterpreterManager();
 		if (!interpreterManager.isConfigured()) {
 			return new Status(IStatus.ERROR, PythonGeneratorPlugin.PLUGIN_ID, "Configure the Python Interpreter before attempting code generation.");
 		} else {
