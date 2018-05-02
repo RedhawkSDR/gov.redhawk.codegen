@@ -9,3 +9,4 @@ Require-Bundle: gov.redhawk.ide.codegen.cplusplus;bundle-version="6.2.0",
  org.junit;bundle-version="4.10.0",
  gov.redhawk.ide.sdr;bundle-version="8.2.0"
 Bundle-Vendor: REDHAWK
+Automatic-Module-Name: gov.redhawk.ide.codegen.cplusplus.tests
