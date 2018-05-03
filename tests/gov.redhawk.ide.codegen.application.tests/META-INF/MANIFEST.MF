@@ -19,6 +19,6 @@ Require-Bundle: gov.redhawk.ide,
  org.eclipse.debug.core,
  org.eclipse.ui,
  org.junit,
- org.python.pydev,
- org.python.pydev.core
+ org.python.pydev;bundle-version="6.3.1",
+ org.python.pydev.core;bundle-version="6.3.1"
 Automatic-Module-Name: gov.redhawk.ide.codegen.application.tests

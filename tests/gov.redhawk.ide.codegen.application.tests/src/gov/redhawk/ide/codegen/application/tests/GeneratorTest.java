@@ -57,10 +57,10 @@ import org.eclipse.ui.intro.IIntroPart;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.python.pydev.ast.interpreter_managers.InterpreterManagersAPI;
 import org.python.pydev.core.IInterpreterInfo;
 import org.python.pydev.core.IInterpreterManager;
 import org.python.pydev.core.MisconfigurationException;
-import org.python.pydev.plugin.PydevPlugin;
 
 @SuppressWarnings("restriction")
 public class GeneratorTest extends TestCase {
@@ -376,7 +376,7 @@ public class GeneratorTest extends TestCase {
 		environmentMap.put("PYTHONPATH", pythonPath);
 
 		String command = null;
-		final IInterpreterManager pyman = PydevPlugin.getPythonInterpreterManager();
+		final IInterpreterManager pyman = InterpreterManagersAPI.getPythonInterpreterManager();
 		IInterpreterInfo info = null;
 		try {
 			if (pyman != null) {
