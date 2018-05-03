@@ -21,3 +21,4 @@ Require-Bundle: gov.redhawk.ide,
  org.junit,
  org.python.pydev,
  org.python.pydev.core
+Automatic-Module-Name: gov.redhawk.ide.codegen.application.tests

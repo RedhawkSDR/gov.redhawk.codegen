@@ -9,3 +9,4 @@ Require-Bundle: gov.redhawk.ide.codegen.python,
  org.junit,
  org.eclipse.core.runtime,
  gov.redhawk.ide.sdr
+Automatic-Module-Name: gov.redhawk.ide.codegen.python.tests

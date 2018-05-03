@@ -14,3 +14,4 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: %Bundle-Vendor
 Export-Package: gov.redhawk.ide.idl.tests
+Automatic-Module-Name: gov.redhawk.ide.idl.tests
