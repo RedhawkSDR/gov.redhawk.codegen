@@ -1,17 +1,16 @@
-/*******************************************************************************
- * This file is protected by Copyright. 
+/**
+ * This file is protected by Copyright.
  * Please refer to the COPYRIGHT file distributed with this source distribution.
  *
  * This file is part of REDHAWK IDE.
  *
- * All rights reserved.  This program and the accompanying materials are made available under 
- * the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at 
- * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ * All rights reserved.  This program and the accompanying materials are made available under
+ * the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html.
+ */
 package gov.redhawk.ide.cplusplus.utils.internal;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -30,18 +29,21 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.transaction.RunnableWithResult;
+import org.eclipse.emf.common.util.WrappedException;
+import org.eclipse.osgi.util.NLS;
+import org.osgi.framework.FrameworkUtil;
 
+import gov.redhawk.ide.cplusplus.utils.CplusplusUtilsPlugin;
 import gov.redhawk.ide.sdr.SdrPackage;
 import gov.redhawk.ide.sdr.SdrRoot;
 import gov.redhawk.ide.sdr.ui.SdrUiPlugin;
@@ -57,7 +59,7 @@ import mil.jpeojtrs.sca.util.ScaEcoreUtils;
  * @since 1.2
  */
 public class ExternalSettingProvider extends CExternalSettingProvider {
-	public static final String ID = "gov.redhawk.ide.cplusplus.utils.CppExternalSettingProvider";
+	public static final String ID = "gov.redhawk.ide.cplusplus.utils.CppExternalSettingProvider"; //$NON-NLS-1$
 
 	// This listener will fire when any resource in the workspace changes
 	// we check to see if that resource was an SPD file and call the updateExternalSettingsProviders if that occurs.
@@ -66,7 +68,7 @@ public class ExternalSettingProvider extends CExternalSettingProvider {
 			IResourceDelta rootDelta = event.getDelta();
 			for (IResourceDelta projectDelta : rootDelta.getAffectedChildren()) {
 				for (IResourceDelta fileDelta : projectDelta.getAffectedChildren()) {
-					if (fileDelta.getResource().getName().endsWith(".spd.xml")) {
+					if (fileDelta.getResource().getName().endsWith(SpdPackage.FILE_EXTENSION)) {
 						// Refresh the dynamic C++ include paths in case there has been change to a shared library in
 						// the SDR.
 						CoreModel.getDefault().getProjectDescriptionManager().updateExternalSettingsProviders(new String[] { ExternalSettingProvider.ID },
@@ -85,16 +87,11 @@ public class ExternalSettingProvider extends CExternalSettingProvider {
 				// The value is the changed load status which will go to null during loading
 				// once loading is finished the status will change to reflect that of the SDRROOT.
 				if (msg.getNewValue() != null) {
-					Job refreshExternalSettingProviderJob = new Job("Refresh External Settings Providers") {
-
-						@Override
-						protected IStatus run(IProgressMonitor monitor) {
-							CoreModel.getDefault().getProjectDescriptionManager().updateExternalSettingsProviders(new String[] { ExternalSettingProvider.ID },
-								monitor);
-							return Status.OK_STATUS;
-						}
-
-					};
+					Job refreshExternalSettingProviderJob = Job.create(Messages.ExternalSettingProvider_JobName, monitor -> {
+						CoreModel.getDefault().getProjectDescriptionManager().updateExternalSettingsProviders(new String[] { ExternalSettingProvider.ID },
+							monitor);
+						return Status.OK_STATUS;
+					});
 					refreshExternalSettingProviderJob.setSystem(true); // hide from progress monitor
 					refreshExternalSettingProviderJob.setUser(false);
 					refreshExternalSettingProviderJob.schedule(1000);
@@ -122,27 +119,27 @@ public class ExternalSettingProvider extends CExternalSettingProvider {
 	@Override
 	public CExternalSetting[] getSettings(final IProject project, ICConfigurationDescription cfg) {
 		// Create empty settings entry
-		final List<ICSettingEntry> settingEntries = new ArrayList<ICSettingEntry>();
-		final SoftPkg spd = ModelUtil.getSoftPkg(project);
-		if (spd == null) {
+		final SoftPkg spd;
+		try {
+			spd = ModelUtil.getSoftPkg(project);
+			if (spd == null) {
+				return new CExternalSetting[0];
+			}
+		} catch (WrappedException e) {
+			String msg = NLS.bind(Messages.ExternalSettingProvider_UnableToLoadSPD, project.getName());
+			IStatus status = new Status(IStatus.ERROR, CplusplusUtilsPlugin.PLUGIN_ID, msg, e.getCause());
+			Platform.getLog(FrameworkUtil.getBundle(getClass())).log(status);
 			return new CExternalSetting[0];
 		}
-		Set<IPath> incPaths;
-		try {
-			incPaths = ScaModelCommand.runExclusive(spd, new RunnableWithResult.Impl<Set<IPath>>() {
 
-				@Override
-				public void run() {
-					Set<IPath> incPaths = new HashSet<IPath>();
-					populateIncludePaths(spd, incPaths);
-					setResult(incPaths);
-				}
-			});
-		} catch (InterruptedException e) {
-			incPaths = Collections.emptySet();
-		}
+		Set<IPath> includePaths = ScaModelCommand.runExclusive(spd, () -> {
+			Set<IPath> retVal = new HashSet<IPath>();
+			populateIncludePaths(spd, retVal);
+			return retVal;
+		});
 
-		for (IPath incPath : incPaths) {
+		final List<ICSettingEntry> settingEntries = new ArrayList<ICSettingEntry>();
+		for (IPath incPath : includePaths) {
 			final ICPathEntry pathEntry = new CIncludePathEntry(incPath, ICSettingEntry.READONLY);
 			settingEntries.add(pathEntry);
 		}
@@ -171,7 +168,8 @@ public class ExternalSettingProvider extends CExternalSettingProvider {
 				if (sharedLibraryPath == null) {
 					continue;
 				}
-				IPath includeDirPath = new Path("${SdrRoot}").append("dom").append(sharedLibraryPath).removeLastSegments(1).append("include");
+				String dom = SdrUiPlugin.getDefault().getDomPath();
+				IPath includeDirPath = new Path("${SdrRoot}").append(dom).append(sharedLibraryPath).removeLastSegments(1).append("include"); //$NON-NLS-1$ //$NON-NLS-2$
 
 				// This check prevents us from getting into a circular loop in the case where there
 				// is a circular dependency within the shared library list.
