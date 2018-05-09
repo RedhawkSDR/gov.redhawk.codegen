@@ -37,7 +37,7 @@ public class PathLocatorUtil {
 	}
 
 	/**
-	 * @since 2.1
+	 * @since 2.2
 	 */
 	public List<File> getFileListings(List<File> startingDirs) {
 		final List<File> results = new ArrayList<File>();
@@ -114,7 +114,7 @@ public class PathLocatorUtil {
 
 	/**
 	 * If the last segment of a path matches this regular expression it will be excluded from the search.
-	 * @since 2.1
+	 * @since 2.2
 	 */
 	public void setExcludePathSegmentRegex(String excludePathSegements) {
 		this.excludePathSegmentRegex = Pattern.compile(excludePathSegements);
