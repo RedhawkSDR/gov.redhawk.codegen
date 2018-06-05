@@ -18,8 +18,14 @@
     <version>2.1.3-SNAPSHOT</version>
     <relativePath>../..</relativePath>
   </parent>
+
   <groupId>gov.redhawk.codegen</groupId>
   <artifactId>gov.redhawk.ide.codegen.cplusplus.tests</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>eclipse-test-plugin</packaging>
+
+  <properties>
+    <sonar.sources></sonar.sources>
+    <sonar.tests>src</sonar.tests>
+  </properties>
 </project>
