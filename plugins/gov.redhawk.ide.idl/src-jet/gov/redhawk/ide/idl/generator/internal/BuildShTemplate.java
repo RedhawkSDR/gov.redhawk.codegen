@@ -32,13 +32,10 @@ public class BuildShTemplate
   protected final String TEXT_1 = "#!/bin/sh" + NL + "" + NL + "if [ \"$1\" = \"clean\" ]; then" + NL + "  if [ -e Makefile ]; then" + NL + "    make clean" + NL + "  fi" + NL + "elif [ \"$1\" = \"rpm\" ]; then" + NL + "  # A very simplistic RPM build scenario" + NL + "  mydir=`dirname $0`" + NL + "  tmpdir=`mktemp -d`" + NL + "  cp -r ${mydir} ${tmpdir}/";
   protected final String TEXT_2 = "-";
   protected final String TEXT_3 = NL + "  tar czf ${tmpdir}/";
-  protected final String TEXT_4 = "-";
-  protected final String TEXT_5 = ".tar.gz --exclude=\".svn\" -C ${tmpdir} ";
-  protected final String TEXT_6 = "-";
-  protected final String TEXT_7 = NL + "  rpmbuild -ta ${tmpdir}/";
-  protected final String TEXT_8 = "-";
-  protected final String TEXT_9 = ".tar.gz" + NL + "  rm -rf $tmpdir" + NL + "else" + NL + "  # Checks if build is newer than makefile (based on modification time)" + NL + "  if [ ! -e configure ] || [ ! -e Makefile ] || [ configure.ac -nt Makefile ] || [ Makefile.am -nt Makefile ]; then" + NL + "    ./reconf" + NL + "    ./configure" + NL + "  fi" + NL + "  make" + NL + "fi";
-  protected final String TEXT_10 = NL;
+  protected final String TEXT_4 = ".tar.gz --exclude=\".svn\" -C ${tmpdir} ";
+  protected final String TEXT_5 = NL + "  rpmbuild -ta ${tmpdir}/";
+  protected final String TEXT_6 = ".tar.gz" + NL + "  rm -rf $tmpdir" + NL + "else" + NL + "  # Checks if build is newer than makefile (based on modification time)" + NL + "  if [ ! -e configure ] || [ ! -e Makefile ] || [ configure.ac -nt Makefile ] || [ Makefile.am -nt Makefile ]; then" + NL + "    ./reconf" + NL + "    ./configure" + NL + "  fi" + NL + "  make" + NL + "fi";
+  protected final String TEXT_7 = NL;
 
     /**
     * {@inheritDoc}
@@ -58,18 +55,18 @@ public class BuildShTemplate
     stringBuffer.append(version);
     stringBuffer.append(TEXT_3);
     stringBuffer.append(rpmname);
+    stringBuffer.append(TEXT_2);
+    stringBuffer.append(version);
     stringBuffer.append(TEXT_4);
+    stringBuffer.append(rpmname);
+    stringBuffer.append(TEXT_2);
     stringBuffer.append(version);
     stringBuffer.append(TEXT_5);
     stringBuffer.append(rpmname);
+    stringBuffer.append(TEXT_2);
+    stringBuffer.append(version);
     stringBuffer.append(TEXT_6);
-    stringBuffer.append(version);
     stringBuffer.append(TEXT_7);
-    stringBuffer.append(rpmname);
-    stringBuffer.append(TEXT_8);
-    stringBuffer.append(version);
-    stringBuffer.append(TEXT_9);
-    stringBuffer.append(TEXT_10);
     return stringBuffer.toString();
   }
 } 
