@@ -854,7 +854,7 @@ public class FeiDeviceImpl extends MinimalEObjectImpl.Container implements FeiDe
 		if (eIsProxy())
 			return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
+		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (Antenna: ");
 		result.append(antenna);
 		result.append(", ingestsGPS: ");
