@@ -20,5 +20,5 @@ Require-Bundle: org.eclipse.core.runtime,
  gov.redhawk.eclipsecorba.idl,
  gov.redhawk.frontend
 Bundle-ActivationPolicy: lazy
-Import-Package: FRONTEND;version="[2.1.1,2.2.0)"
+Import-Package: FRONTEND;version="2.1.1"
 Automatic-Module-Name: gov.redhawk.ide.codegen.frontend
