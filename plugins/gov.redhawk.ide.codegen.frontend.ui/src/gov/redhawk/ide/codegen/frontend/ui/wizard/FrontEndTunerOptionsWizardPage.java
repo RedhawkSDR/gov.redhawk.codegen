@@ -93,13 +93,23 @@ public class FrontEndTunerOptionsWizardPage extends WizardPage implements ICodeg
 		super(""); //$NON-NLS-1$
 		this.feiDevice = feiDevice;
 		populatePropertyTypes();
+		setDefaultPropertyType();
+	}
 
-		// Initialize the model object
+	private void setDefaultPropertyType() {
 		if (propertyTypes != null && propertyTypes.length > 0) {
+			for (Definition propertyType : propertyTypes) {
+				if ("BULKIO/dataShort".equals(propertyType.getId())) {
+					this.feiDevice.setDigitalInputTypeForTx(propertyType);
+					this.feiDevice.setDigitalInputType(propertyType);
+					this.feiDevice.setDigitalOutputType(propertyType);
+					return;
+				}
+			}
 			this.feiDevice.setDigitalInputTypeForTx(propertyTypes[0]);
 			this.feiDevice.setDigitalInputType(propertyTypes[0]);
 			this.feiDevice.setDigitalOutputType(propertyTypes[0]);
-		} 
+		}
 	}
 
 	@Override
