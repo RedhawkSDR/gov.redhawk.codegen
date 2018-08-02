@@ -1,5 +1,5 @@
 @Ecore(nsURI="http://codegen.redhawk.gov/frontend/1.0.0")
-@GenModel(prefix="Frontend", dataTypeConverters="true", binaryCompantibleReflectiveMethods="true", fileExtensions="xml", colorProviders="true", fontProviders="true", tablesProviders="true", resource="XML", templateDirectory="/gov.redhawk.ide.codegen.frontend/templates", forceOverwrite="true", modelPluginVariables="org.eclipse.xtext.xbase.lib", tableProviders="true", runtimeVersion="2.9", codeFormatting="true", commentFormatting="true", dynamicTemplates="true")
+@GenModel(prefix="Frontend", dataTypeConverters="true", binaryCompatibleReflectiveMethods="true", fileExtensions="xml", colorProviders="true", fontProviders="true", resource="XML", templateDirectory="/gov.redhawk.ide.codegen.frontend/templates", forceOverwrite="true", modelPluginVariables="org.eclipse.xtext.xbase.lib", tableProviders="true", runtimeVersion="2.9", codeFormatting="true", commentFormatting="true", dynamicTemplates="true")
 @GenModel(contentTypeIdentifier="http://codegen.redhawk.gov/frontend/1.0.0")
 @GenModel(modelDirectory="/gov.redhawk.ide.codegen.frontend/src-model")
 @GenModel(editDirectory="/gov.redhawk.ide.codegen.frontend.edit/src-gen")
