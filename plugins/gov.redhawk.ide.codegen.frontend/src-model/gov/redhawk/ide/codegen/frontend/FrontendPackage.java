@@ -31,11 +31,10 @@ import org.eclipse.emf.ecore.EPackage;
  * @see gov.redhawk.ide.codegen.frontend.FrontendFactory
  * @model kind="package"
  * annotation="http://www.eclipse.org/emf/2002/GenModel prefix='Frontend' dataTypeConverters='true'
- * binaryCompantibleReflectiveMethods='true' fileExtensions='xml' colorProviders='true' fontProviders='true'
- * tablesProviders='true' resource='XML' templateDirectory='/gov.redhawk.ide.codegen.frontend/templates'
- * forceOverwrite='true' modelPluginVariables='org.eclipse.xtext.xbase.lib' tableProviders='true' runtimeVersion='2.9'
- * codeFormatting='true' commentFormatting='true' dynamicTemplates='true'
- * contentTypeIdentifier='http://codegen.redhawk.gov/frontend/1.0.0'
+ * binaryCompatibleReflectiveMethods='true' fileExtensions='xml' colorProviders='true' fontProviders='true'
+ * resource='XML' templateDirectory='/gov.redhawk.ide.codegen.frontend/templates' forceOverwrite='true'
+ * modelPluginVariables='org.eclipse.xtext.xbase.lib' tableProviders='true' runtimeVersion='2.9' codeFormatting='true'
+ * commentFormatting='true' dynamicTemplates='true' contentTypeIdentifier='http://codegen.redhawk.gov/frontend/1.0.0'
  * modelDirectory='/gov.redhawk.ide.codegen.frontend/src-model'
  * editDirectory='/gov.redhawk.ide.codegen.frontend.edit/src-gen' basePackage='gov.redhawk.ide.codegen'"
  * @generated

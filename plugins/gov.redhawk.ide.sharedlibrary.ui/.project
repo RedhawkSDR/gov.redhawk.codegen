@@ -41,6 +41,5 @@
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.pde.api.tools.apiAnalysisNature</nature>
 		<nature>net.sf.eclipsecs.core.CheckstyleNature</nature>
-		<nature>org.python.pydev.pythonNature</nature>
 	</natures>
 </projectDescription>
