@@ -334,7 +334,7 @@ public class GeneratorTest extends TestCase {
 
 		final ILaunchConfigurationWorkingCopy workingCopy = type.newInstance(null, testScript.getName());
 
-		final IPath sdrPath = SdrUiPlugin.getDefault().getTargetSdrPath();
+		final IPath sdrPath = IdeSdrPreferences.getTargetSdrDomPath();
 		final IPath ossieHome = RedhawkIdeActivator.getDefault().getRuntimePath();
 		final Map<String, String> environmentMap = new HashMap<String, String>();
 		environmentMap.put("OSSIEHOME", ossieHome.toOSString());
