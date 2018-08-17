@@ -10,9 +10,10 @@
  *******************************************************************************/
 package gov.redhawk.ide.sandbox.console.py.tests;
 
+import gov.redhawk.ide.sdr.IdeSdrActivator;
 import gov.redhawk.ide.sdr.SdrRoot;
 import gov.redhawk.ide.sdr.ui.SdrUiPlugin;
-import gov.redhawk.ide.sdr.ui.preferences.SdrUiPreferenceConstants;
+import gov.redhawk.ide.sdr.preferences.IdeSdrPreferenceConstants;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +23,7 @@ import java.net.URL;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.jacorb.JacorbActivator;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -65,7 +67,7 @@ public class SandboxTestsActivator implements BundleActivator {
 		final SdrRoot root = SdrUiPlugin.getDefault().getTargetSdrRoot();
 		root.load(null);
 		final URL fileURL = FileLocator.toFileURL(url);
-		SdrUiPlugin.getDefault().getPreferenceStore().setValue(SdrUiPreferenceConstants.SCA_LOCAL_SDR_PATH_PREFERENCE,
+		InstanceScope.INSTANCE.getNode(IdeSdrActivator.PLUGIN_ID).put(IdeSdrPreferenceConstants.SCA_LOCAL_SDR_PATH_PREFERENCE,
 			new File(fileURL.toURI()).getAbsolutePath());
 		root.reload(null);
 		return root;
