@@ -13,7 +13,8 @@ package gov.redhawk.ide.codegen.application.tests;
 import gov.redhawk.ide.RedhawkIdeActivator;
 import gov.redhawk.ide.codegen.application.CodegeneratorApplication;
 import gov.redhawk.ide.sdr.LoadState;
-import gov.redhawk.ide.sdr.ui.SdrUiPlugin;
+import gov.redhawk.ide.sdr.TargetSdrRoot;
+import gov.redhawk.ide.sdr.preferences.IdeSdrPreferences;
 
 import java.io.File;
 import java.io.IOException;
@@ -165,7 +166,7 @@ public class GeneratorTest extends TestCase {
 		}
 		File filePath = new File(url.getPath());
 
-		while (!SdrUiPlugin.getDefault().getTargetSdrRoot().getState().equals(LoadState.LOADED)) {
+		while (!TargetSdrRoot.getSdrRoot().getState().equals(LoadState.LOADED)) {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
@@ -209,7 +210,7 @@ public class GeneratorTest extends TestCase {
 		}
 		File filePath = new File(url.getPath());
 
-		while (!SdrUiPlugin.getDefault().getTargetSdrRoot().getState().equals(LoadState.LOADED)) {
+		while (!TargetSdrRoot.getSdrRoot().getState().equals(LoadState.LOADED)) {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {

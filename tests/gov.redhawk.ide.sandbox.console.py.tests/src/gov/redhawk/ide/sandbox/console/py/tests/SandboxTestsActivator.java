@@ -12,7 +12,7 @@ package gov.redhawk.ide.sandbox.console.py.tests;
 
 import gov.redhawk.ide.sdr.IdeSdrActivator;
 import gov.redhawk.ide.sdr.SdrRoot;
-import gov.redhawk.ide.sdr.ui.SdrUiPlugin;
+import gov.redhawk.ide.sdr.TargetSdrRoot;
 import gov.redhawk.ide.sdr.preferences.IdeSdrPreferenceConstants;
 
 import java.io.File;
@@ -38,25 +38,12 @@ public class SandboxTestsActivator implements BundleActivator {
 		return SandboxTestsActivator.context;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext
-	 * )
-	 */
 	@Override
 	public void start(final BundleContext bundleContext) throws Exception {
 		SandboxTestsActivator.context = bundleContext;
 		JacorbActivator.getDefault().init();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
-	 */
 	@Override
 	public void stop(final BundleContext bundleContext) throws Exception {
 		SandboxTestsActivator.context = null;
@@ -64,7 +51,7 @@ public class SandboxTestsActivator implements BundleActivator {
 
 	public static SdrRoot initSdrRoot() throws IOException, URISyntaxException, InterruptedException {
 		final URL url = FileLocator.find(Platform.getBundle(SandboxTestsActivator.PLUGIN_ID), new Path("sdr"), null);
-		final SdrRoot root = SdrUiPlugin.getDefault().getTargetSdrRoot();
+		final SdrRoot root = TargetSdrRoot.getSdrRoot();
 		root.load(null);
 		final URL fileURL = FileLocator.toFileURL(url);
 		InstanceScope.INSTANCE.getNode(IdeSdrActivator.PLUGIN_ID).put(IdeSdrPreferenceConstants.SCA_LOCAL_SDR_PATH_PREFERENCE,

@@ -46,8 +46,8 @@ import org.osgi.framework.FrameworkUtil;
 import gov.redhawk.ide.cplusplus.utils.CplusplusUtilsPlugin;
 import gov.redhawk.ide.sdr.SdrPackage;
 import gov.redhawk.ide.sdr.SdrRoot;
+import gov.redhawk.ide.sdr.TargetSdrRoot;
 import gov.redhawk.ide.sdr.preferences.IdeSdrPreferences;
-import gov.redhawk.ide.sdr.ui.SdrUiPlugin;
 import gov.redhawk.model.sca.commands.ScaModelCommand;
 import gov.redhawk.model.sca.util.ModelUtil;
 import mil.jpeojtrs.sca.spd.Dependency;
@@ -106,7 +106,7 @@ public class ExternalSettingProvider extends CExternalSettingProvider {
 
 	public ExternalSettingProvider() {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		SdrRoot sdrroot = SdrUiPlugin.getDefault().getTargetSdrRoot();
+		SdrRoot sdrroot = TargetSdrRoot.getSdrRoot();
 
 		// We add two listeners, one to the workspace and one to the SDRROOT.
 		// The workspace listener will be ignored if it already exists but we check for the sdrroot eAdapter
