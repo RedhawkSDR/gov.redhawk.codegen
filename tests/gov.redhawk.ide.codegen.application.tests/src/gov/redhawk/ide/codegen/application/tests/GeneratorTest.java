@@ -23,9 +23,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.TestCase;
-import junit.textui.TestRunner;
-
 import org.eclipse.core.externaltools.internal.IExternalToolConstants;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -55,20 +52,19 @@ import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.intro.IIntroPart;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Test;
 import org.python.pydev.core.IInterpreterInfo;
 import org.python.pydev.core.IInterpreterManager;
 import org.python.pydev.core.MisconfigurationException;
 import org.python.pydev.plugin.PydevPlugin;
 
 @SuppressWarnings("restriction")
-public class GeneratorTest extends TestCase {
+public class GeneratorTest {
 
 	private static final String[] TEST_COMPONENTS = { "basic", "bulkio_ports", "event_props", "props", "sri" };
 
-	@Override
 	@Before
 	public void setUp() throws Exception {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
@@ -96,12 +92,8 @@ public class GeneratorTest extends TestCase {
 		});
 	}
 
-	@Override
-	@After
-	public void tearDown() throws Exception {
-	}
-
-	public void test_generators() throws CoreException {
+	@Test
+	public void test_generators() throws Exception {
 		createAndGenerate("test_cpp", "C++", "resource");
 		createAndGenerate("test_py", "Python", "resource");
 		createAndGenerate("test_java", "Java", "resource");
@@ -125,7 +117,7 @@ public class GeneratorTest extends TestCase {
 		}
 	}
 
-	private void createAndGenerate(String name, String lang, String type) throws CoreException {
+	private void createAndGenerate(String name, String lang, String type) throws Exception {
 		IProject proj = createProject(name, lang, type);
 		try {
 			generateCode(name, null);
@@ -140,21 +132,7 @@ public class GeneratorTest extends TestCase {
 		}
 	}
 
-	//	public void test_py_generators() {
-	//		for (String component : TEST_COMPONENTS) {
-	//			generateCode(component, "Python");
-	//			runComponentUnitTest(component);
-	//		}
-	//	}
-	//	
-	//	public void test_java_generators() {
-	//		for (String component : TEST_COMPONENTS) {
-	//			generateCode(component, "Java");
-	//			runComponentUnitTest(component);
-	//		}
-	//	}
-
-	public IProject createProject(String componentName, String lang, String projectType) {
+	private IProject createProject(String componentName, String lang, String projectType) throws Exception {
 		URL url = null;
 		try {
 			url = FileLocator.toFileURL(FileLocator.find(Platform.getBundle("gov.redhawk.ide.codegen.tests"), new Path(""), null));
@@ -185,14 +163,7 @@ public class GeneratorTest extends TestCase {
 		}
 
 		CodegeneratorApplication generator = new CodegeneratorApplication();
-		try {
-			generator.start(args.toArray(new String[args.size()]));
-		} catch (Exception e) {
-			// BEGIN DEBUG CODE
-			e.printStackTrace();
-			// END DEBUG CODE
-			Assert.fail("Generator failed on " + componentName + " : " + e.getMessage());
-		}
+		generator.start(args.toArray(new String[args.size()]));
 
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IProject proj = workspace.getRoot().getProject(componentName);
@@ -200,7 +171,7 @@ public class GeneratorTest extends TestCase {
 		return proj;
 	}
 
-	public void generateCode(String componentName, String lang) {
+	private void generateCode(String componentName, String lang) throws Exception {
 		URL url = null;
 		try {
 			url = FileLocator.toFileURL(FileLocator.find(Platform.getBundle("gov.redhawk.ide.codegen.tests"), new Path(""), null));
@@ -226,14 +197,7 @@ public class GeneratorTest extends TestCase {
 		}
 
 		CodegeneratorApplication generator = new CodegeneratorApplication();
-		try {
-			generator.start(args.toArray(new String[args.size()]));
-		} catch (Exception e) {
-			// BEGIN DEBUG CODE
-			e.printStackTrace();
-			// END DEBUG CODE
-			Assert.fail("Generator failed on " + componentName + " : " + e.getMessage());
-		}
+		generator.start(args.toArray(new String[args.size()]));
 
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IProject proj = workspace.getRoot().getProject(componentName);
@@ -266,7 +230,7 @@ public class GeneratorTest extends TestCase {
 
 	}
 
-	public void runComponentUnitTest(String componentName) {
+	private void runComponentUnitTest(String componentName) {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IProject proj = workspace.getRoot().getProject(componentName);
 		Assert.assertTrue(proj.exists());
@@ -319,7 +283,7 @@ public class GeneratorTest extends TestCase {
 		}
 	}
 
-	public static ILaunchConfigurationWorkingCopy createUnitTestLaunchConfig(final IProject proj, final String componentName) throws CoreException {
+	private static ILaunchConfigurationWorkingCopy createUnitTestLaunchConfig(final IProject proj, final String componentName) throws CoreException {
 		IFolder testFolder = proj.getFolder("tests");
 		if (!testFolder.exists()) {
 			return null;
@@ -398,14 +362,5 @@ public class GeneratorTest extends TestCase {
 		workingCopy.setAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES, environmentMap);
 
 		return workingCopy;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public static void main(final String[] args) {
-		TestRunner.run(GeneratorTest.class);
 	}
 }
