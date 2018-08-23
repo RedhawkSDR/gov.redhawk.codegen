@@ -10,9 +10,10 @@
  *******************************************************************************/
 package gov.redhawk.ide.sandbox.console.py.tests;
 
+import gov.redhawk.ide.sdr.IdeSdrActivator;
 import gov.redhawk.ide.sdr.SdrRoot;
-import gov.redhawk.ide.sdr.ui.SdrUiPlugin;
-import gov.redhawk.ide.sdr.ui.preferences.SdrUiPreferenceConstants;
+import gov.redhawk.ide.sdr.TargetSdrRoot;
+import gov.redhawk.ide.sdr.preferences.IdeSdrPreferenceConstants;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +23,7 @@ import java.net.URL;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.jacorb.JacorbActivator;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -36,25 +38,12 @@ public class SandboxTestsActivator implements BundleActivator {
 		return SandboxTestsActivator.context;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext
-	 * )
-	 */
 	@Override
 	public void start(final BundleContext bundleContext) throws Exception {
 		SandboxTestsActivator.context = bundleContext;
 		JacorbActivator.getDefault().init();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
-	 */
 	@Override
 	public void stop(final BundleContext bundleContext) throws Exception {
 		SandboxTestsActivator.context = null;
@@ -62,10 +51,10 @@ public class SandboxTestsActivator implements BundleActivator {
 
 	public static SdrRoot initSdrRoot() throws IOException, URISyntaxException, InterruptedException {
 		final URL url = FileLocator.find(Platform.getBundle(SandboxTestsActivator.PLUGIN_ID), new Path("sdr"), null);
-		final SdrRoot root = SdrUiPlugin.getDefault().getTargetSdrRoot();
+		final SdrRoot root = TargetSdrRoot.getSdrRoot();
 		root.load(null);
 		final URL fileURL = FileLocator.toFileURL(url);
-		SdrUiPlugin.getDefault().getPreferenceStore().setValue(SdrUiPreferenceConstants.SCA_LOCAL_SDR_PATH_PREFERENCE,
+		InstanceScope.INSTANCE.getNode(IdeSdrActivator.PLUGIN_ID).put(IdeSdrPreferenceConstants.SCA_LOCAL_SDR_PATH_PREFERENCE,
 			new File(fileURL.toURI()).getAbsolutePath());
 		root.reload(null);
 		return root;

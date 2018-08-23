@@ -23,7 +23,7 @@ import gov.redhawk.ide.codegen.ui.ICodegenLanguageDisplayFactory;
 import gov.redhawk.ide.codegen.ui.ICodegenWizardPage;
 import gov.redhawk.ide.octave.ui.wizard.MFileSelectionWizardPage;
 import gov.redhawk.ide.octave.ui.wizard.MFileVariableMappingWizardPage;
-import gov.redhawk.ide.sdr.ui.SdrUiPlugin;
+import gov.redhawk.ide.sdr.TargetSdrRoot;
 import gov.redhawk.sca.util.SubMonitor;
 
 import java.io.File;
@@ -278,7 +278,7 @@ public class OctaveGeneratorDisplayFactory implements ICodegenDisplayFactory2, I
 	private void initPort(AbstractPort port, OctaveFunctionVariables var, final SoftPkg eSpd) {
 		port.setName(var.getName());
 		port.setRepID(dataDoubleHelper.id());
-		addInterface(SdrUiPlugin.getDefault().getTargetSdrRoot().getIdlLibrary(), port.getRepID(), eSpd.getDescriptor().getComponent().getInterfaces());
+		addInterface(TargetSdrRoot.getSdrRoot().getIdlLibrary(), port.getRepID(), eSpd.getDescriptor().getComponent().getInterfaces());
 	}
 
 	private void addInterface(final IdlLibrary library, final String repId, Interfaces interfaces) {
