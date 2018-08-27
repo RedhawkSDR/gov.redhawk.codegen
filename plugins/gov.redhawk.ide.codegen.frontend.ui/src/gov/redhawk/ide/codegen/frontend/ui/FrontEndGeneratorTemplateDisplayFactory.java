@@ -45,7 +45,7 @@ import gov.redhawk.ide.codegen.ui.BooleanGeneratorPropertiesComposite;
 import gov.redhawk.ide.codegen.ui.ICodegenComposite;
 import gov.redhawk.ide.codegen.ui.ICodegenTemplateDisplayFactory;
 import gov.redhawk.ide.codegen.ui.ICodegenWizardPage;
-import gov.redhawk.ide.sdr.ui.SdrUiPlugin;
+import gov.redhawk.ide.sdr.TargetSdrRoot;
 import gov.redhawk.sca.util.SubMonitor;
 import mil.jpeojtrs.sca.prf.AbstractProperty;
 import mil.jpeojtrs.sca.prf.Properties;
@@ -239,7 +239,7 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 
 		portToAdd.setRepID(repId);
 		portToAdd.setName(name);
-		addInterface(SdrUiPlugin.getDefault().getTargetSdrRoot().getIdlLibrary(), portToAdd.getRepID(), eSpd.getDescriptor().getComponent().getInterfaces());
+		addInterface(TargetSdrRoot.getSdrRoot().getIdlLibrary(), portToAdd.getRepID(), eSpd.getDescriptor().getComponent().getInterfaces());
 		ports.getProvides().add(portToAdd);
 
 		return ports;
@@ -259,7 +259,7 @@ public class FrontEndGeneratorTemplateDisplayFactory implements ICodegenTemplate
 
 		portToAdd.setRepID(repId);
 		portToAdd.setName(name);
-		addInterface(SdrUiPlugin.getDefault().getTargetSdrRoot().getIdlLibrary(), portToAdd.getRepID(), eSpd.getDescriptor().getComponent().getInterfaces());
+		addInterface(TargetSdrRoot.getSdrRoot().getIdlLibrary(), portToAdd.getRepID(), eSpd.getDescriptor().getComponent().getInterfaces());
 		ports.getUses().add(portToAdd);
 
 		return ports;
