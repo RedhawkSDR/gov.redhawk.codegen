@@ -11,8 +11,7 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.6.0",
  mil.jpeojtrs.sca.spd;bundle-version="2.2.2",
  mil.jpeojtrs.sca.util,
  gov.redhawk.sca.model,
- gov.redhawk.ide.sdr,
- gov.redhawk.ide.sdr.ui
+ gov.redhawk.ide.sdr;bundle-version="10.1.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: gov.redhawk.ide.cplusplus.utils
