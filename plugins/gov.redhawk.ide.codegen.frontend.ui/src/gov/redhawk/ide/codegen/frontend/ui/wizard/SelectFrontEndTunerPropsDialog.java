@@ -12,7 +12,7 @@ package gov.redhawk.ide.codegen.frontend.ui.wizard;
 
 import gov.redhawk.ide.codegen.frontend.ui.FrontEndDeviceUIUtils;
 
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -68,7 +68,11 @@ public class SelectFrontEndTunerPropsDialog extends Dialog {
 	}
 
 	public Set<FrontEndProp> getResult() {
-		return Collections.unmodifiableSet(this.output);
+		Set<FrontEndProp> props = new HashSet<>();
+		for (Object prop : this.output) {
+			props.add((FrontEndProp) prop);
+		}
+		return props;
 	}
 
 }

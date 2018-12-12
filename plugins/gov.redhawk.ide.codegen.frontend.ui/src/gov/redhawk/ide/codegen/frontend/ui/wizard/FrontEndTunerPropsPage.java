@@ -274,12 +274,14 @@ public class FrontEndTunerPropsPage extends WizardPage implements ICodegenWizard
 	}
 
 	public Set<FrontEndProp> getSelectedProperties() {
-		final Set<FrontEndProp> retVal = new HashSet<FrontEndProp>();
+		final Set<FrontEndProp> retVal = new HashSet<>();
 		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 
 			@Override
 			public void run() {
-				retVal.addAll(selectedProps);
+				for (Object selectedProp : selectedProps) {
+					retVal.add((FrontEndProp) selectedProp);
+				}
 			}
 
 		});
