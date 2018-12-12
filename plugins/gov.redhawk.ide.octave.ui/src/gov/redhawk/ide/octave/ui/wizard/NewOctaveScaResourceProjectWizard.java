@@ -49,7 +49,9 @@ public class NewOctaveScaResourceProjectWizard extends NewScaResourceProjectWiza
 			if (!Modifier.isPublic(field.getModifiers())) {
 				field.setAccessible(true);
 			}
-			setWizPages((List<IWizardPage>) field.get(this));
+			@SuppressWarnings("unchecked")
+			List<IWizardPage> pages = (List<IWizardPage>) field.get(this);
+			setWizPages(pages);
 		} catch (final SecurityException e1) {
 			// PASS
 		} catch (final NoSuchFieldException e1) {
