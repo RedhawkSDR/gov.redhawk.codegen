@@ -25,7 +25,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 
-import FRONTEND.FE_TUNER_DEVICE_KIND;
+import FRONTEND.FE_DEVICE_KIND;
 import gov.redhawk.frontend.util.TunerProperties.TunerStatusAllocationProperties;
 import gov.redhawk.ide.codegen.frontend.FeiDevice;
 import gov.redhawk.ide.codegen.frontend.ui.wizard.FrontEndPropLabelProvider;
@@ -34,10 +34,10 @@ import mil.jpeojtrs.sca.prf.AbstractProperty;
 public enum FrontEndDeviceUIUtils {
 	INSTANCE;
 
-	protected static final String TUNER_DEVICE_KIND_NAME = FE_TUNER_DEVICE_KIND.value;
+	protected static final String TUNER_DEVICE_KIND_NAME = FE_DEVICE_KIND.value;
 
 	// Antenna device kind name is still in flux but should eventually be defined within the IDL
-	protected static final String ANTENNA_DEVICE_KIND_NAME = "FRONTEND::RFSOURCE";
+	protected static final String ANTENNA_DEVICE_KIND_NAME = "FRONTEND::ANTENNA";
 
 	private FrontEndDeviceUIUtils() {
 	}
