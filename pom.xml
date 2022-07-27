@@ -48,12 +48,11 @@
   </properties>
 
   <repositories>
-    <repositories>
-      <repository>
-        <id>reload4j</id>
-        <layout>p2</layout>
-        <url>${reload4j}</url>
-      </repository>
+    <repository>
+      <id>reload4j</id>
+      <layout>p2</layout>
+      <url>${reload4j}</url>
+    </repository>
 
     <repository>
       <id>eclipse</id>
