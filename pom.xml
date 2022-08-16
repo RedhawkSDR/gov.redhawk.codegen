@@ -36,6 +36,7 @@
     <pydev>https://dl.bintray.com/fabioz/pydev/6.4.3/</pydev>
     <nebula>http://download.eclipse.org/nebula/releases/2.0.0/</nebula>
     <idl-editor>http://download.redhawksdr.org/idl-editor</idl-editor>
+    <reload4j>http://download.redhawksdr.org/reload4j/1.2.19</reload4j>
     <!-- Sonar -->
     <sonar.language>java</sonar.language>
     <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
@@ -47,6 +48,12 @@
   </properties>
 
   <repositories>
+    <repository>
+      <id>reload4j</id>
+      <layout>p2</layout>
+      <url>${reload4j}</url>
+    </repository>
+
     <repository>
       <id>eclipse</id>
       <layout>p2</layout>
