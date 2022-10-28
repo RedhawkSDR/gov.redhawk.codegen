@@ -10,7 +10,7 @@ build:
   image: ${docker_registry}redhawk/maven:3-jdk-8
   stage: build
   rules:
-    - if: $CI_COMMIT_REF_NAME !~ /^(\d+\.)?(\d+)?(\.\d+)$/ && $CI_PIPELINE_SOURCE !~ 'merge_request_event' && $CI_COMMIT_REF_NAME !~ /.*-external$/ && $CI_COMMIT_REF_NAME !~ master
+    - if: $CI_COMMIT_REF_NAME !~ /^(\d+\.)?(\d+)?(\.\d+)$/ && $CI_PIPELINE_SOURCE !~ 'merge_request_event' && $CI_COMMIT_REF_NAME !~ /.*-external$/ && $CI_COMMIT_REF_NAME !~ 'master'
   tags:
     - ide
   script:
